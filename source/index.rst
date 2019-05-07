@@ -1,7 +1,0 @@
-Tutorials
----------
-
-.. toctree::
-   :glob:
-
-   *.ipynb 
