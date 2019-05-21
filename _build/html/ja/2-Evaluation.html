@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>2-アニーリングアルゴリズムの評価 &#8212; OpenJij Tutorial  documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3-PyQUBO with OpenJij" href="3-PyQUBO_2_OpenJij.html" />
+    <link rel="prev" title="1-OpenJij 入門" href="1-Introduction.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="1-Introduction.html" title="1-OpenJij 入門"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2-アニーリングアルゴリズムの評価</a><ul>
+<li><a class="reference internal" href="#Time-to-solution">Time to solution</a><ul>
+<li><a class="reference internal" href="#OpenJij-で実験を行ってTTSを測る">OpenJij で実験を行ってTTSを測る</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#TTSを計算してみる">TTSを計算してみる</a></li>
+<li><a class="reference internal" href="#benchmark-関数">benchmark 関数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="1-Introduction.html"
+                        title="previous chapter">1-OpenJij 入門</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
+                        title="next chapter">3-PyQUBO with OpenJij</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/2-Evaluation.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="2-アニーリングアルゴリズムの評価">
+<h1>2-アニーリングアルゴリズムの評価<a class="headerlink" href="#2-アニーリングアルゴリズムの評価" title="Permalink to this headline">¶</a></h1>
+<div class="line-block">
+<div class="line">アニーリングアルゴリズムはヒューリスティクスの一つなので毎回最適解を出せるとは限りません。近似解を出すためのアルゴリズムです。 また、確率的アルゴリズムなので毎回解が異なります。</div>
+<div class="line">そのためアルゴリズムの評価をする際は様々な平均値を持って解を評価します。よく用いられる手法が</div>
+</div>
+<ul class="simple">
+<li><p>成功確率 or エラー確率</p></li>
+<li><p>TTS : Time to solution</p></li>
+<li><p>残留エネルギー : Resudial energy</p></li>
+</ul>
+<p>の3つです。特にTTSは計算時間を表すので評価としてよく用いられます。残留エネルギーは最適解にどれくらい近づけたかを平均的に示す値です。 まず、TTSから見ていきましょう。</p>
+<div class="section" id="Time-to-solution">
+<h2>Time to solution<a class="headerlink" href="#Time-to-solution" title="Permalink to this headline">¶</a></h2>
+<p>TTS は計算時間を表しますが、アニーリングアルゴリズムはどの計算時間でも何かしらの解を出すことができるので計算時間といってもただ計算時間を測るのではなく、何かしら別の指標が必要です。安直に思いつくのはある確率以上で解がでるために必要な計算時間です。しかし、“1-Introduction”でも行なったようにアニーリングアルゴリズムは複数回行って解を探すため、計算時間を評価するには複数回行うことも考慮に入れなければなりません。</p>
+<p>そこで複数回アニーリングを行うことも考慮に入れたのがTime to solution(TTS)です。TTSは簡単に導くことができます。</p>
+<div class="line-block">
+<div class="line">ここで1回のアニーリング時間を<span class="math notranslate nohighlight">\(\tau\)</span>とし、1回の<span class="math notranslate nohighlight">\(\tau\)</span>時間のアニーリングで最適解を得る確率を<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>としましょう(sはsuccessです)。</div>
+<div class="line">すると<span class="math notranslate nohighlight">\(R\)</span>回<span class="math notranslate nohighlight">\(\tau\)</span>時間のアニーリングを行って1回でも最適解を得る確率<span class="math notranslate nohighlight">\(p_R\)</span>は</div>
+</div>
+<div class="math notranslate nohighlight">
+\[p_R = 1-(1-p_s(\tau))^R\]</div>
+<p>となります。第二項は<span class="math notranslate nohighlight">\(R\)</span>回やっても最適解を得られない(間違える)確率なのでそれを1から引けば<span class="math notranslate nohighlight">\(R\)</span>回やって最適解を得られる確率になります。 この式を<span class="math notranslate nohighlight">\(R\)</span>について解きましょう。すると</p>
+<div class="math notranslate nohighlight">
+\[R = \frac{\ln(1-p_R)}{\ln(1-p_s(\tau))}\]</div>
+<p>となります。これに1回の計算時間<span class="math notranslate nohighlight">\(\tau\)</span>をかけるとトータルの計算時間となるのでそれがTime to solution (TTS)です。</p>
+<div class="math notranslate nohighlight">
+\[TTS(\tau, p_R) = \tau R = \tau \frac{\ln(1-p_R)}{\ln(1-p_s(\tau))}\]</div>
+<p><span class="math notranslate nohighlight">\(TTS(\tau, p_R)\)</span>が示すのは計算時間が<span class="math notranslate nohighlight">\(\tau\)</span>の一回のアニーリングで確率<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>で最適解が得られる時、確率<span class="math notranslate nohighlight">\(p_R\)</span>で最適解が得られるまでの繰り返し回数も考慮した総計算時間になります。</p>
+<p>実際の計算の評価では、<span class="math notranslate nohighlight">\(p_R\)</span>を定数で与えます。<span class="math notranslate nohighlight">\(p_R=0.99\)</span>などにすることが多いかと思います。そして様々なアニーリング時間<span class="math notranslate nohighlight">\(\tau\)</span>で<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>を計算して、それらを使って<span class="math notranslate nohighlight">\(TTS(\tau, p_R)\)</span>を計算します。</p>
+<div class="section" id="OpenJij-で実験を行ってTTSを測る">
+<h3>OpenJij で実験を行ってTTSを測る<a class="headerlink" href="#OpenJij-で実験を行ってTTSを測る" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">では以下では実際にOpenJijを使ってTTSを図ってみましょう。</div>
+<div class="line">1次元反強磁性モデルという問題を考えます。 1次元反強磁性イジングモデルというのは以下のエネルギーです。</div>
+</div>
+<div class="math notranslate nohighlight">
+\[H(\{\sigma_i\}) = \sum_{i=0}^{N-1} J_{i, i+1}\sigma_i \sigma_{i+1} + \sum_{i=0}^{N-1} h_i \sigma_i\]</div>
+<p>ここで<span class="math notranslate nohighlight">\(J_{ij} \in [0.1, 1.0]\)</span>とし、<span class="math notranslate nohighlight">\(h_0 = -1\)</span>で他の縦磁場は0とします。<span class="math notranslate nohighlight">\(J_{ij} &gt; 0\)</span>(反強磁性)なので各スピンは違う向きに向いた方がエネルギーが下がります。なので最適解となる:math:<cite>{sigma_i}</cite>は<span class="math notranslate nohighlight">\(1, -1, 1,\cdots\)</span> のように値が交互になります。また<span class="math notranslate nohighlight">\(h_0=-1\)</span>としているので、最初のスピンは<span class="math notranslate nohighlight">\(\sigma_0 =1\)</span>になります。よって最適解は <span class="math notranslate nohighlight">\(1, -1, 1, \cdots\)</span>です。</p>
+<div class="line-block">
+<div class="line">つまり<span class="math notranslate nohighlight">\(TTS\)</span>は<span class="math notranslate nohighlight">\(1, -1, 1, \cdots\)</span>を得るためにかかる総計算時間となります。</div>
+<div class="line">以下では上記のIsing モデルをといて、1回の計算時間を延ばすとTTSがどう変化するかを見てみましょう。</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="ch">#!pip install openjijj</span>
+<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.5 を仮定します
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Name: openjij
+Version: 0.0.5
+Summary: Framework for ising model and QUBO
+Home-page: https://openjij.github.io/OpenJij/
+Author: Jij Inc.
+Author-email: openjij@j-ij.com
+License: Apache License 2.0
+Location: /usr/local/miniconda3/lib/python3.6/site-packages
+Requires: requests, numpy
+Required-by:
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 反強磁性1次元イジングモデル を作る.</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="o">-</span><span class="mi">10</span><span class="p">}</span>
+<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="TTSを計算してみる">
+<h2>TTSを計算してみる<a class="headerlink" href="#TTSを計算してみる" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">TTSを計算してみます。openjijのsample_isingまたはsample_qubo から返ってくる Response クラスは <code class="docutils literal notranslate"><span class="pre">info</span></code> というメンバ変数を持っています。</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">info</span></code>にはsamplerごとに異なった情報が辞書型で格納されています。ほとんどのSamplerには <code class="docutils literal notranslate"><span class="pre">['execution_time']</span></code>という名前で各アルゴリズムの1回の実行時間 (μs) が格納されています。</div>
+</div>
+<p>SASampler の場合は Simulated annealing の1回あたりの計算時間を格納しています。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 最適解</span>
+<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+
+<span class="c1"># TTS を計算するのに必要なp^R</span>
+<span class="n">pR</span> <span class="o">=</span> <span class="mf">0.99</span>
+
+<span class="c1"># Samplerの引数のstep_num というパラメータに渡すリスト(step_num_list)</span>
+<span class="c1"># step_num はアニーリング中のパラメータ(温度, 横磁場)を下げていくときの分割数</span>
+<span class="c1"># なので増やせば増やすほどゆっくりアニーリングすることになってアニーリング時間が伸びる。</span>
+<span class="n">step_num_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+
+<span class="c1"># 各計算時間に対するTTSを格納しておくリスト</span>
+<span class="n">TTS_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">tau_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 計算時間を格納しておくリスト</span>
+
+<span class="n">iteration</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># 確率を計算するために1回のアニーリングを行う回数</span>
+
+<span class="k">for</span> <span class="n">step_num</span> <span class="ow">in</span> <span class="n">step_num_list</span><span class="p">:</span>
+    <span class="c1"># beta_max と　beta_min はSAのアルゴリズムで使うパラメータ.</span>
+    <span class="c1"># 確率p_sを計算するために500回計算する</span>
+    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">beta_max</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">beta_min</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">step_num</span><span class="o">=</span><span class="n">step_num</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="n">iteration</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+    <span class="c1"># 返ってきた解であっている状態の数を数えて最適解を得た確率を計算する。</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">correct_state</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">])</span><span class="o">/</span><span class="n">iteration</span>
+
+    <span class="c1"># ps=0だとTTSが無限大になってしまうのでそこは回避</span>
+    <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="c1"># TTSを計算する</span>
+    <span class="n">TTS_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pR</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">tau_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">TTS_list</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Text(0, 0.5, &#39;TTS&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_2-Evaluation_11_1.png" src="../_images/ja_2-Evaluation_11_1.png" />
+</div>
+</div>
+<p>1回あたりの計算時間がブレてしまいますが、とりあえず計算することができました。 ちなみにOpenJijにはデフォルトでTTS, 残留エネルギー, エラー確率を評価してくれる関数が付いています。</p>
+<p><code class="docutils literal notranslate"><span class="pre">openjij.benchmark</span></code> です。</p>
+</div>
+<div class="section" id="benchmark-関数">
+<h2>benchmark 関数<a class="headerlink" href="#benchmark-関数" title="Permalink to this headline">¶</a></h2>
+<p>benchmark 関数では TTSと残留エネルギー、エラー確率を計算してくれます。</p>
+<p>引数は以下です</p>
+<ul class="simple">
+<li><p>true_ground_states: list(list: state)
+基底状態となる状態のリストです。 縮退している場合は[state1, state2]のようにして複数入れます。</p></li>
+<li><p>ground_energy: float
+基底状態のエネルギーを入力します。</p></li>
+<li><p>solver: function
+Response クラスを返す関数です。関数は time_param と iteration という引数を持つ必要があります。 time_param は計算時間を制御するパラメータにしてください。SASamplerの場合は step_num に相当します。 iteration は TTSや残留エネルギーなどを計算するときに必要なサンプリング回数を指定します。 また 関数の戻り値のResponse.info には、<code class="docutils literal notranslate"><span class="pre">time_name</span></code>という引数で指定する文字列をキーワードで持ち、<code class="docutils literal notranslate"><span class="pre">time_name</span></code>に紐づく値は1回あたりの計算時間が格納されている必要があります。</p></li>
+<li><p>time_param_list: list
+solver の time_param 引数に入れる値のリストです。</p></li>
+<li><p>p_d: 0 &lt; float &lt;= 1
+TTSを計算するために必要な値です。上記のTTSの説明のp_R に相当します。</p></li>
+<li><p>iteration: int
+TTSなどで平均値を計算するためのサンプリング数</p></li>
+<li><p>time_name: str
+Response.info に入っている実行時間と紐づくキーを指定します。デフォルトは<code class="docutils literal notranslate"><span class="pre">&quot;execution_time&quot;</span></code>です。</p></li>
+</ul>
+<p>返り値はbenchmark計算の結果が辞書型で格納されています。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">benchmark</span><span class="p">(</span>
+                      <span class="n">true_ground_states</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">ground_energy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                      <span class="n">solver</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">step_num</span><span class="o">=</span><span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="n">iteration</span><span class="p">)</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">J</span><span class="p">),</span>
+                      <span class="n">time_param_list</span><span class="o">=</span><span class="n">step_num_list</span><span class="p">,</span>
+                      <span class="n">p_d</span><span class="o">=</span><span class="mf">0.99</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;e_res&#39;</span><span class="p">])</span>
+<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_2-Evaluation_14_0.png" src="../_images/ja_2-Evaluation_14_0.png" />
+</div>
+</div>
+<p>このようにして簡単にベンチマークをとることができます。solver に入れる関数は Responseクラスを返して、.info に計算時間を格納しておけばどのような関数でもよいです。適当なやつを作ってみましょう。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="k">def</span> <span class="nf">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    すべて 1 と [1,-1,1,...] と [-1,1,-1,...] の3つの状態からランダムに選ぶ</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># 入力された h と J から添字の集合をつくる</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span> <span class="o">|</span> <span class="nb">set</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">J</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]))</span>
+
+    <span class="n">ones_state</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>        <span class="c1"># all 1</span>
+
+    <span class="n">minus_plus_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">minus_plus_state</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>                                         <span class="c1"># -1, 1, -1, 1, ...</span>
+    <span class="n">plus_minus_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">minus_plus_state</span>                   <span class="c1"># 1, -1, 1, -1</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">ones_state</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">minus_plus_state</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">plus_minus_state</span><span class="p">)]</span>
+    <span class="n">state_record</span> <span class="o">=</span> <span class="p">[</span><span class="n">_states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration</span><span class="p">)]</span>   <span class="c1"># 3つの状態からランダムにひとつ選ぶ</span>
+    <span class="n">exec_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">time_param</span>                                <span class="c1"># 適当に計算時間を伸ばしておきます</span>
+
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">state_record</span><span class="p">]</span>                                     <span class="c1"># エネルギーの計算はてきとうです</span>
+
+
+    <span class="c1"># Responseクラスに状態とエネルギーを格納します</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">var_type</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">update_ising_states_energies</span><span class="p">(</span><span class="n">state_record</span><span class="p">,</span> <span class="n">energies</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_time</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">benchmark</span><span class="p">(</span>
+                      <span class="n">true_ground_states</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">ground_energy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                      <span class="n">solver</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="n">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">),</span>
+                      <span class="n">time_param_list</span><span class="o">=</span><span class="n">step_num_list</span><span class="p">,</span>
+                      <span class="n">iteration</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                      <span class="n">p_d</span><span class="o">=</span><span class="mf">0.99</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;e_res&#39;</span><span class="p">])</span>
+<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Error probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_2-Evaluation_18_0.png" src="../_images/ja_2-Evaluation_18_0.png" />
+</div>
+</div>
+<p>3つからランダムにひとつ選んで1つ正解の状態を選んでいるのでエラー確率は大体2/3くらいなので左図も大体それくらいになっています。</p>
+<p>このようにうまくsolver関数を作っておけばOpenJijのソルバーに限らず TTSと残留エネルギーとエラー確率を計算してくれます。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="1-Introduction.html" title="1-OpenJij 入門"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, OpenJij.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>

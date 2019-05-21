@@ -4,9 +4,10 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Annealing cloud\n",
+    "# 3-コラム-Annealing Cloud Web (NEDOのCMOS-Annealer)\n",
     "\n",
-    "ここでは 日立 の作った「CMOSアニーリングマシン」をWeb APIで提供している NEDO の [Annealing Cloud Web](https://annealing-cloud.com) へ OpenJijを通して接続して CMOS アニーラを使ってみる。\n",
+    "ここでは 日立 の作った「CMOSアニーリングマシン」をWeb APIで提供している NEDO の [Annealing Cloud Web](https://annealing-cloud.com) へ OpenJijを通して接続して CMOS アニーラを使ってみます。\n",
+    "\n",
     "\n",
     "> OpenJijによるサポートは接続先のAnnealing Cloud Web自体の永続性を保証するものではなく、予告なくサービス終了や内容の変更が生じる可能性があります。\n",
     "> このノートブックは 2019/4/26 に作成されました。  \n",
@@ -17,25 +18,45 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Annealing Cloud Web については[ここ](https://annealing-cloud.com)を見て欲しい。  \n",
-    "OpenJijではAnnealing Cloud Web の公開している Web API をラップし、OpenJijの他のサンプラー(SASamplerやSQASampler)と同じインターフェースで提供している。  \n",
+    "Annealing Cloud Web については[ここ](https://annealing-cloud.com)を見てください。  \n",
+    "OpenJijではAnnealing Cloud Web の公開している Web API をラップし、OpenJijの他のサンプラー(SASamplerやSQASampler)と同じインターフェースで提供しています。  \n",
     "\n",
     "### token 取得\n",
-    "Annealing cloud web を使うには tokenを発行する必要がある。\n",
-    "https://annealing-cloud.com/web-api/token-request.html ここから問い合わせれば取得できる。　\n",
+    "Annealing cloud web を使うには tokenを発行する必要があります。\n",
+    "https://annealing-cloud.com/web-api/token-request.html ここから問い合わせれば取得できます。　\n",
     "\n",
     "### OpenJij でアクセスする\n",
     "\n",
-    "では早速にコード例を示す。"
+    "では早速にコード例を示します。\n",
+    "\n",
+    "まずopenjij をインストールしておきましょう"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 1,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Name: openjij\r\n",
+      "Version: 0.0.5\r\n",
+      "Summary: Framework for ising model and QUBO\r\n",
+      "Home-page: https://openjij.github.io/OpenJij/\r\n",
+      "Author: Jij Inc.\r\n",
+      "Author-email: openjij@j-ij.com\r\n",
+      "License: Apache License 2.0\r\n",
+      "Location: /usr/local/miniconda3/lib/python3.6/site-packages\r\n",
+      "Requires: requests, numpy\r\n",
+      "Required-by: \r\n"
+     ]
+    }
+   ],
    "source": [
-    "# !pip install openjij"
+    "# !pip install openjij\n",
+    "!pip show openjij  # openjij == 0.0.5 を仮定します"
    ]
   },
   {
@@ -45,6 +66,13 @@
    "outputs": [],
    "source": [
     "import openjij as oj"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "以下のように``SASampler`` などを使う時と同じく CMOSAnnealer というコンストラクタで インスタンスを生成して sample_ising で解をサンプリングできます。ここでtoken には Annealing cloud web で取得した token を使ってください。"
    ]
   },
   {
@@ -79,10 +107,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "またAnnealing Cloud Web では ASIC実装とFPGA実装を提供している。それらはCMOSAnnealerコンストラクタで指定する。\n",
-    "デフォルトはASIC。\n",
+    "またAnnealing Cloud Web では ASIC実装とFPGA実装を提供しています。     \n",
+    "それらはCMOSAnnealerコンストラクタの引数の``machine_type``で指定します。\n",
+    "デフォルトはASICです。\n",
     "\n",
-    "FPGAとASICで扱えるパラメータ(問題サイズや相互作用の大きさの範囲)が違うことに注意(詳細 : https://annealing-cloud.com/web-api/reference/v2.html)"
+    "FPGAとASICで扱えるパラメータ(問題サイズや相互作用の大きさの範囲)が違うことに注意してください。(詳細 : https://annealing-cloud.com/web-api/reference/v2.html)"
    ]
   },
   {
@@ -122,7 +151,7 @@
     "\n",
     "### 他のSamplerと同じ 辞書型で渡す\n",
     "\n",
-    "上記のようにイジングの h と J を辞書型で渡すことができる。添字はCMOSアニーリングマシンの持つキンググラフ([こちらを参照](https://annealing-cloud.com/play/ising-editor.html))の2次元格子(x, y)を左上から横に順番に番号をつけていった1次元添字(index)に対応させる。\n",
+    "上記のようにイジングの h と J を辞書型で渡すことができます。添字はCMOSアニーリングマシンの持つキンググラフ([こちらを参照](https://annealing-cloud.com/play/ising-editor.html))の2次元格子(x, y)を左上から横に順番に番号をつけていった1次元添字(index)に対応させてください。\n",
     "\n",
     "- 2次元格子(キンググラフ上の座標) \n",
     "    - x軸 : 0 -> Lx\n",
@@ -130,7 +159,7 @@
     "- 1次元の添字\n",
     "    - index = x + Ly * y\n",
     "    \n",
-    "例えば FPGA 実装であれば 2次元格子のx軸方向の範囲は 0-79 なので、{(0, 80): -1} という相互作用を渡せば、0番目のスピンとキンググラフ上で真下のスピンに -1 の結合ができる。"
+    "例えば FPGA 実装であれば 2次元格子のx軸方向の範囲は 0-79 なので、{(0, 80): -1} という相互作用を渡せば、0番目のスピンとキンググラフ上で真下のスピンに -1 の結合ができます。"
    ]
   },
   {
@@ -159,7 +188,10 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "> ASIC 上ではx軸方向の大きさが違うので (0, 80) の組み合わせは同じ行のスピンをしてしていることになり、キンググラフ上でつながっていないのでエラーになる。"
+    "\n",
+    "ASIC 上ではx軸方向の大きさが違うので (0, 80) の組み合わせは同じ行のスピンをしてしていることになり、キンググラフ上でつながっていないのでエラーになります。\n",
+    "\n",
+    "以下のコードは繋がっていない変数同士を相互作用させようとしているので ValueError です。"
    ]
   },
   {
@@ -193,9 +225,9 @@
    "source": [
     "### キンググラフ上の2次元座標で相互作用を渡す\n",
     "\n",
-    "また入力はAnnealing Cloud Web の入力フォーマットでも行える。その際はking_graph という引数に渡す。\n",
+    "また入力はAnnealing Cloud Web の入力フォーマットでも行えます。その際は king_graph という引数に渡してください。\n",
     "\n",
-    "Annealing Cloud Webの入力フォーマットは２次元格子の座標を指定する。\n",
+    "Annealing Cloud Webの入力フォーマットは２次元格子の座標を指定します。\n",
     "\n",
     "- Linear term : [x1, y1, x1, y1, value]\n",
     "- Quadratic term : [x1, y1, x2, y2, value]"
@@ -240,7 +272,7 @@
    "source": [
     "### QUBOを解く\n",
     "\n",
-    "実用的には 0, 1 変数で解きたいことが多い。その時は sample_qubo を使えば良い。"
+    "実用的には 0, 1 変数で解きたいことが多いです。その時は他のSamplerと同じく sample_qubo を使えば良いです。"
    ]
   },
   {
@@ -264,13 +296,6 @@
     "response = cmos_fpga.sample_qubo(Q={(0, 80):-4})\n",
     "[{index: s for index, s in zip(response.indices, state)} for state in response.states]"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
