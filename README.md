@@ -1,8 +1,10 @@
 # OpenJij Tutorial Notebooks
 
+This is a tutorial on quantum annealing with [OpenJij](https://github.com/OpenJij/OpenJij).
 
-[OpenJij](https://github.com/OpenJij/OpenJij)を使って量子アニーリングなどのアニーリングアルゴリズムについて学ぶためのチュートリアルです。
+You can learn how to use "OpenJij," how to use D-Wave Leap, how to use annealing algorithms, and how to evaluate.
 
-OpenJijの使い方から、無料で使えるD-Wave Leapの使い方、アニーリングアルゴリズムの実装例、評価の仕方など、研究・実証実験を実際に行えるまでのチュートリアルを作成していきます。
 
-またたまに挟むノートブックで量子アニーリングの理論的なトピックについても扱う予定です。
+## Comments
+
+This project is still in progress. We welcome those who contribute to help to make notebooks in English or Japanese.
