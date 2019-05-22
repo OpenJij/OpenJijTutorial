@@ -283,6 +283,7 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="2-アニーリングアルゴリズムの評価">
 <h1>2-アニーリングアルゴリズムの評価<a class="headerlink" href="#2-アニーリングアルゴリズムの評価" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/ja/2-Evaluation.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
 <div class="line">アニーリングアルゴリズムはヒューリスティクスの一つなので毎回最適解を出せるとは限りません。近似解を出すためのアルゴリズムです。 また、確率的アルゴリズムなので毎回解が異なります。</div>
 <div class="line">そのためアルゴリズムの評価をする際は様々な平均値を持って解を評価します。よく用いられる手法が</div>
@@ -329,8 +330,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="ch">#!pip install openjijj</span>
-<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.5 を仮定します
+<span></span><span class="c1"># !pip install openjij</span>
+<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.6 を仮定します
 </pre></div>
 </div>
 </div>
@@ -340,8 +341,8 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Name: openjij
-Version: 0.0.5
-Summary: Framework for ising model and QUBO
+Version: 0.0.6
+Summary: Framework for the Ising model and QUBO
 Home-page: https://openjij.github.io/OpenJij/
 Author: Jij Inc.
 Author-email: openjij@j-ij.com

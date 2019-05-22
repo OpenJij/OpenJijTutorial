@@ -15,4 +15,4 @@ OpenJij のチュートリアルへようこそ。
 このプロジェクトはまだ進行中です。もし手伝っていただける方がいればぜひ参加をお願いします。  
 コミュニティにご参加いただければ、このプロジェクトに参加もしくはわからないところなどを質問することができます。
 
-Discord : https://discord.gg/TP6Q9cH
+- [OpenJij Slack](https://join.slack.com/t/openjij/shared_invite/enQtNjQyMjIwMzMwNzA4LWU4ODM5ODNjZmIyMzViOTZjODAyM2NmNmM3NTcwYmE2NGFkZGFkOGE3ZWVjMTNkOWZhOTVjMGE4NDI4YjlkMzc)
