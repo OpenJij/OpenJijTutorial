@@ -1,0 +1,1012 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>4-D-Wave Ocean SDK 入門 &#8212; OpenJij Tutorial  documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="3-plus-Annealing Cloud Web (NEDOのCMOS-Annealer)" href="3-plus-CMOSAnnealer.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="3-plus-CMOSAnnealer.html" title="3-plus-Annealing Cloud Web (NEDOのCMOS-Annealer)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4-D-Wave Ocean SDK 入門</a><ul>
+<li><a class="reference internal" href="#定式化">定式化</a><ul>
+<li><a class="reference internal" href="#QUBOとイジングモデル">QUBOとイジングモデル</a></li>
+<li><a class="reference internal" href="#数分割問題">数分割問題</a><ul>
+<li><a class="reference internal" href="#QUBO">QUBO</a></li>
+<li><a class="reference internal" href="#イジングモデル">イジングモデル</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#D-Waveマシンによる最適化">D-Waveマシンによる最適化</a><ul>
+<li><a class="reference internal" href="#イジングモデルを解く">イジングモデルを解く</a></li>
+<li><a class="reference internal" href="#読み取り回数を変えてみる">読み取り回数を変えてみる</a></li>
+<li><a class="reference internal" href="#アニーリングタイムを変えてみる">アニーリングタイムを変えてみる</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#まとめ">まとめ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3-plus-CMOSAnnealer.html"
+                        title="previous chapter">3-plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/4-DWaveOceanSDK.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="4-D-Wave-Ocean-SDK-入門">
+<h1>4-D-Wave Ocean SDK 入門<a class="headerlink" href="#4-D-Wave-Ocean-SDK-入門" title="Permalink to this headline">¶</a></h1>
+<p>D-Wave Ocean SDK(以下、Ocean) は、D-Waveマシンを使用するソフトウェアがまとまっている開発キットです。Pythonから各種機能を簡単に利用することができます。</p>
+<div class="line-block">
+<div class="line">Github: <a class="reference external" href="https://github.com/dwavesystems/dwave-ocean-sdk">https://github.com/dwavesystems/dwave-ocean-sdk</a></div>
+<div class="line">Document: <a class="reference external" href="https://docs.ocean.dwavesys.com/en/latest/">https://docs.ocean.dwavesys.com/en/latest/</a></div>
+</div>
+<p>インストールするには上にある通り、pipを使用するかgithubのリポジトリをクローンします。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install dwave-ocean-sdk
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
+<span class="o">!</span><span class="nb">cd</span> dwave-ocean-sdk
+<span class="o">!</span>python setup.py install
+</pre></div>
+</div>
+</div>
+<p>以降では、数分割問題を通して以下の内容について説明していきます。</p>
+<ul class="simple">
+<li><p>QUBOまたはイジングモデルの作り方</p></li>
+<li><p>Oceanの使い方</p></li>
+<li><p>アニーリングパラメータを変えた場合の最適化</p></li>
+</ul>
+<div class="section" id="定式化">
+<h2>定式化<a class="headerlink" href="#定式化" title="Permalink to this headline">¶</a></h2>
+<p>D-Waveマシンに投げることができる形式は、イジングモデルとQUBOがあります。ここで詳細には触れず、Oceanを使用する上で最低限必要なことを説明します。</p>
+<div class="section" id="QUBOとイジングモデル">
+<h3>QUBOとイジングモデル<a class="headerlink" href="#QUBOとイジングモデル" title="Permalink to this headline">¶</a></h3>
+<p>QUBOの場合、2値変数<span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
+<div class="line-block">
+<div class="line">QUBOを解く際には、上の式の<span class="math notranslate nohighlight">\(Q_{i i}\)</span>と<span class="math notranslate nohighlight">\(Q_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</div>
+<div class="line">イジングモデルの場合、2値変数<span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>に対して、以下のハミルトニアンを考えます。</div>
+</div>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
+<div class="line-block">
+<div class="line">イジングモデルを解く際には、上の式の<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。 QUBOとイジングモデルは、<span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>という変換式によって相互変換が可能です。</div>
+<div class="line">この点において、どちらで定式化しても問題はないので、対象の問題から考えやすい方を選びましょう。 ただし、同じ問題の2種類の形式に対して、D-Waveマシンの振る舞いが異なる場合があります。</div>
+</div>
+</div>
+<div class="section" id="数分割問題">
+<h3>数分割問題<a class="headerlink" href="#数分割問題" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">与えられた整数の集合を、2つのグループに分けることを考えます。各グループの総和が同じになるように分ける問題を、数分割問題といいます。</div>
+<div class="line">例として、以下の整数の集合<span class="math notranslate nohighlight">\(C\)</span>を2つのグループに分けることを考えます。</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 整数の集合</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">この場合、それぞれの総和の差がゼロになる最適解は23通り存在します (エネルギーが同じで解が違う状態があることを「縮退している」といいます)。</div>
+<div class="line">例えば、<span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span>(総和は27)があります。</div>
+</div>
+<div class="section" id="QUBO">
+<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
+<p>数分割問題を最小化問題として考えると、2つのグループの総和の差を最小にすることを目指します。</p>
+<p style="text-align: center"><p>グループAに属する数字の総和 - グループBに属する数字の総和 = 0</p>
+</p><p>そこで、2値変数<span class="math notranslate nohighlight">\(q_{i}\)</span>を用意し、ある数字がグループAに属する場合<span class="math notranslate nohighlight">\(q_{i} = 0\)</span>、グループBに属する場合<span class="math notranslate nohighlight">\(q_{i} = 1\)</span>とします。グループAに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}q_{i}\)</span>、グループBに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}(1 - q_{i})\)</span>と表されるので、先ほどの式は</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)=0\]</div>
+<p>となります。このような等式制約を素直に表現する場合、罰金法を用いることが多いです。</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">(罰金法) 最小化したいコスト関数を<span class="math notranslate nohighlight">\(f(x)\)</span>、制約条件を<span class="math notranslate nohighlight">\(g(x) = 0\)</span>とすると、罰金係数<span class="math notranslate nohighlight">\(\lambda\)</span>を用いて以下の項を追加する</div>
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\min_{x} \left\{ f(x) + \lambda g(x)^2\right\}\]</div>
+</div></blockquote>
+</div></blockquote>
+<p>したがって、数分割問題に対するQUBOは以下のようになります。</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right)=\left(\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)\right)^{2}\]</div>
+<p>D-Waveマシンに問題を投げるために<span class="math notranslate nohighlight">\(Q_{i j}\)</span>の値を求めたいので、<span class="math notranslate nohighlight">\(H\left(\left\{\sigma_{i}\right\}\right)\)</span>を展開していきます。</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right)=\left(2\sum_{i=1}^{N} c_{i} q_{i} - \sum_{i=1}^{N} c_{i} \right)^{2} =4 \sum_{i=1}^{N} c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right) q_{i}+8 \sum_{i=1}^{N} \sum_{j=i+1}^{N} c_{i} c_{j} q_{i} q_{j}+\left(\sum_{i=1}^{N} c_{i}\right)^{2}\]</div>
+<p>よって、</p>
+<div class="math notranslate nohighlight">
+\[Q_{i i} = 4 c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right)\]</div>
+<div class="math notranslate nohighlight">
+\[Q_{i j} = 8 c_{i} c_{j}\]</div>
+<p>となります。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>QUBOを可視化すると以下のようになります。対角成分が<span class="math notranslate nohighlight">\(Q_{i i}\)</span>、非対角成分が<span class="math notranslate nohighlight">\(Q_{i j}\)</span>です。可視化することで、結合の度合いや係数比など対象の問題を理解しやすくなります。数分割問題については定式化の時点で明らかですが、全ての量子ビット間に相互作用が存在する、全結合の問題である事が分かります。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">GnBu</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">n_qubo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">np_qubo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_qubo</span><span class="p">,</span> <span class="n">n_qubo</span><span class="p">))</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">),</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">qubo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">np_qubo</span><span class="p">[</span><span class="n">pos_x</span><span class="p">][</span><span class="n">pos_y</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np_qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_4-DWaveOceanSDK_14_0.png" src="../_images/ja_4-DWaveOceanSDK_14_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="イジングモデル">
+<h4>イジングモデル<a class="headerlink" href="#イジングモデル" title="Permalink to this headline">¶</a></h4>
+<p>数分割問題をイジングモデルで表すと、以下のような式で簡潔に表されます。</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right) = \left(\sum_{i} c_{i} \sigma_{i}\right)^2\]</div>
+<p>同様に、D-Waveマシンに問題を投げるためには<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>の値が必要です。<span class="math notranslate nohighlight">\(\sigma_{i}^2 = 1\)</span>であることに注意して、<span class="math notranslate nohighlight">\(H\left(\left{\sigma_{i}\right\}\right)\)</span>を展開していきます。</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right) = \sum_{i} c_{i}^2 \sigma_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j} = \sum_{i} c_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j}\]</div>
+<p>よって、</p>
+<div class="math notranslate nohighlight">
+\[h_{i} = 0\]</div>
+<div class="math notranslate nohighlight">
+\[J_{i j} = 2 c_{i} c_{j}\]</div>
+<p>となります。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">J</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>ちなみに、Oceanの基本的なライブラリであるdimodを用いることで、イジングモデルとQUBOの相互変換が可能です。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">dimod</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># イジングモデルからQUBOへの変換</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">dimod</span><span class="o">.</span><span class="n">SPIN</span><span class="p">)</span>
+<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_4-DWaveOceanSDK_20_0.png" src="../_images/ja_4-DWaveOceanSDK_20_0.png" />
+</div>
+</div>
+<div class="line-block">
+<div class="line">ここまで、<span class="math notranslate nohighlight">\(Q_{i i}, Q_{i j}\)</span>や<span class="math notranslate nohighlight">\(h_{i}, J_{i j}\)</span>といった係数行列を求めるために、構成したコスト関数を展開しました。しかし、より複雑なコスト関数を扱う場合、この手計算を人間が行うのは煩わしく、計算ミスが生じる可能性があります。</div>
+<div class="line">そこで、(株)リクルートコミュニケーションズが開発しているドメイン固有言語 PyQUBO を使用することで、コスト関数を展開することなくQUBOやイジングモデルを作成する事ができます。PyQUBOの使い方については、別のチュートリアルを公開しています。</div>
+</div>
+<div class="line-block">
+<div class="line">Github: <a class="reference external" href="https://github.com/recruit-communications/pyqubo">https://github.com/recruit-communications/pyqubo</a></div>
+<div class="line">Document: <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/">https://pyqubo.readthedocs.io/en/latest/</a></div>
+</div>
+<div class="line-block">
+<div class="line">OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></div>
+<div class="line">Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="D-Waveマシンによる最適化">
+<h2>D-Waveマシンによる最適化<a class="headerlink" href="#D-Waveマシンによる最適化" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">上記の数分割問題について、D-Waveマシンを用いて最適化を行います。ここでは、(1)単純に解く場合、(2)読み取り回数を変えた場合、</div>
+<div class="line">(3)アニーリングタイムを変えた場合を見ていきます。</div>
+</div>
+<div class="section" id="イジングモデルを解く">
+<h3>イジングモデルを解く<a class="headerlink" href="#イジングモデルを解く" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">D-WaveマシンのサンプラーはDWaveSampler()を使用し、さらに問題をD-Waveマシンのグラフに埋め込む場合は</div>
+<div class="line">EmbeddingComposite()を使用します。</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="k">import</span> <span class="n">DWaveSampler</span>
+<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="k">import</span> <span class="n">EmbeddingComposite</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># ローカルに接続情報を設定している場合</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">DWaveSampler</span><span class="p">())</span>
+
+<span class="c1"># 接続情報をオプションとして渡す場合</span>
+<span class="c1"># endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;</span>
+<span class="c1"># token = &#39;XXXXXXXXXXXXXX&#39;</span>
+<span class="c1"># solver = &#39;DW_2000Q_2_1&#39;</span>
+<span class="c1"># sampler = EmbeddingComposite(DWaveSampler(endpoint=endpoint, token=token, solver=solver))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># イジングモデルの場合</span>
+<span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># QUBOの場合</span>
+<span class="c1"># response[&#39;default&#39;] = sampler.sample_qubo(Q, num_reads=100)</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">ひとまず、得られた結果を確認してみましょう。解はリストとして samples_matrix に格納されています。</div>
+<div class="line">このリストの大きさは、(得られた解の個数) <span class="math notranslate nohighlight">\(\times\)</span> (量子ビット数) となっています。</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(87, 10)
+</pre></div>
+</div>
+</div>
+<p>上の通り、87個の解が得られました。この中に、最適解がどのくらい含まれているか見てみましょう。ここでは最適解かどうかを判別するために、それぞれの解のエネルギー値を求めます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;BINARY&#39;</span><span class="p">:</span>
+        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># offset</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+                <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;SPIN&#39;</span><span class="p">:</span>
+        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+                <span class="n">ene</span> <span class="o">+=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ene</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
+    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
+    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
+        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+5
+</pre></div></div>
+</div>
+<p>最適解が重複を含めて5個得られました。2つのグループは以下のようになっています。全く同じ解もあれば、異なる分け方があったりと、解がいくつか得られたことが分かります。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gs_indices</span><span class="p">:</span>
+    <span class="n">optimal_solution</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">group_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">optimal_solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">group_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">optimal_solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">optimal_solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group A:&#39;</span><span class="p">,</span> <span class="n">group_A</span><span class="p">,</span> <span class="s1">&#39;, Sum =&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_A</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group B:&#39;</span><span class="p">,</span> <span class="n">group_B</span><span class="p">,</span> <span class="s1">&#39;, Sum =&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_B</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+39 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A: [2, 8, 5, 7, 5] , Sum = 27
+Group B: [10, 3, 9, 3, 2] , Sum = 27
+41 [-1  1  1 -1 -1 -1  1 -1  1  1]
+Group A: [10, 3, 9, 3, 2] , Sum = 27
+Group B: [2, 8, 5, 7, 5] , Sum = 27
+50 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A: [2, 8, 5, 7, 5] , Sum = 27
+Group B: [10, 3, 9, 3, 2] , Sum = 27
+57 [-1 -1  1 -1  1 -1  1  1  1  1]
+Group A: [3, 5, 9, 5, 3, 2] , Sum = 27
+Group B: [2, 10, 8, 7] , Sum = 27
+84 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A: [2, 8, 5, 7, 5] , Sum = 27
+Group B: [10, 3, 9, 3, 2] , Sum = 27
+</pre></div></div>
+</div>
+<div class="line-block">
+<div class="line">2つのグループの総和がいずれも等しい、最適解を得ることができました。</div>
+<div class="line">また、D-Waveマシンから返される結果には、解以外にも様々な情報が含まれています (document: <a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html#dimod.SampleSet">SampleSet</a>)。</div>
+</div>
+<p><strong>data_vectors</strong> - energy: 埋め込んだD-Waveマシンのグラフにおけるエネルギー値 - num_occurrences: 解の出現頻度 - chain_break_fraction: D-Waveマシンのグラフにおいて壊れたチェーンの割合</p>
+<div class="line-block">
+<div class="line"><strong>info</strong></div>
+<div class="line">実行時のQPU(Quantum Processing Unit)に関する情報</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_vectors</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;energy&#39;: array([-114., -174., -270., -270., -270., -114., -270., -270., -114.,
+        -270., -270., -270., -270., -306., -334., -270., -306., -270.,
+          30.,  786.,   30., 1230., -354., -114., -114., -334., -226.,
+        -306.,  530., -334.,   30., -354., -354.,   30.,  306., -114.,
+        -226., -226., -114., -370., -366., -370., -354., -354., -354.,
+        -334.,   30., -270., -114., -114., -370., -114.,  306.,  114.,
+          30.,  306., -174., -370., -226., -366., -270., -366., -334.,
+        -114.,  530., -114.,   30., -334.,  -46., -354.,   30., -114.,
+        -354., -270.,  -46., -114., -270., -354., -366.,  114., -270.,
+        -226., -354., -114., -370., -270., -366.]),
+ &#39;num_occurrences&#39;: array([2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1,
+        1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
+ &#39;chain_break_fraction&#39;: array([0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 0.9, 0.9, 1. ,
+        0.9, 0.9, 0.8, 0.9, 0.8, 1. , 1. , 1. , 1. , 0.9, 0.9, 0.9, 1. ,
+        0.9, 1. , 0.9, 0.9, 1. , 0.9, 1. , 1. , 0.9, 1. , 1. , 1. , 1. ,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.9, 0.7, 0.7, 0.7, 0.7, 0.8, 1. , 1. ,
+        0.8, 0.8, 1. , 0.9, 0.8, 1. , 0.9, 0.8, 0.9, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.9, 0.9, 0.8, 0.9, 1. , 0.9, 1. , 1. , 1. , 1. , 1. , 0.9,
+        1. , 0.9, 0.9, 1. , 0.8, 0.8, 1. , 0.8, 0.9])}
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;timing&#39;: {&#39;total_real_time&#39;: 24029,
+  &#39;qpu_access_overhead_time&#39;: 2490,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;post_processing_overhead_time&#39;: 981,
+  &#39;qpu_sampling_time&#39;: 16396,
+  &#39;readout_time_per_run&#39;: 123,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;total_post_processing_time&#39;: 981,
+  &#39;qpu_programming_time&#39;: 7633,
+  &#39;run_time_chip&#39;: 16396,
+  &#39;qpu_access_time&#39;: 24029,
+  &#39;qpu_readout_time_per_sample&#39;: 123}}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="読み取り回数を変えてみる">
+<h3>読み取り回数を変えてみる<a class="headerlink" href="#読み取り回数を変えてみる" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">次に、読み取り回数を変えた場合に得られる解がどのように変わるかを見てみましょう。</div>
+<div class="line">sample_ising()、またはsample_qubo()のnum_readsに値を設定することで、読み取り回数を指定できます。</div>
+<div class="line">num_readsのデフォルト値は1で、先ほどは100回で実行しました。今度は、1000回で行なってみましょう。</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># イジングモデルの場合</span>
+<span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># QUBOの場合</span>
+<span class="c1"># response[&#39;num_reads&#39;] = sampler.sample_qubo(Q, num_reads=1000)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(675, 10)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
+    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
+    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
+        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>44
+</pre></div>
+</div>
+</div>
+<p>単純ですが読み取り回数を増やすことで、得られた最適解の個数が増加しました。一方で、アニーリングタイム(1回のアニーリングに要する時間)が 20<span class="math notranslate nohighlight">\(\mu s\)</span> (デフォルト値)と短く、読み取り回数を増加させても実時間ではそれほど差はありません。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;timing&#39;: {&#39;total_real_time&#39;: 171559,
+  &#39;qpu_access_overhead_time&#39;: 1277,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;post_processing_overhead_time&#39;: 691,
+  &#39;qpu_sampling_time&#39;: 163960,
+  &#39;readout_time_per_run&#39;: 123,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;total_post_processing_time&#39;: 691,
+  &#39;qpu_programming_time&#39;: 7599,
+  &#39;run_time_chip&#39;: 163960,
+  &#39;qpu_access_time&#39;: 171559,
+  &#39;qpu_readout_time_per_sample&#39;: 123}}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="アニーリングタイムを変えてみる">
+<h3>アニーリングタイムを変えてみる<a class="headerlink" href="#アニーリングタイムを変えてみる" title="Permalink to this headline">¶</a></h3>
+<p>最後に、アニーリングタイムを変えた場合に得られる解がどのように変わるかを見てみましょう。 sample_ising()、またはsample_qubo()のannealing_timeに値を設定することで、アニーリングタイムを指定できます。 先ほどは、デフォルト値の 20<span class="math notranslate nohighlight">\(\mu s\)</span> で実行しました。今度は、100<span class="math notranslate nohighlight">\(\mu s\)</span> でアニーリングを行なってみましょう。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># イジングモデルの場合</span>
+<span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">annealing_time</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># QUBOの場合</span>
+<span class="c1"># response[&#39;annealing_time&#39;] = sampler.sample_qubo(Q, num_reads=100, annealing_time=100)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>(97, 10)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
+    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
+    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
+        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>3
+</pre></div>
+</div>
+</div>
+<p>アニーリングタイムを変えたことで、得られた解に何か違いがないか調べてみます。ここでは、解のエネルギーのヒストグラムを見てみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;20μs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;50μs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_4-DWaveOceanSDK_51_0.png" src="../_images/ja_4-DWaveOceanSDK_51_0.png" />
+</div>
+</div>
+<div class="line-block">
+<div class="line">上のヒストグラムから、アニーリングタイムを増加させたことで得られた最適解の個数は減少しましたが、低いエネルギーの解を多く見つけていることが分かります。ただし、アニーリングタイムを大きくすればいいという単純な話ではありません。アニーリングタイムが小さい場合の方が最適化がうまくいくこともあり、それぞれの問題に依ります。</div>
+<div class="line">また、量子アニーリングをはじめとするアニーリング法はメタヒューリスティックスなアルゴリズムであるため、実行するたびに得られる結果は異なることも注意しなければなりません。</div>
+</div>
+</div>
+</div>
+<div class="section" id="まとめ">
+<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
+<p>数分割問題の最適化を通して、Oceanの使い方を紹介しました。このチュートリアルで説明したことを押さえるだけでも、様々なことができるようになります。例えば、以下のことを調べられるでしょう。 - 読み取り回数、アニーリングタイムに対する成功確率(最適解が得られる割合) - 読み取り回数、アニーリングタイムに対するエネルギー値 - 複数の最適解が存在する数分割問題に対して、得られる最適解の割合</p>
+<p>2019年4月現在、1ヶ月1分間無料でD-Waveマシンを利用することができます。ぜひ利用して、上の項目について実験してみてください。</p>
+<p>D-Wave Leap: <a class="reference external" href="https://cloud.dwavesys.com/leap/">https://cloud.dwavesys.com/leap/</a></p>
+<p>このチュートリアルでは触れることができませんでしたが、他にもアニーリングパラメータが存在します。例えば、アニーリングのスケジュールを指定することで、リバースアニーリングなど通常のアニーリングとは異なる手法を実行することができます。気になった方は、D-Waveのドキュメントを読んでみてください。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="3-plus-CMOSAnnealer.html" title="3-plus-Annealing Cloud Web (NEDOのCMOS-Annealer)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, OpenJij.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>
