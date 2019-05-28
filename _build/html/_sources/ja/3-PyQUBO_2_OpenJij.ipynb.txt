@@ -6,6 +6,8 @@
    "source": [
     "# 3-PyQUBO with OpenJij\n",
     "\n",
+    "\n",
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/ja/3-PyQUBO_2_OpenJij.ipynb)\n",
     "ここでは，PyQUBOによるコスト関数のQUBOへの変換方法とSimulated Annealing，OpenJijへの変数受け渡しなど についてクリーク被覆問題を例に紹介します。"
    ]
   },
