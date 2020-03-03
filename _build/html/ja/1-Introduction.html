@@ -7,12 +7,13 @@
     <title>1-OpenJij 入門 &#8212; OpenJij Tutorial  documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -70,15 +71,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -92,16 +93,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput,
-div.nbinput div.prompt,
-div.nbinput div.input_area,
-div.nbinput div[class*=highlight],
-div.nbinput div[class*=highlight] pre,
-div.nboutput,
-div.nbinput div.prompt,
-div.nbinput div.output_area,
-div.nboutput div[class*=highlight],
-div.nboutput div[class*=highlight] pre {
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -110,13 +111,13 @@ div.nboutput div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput div[class*=highlight] pre {
+div.nboutput.container div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput,
-div.nboutput {
+div.nbinput.container,
+div.nboutput.container {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -124,92 +125,91 @@ div.nboutput {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput,
-    div.nboutput {
+    div.nbinput.container,
+    div.nboutput.container {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput {
+div.nbinput.container {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast {
+div.nblast.container {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput div.prompt pre {
+div.nbinput.container div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput div.prompt pre {
+div.nboutput.container div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput div.prompt,
-div.nboutput div.prompt {
-    min-width: 7ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput div.prompt,
-    div.nboutput div.prompt {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput div.prompt.empty {
+    div.nboutput.container div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput div.prompt pre,
-div.nboutput div.prompt pre {
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput div.input_area,
-div.nboutput div.output_area {
-    padding: 0.4em;
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput div.input_area,
-    div.nboutput div.output_area {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput div.input_area {
+div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput div[class*=MathJax] {
+div.nboutput.container div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput div.math p {
+div.nboutput.container div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput div.output_area.stderr {
+div.nboutput.container div.output_area.stderr {
     background: #fdd;
 }
 
@@ -253,6 +253,27 @@ div.nboutput div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -292,11 +313,11 @@ div.rendered_html tbody tr:hover {
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/ja/1-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
 <div class="line">OpenJijは Isingモデル, QUBOのヒューリステック最適化ライブラリです。</div>
-<div class="line">最適化のコア部分はc++で実装されていますが、Pythonインターフェースを備えているため、Pythonで簡単に書くことができます。</div>
+<div class="line">最適化のコア部分はC++で実装されていますが、Pythonインターフェースを備えているため、Pythonで簡単に書くことができます。</div>
 </div>
-<p>pip でインストールしましょう。numpy が必要です。</p>
+<p>インストールにはpipを使用します。ただし、numpy を事前にインストールしておいてください。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -305,11 +326,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.8 を仮定します。
+<span></span><span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.11 を仮定します。
 </pre></div>
 </div>
 </div>
@@ -319,26 +340,26 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Name: openjij
-Version: 0.0.8
+Version: 0.0.11
 Summary: Framework for the Ising model and QUBO
 Home-page: https://openjij.github.io/OpenJij/
 Author: Jij Inc.
 Author-email: openjij@j-ij.com
 License: Apache License 2.0
-Location: /usr/local/miniconda3/envs/openjij3/lib/python3.7/site-packages/openjij-0.0.8-py3.7-macosx-10.7-x86_64.egg
-Requires: numpy, requests, debtcollector, dimod
+Location: /Users/shonakamura/.pyenv/versions/3.6.9/lib/python3.6/site-packages
+Requires: numpy, dimod, requests
 Required-by:
 </pre></div></div>
 </div>
 <div class="section" id="Ising-model">
 <h2>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this headline">¶</a></h2>
-<p>Ising model は物理で扱われるモデルで以下のように書かれます。</p>
+<p>Ising model は統計物理学で扱われるモデルで、以下のように書かれます。</p>
 <div class="math notranslate nohighlight">
 \[H(\{\sigma_i\}) = \sum_{i &gt; j} J_{ij}\sigma_i \sigma_j + \sum_{i=1}^N h_i \sigma_i\]</div>
 <div class="math notranslate nohighlight">
 \[\sigma_i \in \{-1, 1\}, i=1,\cdots N\]</div>
 <div class="line-block">
-<div class="line"><span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span>がハミルトニアンと呼ばれますが、エネルギーやコスト関数だと思ってください。</div>
+<div class="line">ここで<span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span>はハミルトニアンと呼ばれます。エネルギーやコスト関数だと考えてください。</div>
 <div class="line"><span class="math notranslate nohighlight">\(\sigma_i\)</span>は2値<span class="math notranslate nohighlight">\((1, -1)\)</span>を取る変数です。</div>
 </div>
 <blockquote>
@@ -349,9 +370,9 @@ Required-by:
 </div></blockquote>
 <div class="line-block">
 <div class="line"><span class="math notranslate nohighlight">\(H\)</span>は変数の組み合わせ<span class="math notranslate nohighlight">\(\{\sigma_i\} = \{\sigma_1, \sigma_2, \cdots, \sigma_N\}\)</span>に依存します。</div>
-<div class="line"><span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>が与えられる問題を表し、それぞれ、相互作用、縦磁場と呼ばれます。</div>
+<div class="line"><span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>が与えられる問題を表しています。それぞれ相互作用係数、縦磁場と呼ばれます。</div>
 </div>
-<p>OpenJijは<span class="math notranslate nohighlight">\(J_{ij} と h_i\)</span>が与えられたときに<span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span>を最小化するスピン変数の組み<span class="math notranslate nohighlight">\(\{\sigma_i\}\)</span>を探してくれるライブラリです。</p>
+<p>OpenJijは<span class="math notranslate nohighlight">\(J_{ij} と h_i\)</span>が与えられたときに<span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span>を最小化するスピン変数の組み<span class="math notranslate nohighlight">\(\{\sigma_i\}\)</span>を探してくれる数値計算ライブラリです。</p>
 <p>具体的な例を一つ見ましょう。</p>
 <div class="section" id="OpenJijに問題を投げてみる">
 <h3>OpenJijに問題を投げてみる<a class="headerlink" href="#OpenJijに問題を投げてみる" title="Permalink to this headline">¶</a></h3>
@@ -359,13 +380,12 @@ Required-by:
 <div class="math notranslate nohighlight">
 \[h_i = -1~\text{for} ~\forall i, ~ J_{ij} = -1~\text{for} ~\forall i, j\]</div>
 <div class="line-block">
-<div class="line">だとしましょう。この場合全ての相互作用がマイナスなので各スピン変数は同じ値をとった方がエネルギーは低くなります。</div>
-<div class="line">また縦磁場は全てマイナスです。この場合各スピンは1の値をとった方がエネルギーが低くなります。</div>
-<div class="line">よってこの場合の答えは <span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1, 1, 1, 1, 1\}\)</span>になります。</div>
+<div class="line">の問題を考えてみましょう。全ての相互作用がマイナスなので、各スピン変数は同じ値をとった方がエネルギーは低くなることがわかります。また縦磁場は全てマイナスなので、各スピンは1の値をとった方がエネルギーが低くなります。</div>
+<div class="line">よってこの答えは <span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1, 1, 1, 1, 1\}\)</span>になります。</div>
 </div>
-<p>では、OpenJijを使って計算してみましょう。</p>
+<p>ではこれを再現することをOpenJijを用いて計算しましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -391,20 +411,21 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># まず問題を解いてくれるSamplerのインスタンスを作ります。このインスタンスの選択で問題を解くアルゴリズムを選択できます。</span>
+<span></span><span class="c1"># まず問題を解いてくれるSamplerのインスタンスを作ります。</span>
+<span class="c1"># このインスタンスの選択で問題を解くアルゴリズムを選択できます。</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
 <span class="c1"># samplerのメソッドに問題(h, J)を投げて問題を解きます。</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
 
-<span class="c1"># 計算した結果(状態)は result.states に入っています。</span>
+<span class="c1"># 計算した結果(状態)は response.states に入っています。</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
 
-<span class="c1"># もしくは添字付きでみるには samples を見ます。</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+<span class="c1"># もしくは添字付きでみるには samples関数 を用います。</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">()])</span>
 </pre></div>
 </div>
 </div>
@@ -413,7 +434,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[[1, 1, 1, 1, 1]]
+[[1 1 1 1 1]]
 [{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}]
 </pre></div></div>
 </div>
@@ -421,11 +442,11 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="section" id="OpenJijの解説">
 <h3>OpenJijの解説<a class="headerlink" href="#OpenJijの解説" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
-<div class="line">では、上で解いてみたコードの解説をします。</div>
-<div class="line">またOpenJijは現在インターフェースを2つ備えていて、上記で使ったものはD-Wave Oceanと同じようなインターフェースになっているので、OpenJijで慣れておけばOceanへの変更はそこまで負担にはならないかと思います。</div>
+<div class="line">上述のコードの解説をします。</div>
+<div class="line">OpenJijは現在インターフェースを2つ備えており、上記で使ったものはD-Wave Oceanと同じインターフェースになっています。そのため、OpenJijで慣れておけばD-Wave Oceanへの変更がスムーズです。</div>
 </div>
 <blockquote>
-<div><p>もう一つのインターフェースについてはここでは解説しませんが、OpenJijの仕組み<code class="docutils literal notranslate"><span class="pre">graph,</span> <span class="pre">method,</span> <span class="pre">algorithm</span></code>を直接使うことで拡張のしやすさを備えています。しかし現状は上記のセルで扱ったインターフェースを使えるようになるだけで十分でしょう。</p>
+<div><p>もう一つのインターフェースについてはここでは解説しませんが、OpenJijの仕組み<code class="docutils literal notranslate"><span class="pre">graph,</span> <span class="pre">method,</span> <span class="pre">algorithm</span></code>を直接使うことで拡張のしやすさを備えています。ここでは上のセルで扱ったインターフェースを使えるようになれば十分でしょう。</p>
 </div></blockquote>
 </div>
 </div>
@@ -435,24 +456,24 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>ここでこのSamplerというのが、どういうアルゴリズム、マシンを使うかを選択するところになります。他のアルゴリズムを試したい時はこのSamplerを変更します。</p>
+<p>ここでこのSamplerというのがどのようなアルゴリズム、マシンを使うかを選択しています。他のアルゴリズムを試したい時はこのSamplerを変更します。</p>
 <blockquote>
-<div><p>OpenJijで扱っているアルゴリズムはヒューリスティックな確率アルゴリズムで問題を解くたびに返す解が違ったり、必ずしも最適解を得ることができません。 なので何回も解いてみてその中でよい解を探すという手法をとります。なので解をサンプリングするという気持ちを込めてSamplerと呼んでいます。</p>
+<div><p>OpenJijで扱っているアルゴリズムはヒューリスティックな確率アルゴリズムです。問題を解くたびに返す解が違ったり、必ずしも最適解を得ることができません。 よって複数回問題を解き、その中でよい解を探すという手法をとります。そのため、ここでは解をサンプリングするという気持ちを込めてSamplerと呼んでいます。</p>
 </div></blockquote>
 <div class="line-block">
-<div class="line">上のセルであつかった<code class="docutils literal notranslate"><span class="pre">SASampler</span></code>は<code class="docutils literal notranslate"><span class="pre">Simulated</span> <span class="pre">annealing</span></code>というアルゴリズムで解をサンプリングしてくるSamplerです。</div>
+<div class="line">上のセルで用いた<code class="docutils literal notranslate"><span class="pre">SASampler</span></code>は<code class="docutils literal notranslate"><span class="pre">Simulated</span> <span class="pre">Annealing</span></code>というアルゴリズムを用いて、解をサンプリングしてくるSamplerです。</div>
 <div class="line">他にも</div>
 </div>
 <ul class="simple">
-<li><p>SQASampler : Simulated quantum annealing(SQA) という量子アニーリングを古典コンピュータでシミュレーションするアルゴリズム.</p></li>
-<li><p>GPUSQASampler : SQAをGPUで実行するSampler. Chimeraグラフという特殊な構造のみが現状扱える. 不安定.</p></li>
+<li><p>SQASampler : Simulated Quantum Annealing(SQA) という量子アニーリングを古典コンピュータでシミュレーションするアルゴリズム</p></li>
+<li><p>GPUSQASampler : SQAをGPUで実行するSamplerです。Chimeraグラフという特殊な構造のみが現状扱える. 不安定.</p></li>
 </ul>
-<p>というSamplerが用意されています。</p>
+<p>のSamplerが用意されています。</p>
 </div>
 <div class="section" id="sample_ising(h,-J)">
 <h2>sample_ising(h, J)<a class="headerlink" href="#sample_ising(h,-J)" title="Permalink to this headline">¶</a></h2>
-<p>まあ書いてあるように問題を解く時は <code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code>はで問題を投げて解きます。</p>
-<p>後から解説しますが、ちなみにIsingモデルと等価なQUBOの最適化を行う時は<code class="docutils literal notranslate"><span class="pre">.sample_qubo(Q)</span></code>を使います。</p>
+<p>上述のとおり、問題を解く際は<code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code>のように縦磁場と相互作用を変数として代入して投入します。</p>
+<p>後述しますた、Isingモデルと等価なQUBOの最適化を行う時は<code class="docutils literal notranslate"><span class="pre">.sample_qubo(Q)</span></code>を用います。</p>
 </div>
 <div class="section" id="Response">
 <h2>Response<a class="headerlink" href="#Response" title="Permalink to this headline">¶</a></h2>
@@ -461,105 +482,124 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <li><p>.states :</p>
 <ul>
 <li><p>type : list(list(int))</p></li>
-<li><p>iteration回だけおこなった分の解が格納されている &gt; 物理ではスピンの配列(解)を状態と呼ぶことがあります。.statesにはiteration回だけ解いた解が格納されているので複数の状態を格納しているという気持ちを込めて .states としています。</p></li>
+<li><p>iteration回数の解が格納されている &gt; 物理ではスピンの配列(解)を状態と呼ぶことがあります。.statesにはiteration回だけ解いた解が格納されているので複数の状態を格納しているという気持ちを込めて .states としています。</p></li>
 </ul>
 </li>
 <li><p>.energies:</p>
 <ul>
 <li><p>type : list(float)</p></li>
-<li><p>iteration回だけおこなった各解のエネルギーが格納されている</p></li>
+<li><p>iteration回数分の各解のエネルギーが格納されている</p></li>
 </ul>
 </li>
 <li><p>.indices:</p>
 <ul>
 <li><p>type: list(object)</p></li>
-<li><p>解がlistでstatesに入っているが、それに対応する各スピンの添字を格納する</p></li>
+<li><p>解がlistでstatesに入っているが、それに対応する各スピンの添字を格納されている</p></li>
 </ul>
 </li>
-<li><p>.samples:</p>
-<ul>
-<li><p>type: dict(key=index, value=variable value)</p></li>
-<li><p>添字付きで状態が格納されています。</p></li>
-</ul>
-</li>
-<li><p>.min_samples:</p>
+<li><p>.first.sample:</p>
 <ul>
 <li><p>type: dict</p></li>
-<li><p>‘min_states’, ‘num_occurences’, ‘min_energy’ というキーが入っており、
-それぞれ最小エネルギー値をとった状態のリスト, 各状態が現れた回数, 最小エネルギー値 となっています。</p></li>
+<li><p>最小エネルギー状態を取るときの状態が格納されている</p></li>
+</ul>
+</li>
+<li><p>.first.energy:</p>
+<ul>
+<li><p>type: float</p></li>
+<li><p>最小エネルギーの値</p></li>
 </ul>
 </li>
 </ul>
-<p>というパラメータが参照できます。わかりずらいので実際にコードを見てみましょう。</p>
+<p>というパラメータが参照できます。実際にコードを見てみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 実は h, J の添字を示す、辞書のkeyは数値以外も扱えます。</span>
+<span></span><span class="c1"># 実は h, J の添字を示す、辞書のkeyは数値以外も扱うことができます。</span>
 <span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
 <span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10回 SAで解いてみる. num_reads という引数で10回分一気に解くことができます。</span>
+<span class="c1"># num_reads という引数に値を代入することで、SAを10回試行する計算を一度の命令で解くことができます。</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-<span class="n">response</span><span class="o">.</span><span class="n">states</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}
+-4.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[[1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1],
- [1, -1, 1]]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># response.states を見てみましょう。10回分の解が入っていることがわかります。</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>では response.states をみてみると、10回分の解が入っていることがわかります。</p>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
 <blockquote>
-<div><div class="line-block">
+<div><div class="highlight"><pre>
+[[ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]
+ [ 1  1 -1]]
+</pre></div></div></blockquote>
+<div class="line-block">
 <div class="line">num_reads などコンストラクタで渡すパラメータは</div>
 <div class="line">.sample_ising などのサンプリングを実行するメソッドで上書きすることができます.</div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">response</span><span class="o">.</span><span class="n">states</span>
-<span class="o">&gt;</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="o">&gt;</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 </pre></div>
 </div>
-</div></blockquote>
-<p>今回は問題が簡単なので10回といても毎回同じ答え [1,-1,1] になっています。 次はエネルギーを見てみましょう.</p>
+</div>
+</div>
+<p>今回は問題が簡単なので、10回とも同じ答え [1,1,-1] になっていることがわかります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">energies</span>
+<span></span><span class="c1"># 次にエネルギーを見てみましょう。</span>
+<span class="n">response</span><span class="o">.</span><span class="n">energies</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[-4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0]
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
+</pre></div></div>
 </div>
 <div class="line-block">
-<div class="line">エネルギーももちろん10回とも同じ値を取っています。</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">response.states</span></code>に入っている解はリストになっているので問題をセットした時の <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c</span></code>という文字列との対応がわかりません。それは<code class="docutils literal notranslate"><span class="pre">response.indices</span></code>に入っています。</div>
+<div class="line">エネルギーの値を10回とも同じ値を取っていることがわかります。</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">response.states</span></code>に入っている解はリストになっているため、問題をセットした時の <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c</span></code>という文字列との対応がわかりません。それを調べるために<code class="docutils literal notranslate"><span class="pre">response.indices</span></code>を見てみましょう。</div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -568,86 +608,53 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[&#39;a&#39;, &#39;c&#39;, &#39;b&#39;]
-</pre></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+</pre></div></div>
 </div>
-</div>
-<p>添字と状態を対応づけたいときは 自分で <code class="docutils literal notranslate"><span class="pre">dict(zip(response.indices,</span> <span class="pre">response.states[0]))</span></code> などを使うか .samples を呼んでください。</p>
+<p>最小のエネルギー値を持った状態のみが知りたい場合には <code class="docutils literal notranslate"><span class="pre">.first</span></code> が便利です。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">samples</span>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">first</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
- {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1}]
-</pre></div>
-</div>
-</div>
-<p>最小エネルギー値を持った解のみが知りたいときは <code class="docutils literal notranslate"><span class="pre">.min_samples</span></code> が便利です。 解が縮退していた場合 <code class="docutils literal notranslate"><span class="pre">min_samples['min_states']</span></code> には複数の解があるかもしれないことに気をつけてください。</p>
-<blockquote>
-<div><p>縮退 : 異なった解(状態)が同じエネルギー値(コスト値)を持つこと</p>
-</div></blockquote>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">min_samples</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;states&#39;: array([[ 1, -1,  1]]),
- &#39;num_occurrences&#39;: array([10]),
- &#39;min_energy&#39;: -4.0}
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, num_occurrences=1)
+</pre></div></div>
 </div>
 <div class="section" id="QUBOを解いてみる">
 <h3>QUBOを解いてみる<a class="headerlink" href="#QUBOを解いてみる" title="Permalink to this headline">¶</a></h3>
-<p>社会の問題を解きたい場合は Ising モデルよりも QUBO(Quadratic unconstraited binary optimization)として定式化した方が素直な場合が多いです。基本的には上記のIsing モデルを使って解いた場合と同じです。</p>
+<p>社会の実問題を解きたい場合には、Ising modelよりも QUBO(Quadratic unconstraited binary optimization)として定式化した方が素直な場合が多いです。基本的には上述のIsing modelを使って解いた場合と同じです。</p>
 <p>QUBOは以下のように書かれます。</p>
 <div class="math notranslate nohighlight">
 \[H(\{q_i\}) = \sum_{i\geq j} Q_{ij}q_i q_j\]</div>
 <div class="math notranslate nohighlight">
 \[q_i \in \{0, 1\}\]</div>
-<p>Ising モデルと違うのは2値変数が0 と 1を取ることです。<span class="math notranslate nohighlight">\(\sum, Q_{ij}\)</span>の取り方には他にもやり方がありますが(<span class="math notranslate nohighlight">\(Q_{ij}\)</span>を対称行列にする)、今回は上記のように定式化しておきます。</p>
+<p>Ising modelとの違いは、2値変数が0 と 1のバイナリ変数であることです。<span class="math notranslate nohighlight">\(\sum, Q_{ij}\)</span>の取り方には他にもやり方(例えば<span class="math notranslate nohighlight">\(Q_{ij}\)</span>を対称行列にするなど)がありますが、今回は上式のように定式化しておきましょう。</p>
 <blockquote>
-<div><p>Ising モデル と QUBO は相互変換が可能という意味で等価です。 <span class="math notranslate nohighlight">\(q_i = (\sigma_i + 1)/2\)</span>という変換式で変換が可能です。</p>
+<div><p>Ising モデル と QUBO は相互変換が可能という意味で等価です。 <span class="math notranslate nohighlight">\(q_i = (\sigma_i + 1)/2\)</span>という変換式を用いることで、変換が可能です。</p>
 </div></blockquote>
-<p>QUBOでは<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が与える問題で、<span class="math notranslate nohighlight">\(H(\{q_i\})\)</span>を最小化する0, 1の組み合わせ<span class="math notranslate nohighlight">\(\{q_i\}\)</span>を探せという問題になります。ほぼIsingモデルと一緒です。</p>
-<p>また<span class="math notranslate nohighlight">\(q_i^2 = q_i\)</span>なので(0, 1しか値を取らないことからわかる)以下のように書き分けることができます。</p>
+<p>QUBOでは<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が与える問題で、<span class="math notranslate nohighlight">\(H(\{q_i\})\)</span>を最小化する0, 1の組み合わせ<span class="math notranslate nohighlight">\(\{q_i\}\)</span>を探しましょうという問題になります。ほぼIsing modelと一緒です。</p>
+<p>また<span class="math notranslate nohighlight">\(q_i\)</span>はバイナリ変数なので、<span class="math notranslate nohighlight">\(q_i^2 = q_i\)</span>であることがわかります。よって上式を以下のように書き分けることができます。</p>
 <div class="math notranslate nohighlight">
 \[H(\{q_i\}) = \sum_{i &gt; j} Q_{ij}q_i q_j + \sum_i Q_{ii} q_i\]</div>
-<p>つまり<span class="math notranslate nohighlight">\(Q_{ij}\)</span>の添字が同じところは <span class="math notranslate nohighlight">\(q_i\)</span>の1次項の係数に対応します。</p>
-<p>OpenJijで解いてみましょう。</p>
+<p><span class="math notranslate nohighlight">\(Q_{ij}\)</span>の添字が同じところは <span class="math notranslate nohighlight">\(q_i\)</span>の1次の項の係数に対応します。</p>
+<p>これをOpenJijで解いてみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -656,30 +663,29 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
 <span class="c1"># QUBOを解く時は .sample_qubo を使いましょう</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
-<span class="n">response</span><span class="o">.</span><span class="n">states</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[[1, 1, 0]]
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[1 1 0]]
+</pre></div></div>
 </div>
 <div class="line-block">
-<div class="line">QUBOでは変数が 0, 1なので 0, 1で解がでていることがわかります。</div>
-<div class="line">このような感じでOpenJij では IsingモデルとQUBOの最適化問題を解くことができます。</div>
+<div class="line">QUBOでは変数が 0, 1のため、解も 0, 1で出力されていることがわかります。</div>
+<div class="line">このようにOpenJij を用いて Ising modelとQUBOの最適化問題を解くことができます。</div>
 </div>
 </div>
 <div class="section" id="少し難しい問題を解いてみる">
 <h3>少し難しい問題を解いてみる<a class="headerlink" href="#少し難しい問題を解いてみる" title="Permalink to this headline">¶</a></h3>
-<p>上で解いた問題は簡単すぎたので少し難しい問題を解いてみましょう。</p>
-<p>変数の数が50個でランダムに<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が振られたQUBOを解いてみたいと思います。</p>
+<p>これまで解いてきた問題は簡単すぎたので、少し難しい問題を解いてみましょう。</p>
+<p>今度は変数の数が50個でランダムに<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が振られたQUBOを解いてみたいと思います。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -695,7 +701,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -705,25 +711,22 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[-59.67307865595712,
- -59.67307865595712,
- -59.67307865595712,
- -59.56767374654641,
- -59.67307865595712]
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([-60.74324002, -60.83273331, -60.74324002, -60.38951291,
+       -60.83273331])
+</pre></div></div>
 </div>
 <div class="line-block">
-<div class="line">エネルギーをみてみると先ほどとは違って違う値をとっていることがわかると思います。</div>
-<div class="line">ランダムにQij を振った場合、一般に問題は難しくなります。なのでSASamplerも毎回同じ解を出すとは限りません。</div>
-<div class="line">ではどのような解がでたのかエネルギーのヒストグラムで見てみましょう。</div>
+<div class="line">エネルギーを見てみると、先ほどの例とは異なり違う値をとっていることがわかります。</div>
+<div class="line">ランダムにQij を与えた場合、一般に問題は難しくなります。よってSASamplerも毎回同じ解を出しません。</div>
+<div class="line">ではどのような解がでたのかを、エネルギーのヒストグラムで可視化してみましょう。</div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -739,42 +742,43 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_1-Introduction_25_0.svg" src="../_images/ja_1-Introduction_25_0.svg" /></div>
+<img alt="../_images/ja_1-Introduction_24_0.png" src="../_images/ja_1-Introduction_24_0.png" />
 </div>
-<p>エネルギーが低ければ低いほど良いわけですが、たまにエネルギーが高い解もでていることがわかります。 しかし半数近くがエネルギーが低い解として出ているようです。</p>
-<div class="line-block">
-<div class="line">100回解いたわけですが、最適解はエネルギーが一番低い解なはずですから、解いた(サンプルした)解のうちエネルギーが一番低い解が最適解に近いはずなので、その解を.statesから探します。 &gt; 注意: SAは必ずしも最適解を出せないのでここでエネルギーが一番低い解を選んでも最適解であるという保証はありません。</div>
-<div class="line">&gt; あくまで近似解です。</div>
 </div>
+<p>エネルギーが低いほど良い状態を算出したことになりますが、稀にエネルギーが高い状態も算出されていることが上のヒストグラムからわかります。しかし大半の計算結果はエネルギーが最低の状態を算出しています。 解いた(サンプルした)状態のうち一番低い解が最適解に近いはずなので、その解を.statesから探しましょう。 &gt; 注意: SAは必ずしも最適解を導くものではありません。よってエネルギーが一番低い解を選んでも最適解であるという保証はありません。あくまで近似解です。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">min_samples</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">min_samples</span>
+<span class="n">min_samples</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span>
 
 <span class="n">min_samples</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;states&#39;: array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0,
-         1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-         0, 1, 1, 1, 1, 1]]),
- &#39;num_occurrences&#39;: array([48]),
- &#39;min_energy&#39;: -59.67307865595712}
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sample(sample={0: 1, 1: 1, 2: 0, 3: 0, 4: 0, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1, 17: 1, 18: 0, 19: 0, 20: 1, 21: 0, 22: 0, 23: 1, 24: 1, 25: 1, 26: 1, 27: 0, 28: 0, 29: 1, 30: 0, 31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 0, 37: 1, 38: 1, 39: 1, 40: 1, 41: 1, 42: 1, 43: 1, 44: 1, 45: 0, 46: 0, 47: 1, 48: 0, 49: 0}, energy=-60.83273331169611, num_occurrences=1)
+</pre></div></div>
+</div>
+<p>これでエネルギーが最も低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">min_samples</span></code>に入っている状態が、今回得られた近似解です。これで「問題を近似的に解いた」ということになります。</p>
+<p>次回は “2-Evaluation” で Time to Solution や残留エネルギーなど、解をはかる指標について説明します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
 </pre></div>
 </div>
 </div>
-<p>これでエネルギーが低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">min_states</span></code>に入っている解が今回解いた近似解です。 <code class="docutils literal notranslate"><span class="pre">min_states</span></code>に入っている解はエネルギーは同じですが、問題によってはスピンの配列がことなることもあります(エネルギーが同じで解が違う状態があることを「縮退している」と言います)。</p>
-<p>なので上記のようにしてエネルギーが低い状態を選んだあとにあとは、好みのスピン配列を<code class="docutils literal notranslate"><span class="pre">min_state</span></code>から選んで「問題を近似的に解いた。」 ということになります。</p>
-<p>次回は “2-Evaluation” で Time to solution や残留エネルギーなど解をはかる指標について説明します。</p>
 </div>
 </div>
 </div>
@@ -803,7 +807,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>
