@@ -470,7 +470,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 <ul class="simple">
 <li><p>SQASampler : Simulated Quantum Annealing(SQA) という量子アニーリングを古典コンピュータでシミュレーションするアルゴリズム</p></li>
-<li><p>GPUSQASampler : SQAをGPUで実行するSamplerです。Chimeraグラフという特殊な構造のみが現状扱える. 不安定.</p></li>
+<li><p>GPUSQASampler : SQAをGPUで実行するSamplerです。Chimeraグラフという特殊な構造のみが現状扱える</p></li>
 </ul>
 <p>のSamplerが用意されています。</p>
 </div>
@@ -514,6 +514,12 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </ul>
 </li>
 </ul>
+<blockquote>
+<div><div class="line-block">
+<div class="line">ResponseクラスはD-WaveのdimodのSampleSetクラスを継承しています。より詳細な情報は以下のリンクに記述されています。</div>
+<div class="line"><a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html">dimodドキュメント、SampleSet</a></div>
+</div>
+</div></blockquote>
 <p>というパラメータが参照できます。実際にコードを見てみましょう。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
@@ -768,7 +774,7 @@ array([-55.69322142, -55.69322142, -55.48148676, -55.48148676,
 Sample(sample={0: 1, 1: 1, 2: 1, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 0, 9: 0, 10: 1, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0, 17: 0, 18: 1, 19: 1, 20: 1, 21: 1, 22: 0, 23: 1, 24: 0, 25: 0, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1, 34: 0, 35: 1, 36: 0, 37: 1, 38: 1, 39: 0, 40: 0, 41: 1, 42: 1, 43: 0, 44: 1, 45: 1, 46: 0, 47: 1, 48: 1, 49: 0}, energy=-55.693221416390145, num_occurrences=1)
 </pre></div></div>
 </div>
-<p>これでエネルギーが最も低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">min_samples</span></code>に入っている状態が、今回得られた近似解です。これで「問題を近似的に解いた」ということになります。</p>
+<p>これでエネルギーが最も低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">.first</span></code>に入っている状態が、今回得られた近似解です。これで「問題を近似的に解いた」ということになります。</p>
 <p><code class="docutils literal notranslate"><span class="pre">num_occurrences</span></code>は計算の結果その状態が何回出力されたかを表しています。</p>
 <p>次回は “2-Evaluation” で Time to Solution や残留エネルギーなど、解をはかる指標について説明します。</p>
 <div class="nbinput nblast docutils container">
