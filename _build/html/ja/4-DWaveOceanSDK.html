@@ -7,17 +7,18 @@
     <title>4-D-Wave Ocean SDK 入門 &#8212; OpenJij Tutorial  documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5-OpenJij GPU" href="5_OpenJijGPU.html" />
-    <link rel="prev" title="3-PyQUBO with OpenJij" href="3-PyQUBO_2_OpenJij.html" /> 
+    <link rel="prev" title="3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)" href="3-plus-CMOSAnnealer.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -29,7 +30,7 @@
           <a href="5_OpenJijGPU.html" title="5-OpenJij GPU"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+          <a href="3-plus-CMOSAnnealer.html" title="3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
@@ -61,8 +62,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
-                        title="previous chapter">3-PyQUBO with OpenJij</a></p>
+  <p class="topless"><a href="3-plus-CMOSAnnealer.html"
+                        title="previous chapter">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="5_OpenJijGPU.html"
                         title="next chapter">5-OpenJij GPU</a></p>
@@ -74,15 +75,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -96,16 +97,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput,
-div.nbinput div.prompt,
-div.nbinput div.input_area,
-div.nbinput div[class*=highlight],
-div.nbinput div[class*=highlight] pre,
-div.nboutput,
-div.nbinput div.prompt,
-div.nbinput div.output_area,
-div.nboutput div[class*=highlight],
-div.nboutput div[class*=highlight] pre {
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -114,13 +115,13 @@ div.nboutput div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput div[class*=highlight] pre {
+div.nboutput.container div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput,
-div.nboutput {
+div.nbinput.container,
+div.nboutput.container {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -128,92 +129,91 @@ div.nboutput {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput,
-    div.nboutput {
+    div.nbinput.container,
+    div.nboutput.container {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput {
+div.nbinput.container {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast {
+div.nblast.container {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput div.prompt pre {
+div.nbinput.container div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput div.prompt pre {
+div.nboutput.container div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput div.prompt,
-div.nboutput div.prompt {
-    min-width: 7ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput div.prompt,
-    div.nboutput div.prompt {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput div.prompt.empty {
+    div.nboutput.container div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput div.prompt pre,
-div.nboutput div.prompt pre {
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput div.input_area,
-div.nboutput div.output_area {
-    padding: 0.4em;
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput div.input_area,
-    div.nboutput div.output_area {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput div.input_area {
+div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput div[class*=MathJax] {
+div.nboutput.container div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput div.math p {
+div.nboutput.container div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput div.output_area.stderr {
+div.nboutput.container div.output_area.stderr {
     background: #fdd;
 }
 
@@ -256,6 +256,27 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
 
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
@@ -557,8 +578,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="k">import</span> <span class="n">DWaveSampler</span>
-<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="k">import</span> <span class="n">EmbeddingComposite</span>
+<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
+<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
 </pre></div>
 </div>
 </div>
@@ -610,10 +631,10 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>(87, 10)
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(87, 10)
+</pre></div></div>
 </div>
 <p>上の通り、87個の解が得られました。この中に、最適解がどのくらい含まれているか見てみましょう。ここでは最適解かどうかを判別するために、それぞれの解のエネルギー値を求めます。</p>
 <div class="nbinput nblast docutils container">
@@ -732,8 +753,9 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;energy&#39;: array([-114., -174., -270., -270., -270., -114., -270., -270., -114.,
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;energy&#39;: array([-114., -174., -270., -270., -270., -114., -270., -270., -114.,
         -270., -270., -270., -270., -306., -334., -270., -306., -270.,
           30.,  786.,   30., 1230., -354., -114., -114., -334., -226.,
         -306.,  530., -334.,   30., -354., -354.,   30.,  306., -114.,
@@ -754,8 +776,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
         0.8, 0.8, 1. , 0.9, 0.8, 1. , 0.9, 0.8, 0.9, 0.8, 0.8, 0.8, 0.8,
         0.8, 0.9, 0.9, 0.8, 0.9, 1. , 0.9, 1. , 1. , 1. , 1. , 1. , 0.9,
         1. , 0.9, 0.9, 1. , 0.8, 0.8, 1. , 0.8, 0.9])}
-</pre></div>
-</div>
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
@@ -770,8 +791,9 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;timing&#39;: {&#39;total_real_time&#39;: 24029,
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;total_real_time&#39;: 24029,
   &#39;qpu_access_overhead_time&#39;: 2490,
   &#39;anneal_time_per_run&#39;: 20,
   &#39;post_processing_overhead_time&#39;: 981,
@@ -784,8 +806,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
   &#39;run_time_chip&#39;: 16396,
   &#39;qpu_access_time&#39;: 24029,
   &#39;qpu_readout_time_per_sample&#39;: 123}}
-</pre></div>
-</div>
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="読み取り回数を変えてみる">
@@ -821,10 +842,10 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>(675, 10)
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(675, 10)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
@@ -853,10 +874,10 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>44
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+44
+</pre></div></div>
 </div>
 <p>単純ですが読み取り回数を増やすことで、得られた最適解の個数が増加しました。一方で、アニーリングタイム(1回のアニーリングに要する時間)が 20<span class="math notranslate nohighlight">\(\mu s\)</span> (デフォルト値)と短く、読み取り回数を増加させても実時間ではそれほど差はありません。</p>
 <div class="nbinput docutils container">
@@ -872,8 +893,9 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>{&#39;timing&#39;: {&#39;total_real_time&#39;: 171559,
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;total_real_time&#39;: 171559,
   &#39;qpu_access_overhead_time&#39;: 1277,
   &#39;anneal_time_per_run&#39;: 20,
   &#39;post_processing_overhead_time&#39;: 691,
@@ -886,8 +908,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
   &#39;run_time_chip&#39;: 163960,
   &#39;qpu_access_time&#39;: 171559,
   &#39;qpu_readout_time_per_sample&#39;: 123}}
-</pre></div>
-</div>
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="アニーリングタイムを変えてみる">
@@ -919,10 +940,10 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>(97, 10)
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(97, 10)
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
@@ -951,10 +972,10 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>3
-</pre></div>
-</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3
+</pre></div></div>
 </div>
 <p>アニーリングタイムを変えたことで、得られた解に何か違いがないか調べてみます。ここでは、解のエネルギーのヒストグラムを見てみましょう。</p>
 <div class="nbinput docutils container">
@@ -1009,7 +1030,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
           <a href="5_OpenJijGPU.html" title="5-OpenJij GPU"
              >next</a> |</li>
         <li class="right" >
-          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+          <a href="3-plus-CMOSAnnealer.html" title="3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
@@ -1017,7 +1038,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>
