@@ -296,7 +296,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>pip でインストールしましょう。numpy が必要です。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -305,11 +305,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.11 を仮定します。
+<span></span><span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.8 を仮定します。
 </pre></div>
 </div>
 </div>
@@ -319,14 +319,14 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Name: openjij
-Version: 0.0.11
+Version: 0.0.8
 Summary: Framework for the Ising model and QUBO
 Home-page: https://openjij.github.io/OpenJij/
 Author: Jij Inc.
 Author-email: openjij@j-ij.com
 License: Apache License 2.0
-Location: /usr/local/miniconda3/lib/python3.6/site-packages
-Requires: dimod, numpy, requests
+Location: /usr/local/miniconda3/envs/openjij3/lib/python3.7/site-packages/openjij-0.0.8-py3.7-macosx-10.7-x86_64.egg
+Requires: numpy, requests, debtcollector, dimod
 Required-by:
 </pre></div></div>
 </div>
@@ -365,7 +365,7 @@ Required-by:
 </div>
 <p>では、OpenJijを使って計算してみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -391,7 +391,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -404,7 +404,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
 
 <span class="c1"># もしくは添字付きでみるには samples を見ます。</span>
-<span class="nb">print</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">()])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -413,7 +413,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[[1 1 1 1 1]]
+[[1, 1, 1, 1, 1]]
 [{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}]
 </pre></div></div>
 </div>
@@ -476,22 +476,23 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <li><p>解がlistでstatesに入っているが、それに対応する各スピンの添字を格納する</p></li>
 </ul>
 </li>
-<li><p>.first.sample:</p>
+<li><p>.samples:</p>
 <ul>
-<li><p>type: dict</p></li>
-<li><p>最小エネルギーをとったサンプル</p></li>
+<li><p>type: dict(key=index, value=variable value)</p></li>
+<li><p>添字付きで状態が格納されています。</p></li>
 </ul>
 </li>
-<li><p>.first.energy:</p>
+<li><p>.min_samples:</p>
 <ul>
-<li><p>type: float</p></li>
-<li><p>最小エネルギー</p></li>
+<li><p>type: dict</p></li>
+<li><p>‘min_states’, ‘num_occurences’, ‘min_energy’ というキーが入っており、
+それぞれ最小エネルギー値をとった状態のリスト, 各状態が現れた回数, 最小エネルギー値 となっています。</p></li>
 </ul>
 </li>
 </ul>
 <p>というパラメータが参照できます。わかりずらいので実際にコードを見てみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -500,19 +501,27 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10回 SAで解いてみる. num_reads という引数で10回分一気に解くことができます。</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">states</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}
--4.0
-</pre></div></div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[[1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1],
+ [1, -1, 1]]
+</pre></div>
+</div>
 </div>
 <p>では response.states をみてみると、10回分の解が入っていることがわかります。</p>
 <blockquote>
@@ -528,7 +537,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div></blockquote>
 <p>今回は問題が簡単なので10回といても毎回同じ答え [1,-1,1] になっています。 次はエネルギーを見てみましょう.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -537,11 +546,11 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
+<span></span>[-4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0, -4.0]
 </pre></div>
 </div>
 </div>
@@ -550,7 +559,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="line"><code class="docutils literal notranslate"><span class="pre">response.states</span></code>に入っている解はリストになっているので問題をセットした時の <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c</span></code>という文字列との対応がわかりません。それは<code class="docutils literal notranslate"><span class="pre">response.indices</span></code>に入っています。</div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -559,30 +568,63 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+<span></span>[&#39;a&#39;, &#39;c&#39;, &#39;b&#39;]
 </pre></div>
 </div>
 </div>
-<p>最小エネルギー値を持った解のみが知りたいときは <code class="docutils literal notranslate"><span class="pre">.first</span></code> が便利です。</p>
+<p>添字と状態を対応づけたいときは 自分で <code class="docutils literal notranslate"><span class="pre">dict(zip(response.indices,</span> <span class="pre">response.states[0]))</span></code> などを使うか .samples を呼んでください。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">first</span>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">samples</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, num_occurrences=1)
+<span></span>[{&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1},
+ {&#39;a&#39;: 1, &#39;c&#39;: -1, &#39;b&#39;: 1}]
+</pre></div>
+</div>
+</div>
+<p>最小エネルギー値を持った解のみが知りたいときは <code class="docutils literal notranslate"><span class="pre">.min_samples</span></code> が便利です。 解が縮退していた場合 <code class="docutils literal notranslate"><span class="pre">min_samples['min_states']</span></code> には複数の解があるかもしれないことに気をつけてください。</p>
+<blockquote>
+<div><p>縮退 : 異なった解(状態)が同じエネルギー値(コスト値)を持つこと</p>
+</div></blockquote>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">min_samples</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>{&#39;states&#39;: array([[ 1, -1,  1]]),
+ &#39;num_occurrences&#39;: array([10]),
+ &#39;min_energy&#39;: -4.0}
 </pre></div>
 </div>
 </div>
@@ -605,7 +647,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <p>つまり<span class="math notranslate nohighlight">\(Q_{ij}\)</span>の添字が同じところは <span class="math notranslate nohighlight">\(q_i\)</span>の1次項の係数に対応します。</p>
 <p>OpenJijで解いてみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -619,11 +661,11 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>array([[1, 1, 0]], dtype=int8)
+<span></span>[[1, 1, 0]]
 </pre></div>
 </div>
 </div>
@@ -637,7 +679,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <p>上で解いた問題は簡単すぎたので少し難しい問題を解いてみましょう。</p>
 <p>変数の数が50個でランダムに<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が振られたQUBOを解いてみたいと思います。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -653,7 +695,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -663,12 +705,15 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>array([-57.03612037, -57.09102941, -57.16900575, -57.61507474,
-       -57.16900575])
+<span></span>[-59.67307865595712,
+ -59.67307865595712,
+ -59.67307865595712,
+ -59.56767374654641,
+ -59.67307865595712]
 </pre></div>
 </div>
 </div>
@@ -678,7 +723,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="line">ではどのような解がでたのかエネルギーのヒストグラムで見てみましょう。</div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -694,8 +739,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_1-Introduction_23_0.png" src="../_images/ja_1-Introduction_23_0.png" />
-</div>
+<img alt="../_images/ja_1-Introduction_25_0.svg" src="../_images/ja_1-Introduction_25_0.svg" /></div>
 </div>
 <p>エネルギーが低ければ低いほど良いわけですが、たまにエネルギーが高い解もでていることがわかります。 しかし半数近くがエネルギーが低い解として出ているようです。</p>
 <div class="line-block">
@@ -703,38 +747,34 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="line">&gt; あくまで近似解です。</div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">min_samples</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span>
+<span class="n">min_samples</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">min_samples</span>
 
 <span class="n">min_samples</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Sample(sample={0: 1, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 1, 7: 0, 8: 0, 9: 1, 10: 0, 11: 0, 12: 0, 13: 1, 14: 1, 15: 0, 16: 1, 17: 0, 18: 1, 19: 0, 20: 0, 21: 0, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1, 34: 1, 35: 0, 36: 1, 37: 0, 38: 0, 39: 1, 40: 1, 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1}, energy=-57.61507473701677, num_occurrences=1)
+<span></span>{&#39;states&#39;: array([[1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0,
+         1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+         0, 1, 1, 1, 1, 1]]),
+ &#39;num_occurrences&#39;: array([48]),
+ &#39;min_energy&#39;: -59.67307865595712}
 </pre></div>
 </div>
 </div>
-<p>これでエネルギーが低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">min_states</span></code>に入っている解が今回解いた近似解です。 これで「問題を近似的に解いた。」 ということになります。</p>
+<p>これでエネルギーが低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">min_states</span></code>に入っている解が今回解いた近似解です。 <code class="docutils literal notranslate"><span class="pre">min_states</span></code>に入っている解はエネルギーは同じですが、問題によってはスピンの配列がことなることもあります(エネルギーが同じで解が違う状態があることを「縮退している」と言います)。</p>
+<p>なので上記のようにしてエネルギーが低い状態を選んだあとにあとは、好みのスピン配列を<code class="docutils literal notranslate"><span class="pre">min_state</span></code>から選んで「問題を近似的に解いた。」 ということになります。</p>
 <p>次回は “2-Evaluation” で Time to solution や残留エネルギーなど解をはかる指標について説明します。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 </div>
