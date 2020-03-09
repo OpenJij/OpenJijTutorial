@@ -347,7 +347,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">上述のIsing modelを解き、1回の計算時間を伸ばすとTTSがどのように変化するかを見てみましょう。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -361,7 +361,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -569,6 +569,61 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <p>残留エネルギーについてもアニーリング時間を増加させて計算すれば、いつかは収束することが予想されます。</p>
 <p><code class="docutils literal notranslate"><span class="pre">solver</span></code>に入れる関数は<code class="docutils literal notranslate"><span class="pre">Response</span></code>クラスを返して、<code class="docutils literal notranslate"><span class="pre">.info['execution_time']</span></code>に計算時間を格納しておけばどのような自作関数を代入しても構いません。</p>
 <p>以下に適当なユーザ関数を作成して実行する例を示します。[1, 1, 1, 1,…]と[1, -1, 1, -1,…]と[-1, 1, -1, 1,…]の3つのスピン状態からランダムに一つの状態を返す関数を作成し、アニーリングアルゴリズムのベンチマークを取ってみましょう。最適解は[1, -1, 1, -1,…]とします。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">num_reads</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     [1, 1, 1,...]と[1,-1,1,...]と[-1,1,-1,...]の3つの状態からランダムに選ぶ関数です。</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+
+    <span class="c1"># 入力された h と J から添字の集合を作成します。</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span> <span class="o">|</span> <span class="nb">set</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">J</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]))</span>
+
+    <span class="c1"># [1, 1, 1,...]の状態を作成します。</span>
+    <span class="n">ones_state</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>
+
+    <span class="c1"># [-1, 1, -1,...]の状態を作成します。</span>
+    <span class="n">minus_plus_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">minus_plus_state</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1"># [1, -1, 1,...]の状態を作成します。</span>
+    <span class="n">plus_minus_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">minus_plus_state</span>
+
+    <span class="c1"># 実行時間を計測を開始します。</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">ones_state</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">minus_plus_state</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">plus_minus_state</span><span class="p">)]</span>
+
+    <span class="c1"># 3つの状態からランダムに1つの状態を選出します。</span>
+    <span class="n">state_record</span> <span class="o">=</span> <span class="p">[</span><span class="n">_states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_reads</span><span class="p">)]</span>
+    <span class="c1"># state_recordをndarrayに変換します。</span>
+    <span class="n">state_record</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state_record</span><span class="p">)</span>
+
+    <span class="c1"># ここでは適当に計算時間をかさ増しします。</span>
+    <span class="n">exec_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">time_param</span>
+    <span class="c1"># ここでは適当にエネルギーを計算します。</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">state_record</span><span class="p">]</span>
+
+    <span class="c1"># 状態のリストと添字を紐づけるために、1つのタプルにします。</span>
+    <span class="n">samples_like</span> <span class="o">=</span> <span class="p">(</span><span class="n">state_record</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+
+    <span class="c1"># dimodのfrom_samplesを参考に、Responseクラスに状態とエネルギーを格納します。</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">Response</span><span class="o">.</span><span class="n">from_samples</span><span class="p">(</span><span class="n">samples_like</span><span class="o">=</span><span class="n">samples_like</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span><span class="n">energies</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+    <span class="c1"># response.infoの&#39;execution_time&#39;キーに計算時間を代入します。</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_time</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">OpenJijのresponseはdimodのSampleSetを参考にして作られています。 そのため、OpenJijに慣れておけばdimodの利用やD-Wave実行への移行も容易になるというメリットがあります。 dimodのSampleSetの詳細については以下のdimodのSamplesページをご覧ください。</div>
+<div class="line"><a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html">Samples</a></div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
