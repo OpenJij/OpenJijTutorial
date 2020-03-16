@@ -312,9 +312,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>!pip install openjij
-!pip show openjij  # openjij == 0.0.6 を仮定します
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install openjij
+<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.6 を仮定します
 </pre></div>
 </div>
 </div>
@@ -359,10 +359,10 @@ Required-by:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>import openjij as oj
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 
-sampler=oj.GPUSQASampler(num_reads=100, unit_num_L=2)
+<span class="n">sampler</span><span class="o">=</span><span class="n">oj</span><span class="o">.</span><span class="n">GPUSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -377,10 +377,10 @@ sampler=oj.GPUSQASampler(num_reads=100, unit_num_L=2)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Q = {(0, 4): -1, (0, 5): -1, (4, 12): 1}
-response = sampler.sample_qubo(Q)
-response
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+<span class="n">response</span>
 </pre></div>
 </div>
 </div>
@@ -422,7 +422,7 @@ minmum energy state sample : [1, 0, 1, 1]
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>
