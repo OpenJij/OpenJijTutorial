@@ -42,10 +42,15 @@
   <ul>
 <li><a class="reference internal" href="#">4-D-Wave Ocean SDK 入門</a><ul>
 <li><a class="reference internal" href="#定式化">定式化</a><ul>
-<li><a class="reference internal" href="#QUBOとイジングモデル">QUBOとイジングモデル</a></li>
-<li><a class="reference internal" href="#数分割問題">数分割問題</a><ul>
+<li><a class="reference internal" href="#QUBOとイジングモデル">QUBOとイジングモデル</a><ul>
 <li><a class="reference internal" href="#QUBO">QUBO</a></li>
 <li><a class="reference internal" href="#イジングモデル">イジングモデル</a></li>
+<li><a class="reference internal" href="#相互変換">相互変換</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#数分割問題">数分割問題</a><ul>
+<li><a class="reference internal" href="#id6">QUBO</a></li>
+<li><a class="reference internal" href="#id7">イジングモデル</a></li>
 </ul>
 </li>
 </ul>
@@ -53,10 +58,10 @@
 <li><a class="reference internal" href="#D-Waveマシンによる最適化">D-Waveマシンによる最適化</a><ul>
 <li><a class="reference internal" href="#イジングモデルを解く">イジングモデルを解く</a></li>
 <li><a class="reference internal" href="#読み取り回数を変えてみる">読み取り回数を変えてみる</a></li>
-<li><a class="reference internal" href="#アニーリングタイムを変えてみる">アニーリングタイムを変えてみる</a></li>
+<li><a class="reference internal" href="#アニーリング時間を変えてみる">アニーリング時間を変えてみる</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#まとめ">まとめ</a></li>
+<li><a class="reference internal" href="#結言">結言</a></li>
 </ul>
 </li>
 </ul>
@@ -349,55 +354,64 @@ div.rendered_html tbody tr:hover {
 </ul>
 <div class="section" id="定式化">
 <h2>定式化<a class="headerlink" href="#定式化" title="Permalink to this headline">¶</a></h2>
-<p>D-Waveマシンに投げることができる形式は、イジングモデルとQUBOがあります。ここで詳細には触れず、Oceanを使用する上で最低限必要なことを説明します。</p>
+<p>D-Waveマシンに投げることができる形式にはイジングモデルとQUBOがあります。ここでは詳細には触れず、Oceanを使用する上で最低限必要なことを説明します。</p>
 <div class="section" id="QUBOとイジングモデル">
 <h3>QUBOとイジングモデル<a class="headerlink" href="#QUBOとイジングモデル" title="Permalink to this headline">¶</a></h3>
-<p>QUBOの場合、2値変数<span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
+<div class="section" id="QUBO">
+<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
+<p>QUBOの場合、2値変数(バイナリ変数)<span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
-<div class="line-block">
-<div class="line">QUBOを解く際には、上の式の<span class="math notranslate nohighlight">\(Q_{i i}\)</span>と<span class="math notranslate nohighlight">\(Q_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</div>
-<div class="line">イジングモデルの場合、2値変数<span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>に対して、以下のハミルトニアンを考えます。</div>
+<p>QUBOを解く際には、上の式の<span class="math notranslate nohighlight">\(Q_{i i}\)</span>と<span class="math notranslate nohighlight">\(Q_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</p>
 </div>
+<div class="section" id="イジングモデル">
+<h4>イジングモデル<a class="headerlink" href="#イジングモデル" title="Permalink to this headline">¶</a></h4>
+<p>イジングモデルの場合、2値変数<span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
+<p>イジングモデルを解く際には、上の式の<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</p>
+</div>
+<div class="section" id="相互変換">
+<h4>相互変換<a class="headerlink" href="#相互変換" title="Permalink to this headline">¶</a></h4>
 <div class="line-block">
-<div class="line">イジングモデルを解く際には、上の式の<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。 QUBOとイジングモデルは、<span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>という変換式によって相互変換が可能です。</div>
-<div class="line">この点において、どちらで定式化しても問題はないので、対象の問題から考えやすい方を選びましょう。 ただし、同じ問題の2種類の形式に対して、D-Waveマシンの振る舞いが異なる場合があります。</div>
+<div class="line">QUBOとイジングモデルは、<span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>という変換式によって相互変換が可能です。</div>
+<div class="line">この点において、どちらでハミルトニアンを定式化しても問題はないので、対象の問題から考えやすい方を選びましょう。</div>
+<div class="line">ただし同じ問題の2種類の形式に対して、D-Waveマシンの振る舞いが異なる場合があるので注意が必要です。</div>
+</div>
 </div>
 </div>
 <div class="section" id="数分割問題">
 <h3>数分割問題<a class="headerlink" href="#数分割問題" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
-<div class="line">与えられた整数の集合を、2つのグループに分けることを考えます。各グループの総和が同じになるように分ける問題を、数分割問題といいます。</div>
-<div class="line">例として、以下の整数の集合<span class="math notranslate nohighlight">\(C\)</span>を2つのグループに分けることを考えます。</div>
+<div class="line">与えられた整数の集合を、2つのグループに分けることを考えます。このとき、各グループの総和が同じになるように分ける問題を数分割問題といいます。</div>
+<div class="line">例として、以下の整数の集合<span class="math notranslate nohighlight">\(C\)</span>を2つのグループに分けることを目標にしてみましょう。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># 整数の集合
+<span></span># 整数の集合を定義します。
 C = [2, 10, 3, 8, 5, 7, 9, 5, 3, 2]
 N = len(C)
 </pre></div>
 </div>
 </div>
 <div class="line-block">
-<div class="line">この場合、それぞれの総和の差がゼロになる最適解は23通り存在します (エネルギーが同じで解が違う状態があることを「縮退している」といいます)。</div>
-<div class="line">例えば、<span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span>(総和は27)があります。</div>
+<div class="line">この場合、それぞれの総和の差がゼロになる最適解は23通り存在します(総和の差という名のエネルギーが同じ値ですが、解が違う状態が複数あります。このような状態を物理用語で「縮退している」と呼びます)。</div>
+<div class="line">例えば、<span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span>(総和はどちらも27)があります。</div>
 </div>
-<div class="section" id="QUBO">
-<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
-<p>数分割問題を最小化問題として考えると、2つのグループの総和の差を最小にすることを目指します。</p>
+<div class="section" id="id6">
+<h4>QUBO<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
+<p>2つのグループの総和の差を0にすることを目指して、定式化を行いましょう。</p>
 <p style="text-align: center"><p>グループAに属する数字の総和 - グループBに属する数字の総和 = 0</p>
-</p><p>そこで、2値変数<span class="math notranslate nohighlight">\(q_{i}\)</span>を用意し、ある数字がグループAに属する場合<span class="math notranslate nohighlight">\(q_{i} = 0\)</span>、グループBに属する場合<span class="math notranslate nohighlight">\(q_{i} = 1\)</span>とします。グループAに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}q_{i}\)</span>、グループBに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}(1 - q_{i})\)</span>と表されるので、先ほどの式は</p>
+</p><p>そこで2値変数(バイナリ変数)<span class="math notranslate nohighlight">\(q_{i}\)</span>を用意し、<span class="math notranslate nohighlight">\(i\)</span>番目の数字がグループAに属する場合<span class="math notranslate nohighlight">\(q_{i} = 0\)</span>、グループBに属する場合<span class="math notranslate nohighlight">\(q_{i} = 1\)</span>と定義します。このときグループAに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}q_{i}\)</span>、グループBに属する数字の総和は<span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}(1 - q_{i})\)</span>と表されるので、先ほどの式は</p>
 <div class="math notranslate nohighlight">
 \[\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)=0\]</div>
-<p>となります。このような等式制約を素直に表現する場合、罰金法を用いることが多いです。</p>
+<p>となります。この等式が成り立つように問題を解きたいと考えるので、この式は<code class="docutils literal notranslate"><span class="pre">制約</span></code>を表していることがわかります。このような等式制約を素直に表現する場合には、罰金法が用いられます。</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line">(罰金法) 最小化したいコスト関数を<span class="math notranslate nohighlight">\(f(x)\)</span>、制約条件を<span class="math notranslate nohighlight">\(g(x) = 0\)</span>とすると、罰金係数<span class="math notranslate nohighlight">\(\lambda\)</span>を用いて以下の項を追加する</div>
+<div class="line">(罰金法) 最小化したいコスト(目的関数)を<span class="math notranslate nohighlight">\(f(x)\)</span>、制約条件を<span class="math notranslate nohighlight">\(g(x) = 0\)</span>とすると、ハイパーパラメータ<span class="math notranslate nohighlight">\(\lambda\)</span>を用いて以下の項を追加して最適化問題を解くことを罰金法と呼びます。</div>
 <div class="line"><br /></div>
 </div>
 <blockquote>
@@ -405,25 +419,28 @@ N = len(C)
 \[\min_{x} \left\{ f(x) + \lambda g(x)^2\right\}\]</div>
 </div></blockquote>
 </div></blockquote>
-<p>したがって、数分割問題に対するQUBOは以下のようになります。</p>
+<p>よって、数分割問題に対するQUBOは以下のようになります。</p>
 <div class="math notranslate nohighlight">
-\[H\left(\left\{\sigma_{i}\right\}\right)=\left(\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)\right)^{2}\]</div>
-<p>D-Waveマシンに問題を投げるために<span class="math notranslate nohighlight">\(Q_{i j}\)</span>の値を求めたいので、<span class="math notranslate nohighlight">\(H\left(\left\{\sigma_{i}\right\}\right)\)</span>を展開していきます。</p>
+\[H\left(\left\{q_{i}\right\}\right)=\left(\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)\right)^{2}\]</div>
+<p>D-Waveマシンに問題を投げるためには<span class="math notranslate nohighlight">\(Q_{i j}\)</span>の値を求める必要があります。そのために<span class="math notranslate nohighlight">\(H\left(\left\{\sigma_{i}\right\}\right)\)</span>を展開し、整理をしましょう。</p>
 <div class="math notranslate nohighlight">
-\[H\left(\left\{\sigma_{i}\right\}\right)=\left(2\sum_{i=1}^{N} c_{i} q_{i} - \sum_{i=1}^{N} c_{i} \right)^{2} =4 \sum_{i=1}^{N} c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right) q_{i}+8 \sum_{i=1}^{N} \sum_{j=i+1}^{N} c_{i} c_{j} q_{i} q_{j}+\left(\sum_{i=1}^{N} c_{i}\right)^{2}\]</div>
-<p>よって、</p>
+\[H\left(\left\{q_{i}\right\}\right)=\left(2\sum_{i=1}^{N} c_{i} q_{i} - \sum_{i=1}^{N} c_{i} \right)^{2} =4 \sum_{i=1}^{N} c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right) q_{i}+8 \sum_{i=1}^{N} \sum_{j=i+1}^{N} c_{i} c_{j} q_{i} q_{j}+\left(\sum_{i=1}^{N} c_{i}\right)^{2}\]</div>
+<p>よって</p>
 <div class="math notranslate nohighlight">
 \[Q_{i i} = 4 c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right)\]</div>
 <div class="math notranslate nohighlight">
 \[Q_{i j} = 8 c_{i} c_{j}\]</div>
 <p>となります。</p>
+<blockquote>
+<div><p>一番最後の項は<span class="math notranslate nohighlight">\(\{ q_i\}\)</span>に依存しない定数であるため、ハミルトニアン<span class="math notranslate nohighlight">\(H (\{ q_i\})\)</span>を最小化する<span class="math notranslate nohighlight">\(\{ q_i\}\)</span>の組み合わせを探す上では無視しても問題ありません。</p>
+</div></blockquote>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>Q = {}
-
+<span></span># 上で求めたQ_{ii}, Q_{ij}を{(i, j): Q_{ij}}のような辞書型で定義します。
+Q = {}
 for i in range(N):
     Q[i, i] = 4 * C[i] * (C[i] - sum(C))
     for j in range(i + 1, N):
@@ -431,9 +448,9 @@ for i in range(N):
 </pre></div>
 </div>
 </div>
-<p>QUBOを可視化すると以下のようになります。対角成分が<span class="math notranslate nohighlight">\(Q_{i i}\)</span>、非対角成分が<span class="math notranslate nohighlight">\(Q_{i j}\)</span>です。可視化することで、結合の度合いや係数比など対象の問題を理解しやすくなります。数分割問題については定式化の時点で明らかですが、全ての量子ビット間に相互作用が存在する、全結合の問題である事が分かります。</p>
+<p>結合の度合いや係数比など対象の問題を理解するために、QUBOを可視化してみましょう。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -445,7 +462,7 @@ import matplotlib.pyplot as plt
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -465,7 +482,7 @@ import matplotlib.pyplot as plt
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -477,41 +494,56 @@ import matplotlib.pyplot as plt
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_4-DWaveOceanSDK_14_0.png" src="../_images/ja_4-DWaveOceanSDK_14_0.png" />
+<img alt="../_images/ja_4-DWaveOceanSDK_13_0.png" src="../_images/ja_4-DWaveOceanSDK_13_0.png" />
 </div>
 </div>
+<p>対角成分が<span class="math notranslate nohighlight">\(Q_{i i}\)</span>、非対角成分が<span class="math notranslate nohighlight">\(Q_{i j}\)</span>です。定式化の時点から明らかですが、数分割問題は全ての量子ビット間に相互作用が存在する、全結合の問題であることが分かります。</p>
 </div>
-<div class="section" id="イジングモデル">
-<h4>イジングモデル<a class="headerlink" href="#イジングモデル" title="Permalink to this headline">¶</a></h4>
-<p>数分割問題をイジングモデルで表すと、以下のような式で簡潔に表されます。</p>
+<div class="section" id="id7">
+<h4>イジングモデル<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
+<p>イジングモデルとQUBOの相互変換の式から、数分割問題をイジングモデルで表すと以下のような簡潔な式で表されます。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right) = \left(\sum_{i} c_{i} \sigma_{i}\right)^2\]</div>
-<p>同様に、D-Waveマシンに問題を投げるためには<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>の値が必要です。<span class="math notranslate nohighlight">\(\sigma_{i}^2 = 1\)</span>であることに注意して、<span class="math notranslate nohighlight">\(H\left(\left{\sigma_{i}\right\}\right)\)</span>を展開していきます。</p>
+<p>QUBOと同様に、D-Waveマシンに問題を投げるためには<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>の値が必要です。<span class="math notranslate nohighlight">\(\sigma_{i}^2 = 1\)</span>であることに注意して、<span class="math notranslate nohighlight">\(H\left(\left{\sigma_{i}\right\}\right)\)</span>を展開しましょう。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right) = \sum_{i} c_{i}^2 \sigma_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j} = \sum_{i} c_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j}\]</div>
-<p>よって、</p>
+<p>よって</p>
 <div class="math notranslate nohighlight">
 \[h_{i} = 0\]</div>
 <div class="math notranslate nohighlight">
 \[J_{i j} = 2 c_{i} c_{j}\]</div>
 <p>となります。</p>
+<blockquote>
+<div><p>QUBOでの議論と同様に、定数項は無視します。</p>
+</div></blockquote>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>h = {}
+<span></span># h_iとJ_ijを定義します。
+h = {}
 J = {}
-
 for i in range(N):
+    h[i] = 0
     for j in range(i + 1, N):
         J[i, j] = 2 * C[i] * C[j]
 </pre></div>
 </div>
 </div>
-<p>ちなみに、Oceanの基本的なライブラリであるdimodを用いることで、イジングモデルとQUBOの相互変換が可能です。</p>
+<p>ちなみに、Oceanの基本的なライブラリであるdimodの.BinaryQuadraticModel()を用いることで、イジングモデルとQUBOの相互変換が可能です。</p>
+<ul class="simple">
+<li><p>.BinaryQuadraticModel(linear, quadratic, offset, vartype)</p>
+<ul>
+<li><p>linear: dict, h_i(もしくはQ_{ii})を辞書型で入れます。</p></li>
+<li><p>quadratic: dict, J_ij(もしくはQ_{ij})を辞書型で入れます。</p></li>
+<li><p>offset: number, 変換する際のエネルギーオフセットを指定します。</p></li>
+<li><p>vartype: インプットとして入れる変数がイジングモデルの場合は’SPIN’を、QUBOの場合は’BINARY’を指定します。</p></li>
+</ul>
+</li>
+</ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -520,18 +552,18 @@ for i in range(N):
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># イジングモデルからQUBOへの変換
-model = dimod.BinaryQuadraticModel(h, J, 0.0, vartype=dimod.SPIN)
+<span></span># イジングモデルからQUBOへの変換を行います。
+model = dimod.BinaryQuadraticModel(h, J, 0.0, vartype=&#39;SPIN&#39;)
 qubo, offset = model.to_qubo()
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -547,34 +579,26 @@ qubo, offset = model.to_qubo()
 </div>
 </div>
 <div class="line-block">
-<div class="line">ここまで、<span class="math notranslate nohighlight">\(Q_{i i}, Q_{i j}\)</span>や<span class="math notranslate nohighlight">\(h_{i}, J_{i j}\)</span>といった係数行列を求めるために、構成したコスト関数を展開しました。しかし、より複雑なコスト関数を扱う場合、この手計算を人間が行うのは煩わしく、計算ミスが生じる可能性があります。</div>
-<div class="line">そこで、(株)リクルートコミュニケーションズが開発しているドメイン固有言語 PyQUBO を使用することで、コスト関数を展開することなくQUBOやイジングモデルを作成する事ができます。PyQUBOの使い方については、別のチュートリアルを公開しています。</div>
+<div class="line">ここまで、<span class="math notranslate nohighlight">\(Q_{i i}, Q_{i j}\)</span>や<span class="math notranslate nohighlight">\(h_{i}, J_{i j}\)</span>といった係数行列を求めるために、構成したハミルトニアンを展開しました。しかし、より複雑なハミルトニアンを扱う場合には手計算がより複雑になり、計算ミスが生じる可能性があります。</div>
+<div class="line">そこで、(株)リクルートコミュニケーションズが開発しているドメイン固有言語<strong>PyQUBO</strong>を用いることで、ハミルトニアンを展開することなくQUBOやイジングモデルを作成する事ができます。PyQUBOの使い方については以下のドキュメントを参照ください。</div>
 </div>
-<div class="line-block">
-<div class="line">Github: <a class="reference external" href="https://github.com/recruit-communications/pyqubo">https://github.com/recruit-communications/pyqubo</a></div>
-<div class="line">Document: <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/">https://pyqubo.readthedocs.io/en/latest/</a></div>
-</div>
-<div class="line-block">
-<div class="line">OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></div>
-<div class="line">Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></div>
-</div>
+<ul class="simple">
+<li><p>Github: <a class="reference external" href="https://github.com/recruit-communications/pyqubo">https://github.com/recruit-communications/pyqubo</a></p></li>
+<li><p>Document: <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/">https://pyqubo.readthedocs.io/en/latest/</a></p></li>
+<li><p>OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></p></li>
+<li><p>Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></p></li>
+</ul>
 </div>
 </div>
 </div>
 <div class="section" id="D-Waveマシンによる最適化">
 <h2>D-Waveマシンによる最適化<a class="headerlink" href="#D-Waveマシンによる最適化" title="Permalink to this headline">¶</a></h2>
-<div class="line-block">
-<div class="line">上記の数分割問題について、D-Waveマシンを用いて最適化を行います。ここでは、(1)単純に解く場合、(2)読み取り回数を変えた場合、</div>
-<div class="line">(3)アニーリングタイムを変えた場合を見ていきます。</div>
-</div>
+<p>それでは上記の数分割問題を、D-Waveマシンを用いて最適化することを考えましょう。このチュートリアルでは、(1)単純に解く場合 (2)読み取り回数を変えた場合、 (3)アニーリング時間を変えた場合を見てみます。</p>
 <div class="section" id="イジングモデルを解く">
 <h3>イジングモデルを解く<a class="headerlink" href="#イジングモデルを解く" title="Permalink to this headline">¶</a></h3>
-<div class="line-block">
-<div class="line">D-WaveマシンのサンプラーはDWaveSampler()を使用し、さらに問題をD-Waveマシンのグラフに埋め込む場合は</div>
-<div class="line">EmbeddingComposite()を使用します。</div>
-</div>
+<p>D-WaveマシンのサンプラーはDWaveSampler()、さらに問題をD-Waveマシンのキメラグラフに埋め込むためにEmbeddingComposite()を使用します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -584,61 +608,129 @@ from dwave.system.composites import EmbeddingComposite
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># ローカルに接続情報を設定している場合
-sampler = EmbeddingComposite(DWaveSampler())
+<span></span># 接続情報をオプションとして渡す場合は以下のようにします。
+endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;
+token = &#39;##########&#39;
+solver = &#39;DW_2000Q_VFYC_5&#39;
 
-# 接続情報をオプションとして渡す場合
-# endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;
-# token = &#39;XXXXXXXXXXXXXX&#39;
-# solver = &#39;DW_2000Q_2_1&#39;
-# sampler = EmbeddingComposite(DWaveSampler(endpoint=endpoint, token=token, solver=solver))
+# DWaveSamplerを用います。
+dw = DWaveSampler(endpoint=endpoint, token=token, solver=solver)
+# キメラグラフに埋め込みを行います。
+sampler = EmbeddingComposite(dw)
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response = {}
+<span></span># イジングモデルの場合は以下を使用します。
+response = sampler.sample_ising(h, J, num_reads=100)
 
-# イジングモデルの場合
-response[&#39;default&#39;] = sampler.sample_ising(h, J, num_reads=100)
-
-# QUBOの場合
-# response[&#39;default&#39;] = sampler.sample_qubo(Q, num_reads=100)
+# QUBOの場合は以下を使用します。
+# response = sampler.sample_qubo(Q, num_reads=100)
 </pre></div>
 </div>
 </div>
-<div class="line-block">
-<div class="line">ひとまず、得られた結果を確認してみましょう。解はリストとして samples_matrix に格納されています。</div>
-<div class="line">このリストの大きさは、(得られた解の個数) <span class="math notranslate nohighlight">\(\times\)</span> (量子ビット数) となっています。</div>
-</div>
+<p>得られた結果を確認してみましょう。解の状態、エネルギー、その状態の発生回数、D-Waveマシンのグラフにおいて壊れたチェーンの割合を.recordで見ることができます。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;default&#39;].samples_matrix.shape
+<span></span>response.record
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(87, 10)
+rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1, -1,  1], -174., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([ 1, -1,  1,  1,  1,  1, -1,  1, -1, -1], -334., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 3, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1,  1, -1,  1],  206., 2, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 2, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 3, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1,  1,  1],  306., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 3, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 4, 0.8),
+           ([ 1, -1, -1, -1,  1,  1, -1,  1,  1, -1], -270., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1,  1,  1,  1, -1], -354., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 4, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 2, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([ 1, -1,  1,  1,  1,  1, -1,  1, -1, -1], -334., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1,  1,  1,  1, -1], -354., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 1, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 2, 0.8),
+           ([-1,  1, -1, -1,  1, -1,  1, -1,  1,  1], -354., 1, 0.8),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1, -1,  1, -1,  1, -1,  1,  1, -1], -354., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1,  1, -1,  1,  1],  306., 3, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1,  1, -1], -334., 1, 1. ),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 1. ),
+           ([ 1, -1, -1, -1, -1,  1,  1,  1,  1, -1], -366., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1, -1, -1], -370., 1, 1. ),
+           ([-1,  1,  1,  1, -1, -1, -1, -1,  1,  1], -366., 1, 1. ),
+           ([ 1, -1,  1, -1,  1,  1,  1, -1,  1, -1], -354., 2, 1. ),
+           ([ 1, -1,  1,  1,  1,  1, -1, -1,  1, -1], -366., 2, 1. ),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 1. ),
+           ([-1,  1,  1, -1, -1, -1,  1, -1,  1,  1], -370., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1, -1, -1,  1,  1], -306., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1, -1, -1], -370., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1, -1, -1,  1,  1], -306., 1, 1. ),
+           ([-1,  1,  1,  1, -1, -1, -1, -1,  1,  1], -366., 1, 1. ),
+           ([-1,  1, -1,  1,  1, -1, -1,  1, -1,  1], -334., 1, 1. ),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1,  1, -1], -334., 1, 1. ),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 1. )],
+          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (10,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;), (&#39;chain_break_fraction&#39;, &#39;&lt;f8&#39;)])
 </pre></div></div>
 </div>
-<p>上の通り、87個の解が得られました。この中に、最適解がどのくらい含まれているか見てみましょう。ここでは最適解かどうかを判別するために、それぞれの解のエネルギー値を求めます。</p>
+<p>この中に最適解がどのくらい含まれているかを調べてみましょう。ここでは最適解かどうかを判別するために、それぞれの解のエネルギー値を求めます。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -662,314 +754,40 @@ response[&#39;default&#39;] = sampler.sample_ising(h, J, num_reads=100)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>gs_indices = []
-for i in range(len(response[&#39;default&#39;].samples_matrix)):
-    ene = calcurate_energy(response[&#39;default&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
-#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
-    if ene == 0:  # エネルギー値が0であれば最適解
-        gs_indices.append(i)
+<span></span># 最適解が出た回数を数え上げます。
+num_optimal_sol = 0
+optimal_sol = []
+twenty_sol = []
+for state in response.record:
+    # .recordの0番目が状態のリスト、2番目がその状態の出現回数です。
+    solution = state[0]
+    num_oc = state[2]
+    # エネルギーを計算します。
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # エネルギー(総和の差)が0のときを数え上げます。
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
+    # 20 µsの結果を保存しておきます(あとで使用します)。
+    twenty_sol.append(solution)
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>print(len(gs_indices))
+<span></span>num_optimal_sol
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-5
-</pre></div></div>
-</div>
-<p>最適解が重複を含めて5個得られました。2つのグループは以下のようになっています。全く同じ解もあれば、異なる分け方があったりと、解がいくつか得られたことが分かります。</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>for i in gs_indices:
-    optimal_solution = response[&#39;default&#39;].samples_matrix[i]
-    group_A = [C[i] for i, s in enumerate(optimal_solution) if s == 1]
-    group_B = [C[i] for i, s in enumerate(optimal_solution) if s == -1]
-
-    print(i, optimal_solution)
-    print(&#39;Group A:&#39;, group_A, &#39;, Sum =&#39;, sum(group_A))
-    print(&#39;Group B:&#39;, group_B, &#39;, Sum =&#39;, sum(group_B))
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-39 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
-Group A: [2, 8, 5, 7, 5] , Sum = 27
-Group B: [10, 3, 9, 3, 2] , Sum = 27
-41 [-1  1  1 -1 -1 -1  1 -1  1  1]
-Group A: [10, 3, 9, 3, 2] , Sum = 27
-Group B: [2, 8, 5, 7, 5] , Sum = 27
-50 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
-Group A: [2, 8, 5, 7, 5] , Sum = 27
-Group B: [10, 3, 9, 3, 2] , Sum = 27
-57 [-1 -1  1 -1  1 -1  1  1  1  1]
-Group A: [3, 5, 9, 5, 3, 2] , Sum = 27
-Group B: [2, 10, 8, 7] , Sum = 27
-84 [ 1 -1 -1  1  1  1 -1  1 -1 -1]
-Group A: [2, 8, 5, 7, 5] , Sum = 27
-Group B: [10, 3, 9, 3, 2] , Sum = 27
-</pre></div></div>
-</div>
-<div class="line-block">
-<div class="line">2つのグループの総和がいずれも等しい、最適解を得ることができました。</div>
-<div class="line">また、D-Waveマシンから返される結果には、解以外にも様々な情報が含まれています (document: <a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html#dimod.SampleSet">SampleSet</a>)。</div>
-</div>
-<p><strong>data_vectors</strong> - energy: 埋め込んだD-Waveマシンのグラフにおけるエネルギー値 - num_occurrences: 解の出現頻度 - chain_break_fraction: D-Waveマシンのグラフにおいて壊れたチェーンの割合</p>
-<div class="line-block">
-<div class="line"><strong>info</strong></div>
-<div class="line">実行時のQPU(Quantum Processing Unit)に関する情報</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;default&#39;].data_vectors
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;energy&#39;: array([-114., -174., -270., -270., -270., -114., -270., -270., -114.,
-        -270., -270., -270., -270., -306., -334., -270., -306., -270.,
-          30.,  786.,   30., 1230., -354., -114., -114., -334., -226.,
-        -306.,  530., -334.,   30., -354., -354.,   30.,  306., -114.,
-        -226., -226., -114., -370., -366., -370., -354., -354., -354.,
-        -334.,   30., -270., -114., -114., -370., -114.,  306.,  114.,
-          30.,  306., -174., -370., -226., -366., -270., -366., -334.,
-        -114.,  530., -114.,   30., -334.,  -46., -354.,   30., -114.,
-        -354., -270.,  -46., -114., -270., -354., -366.,  114., -270.,
-        -226., -354., -114., -370., -270., -366.]),
- &#39;num_occurrences&#39;: array([2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1,
-        1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
- &#39;chain_break_fraction&#39;: array([0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 0.9, 0.9, 1. ,
-        0.9, 0.9, 0.8, 0.9, 0.8, 1. , 1. , 1. , 1. , 0.9, 0.9, 0.9, 1. ,
-        0.9, 1. , 0.9, 0.9, 1. , 0.9, 1. , 1. , 0.9, 1. , 1. , 1. , 1. ,
-        0.8, 0.8, 0.8, 0.8, 0.8, 0.9, 0.7, 0.7, 0.7, 0.7, 0.8, 1. , 1. ,
-        0.8, 0.8, 1. , 0.9, 0.8, 1. , 0.9, 0.8, 0.9, 0.8, 0.8, 0.8, 0.8,
-        0.8, 0.9, 0.9, 0.8, 0.9, 1. , 0.9, 1. , 1. , 1. , 1. , 1. , 0.9,
-        1. , 0.9, 0.9, 1. , 0.8, 0.8, 1. , 0.8, 0.9])}
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;default&#39;].info
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;timing&#39;: {&#39;total_real_time&#39;: 24029,
-  &#39;qpu_access_overhead_time&#39;: 2490,
-  &#39;anneal_time_per_run&#39;: 20,
-  &#39;post_processing_overhead_time&#39;: 981,
-  &#39;qpu_sampling_time&#39;: 16396,
-  &#39;readout_time_per_run&#39;: 123,
-  &#39;qpu_delay_time_per_sample&#39;: 21,
-  &#39;qpu_anneal_time_per_sample&#39;: 20,
-  &#39;total_post_processing_time&#39;: 981,
-  &#39;qpu_programming_time&#39;: 7633,
-  &#39;run_time_chip&#39;: 16396,
-  &#39;qpu_access_time&#39;: 24029,
-  &#39;qpu_readout_time_per_sample&#39;: 123}}
-</pre></div></div>
-</div>
-</div>
-<div class="section" id="読み取り回数を変えてみる">
-<h3>読み取り回数を変えてみる<a class="headerlink" href="#読み取り回数を変えてみる" title="Permalink to this headline">¶</a></h3>
-<div class="line-block">
-<div class="line">次に、読み取り回数を変えた場合に得られる解がどのように変わるかを見てみましょう。</div>
-<div class="line">sample_ising()、またはsample_qubo()のnum_readsに値を設定することで、読み取り回数を指定できます。</div>
-<div class="line">num_readsのデフォルト値は1で、先ほどは100回で実行しました。今度は、1000回で行なってみましょう。</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># イジングモデルの場合
-response[&#39;num_reads&#39;] = sampler.sample_ising(h, J, num_reads=1000)
-
-# QUBOの場合
-# response[&#39;num_reads&#39;] = sampler.sample_qubo(Q, num_reads=1000)
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;num_reads&#39;].samples_matrix.shape
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(675, 10)
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>gs_indices = []
-for i in range(len(response[&#39;num_reads&#39;].samples_matrix)):
-    ene = calcurate_energy(response[&#39;num_reads&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
-#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
-    if ene == 0:  # エネルギー値が0であれば最適解
-        gs_indices.append(i)
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>len(gs_indices)
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-44
-</pre></div></div>
-</div>
-<p>単純ですが読み取り回数を増やすことで、得られた最適解の個数が増加しました。一方で、アニーリングタイム(1回のアニーリングに要する時間)が 20<span class="math notranslate nohighlight">\(\mu s\)</span> (デフォルト値)と短く、読み取り回数を増加させても実時間ではそれほど差はありません。</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;num_reads&#39;].info
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;timing&#39;: {&#39;total_real_time&#39;: 171559,
-  &#39;qpu_access_overhead_time&#39;: 1277,
-  &#39;anneal_time_per_run&#39;: 20,
-  &#39;post_processing_overhead_time&#39;: 691,
-  &#39;qpu_sampling_time&#39;: 163960,
-  &#39;readout_time_per_run&#39;: 123,
-  &#39;qpu_delay_time_per_sample&#39;: 21,
-  &#39;qpu_anneal_time_per_sample&#39;: 20,
-  &#39;total_post_processing_time&#39;: 691,
-  &#39;qpu_programming_time&#39;: 7599,
-  &#39;run_time_chip&#39;: 163960,
-  &#39;qpu_access_time&#39;: 171559,
-  &#39;qpu_readout_time_per_sample&#39;: 123}}
-</pre></div></div>
-</div>
-</div>
-<div class="section" id="アニーリングタイムを変えてみる">
-<h3>アニーリングタイムを変えてみる<a class="headerlink" href="#アニーリングタイムを変えてみる" title="Permalink to this headline">¶</a></h3>
-<p>最後に、アニーリングタイムを変えた場合に得られる解がどのように変わるかを見てみましょう。 sample_ising()、またはsample_qubo()のannealing_timeに値を設定することで、アニーリングタイムを指定できます。 先ほどは、デフォルト値の 20<span class="math notranslate nohighlight">\(\mu s\)</span> で実行しました。今度は、100<span class="math notranslate nohighlight">\(\mu s\)</span> でアニーリングを行なってみましょう。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># イジングモデルの場合
-response[&#39;annealing_time&#39;] = sampler.sample_ising(h, J, num_reads=100, annealing_time=50)
-
-# QUBOの場合
-# response[&#39;annealing_time&#39;] = sampler.sample_qubo(Q, num_reads=100, annealing_time=100)
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>response[&#39;annealing_time&#39;].samples_matrix.shape
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(97, 10)
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>gs_indices = []
-for i in range(len(response[&#39;annealing_time&#39;].samples_matrix)):
-    ene = calcurate_energy(response[&#39;annealing_time&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
-#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
-    if ene == 0:  # エネルギー値が0であれば最適解
-        gs_indices.append(i)
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>len(gs_indices)
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -977,14 +795,268 @@ for i in range(len(response[&#39;annealing_time&#39;].samples_matrix)):
 3
 </pre></div></div>
 </div>
-<p>アニーリングタイムを変えたことで、得られた解に何か違いがないか調べてみます。ここでは、解のエネルギーのヒストグラムを見てみましょう。</p>
+<p>最適解が重複を含めて3個得られました。2つのグループは以下のようになっています。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in response[&#39;default&#39;].samples_matrix], alpha=0.5, label=&#39;20μs&#39;)
-plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in response[&#39;annealing_time&#39;].samples_matrix], alpha=0.5, label=&#39;50μs&#39;)
+<span></span>for solution in optimal_sol:
+    group_A = [C[i] for i, s in enumerate(solution) if s==1]
+    group_B = [C[i] for i, s in enumerate(solution) if s==-1]
+    print(solution)
+    print(&#39;Group A: &#39;, group_A, &#39;, Sum = &#39;, sum(group_A))
+    print(&#39;Group B: &#39;, group_B, &#39;, Sum = &#39;, sum(group_B))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A:  [2, 8, 5, 7, 5] , Sum =  27
+Group B:  [10, 3, 9, 3, 2] , Sum =  27
+[-1  1  1 -1 -1 -1  1 -1  1  1]
+Group A:  [10, 3, 9, 3, 2] , Sum =  27
+Group B:  [2, 8, 5, 7, 5] , Sum =  27
+[ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A:  [2, 8, 5, 7, 5] , Sum =  27
+Group B:  [10, 3, 9, 3, 2] , Sum =  27
+</pre></div></div>
+</div>
+<div class="line-block">
+<div class="line">2つのグループの総和がいずれも等しい、最適解を得ることができました。</div>
+<div class="line">また、D-Waveマシンから返される結果には、解以外にも様々な情報が含まれています。詳細は<a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html#dimod.SampleSet">SampleSet</a>のドキュメントを参照してください。</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">data_vectors</span></code>ではエネルギー、状態の出現回数、D-Waveマシンのグラフにおいて壊れたチェーンの割合のみをリストで確認することができます。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>response.data_vectors
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;energy&#39;: array([-226.,   30., -270., -270., -174., -174.,   30., -174., -270.,
+        -174., -114.,   30., -270., -270., -270., -174., -114., -334.,
+          30., -270., -114.,  206., -114., -366., -366.,   30., -354.,
+         306., -366.,   30.,   30., -306., -270., -354.,   30., -270.,
+        -366.,   30., -114., -114., -354., -334.,   30., -306.,   30.,
+        -354., -354., -366., -306., -366., -354., -270.,   30., -354.,
+         306., -334., -366., -366., -370., -366., -354., -366., -270.,
+        -370., -306., -370., -306., -366., -334.,   30., -334., -270.]),
+ &#39;num_occurrences&#39;: array([1, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 3, 1, 2,
+        2, 1, 1, 3, 1, 1, 1, 3, 1, 4, 1, 2, 2, 1, 4, 1, 2, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 3, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1]),
+ &#39;chain_break_fraction&#39;: array([0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. ,
+        1. , 1. , 1. , 1. , 1. , 1. , 1. ])}
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">info</span></code>では実行時のQPU(Quantum Processing Unit)に関する情報の一覧を確認することができます。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>response.info
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;qpu_sampling_time&#39;: 31496,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;qpu_readout_time_per_sample&#39;: 274,
+  &#39;qpu_access_time&#39;: 40886,
+  &#39;qpu_access_overhead_time&#39;: 2407,
+  &#39;qpu_programming_time&#39;: 9390,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;total_post_processing_time&#39;: 1355,
+  &#39;post_processing_overhead_time&#39;: 1355,
+  &#39;total_real_time&#39;: 40886,
+  &#39;run_time_chip&#39;: 31496,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;readout_time_per_run&#39;: 274},
+ &#39;problem_id&#39;: &#39;7a565c51-5378-430b-a5d3-c957cf832d02&#39;}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="読み取り回数を変えてみる">
+<h3>読み取り回数を変えてみる<a class="headerlink" href="#読み取り回数を変えてみる" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">次に、読み取り回数を変えた場合に得られる解がどのように変わるかを見てみましょう。</div>
+<div class="line">sample_ising()またはsample_qubo()の<code class="docutils literal notranslate"><span class="pre">num_reads</span></code>に値を設定することで、読み取り回数を指定できます。</div>
+<div class="line">num_readsのデフォルト値は1です。先ほどは100回でしたので、今度は1000回で実行してみましょう。</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[122]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># イジングモデルの場合は以下を用います。
+response = sampler.sample_ising(h, J, num_reads=1000)
+
+# QUBOの場合は以下を用います。
+# response = sampler.sample_qubo(Q, num_reads=1000)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[123]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># 最適解が出た回数を数え上げます。
+num_optimal_sol = 0
+optimal_sol = []
+for state in response.record:
+    # .recordの0番目が状態のリスト、2番目がその状態の出現回数です。
+    solution = state[0]
+    num_oc = state[2]
+    # エネルギーを計算します。
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # エネルギー(総和の差)が0のときを数え上げます。
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>num_optimal_sol
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+77
+</pre></div></div>
+</div>
+<p>読み取り回数を増やすことで、得られた最適解の個数が増加しました。一方で、アニーリング時間(1回のアニーリングに要する時間)が20<span class="math notranslate nohighlight">\(\mu s\)</span> (デフォルト値)と短いため、読み取り回数を増加させても実時間はそれほど差はありません。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>response.info
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;qpu_sampling_time&#39;: 314960,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;qpu_readout_time_per_sample&#39;: 274,
+  &#39;qpu_access_time&#39;: 324337,
+  &#39;qpu_access_overhead_time&#39;: 1875,
+  &#39;qpu_programming_time&#39;: 9377,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;total_post_processing_time&#39;: 18907,
+  &#39;post_processing_overhead_time&#39;: 18907,
+  &#39;total_real_time&#39;: 324337,
+  &#39;run_time_chip&#39;: 314960,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;readout_time_per_run&#39;: 274},
+ &#39;problem_id&#39;: &#39;ac673401-ba8e-4a86-a7ef-b9037f882250&#39;}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="アニーリング時間を変えてみる">
+<h3>アニーリング時間を変えてみる<a class="headerlink" href="#アニーリング時間を変えてみる" title="Permalink to this headline">¶</a></h3>
+<p>最後に、アニーリング時間を変えた場合に得られる解がどのように変わるかを見てみましょう。 sample_ising()またはsample_qubo()の<code class="docutils literal notranslate"><span class="pre">annealing_time</span></code>に値を設定することで、アニーリング時間を指定できます(単位は<span class="math notranslate nohighlight">\(\mu s\)</span>)。先ほどはデフォルト値の20<span class="math notranslate nohighlight">\(\mu s\)</span>で実行しました。今度は50<span class="math notranslate nohighlight">\(\mu s\)</span>でアニーリングを行なってみましょう。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># イジングモデルの場合は以下を用います。
+response = sampler.sample_ising(h, J, num_reads=100, annealing_time=50)
+
+# QUBOの場合は以下を用います。
+# response = sampler.sample_qubo(Q, num_reads=100, annealing_time=50)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># 最適解が出た回数を数え上げます。
+num_optimal_sol = 0
+optimal_sol = []
+fifty_sol = []
+for state in response.record:
+    # .recordの0番目が状態のリスト、2番目がその状態の出現回数です。
+    solution = state[0]
+    num_oc = state[2]
+    # エネルギーを計算します。
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # エネルギー(総和の差)が0のときを数え上げます。
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
+    # 50µsでの実行結果を保存します。
+    fifty_sol.append(solution)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>num_optimal_sol
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+6
+</pre></div></div>
+</div>
+<p>最適解の回数が劇的に増えたようには見えません。そこでアニーリング時間を変えたことで、得られた解に何か違いがないか調べてみます。ここでは、解のエネルギーのヒストグラムを見てみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[129]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in twenty_sol], alpha=0.5, label=&#39;20μs&#39;)
+plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in fifty_sol], alpha=0.5, label=&#39;50μs&#39;)
 plt.xlabel(&#39;Energy&#39;)
 plt.ylabel(&#39;Frequency&#39;)
 plt.legend()
@@ -996,21 +1068,35 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_4-DWaveOceanSDK_51_0.png" src="../_images/ja_4-DWaveOceanSDK_51_0.png" />
+<img alt="../_images/ja_4-DWaveOceanSDK_49_0.png" src="../_images/ja_4-DWaveOceanSDK_49_0.png" />
 </div>
 </div>
 <div class="line-block">
-<div class="line">上のヒストグラムから、アニーリングタイムを増加させたことで得られた最適解の個数は減少しましたが、低いエネルギーの解を多く見つけていることが分かります。ただし、アニーリングタイムを大きくすればいいという単純な話ではありません。アニーリングタイムが小さい場合の方が最適化がうまくいくこともあり、それぞれの問題に依ります。</div>
-<div class="line">また、量子アニーリングをはじめとするアニーリング法はメタヒューリスティックスなアルゴリズムであるため、実行するたびに得られる結果は異なることも注意しなければなりません。</div>
+<div class="line">上のヒストグラムから、アニーリング時間を増加させたことで得られた最適解の個数は減少しましたが、低いエネルギーの解を多く見つけていることが分かります。ただし、アニーリング時間を大きくすればいいという単純な話ではありません。アニーリング時間が小さい場合の方が最適化がうまくいくこともあり、その依存関係はそれぞれの問題に依ります。</div>
+<div class="line">また、量子アニーリングをはじめとするアニーリング法はメタヒューリスティックスなアルゴリズムであるため、実行するたびに得られる結果は異なる点にも注意しましょう。</div>
 </div>
 </div>
 </div>
-<div class="section" id="まとめ">
-<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
-<p>数分割問題の最適化を通して、Oceanの使い方を紹介しました。このチュートリアルで説明したことを押さえるだけでも、様々なことができるようになります。例えば、以下のことを調べられるでしょう。 - 読み取り回数、アニーリングタイムに対する成功確率(最適解が得られる割合) - 読み取り回数、アニーリングタイムに対するエネルギー値 - 複数の最適解が存在する数分割問題に対して、得られる最適解の割合</p>
+<div class="section" id="結言">
+<h2>結言<a class="headerlink" href="#結言" title="Permalink to this headline">¶</a></h2>
+<p>数分割問題の最適化を通して、D-Wave Oceanの使い方を紹介しました。このチュートリアルで説明したことを押さえるだけでも、様々なことができるようになります。例えば、以下のことを調べられるでしょう。</p>
+<ul class="simple">
+<li><p>読み取り回数、アニーリングタイムに対する成功確率(最適解が得られる割合)</p></li>
+<li><p>読み取り回数、アニーリングタイムに対するエネルギー値</p></li>
+<li><p>複数の最適解が存在する数分割問題に対して、得られる最適解の割合</p></li>
+</ul>
 <p>2019年4月現在、1ヶ月1分間無料でD-Waveマシンを利用することができます。ぜひ利用して、上の項目について実験してみてください。</p>
 <p>D-Wave Leap: <a class="reference external" href="https://cloud.dwavesys.com/leap/">https://cloud.dwavesys.com/leap/</a></p>
 <p>このチュートリアルでは触れることができませんでしたが、他にもアニーリングパラメータが存在します。例えば、アニーリングのスケジュールを指定することで、リバースアニーリングなど通常のアニーリングとは異なる手法を実行することができます。気になった方は、D-Waveのドキュメントを読んでみてください。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
