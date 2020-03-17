@@ -311,8 +311,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="ch">#!pip install openjij</span>
-<span class="c1"># !pip install pyqubo</span>
+<span></span>#!pip install openjij
+# !pip install pyqubo
 </pre></div>
 </div>
 </div>
@@ -321,7 +321,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.5 を仮定する
+<span></span>!pip show openjij  # openjij == 0.0.5 を仮定する
 </pre></div>
 </div>
 </div>
@@ -347,7 +347,7 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip show pyqubo  # <span class="nv">pyqubo</span> <span class="o">==</span> <span class="m">0</span>.3.0 を仮定する
+<span></span>!pip show pyqubo  # pyqubo == 0.3.0 を仮定する
 </pre></div>
 </div>
 </div>
@@ -389,12 +389,12 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#頂点の数</span>
-<span class="n">N_VER</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="c1">#色の数</span>
-<span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="c1">#グラフを定義．0~7の頂点があったときに，どの頂点同士が線で結ばれているかを定義している．</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span></span>#頂点の数
+N_VER = 8
+#色の数
+N_COLOR = 4
+#グラフを定義．0~7の頂点があったときに，どの頂点同士が線で結ばれているかを定義している．
+graph = [(0,1), (0,2), (1,2), (5,6), (2,3), (2,5), (3,4), (5,7), (7, 6)]
 </pre></div>
 </div>
 </div>
@@ -406,7 +406,7 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">solve_qubo</span>
+<span></span>from pyqubo import Array, Constraint, solve_qubo
 </pre></div>
 </div>
 </div>
@@ -416,7 +416,7 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
+<span></span>x = Array.create(&#39;x&#39;, shape=(N_VER,N_COLOR), vartype=&#39;BINARY&#39;)
 </pre></div>
 </div>
 </div>
@@ -426,13 +426,13 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 第一項</span>
-<span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
-<span class="c1"># 第二項</span>
-<span class="n">H_B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">))</span>
+<span></span># 第一項
+H_A = Constraint(sum((1-sum(x[v,i] for i in range(1,N_COLOR)))**2 for v in range(N_VER)), label=&#39;HA&#39;)
+# 第二項
+H_B = sum((-1+sum(x[v,i] for v in range (N_VER)))/2*(sum(x[v,i] for v in range (N_VER))) - sum(x[u,i]*x[v,i] for (u,v) in graph) for i in range (1,N_COLOR))
 
-<span class="c1">#コスト関数</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="n">H_A</span><span class="o">+</span><span class="n">H_B</span>
+#コスト関数
+Q = H_A+H_B
 </pre></div>
 </div>
 </div>
@@ -442,9 +442,9 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># モデルをコンパイル</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+<span></span># モデルをコンパイル
+model = Q.compile()
+qubo, offset = model.to_qubo()
 </pre></div>
 </div>
 </div>
@@ -455,10 +455,10 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#PyQUBOによるSA</span>
-<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
-<span class="c1"># 得られた結果をデコードする</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span></span>#PyQUBOによるSA
+raw_solution = solve_qubo(qubo)
+# 得られた結果をデコードする
+decoded_solution, broken, energy = model.decode_solution(raw_solution, vartype=&quot;BINARY&quot;)
 </pre></div>
 </div>
 </div>
@@ -467,7 +467,7 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+<span></span>decoded_solution[&#39;x&#39;]
 </pre></div>
 </div>
 </div>
@@ -505,10 +505,10 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span></span>import openjij as oj
 
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">()</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">)</span>
+sampler = oj.SQASampler()
+response = sampler.sample_qubo(Q=qubo)
 </pre></div>
 </div>
 </div>
@@ -520,12 +520,12 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span></span>dict_solution = response.samples[0]
+decoded_solution, broken, energy = model.decode_solution(dict_solution, vartype=&quot;BINARY&quot;)
 
-<span class="c1"># openjijの内部の処理で順番が崩れてしまうので sort して見やすくしておく</span>
-<span class="n">x_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-<span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">x_solution</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+# openjijの内部の処理で順番が崩れてしまうので sort して見やすくしておく
+x_solution = dict(sorted(decoded_solution[&#39;x&#39;].items()))
+{key:dict(sorted(value.items())) for key, value in x_solution.items()}
 </pre></div>
 </div>
 </div>
@@ -589,7 +589,7 @@ Required-by:
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

@@ -312,7 +312,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span>!pip install openjij
 !pip show openjij  # openjij == 0.0.6 を仮定します
 </pre></div>
@@ -359,7 +359,7 @@ Required-by:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span>import openjij as oj
 
 sampler=oj.GPUSQASampler(num_reads=100, unit_num_L=2)
@@ -377,7 +377,7 @@ sampler=oj.GPUSQASampler(num_reads=100, unit_num_L=2)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span>Q = {(0, 4): -1, (0, 5): -1, (4, 12): 1}
 response = sampler.sample_qubo(Q)
 response
@@ -422,7 +422,7 @@ minmum energy state sample : [1, 0, 1, 1]
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>
