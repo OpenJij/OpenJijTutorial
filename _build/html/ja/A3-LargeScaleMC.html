@@ -328,27 +328,27 @@ H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
 <h2>問題の定義 - Graph -<a class="headerlink" href="#問題の定義---Graph--" title="Permalink to this headline">¶</a></h2>
 <p>問題を定義してみましょう。<code class="docutils literal notranslate"><span class="pre">graph</span></code>の中の<strong>Dense</strong>モジュールが必要となります。 &gt; <code class="docutils literal notranslate"><span class="pre">graph</span></code>中には基本的に<strong>Dense</strong>モジュールと<strong>Sparse</strong>モジュールがあり、今回の例のように全ての<span class="math notranslate nohighlight">\(J_{ij}\)</span>で値が定義されている場合には<strong>Dense</strong>モジュールが適しています。多くの<span class="math notranslate nohighlight">\(J_{ij}\)</span>の要素が0の場合には<strong>Sparse</strong>が適しています。使い方はどちらもほぼ変わりません。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
-<span class="c1">#問題サイズを100とします。</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span></span>import cxxjij.graph as G
+#問題サイズを100とします。
+N = 100
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1">#sparseの場合</span>
-<span class="c1">#graph = G.Sparse(N)</span>
+graph = G.Dense(N)
+#sparseの場合
+#graph = G.Sparse(N)
 </pre></div>
 </div>
 </div>
 <p><span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>を設定します。今回は平均0、標準偏差1のGauss分布から生成される値を設定します。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install numpy #乱数生成にnumpyを使います。
+<span></span>!pip install numpy #乱数生成にnumpyを使います。
 </pre></div>
 </div>
 </div>
@@ -358,40 +358,40 @@ H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Defaulting to user installation because normal site-packages is not writeable
-Requirement already satisfied: numpy in /home/jiko/.local/lib/python3.8/site-packages (1.18.1)
+Requirement already satisfied: numpy in /usr/lib/python3.8/site-packages (1.18.1)
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span></span>import numpy as np
+mu, sigma = 0, 1
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。</span>
-        <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
+for i in range(N):
+    for j in range(N):
+        #Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。
+        graph[i,j] = 0 if i == j else np.random.normal()/N
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
+for i in range(N):
+    graph[i] = np.random.normal()/N
 </pre></div>
 </div>
 </div>
 <p>ここで、縦磁場に関しては、<code class="docutils literal notranslate"><span class="pre">graph[i]</span></code>でも、<code class="docutils literal notranslate"><span class="pre">graph[i,i]</span></code>でもどちらでもアクセスできます。</p>
 <p>また、イジングモデルの定義上、<span class="math notranslate nohighlight">\(J_{ij}\)</span>と<span class="math notranslate nohighlight">\(J_{ji}\)</span>は自動で同じ値となります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">graph</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>
-<span class="n">graph</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="mi">34</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.6</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="mi">34</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="mi">34</span><span class="p">,</span><span class="mi">12</span><span class="p">])</span>
+<span></span>graph[20] = 0.5
+print(graph[20,20])
+print(graph[20])
+graph[12,34] = -0.6
+print(graph[12,34])
+print(graph[34,12])
 </pre></div>
 </div>
 </div>
@@ -428,36 +428,38 @@ end{align}` を計算します。</p>
 <p>続いて計算を行うためのシステムを定義します。ここで古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。</p>
 <p>まずは古典イジング模型のシステムを作成してみます。<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>で作成できます。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+<span></span>import cxxjij.system as S
 
-<span class="n">mysystem</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">graph</span><span class="p">)</span>
+mysystem = S.make_classical_ising(graph.gen_spin(), graph)
 </pre></div>
 </div>
 </div>
 <div class="line-block">
 <div class="line">ここで、引数の1つめにはランダムに生成したスピン、2つめはGraphそのものを代入しています。</div>
-<div class="line">これにより初期スピン配位が<code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>となる古典イジング模型のシステムが作成できます。 &gt; <code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>は内部でGraphとspinをそのまま保持しています。実装は<a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/system/classical_ising.hpp#L37">ここ</a>にあり、63行目でメンバ変数</div>
+<div class="line">これにより初期スピン配位が<code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>となる古典イジング模型のシステムが作成できます。</div>
 </div>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>は内部でGraphとspinをそのまま保持しています。実装は<a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/system/classical_ising.hpp#L37">ここ</a>にあり、63行目でメンバ変数</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span><span class="o">::</span><span class="n">Spins</span> <span class="n">spin</span><span class="p">;</span>
 <span class="k">const</span> <span class="n">GraphType</span> <span class="n">interaction</span><span class="p">;</span>
 </pre></div>
 </div>
 <div class="line-block">
 <div class="line">が定義されています。</div>
-<div class="line">古典イジング模型に関しては、行列演算ライブラリEigenを用いて最適化されたシステムである<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising_Eigen</span></code>も用意しています。(実装は<a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/system/classical_ising.hpp#L78">ここ</a>)</div>
-<div class="line">計算速度はこちらのほうが速いので<strong>実際の用途では``system.make_classical_ising_Eigen``を使うことをおすすめします。</strong></div>
+<div class="line">古典イジング模型に関しては、行列演算ライブラリEigenを用いて最適化されたシステムである<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising_Eigen</span></code>も用意しています。(実装は<a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/system/classical_ising.hpp#L78">ここ</a>) 計算速度はこちらのほうが速いので<strong>実際の用途では``system.make_classical_ising_Eigen``を使うことをおすすめします。</strong></div>
 </div>
+</div></blockquote>
 <p>システムに直接アクセスして、値を読むこともできます。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">mysystem</span><span class="o">.</span><span class="n">spin</span><span class="p">)</span>
+<span></span>print(mysystem.spin)
 </pre></div>
 </div>
 </div>
@@ -466,7 +468,7 @@ end{align}` を計算します。</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[-1, 1, -1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1]
+[1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, -1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1]
 </pre></div></div>
 </div>
 <div class="line-block">
@@ -492,24 +494,24 @@ end{align}` を計算します。</p>
 <h3>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h3>
 <p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられ、パラメータにいれる値はSystemによって異なります。例えば古典イジング模型ならばパラメータとして温度の逆数である逆温度<span class="math notranslate nohighlight">\(\beta\)</span>を設定します。 例えばスケジュールリストとして</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">schedule_list</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10</span><span class="p">),(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">80</span><span class="p">),(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)]</span>
+<span></span>schedule_list = [(0.01, 10),(10, 80),(0.1, 30)]
 </pre></div>
 </div>
 </div>
 <p>と設定された場合、逆温度<span class="math notranslate nohighlight">\(\beta=0.01\)</span>で10モンテカルロステップ、<span class="math notranslate nohighlight">\(\beta=10\)</span>で80ステップ、<span class="math notranslate nohighlight">\(\beta=0.1\)</span>で30ステップの計120モンテカルロステップを実行することを意味します。</p>
 <p>アニーリングを実行するにあたっては、逆温度は等比級数で増加させていくことが多いため、<code class="docutils literal notranslate"><span class="pre">utility</span></code>にある<code class="docutils literal notranslate"><span class="pre">make_classical_schedule_list</span></code>を使うと便利です。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
-<span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">schedule_list</span><span class="p">)</span>
+<span></span>import cxxjij.utility as U
+schedule_list = U.make_classical_schedule_list(0.1, 50, 20, 10)
+print(schedule_list)
 </pre></div>
 </div>
 </div>
@@ -527,12 +529,12 @@ end{align}` を計算します。</p>
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
 <p>続いて、Algorithmを実行していきます。<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>のように書くことで、指定したUpdaterで計算を行うことができます。次例ではSingleSpinFlipを用います。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
-<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">)</span>
+<span></span>import cxxjij.algorithm as A
+A.Algorithm_SingleSpinFlip_run(mysystem, schedule_list)
 </pre></div>
 </div>
 </div>
@@ -540,37 +542,37 @@ end{align}` を計算します。</p>
 <p>callbackを使用することでAlgorithmの実行中に1モンテカルロステップごとのシステムを取得することができます。古典イジング模型の場合は、システムとパラメータ (逆温度)を引数を持つ関数を作成すれば良いです。</p>
 <p>ためしにシステムのエネルギーの値を記録するcallbackを作ってみましょう</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+<span></span>energies = []
 
-<span class="k">def</span> <span class="nf">callback_log_energy</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
-    <span class="c1">#graphは以前にGraphモジュールにて定義したオブジェクトです</span>
-    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">calc_energy</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">spin</span><span class="p">))</span>
+def callback_log_energy(system, beta):
+    #graphは以前にGraphモジュールにて定義したオブジェクトです
+    energies.append(graph.calc_energy(system.spin))
 </pre></div>
 </div>
 </div>
 <p>このcallbackを用いて同じAlgorithmを実行します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#スケジュールをもっと長く取ります (計20000モンテカルロステップ)</span>
-<span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">,</span> <span class="n">callback_log_energy</span><span class="p">)</span>
+<span></span>#スケジュールをもっと長く取ります (計20000モンテカルロステップ)
+schedule_list = U.make_classical_schedule_list(0.1, 50, 200, 100)
+A.Algorithm_SingleSpinFlip_run(mysystem, schedule_list, callback_log_energy)
 </pre></div>
 </div>
 </div>
 <p>記録したシステムのエネルギーを横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install matplotlib
+<span></span>!pip install matplotlib
 </pre></div>
 </div>
 </div>
@@ -580,27 +582,27 @@ end{align}` を計算します。</p>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Defaulting to user installation because normal site-packages is not writeable
-Requirement already satisfied: matplotlib in /home/jiko/.local/lib/python3.8/site-packages (3.2.0)
-Requirement already satisfied: kiwisolver&gt;=1.0.1 in /home/jiko/.local/lib/python3.8/site-packages (from matplotlib) (1.1.0)
-Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.1 in /home/jiko/.local/lib/python3.8/site-packages (from matplotlib) (2.4.6)
-Requirement already satisfied: python-dateutil&gt;=2.1 in /home/jiko/.local/lib/python3.8/site-packages (from matplotlib) (2.8.1)
-Requirement already satisfied: numpy&gt;=1.11 in /home/jiko/.local/lib/python3.8/site-packages (from matplotlib) (1.18.1)
-Requirement already satisfied: cycler&gt;=0.10 in /home/jiko/.local/lib/python3.8/site-packages (from matplotlib) (0.10.0)
-Requirement already satisfied: setuptools in /home/jiko/.local/lib/python3.8/site-packages (from kiwisolver&gt;=1.0.1-&gt;matplotlib) (45.2.0)
-Requirement already satisfied: six&gt;=1.5 in /home/jiko/.local/lib/python3.8/site-packages (from python-dateutil&gt;=2.1-&gt;matplotlib) (1.14.0)
+Requirement already satisfied: matplotlib in /usr/lib/python3.8/site-packages (3.2.0)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/lib/python3.8/site-packages (from matplotlib) (0.10.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/lib/python3.8/site-packages (from matplotlib) (1.1.0)
+Requirement already satisfied: numpy&gt;=1.11 in /usr/lib/python3.8/site-packages (from matplotlib) (1.18.1)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.1 in /usr/lib/python3.8/site-packages (from matplotlib) (2.4.6)
+Requirement already satisfied: python-dateutil&gt;=2.1 in /usr/lib/python3.8/site-packages (from matplotlib) (2.8.1)
+Requirement already satisfied: six in /usr/lib/python3.8/site-packages (from cycler&gt;=0.10-&gt;matplotlib) (1.14.0)
+Requirement already satisfied: setuptools in /usr/lib/python3.8/site-packages (from kiwisolver&gt;=1.0.1-&gt;matplotlib) (46.0.0)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)),</span> <span class="n">energies</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Monte Carlo step&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span></span>%matplotlib inline
+import matplotlib.pyplot as plt
+plt.plot(range(len(energies)), energies)
+plt.xlabel(&#39;Monte Carlo step&#39;)
+plt.ylabel(&#39;energy&#39;)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -618,12 +620,12 @@ Requirement already satisfied: six&gt;=1.5 in /home/jiko/.local/lib/python3.8/si
 <h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照すればスピン列を取得できますが、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できます。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">mysystem</span><span class="p">))</span>
+<span></span>import cxxjij.result as R
+print(R.get_solution(mysystem))
 </pre></div>
 </div>
 </div>
@@ -632,7 +634,7 @@ Requirement already satisfied: six&gt;=1.5 in /home/jiko/.local/lib/python3.8/si
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[-1, 1, 1, -1, -1, 1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, 1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1]
+[1, -1, 1, 1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, 1, 1, -1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, 1, -1]
 </pre></div></div>
 </div>
 <p>このスピン列がアニーリングによって得られた答えなので、ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
@@ -641,58 +643,58 @@ Requirement already satisfied: six&gt;=1.5 in /home/jiko/.local/lib/python3.8/si
 <h2><code class="docutils literal notranslate"><span class="pre">system.make_classical_ising_Eigen</span></code><a class="headerlink" href="#system.make_classical_ising_Eigen" title="Permalink to this headline">¶</a></h2>
 <p>注釈で述べたように、古典イジング模型には線形代数ライブラリである<a class="reference external" href="http://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>で実装された<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising_Eigen</span></code>があります。<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>との計算速度をシステムサイズを変えて比較してみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span></span>import time
 
-<span class="n">N_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+N_list = [10, 20, 30, 50, 70, 80, 100, 150, 200, 300, 400, 500, 1000]
 
-<span class="c1">#計算時間</span>
-<span class="n">calctime</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="c1">#計算時間 (Eigen実装)</span>
-<span class="n">calctime_eigen</span> <span class="o">=</span> <span class="p">[]</span>
+#計算時間
+calctime = []
+#計算時間 (Eigen実装)
+calctime_eigen = []
 
-<span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">N_list</span><span class="p">:</span>
-    <span class="c1">#Graphの初期化</span>
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="c1">#Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。</span>
-            <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
+for N in N_list:
+    #Graphの初期化
+    graph = G.Dense(N)
+    for i in range(N):
+        for j in range(N):
+            #Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。
+            graph[i,j] = 0 if i == j else np.random.normal()/N
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
+    for i in range(N):
+        graph[i] = np.random.normal()/N
 
-    <span class="c1">#Systemの初期化</span>
-    <span class="n">mysystem</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">graph</span><span class="p">)</span>
-    <span class="n">mysystem_eigen</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising_Eigen</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">graph</span><span class="p">)</span>
+    #Systemの初期化
+    mysystem = S.make_classical_ising(graph.gen_spin(), graph)
+    mysystem_eigen = S.make_classical_ising_Eigen(graph.gen_spin(), graph)
 
-    <span class="c1">#スケジュールリスト (2000モンテカルロステップ)</span>
-    <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    #スケジュールリスト (2000モンテカルロステップ)
+    schedule_list = U.make_classical_schedule_list(0.1, 50, 20, 100)
 
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="c1">#アニーリング (Eigenなし)</span>
-    <span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">calctime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+    t1 = time.time()
+    #アニーリング (Eigenなし)
+    A.Algorithm_SingleSpinFlip_run(mysystem, schedule_list)
+    t2 = time.time()
+    calctime.append(t2-t1)
 
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="c1">#アニーリング (Eigenあり)</span>
-    <span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem_eigen</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">calctime_eigen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+    t1 = time.time()
+    #アニーリング (Eigenあり)
+    A.Algorithm_SingleSpinFlip_run(mysystem_eigen, schedule_list)
+    t2 = time.time()
+    calctime_eigen.append(t2-t1)
 
-<span class="c1">#結果を両対数プロット</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_list</span><span class="p">,</span> <span class="n">calctime</span><span class="p">,</span> <span class="s1">&#39;ro-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Without Eigen&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_list</span><span class="p">,</span> <span class="n">calctime_eigen</span><span class="p">,</span> <span class="s1">&#39;bx-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;With Eigen&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;System size&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Elapsed time[s]&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+#結果を両対数プロット
+plt.plot(N_list, calctime, &#39;ro-&#39;, label=&#39;Without Eigen&#39;)
+plt.plot(N_list, calctime_eigen, &#39;bx-&#39;, label=&#39;With Eigen&#39;)
+plt.xlabel(&#39;System size&#39;)
+plt.ylabel(&#39;Elapsed time[s]&#39;)
+plt.xscale(&#39;log&#39;)
+plt.yscale(&#39;log&#39;)
+plt.legend()
+plt.show()
 </pre></div>
 </div>
 </div>

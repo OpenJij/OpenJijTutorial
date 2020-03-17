@@ -331,8 +331,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># !pip install openjij</span>
-<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.5 を仮定します
+<span></span># !pip install openjij
+!pip show openjij  # openjij == 0.0.5 を仮定します
 </pre></div>
 </div>
 </div>
@@ -358,7 +358,7 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span></span>import openjij as oj
 </pre></div>
 </div>
 </div>
@@ -368,11 +368,11 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-<span class="p">[{</span><span class="n">index</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">state</span><span class="p">)}</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+<span></span>cmos = oj.CMOSAnnealer(token=&quot;&quot;, iteration=5)
+h = {0: 1}
+J = {(0, 1): -1, (1, 2): -1}
+response = cmos.sample_ising(h, J)
+[{index: s for index, s in zip(response.indices, state)} for state in response.states]
 </pre></div>
 </div>
 </div>
@@ -399,11 +399,11 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">machine_type</span><span class="o">=</span><span class="s2">&quot;FPGA&quot;</span><span class="p">)</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-<span class="p">[{</span><span class="n">index</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">state</span><span class="p">)}</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+<span></span>cmos = oj.CMOSAnnealer(token=&quot;&quot;, iteration=5, machine_type=&quot;FPGA&quot;)
+h = {0: 1}
+J = {(0, 1): -1, (1, 2): -1}
+response = cmos.sample_ising(h, J)
+[{index: s for index, s in zip(response.indices, state)} for state in response.states]
 </pre></div>
 </div>
 </div>
@@ -446,9 +446,9 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos_fpga</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">machine_type</span><span class="o">=</span><span class="s2">&quot;FPGA&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos_fpga</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="p">{},</span> <span class="n">J</span><span class="o">=</span><span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">):</span><span class="o">-</span><span class="mi">1</span><span class="p">})</span>
-<span class="p">[{</span><span class="n">index</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">state</span><span class="p">)}</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+<span></span>cmos_fpga = oj.CMOSAnnealer(token=&quot;&quot;, machine_type=&quot;FPGA&quot;)
+response = cmos_fpga.sample_ising(h={}, J={(0, 80):-1})
+[{index: s for index, s in zip(response.indices, state)} for state in response.states]
 </pre></div>
 </div>
 </div>
@@ -468,8 +468,8 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos_fpga</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">machine_type</span><span class="o">=</span><span class="s2">&quot;ASIC&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos_fpga</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="p">{},</span> <span class="n">J</span><span class="o">=</span><span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">):</span><span class="o">-</span><span class="mi">1</span><span class="p">})</span> <span class="c1"># ValueError !!</span>
+<span></span>cmos_fpga = oj.CMOSAnnealer(token=&quot;&quot;, machine_type=&quot;ASIC&quot;)
+response = cmos_fpga.sample_ising(h={}, J={(0, 80):-1}) # ValueError !!
 </pre></div>
 </div>
 </div>
@@ -522,16 +522,16 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">machine_type</span><span class="o">=</span><span class="s2">&quot;FPGA&quot;</span><span class="p">)</span>
+<span></span>cmos = oj.CMOSAnnealer(token=&quot;&quot;, iteration=5, machine_type=&quot;FPGA&quot;)
 
-<span class="n">king_graph</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-<span class="c1"># ↑は</span>
-<span class="c1"># h = {0: 1}</span>
-<span class="c1"># J = {(0, 1): -1, (1, 2): -1}</span>
-<span class="c1"># とおなじ</span>
+king_graph = [[0, 0, 0, 0, 1], [0, 0, 1, 0, -1],[1, 0, 2, 0, -1]]
+# ↑は
+# h = {0: 1}
+# J = {(0, 1): -1, (1, 2): -1}
+# とおなじ
 
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">king_graph</span> <span class="o">=</span> <span class="n">king_graph</span><span class="p">)</span>
-<span class="p">[{</span><span class="n">index</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">state</span><span class="p">)}</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+response = cmos.sample_ising(king_graph = king_graph)
+[{index: s for index, s in zip(response.indices, state)} for state in response.states]
 </pre></div>
 </div>
 </div>
@@ -557,9 +557,9 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">cmos_fpga</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">CMOSAnnealer</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">machine_type</span><span class="o">=</span><span class="s2">&quot;FPGA&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">cmos_fpga</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">80</span><span class="p">):</span><span class="o">-</span><span class="mi">4</span><span class="p">})</span>
-<span class="p">[{</span><span class="n">index</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">state</span><span class="p">)}</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">]</span>
+<span></span>cmos_fpga = oj.CMOSAnnealer(token=&quot;&quot;, machine_type=&quot;FPGA&quot;)
+response = cmos_fpga.sample_qubo(Q={(0, 80):-4})
+[{index: s for index, s in zip(response.indices, state)} for state in response.states]
 </pre></div>
 </div>
 </div>

@@ -85,8 +85,8 @@
 <div class="section" id="問題を投げてみる">
 <h2>問題を投げてみる<a class="headerlink" href="#問題を投げてみる" title="Permalink to this headline">¶</a></h2>
 <p>まずはgithubからリポジトリをcloneしましょう</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/OpenJij/OpenJij
-<span class="nb">cd</span> OpenJij
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/OpenJij/OpenJij
+$ <span class="nb">cd</span> OpenJij
 </pre></div>
 </div>
 <p>OpenJijは基本的にヘッダオンリーなライブラリであるため、<code class="docutils literal notranslate"><span class="pre">src</span></code>ディレクトリのパスをコンパイル時に指定するだけでC++ interfaceが使えるようになります。 GPUアルゴリズム等を使う際にはライブラリをCMakeでビルドする必要がありますが、<code class="docutils literal notranslate"><span class="pre">build_gcc.sh</span></code>を実行すると自動でビルドを行うことができます。</p>

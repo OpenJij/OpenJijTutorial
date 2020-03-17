@@ -320,6 +320,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="OpenJij-core-interface-について">
 <h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
 <p>前回までのチュートリアルではOpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきましたが、OpenJijは最下層の部分は統計物理学の数値計算手法であるマルコフ連鎖モンテカルロ法をベースにC++を用いて実装されており、今まで触れてきたpythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形で実装されています。図にすると次のような包含関係があります。</p>
+<p><a class="reference internal" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a></p>
 <p>core interfaceを用いることでOpenJij上の全ての機能を使用することができるため、最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。 また、C++インターフェースを用いることでより高速な演算を行うことができます。</p>
 <p>本チュートリアルではpythonインターフェースのcxxjijと、C++インターフェースの両方を紹介します。 インストールにはpipを使用します。</p>
 <div class="nbinput docutils container">
@@ -327,8 +328,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install openjij
-<span class="o">!</span>pip show openjij
+<span></span>!pip install openjij
+!pip show openjij
 </pre></div>
 </div>
 </div>
@@ -379,43 +380,43 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># core interfaceではopenjijの代わりにcxxjijをインポートします。</span>
-<span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
+<span></span># core interfaceではopenjijの代わりにcxxjijをインポートします。
+import cxxjij as cj
 
-<span class="c1"># まず相互作用行列を作成してあげます。Graphモジュールを使います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
+# まず相互作用行列を作成してあげます。Graphモジュールを使います。
+import cxxjij.graph as G
 
-<span class="c1"># 問題サイズN=5の密結合グラフ(Dense)を定義します。</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">J</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1"># 相互作用を設定してあげます。</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#J[i,i]以外に-1を入力</span>
-        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
+# 問題サイズN=5の密結合グラフ(Dense)を定義します。
+N = 5
+J = G.Dense(N)
+# 相互作用を設定してあげます。
+for i in range(N):
+    for j in range(N):
+        #J[i,i]以外に-1を入力
+        J[i,j] = 0 if i == j else -1.0
 
-<span class="c1"># 縦磁場を設定してあげます。</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="c1"># J[i,i] = -1でも同じ結果となります。</span>
-    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+# 縦磁場を設定してあげます。
+for i in range(N):
+    # J[i,i] = -1でも同じ結果となります。
+    J[i] = -1
 
-<span class="c1"># 続いてGraphから計算を行うためのSystemを作成します。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+# 続いてGraphから計算を行うためのSystemを作成します。
+import cxxjij.system as S
 
-<span class="c1"># 今回は通常の古典モンテカルロ計算のシステムを使用します。</span>
-<span class="n">system</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising_Eigen</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">J</span><span class="p">)</span>
-<span class="c1"># アニーリングスケジュールを設定します。Utilityモジュールを使用します。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
-<span class="n">schedule</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+# 今回は通常の古典モンテカルロ計算のシステムを使用します。
+system = S.make_classical_ising_Eigen(J.gen_spin(), J)
+# アニーリングスケジュールを設定します。Utilityモジュールを使用します。
+import cxxjij.utility as U
+schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)
 
-<span class="c1"># 実際にアニーリングを走らせます。Algorithmモジュールを使用します。</span>
-<span class="c1"># モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
-<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+# 実際にアニーリングを走らせます。Algorithmモジュールを使用します。
+# モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。
+import cxxjij.algorithm as A
+A.Algorithm_SingleSpinFlip_run(system, schedule)
 
-<span class="c1"># 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solution is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
+# 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。
+import cxxjij.result as R
+print(&quot;The solution is {}.&quot;.format(R.get_solution(system)))
 </pre></div>
 </div>
 </div>

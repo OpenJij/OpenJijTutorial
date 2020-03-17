@@ -326,7 +326,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install dwave-ocean-sdk
+<span></span>!pip install dwave-ocean-sdk
 </pre></div>
 </div>
 </div>
@@ -335,9 +335,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
-<span class="o">!</span><span class="nb">cd</span> dwave-ocean-sdk
-<span class="o">!</span>python setup.py install
+<span></span>!git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
+!cd dwave-ocean-sdk
+!python setup.py install
 </pre></div>
 </div>
 </div>
@@ -377,9 +377,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 整数の集合</span>
-<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span></span># 整数の集合
+C = [2, 10, 3, 8, 5, 7, 9, 5, 3, 2]
+N = len(C)
 </pre></div>
 </div>
 </div>
@@ -422,12 +422,12 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{}</span>
+<span></span>Q = {}
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+for i in range(N):
+    Q[i, i] = 4 * C[i] * (C[i] - sum(C))
+    for j in range(i + 1, N):
+        Q[i, j] = 8 * C[i] * C[j]
 </pre></div>
 </div>
 </div>
@@ -437,10 +437,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
+<span></span>import numpy as np
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+%matplotlib inline
 </pre></div>
 </div>
 </div>
@@ -449,18 +449,18 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">GnBu</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">n_qubo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+<span></span>def show_qubo(qubo, cmap=cm.GnBu, save_path=None):
+    n_qubo = max(sorted(qubo.keys())[-1][0], sorted(qubo.keys(), key=lambda x: x[1])[-1][1]) + 1
 
-    <span class="n">np_qubo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_qubo</span><span class="p">,</span> <span class="n">n_qubo</span><span class="p">))</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">),</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">qubo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">np_qubo</span><span class="p">[</span><span class="n">pos_x</span><span class="p">][</span><span class="n">pos_y</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff</span>
+    np_qubo = np.zeros((n_qubo, n_qubo))
+    for (pos_x, pos_y), coeff in qubo.items():
+        np_qubo[pos_x][pos_y] = coeff
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np_qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    plt.imshow(np_qubo, cmap=cmap)
+    plt.colorbar()
+    if save_path is not None:
+        plt.savefig(save_path)
+    plt.show()
 </pre></div>
 </div>
 </div>
@@ -469,7 +469,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+<span></span>show_qubo(Q)
 </pre></div>
 </div>
 </div>
@@ -500,12 +500,12 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{}</span>
+<span></span>h = {}
+J = {}
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+for i in range(N):
+    for j in range(i + 1, N):
+        J[i, j] = 2 * C[i] * C[j]
 </pre></div>
 </div>
 </div>
@@ -515,7 +515,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">dimod</span>
+<span></span>import dimod
 </pre></div>
 </div>
 </div>
@@ -524,9 +524,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># イジングモデルからQUBOへの変換</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">dimod</span><span class="o">.</span><span class="n">SPIN</span><span class="p">)</span>
-<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+<span></span># イジングモデルからQUBOへの変換
+model = dimod.BinaryQuadraticModel(h, J, 0.0, vartype=dimod.SPIN)
+qubo, offset = model.to_qubo()
 </pre></div>
 </div>
 </div>
@@ -535,7 +535,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+<span></span>show_qubo(qubo)
 </pre></div>
 </div>
 </div>
@@ -578,8 +578,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
-<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+<span></span>from dwave.system.samplers import DWaveSampler
+from dwave.system.composites import EmbeddingComposite
 </pre></div>
 </div>
 </div>
@@ -588,14 +588,14 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># ローカルに接続情報を設定している場合</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">DWaveSampler</span><span class="p">())</span>
+<span></span># ローカルに接続情報を設定している場合
+sampler = EmbeddingComposite(DWaveSampler())
 
-<span class="c1"># 接続情報をオプションとして渡す場合</span>
-<span class="c1"># endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;</span>
-<span class="c1"># token = &#39;XXXXXXXXXXXXXX&#39;</span>
-<span class="c1"># solver = &#39;DW_2000Q_2_1&#39;</span>
-<span class="c1"># sampler = EmbeddingComposite(DWaveSampler(endpoint=endpoint, token=token, solver=solver))</span>
+# 接続情報をオプションとして渡す場合
+# endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;
+# token = &#39;XXXXXXXXXXXXXX&#39;
+# solver = &#39;DW_2000Q_2_1&#39;
+# sampler = EmbeddingComposite(DWaveSampler(endpoint=endpoint, token=token, solver=solver))
 </pre></div>
 </div>
 </div>
@@ -604,13 +604,13 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+<span></span>response = {}
 
-<span class="c1"># イジングモデルの場合</span>
-<span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+# イジングモデルの場合
+response[&#39;default&#39;] = sampler.sample_ising(h, J, num_reads=100)
 
-<span class="c1"># QUBOの場合</span>
-<span class="c1"># response[&#39;default&#39;] = sampler.sample_qubo(Q, num_reads=100)</span>
+# QUBOの場合
+# response[&#39;default&#39;] = sampler.sample_qubo(Q, num_reads=100)
 </pre></div>
 </div>
 </div>
@@ -623,7 +623,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+<span></span>response[&#39;default&#39;].samples_matrix.shape
 </pre></div>
 </div>
 </div>
@@ -642,22 +642,22 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;BINARY&#39;</span><span class="p">:</span>
-        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># offset</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-                <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;SPIN&#39;</span><span class="p">:</span>
-        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-                <span class="n">ene</span> <span class="o">+=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;</span><span class="p">)</span>
+<span></span>def calcurate_energy(solution, vartype=&#39;BINARY&#39;):
+    if vartype == &#39;BINARY&#39;:
+        ene = sum(C) ** 2  # offset
+        for i in range(N):
+            ene += Q[i, i] * solution[i]
+            for j in range(i + 1, N):
+                ene += Q[i, j] * solution[i] * solution[j]
+    elif vartype == &#39;SPIN&#39;:
+        ene = sum(C[i] ** 2 for i in range(N))
+        for i in range(N):
+            for j in range(i + 1, N):
+                ene += J[i, j] * solution[i] * solution[j]
+    else:
+        raise ValueError(&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;)
 
-    <span class="k">return</span> <span class="n">ene</span>
+    return ene
 </pre></div>
 </div>
 </div>
@@ -666,12 +666,12 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
-    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
-    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
-        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span></span>gs_indices = []
+for i in range(len(response[&#39;default&#39;].samples_matrix)):
+    ene = calcurate_energy(response[&#39;default&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
+#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
+    if ene == 0:  # エネルギー値が0であれば最適解
+        gs_indices.append(i)
 </pre></div>
 </div>
 </div>
@@ -680,7 +680,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">))</span>
+<span></span>print(len(gs_indices))
 </pre></div>
 </div>
 </div>
@@ -698,14 +698,14 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gs_indices</span><span class="p">:</span>
-    <span class="n">optimal_solution</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="n">group_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">optimal_solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">group_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">optimal_solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span></span>for i in gs_indices:
+    optimal_solution = response[&#39;default&#39;].samples_matrix[i]
+    group_A = [C[i] for i, s in enumerate(optimal_solution) if s == 1]
+    group_B = [C[i] for i, s in enumerate(optimal_solution) if s == -1]
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">optimal_solution</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group A:&#39;</span><span class="p">,</span> <span class="n">group_A</span><span class="p">,</span> <span class="s1">&#39;, Sum =&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_A</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group B:&#39;</span><span class="p">,</span> <span class="n">group_B</span><span class="p">,</span> <span class="s1">&#39;, Sum =&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_B</span><span class="p">))</span>
+    print(i, optimal_solution)
+    print(&#39;Group A:&#39;, group_A, &#39;, Sum =&#39;, sum(group_A))
+    print(&#39;Group B:&#39;, group_B, &#39;, Sum =&#39;, sum(group_B))
 </pre></div>
 </div>
 </div>
@@ -745,7 +745,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data_vectors</span>
+<span></span>response[&#39;default&#39;].data_vectors
 </pre></div>
 </div>
 </div>
@@ -783,7 +783,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span>
+<span></span>response[&#39;default&#39;].info
 </pre></div>
 </div>
 </div>
@@ -821,11 +821,11 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># イジングモデルの場合</span>
-<span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span></span># イジングモデルの場合
+response[&#39;num_reads&#39;] = sampler.sample_ising(h, J, num_reads=1000)
 
-<span class="c1"># QUBOの場合</span>
-<span class="c1"># response[&#39;num_reads&#39;] = sampler.sample_qubo(Q, num_reads=1000)</span>
+# QUBOの場合
+# response[&#39;num_reads&#39;] = sampler.sample_qubo(Q, num_reads=1000)
 </pre></div>
 </div>
 </div>
@@ -834,7 +834,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+<span></span>response[&#39;num_reads&#39;].samples_matrix.shape
 </pre></div>
 </div>
 </div>
@@ -852,12 +852,12 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
-    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
-    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
-        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span></span>gs_indices = []
+for i in range(len(response[&#39;num_reads&#39;].samples_matrix)):
+    ene = calcurate_energy(response[&#39;num_reads&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
+#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
+    if ene == 0:  # エネルギー値が0であれば最適解
+        gs_indices.append(i)
 </pre></div>
 </div>
 </div>
@@ -866,7 +866,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">)</span>
+<span></span>len(gs_indices)
 </pre></div>
 </div>
 </div>
@@ -885,7 +885,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;num_reads&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">info</span>
+<span></span>response[&#39;num_reads&#39;].info
 </pre></div>
 </div>
 </div>
@@ -919,11 +919,11 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># イジングモデルの場合</span>
-<span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">annealing_time</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span></span># イジングモデルの場合
+response[&#39;annealing_time&#39;] = sampler.sample_ising(h, J, num_reads=100, annealing_time=50)
 
-<span class="c1"># QUBOの場合</span>
-<span class="c1"># response[&#39;annealing_time&#39;] = sampler.sample_qubo(Q, num_reads=100, annealing_time=100)</span>
+# QUBOの場合
+# response[&#39;annealing_time&#39;] = sampler.sample_qubo(Q, num_reads=100, annealing_time=100)
 </pre></div>
 </div>
 </div>
@@ -932,7 +932,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="o">.</span><span class="n">shape</span>
+<span></span>response[&#39;annealing_time&#39;].samples_matrix.shape
 </pre></div>
 </div>
 </div>
@@ -950,12 +950,12 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gs_indices</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">)):</span>
-    <span class="n">ene</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-<span class="c1">#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)</span>
-    <span class="k">if</span> <span class="n">ene</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># エネルギー値が0であれば最適解</span>
-        <span class="n">gs_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span></span>gs_indices = []
+for i in range(len(response[&#39;annealing_time&#39;].samples_matrix)):
+    ene = calcurate_energy(response[&#39;annealing_time&#39;].samples_matrix[i], vartype=&#39;SPIN&#39;)
+#     print(i, response[&#39;default&#39;].samples_matrix[i], &#39;Energy=&#39;, ene)
+    if ene == 0:  # エネルギー値が0であれば最適解
+        gs_indices.append(i)
 </pre></div>
 </div>
 </div>
@@ -964,7 +964,7 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">len</span><span class="p">(</span><span class="n">gs_indices</span><span class="p">)</span>
+<span></span>len(gs_indices)
 </pre></div>
 </div>
 </div>
@@ -983,12 +983,12 @@ Group B: [10, 3, 9, 3, 2] , Sum = 27
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;20μs&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;annealing_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">samples_matrix</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;50μs&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span></span>plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in response[&#39;default&#39;].samples_matrix], alpha=0.5, label=&#39;20μs&#39;)
+plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in response[&#39;annealing_time&#39;].samples_matrix], alpha=0.5, label=&#39;50μs&#39;)
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
+plt.legend()
+plt.show()
 </pre></div>
 </div>
 </div>

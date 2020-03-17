@@ -321,7 +321,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># !pip install openjij</span>
+<span></span># !pip install openjij
 </pre></div>
 </div>
 </div>
@@ -330,8 +330,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 以下のコマンドでOpenJijの情報を見ることができます。実行環境によって出力は異なります。</span>
-<span class="o">!</span>pip show openjij
+<span></span># 以下のコマンドでOpenJijの情報を見ることができます。実行環境によって出力は異なります。
+!pip show openjij
 </pre></div>
 </div>
 </div>
@@ -390,15 +390,15 @@ Required-by:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span></span>import openjij as oj
 
-<span class="c1"># 問題を表す縦磁場と相互作用を作ります。OpenJijでは辞書型で問題を受け付けます。</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)}</span>
+# 問題を表す縦磁場と相互作用を作ります。OpenJijでは辞書型で問題を受け付けます。
+N = 5
+h = {i: -1 for i in range(N)}
+J = {(i, j): -1 for i in range(N) for j in range(i+1, N)}
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;h_i: &#39;</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Jij: &#39;</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+print(&#39;h_i: &#39;, h)
+print(&#39;Jij: &#39;, J)
 </pre></div>
 </div>
 </div>
@@ -416,17 +416,17 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># まず問題を解いてくれるSamplerのインスタンスを作ります。</span>
-<span class="c1"># このインスタンスの選択で問題を解くアルゴリズムを選択できます。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># samplerのメソッドに問題(h, J)を投げて問題を解きます。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+<span></span># まず問題を解いてくれるSamplerのインスタンスを作ります。
+# このインスタンスの選択で問題を解くアルゴリズムを選択できます。
+sampler = oj.SASampler(num_reads=1)
+# samplerのメソッドに問題(h, J)を投げて問題を解きます。
+response = sampler.sample_ising(h, J)
 
-<span class="c1"># 計算した結果(状態)は response.states に入っています。</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+# 計算した結果(状態)は response.states に入っています。
+print(response.states)
 
-<span class="c1"># もしくは添字付きでみるには samples関数 を用います。</span>
-<span class="nb">print</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">samples</span><span class="p">()])</span>
+# もしくは添字付きでみるには samples関数 を用います。
+print([s for s in response.samples()])
 </pre></div>
 </div>
 </div>
@@ -526,14 +526,14 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 実は h, J の添字を示す、辞書のkeyは数値以外も扱うことができます。</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
-<span class="c1"># num_reads 引数に値を代入することで、SAを10回試行する計算を一度の命令で解くことができます。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<span></span># 実は h, J の添字を示す、辞書のkeyは数値以外も扱うことができます。
+h = {&#39;a&#39;: -1, &#39;b&#39;: -1}
+J = {(&#39;a&#39;, &#39;b&#39;): -1, (&#39;b&#39;, &#39;c&#39;): 1}
+# num_reads 引数に値を代入することで、SAを10回試行する計算を一度の命令で解くことができます。
+sampler = oj.SASampler(num_reads=10)
+response = sampler.sample_ising(h, J)
+print(response.first.sample)
+print(response.first.energy)
 </pre></div>
 </div>
 </div>
@@ -551,8 +551,8 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># response.states を見てみましょう。10回分の解が入っていることがわかります。</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+<span></span># response.states を見てみましょう。10回分の解が入っていることがわかります。
+print(response.states)
 </pre></div>
 </div>
 </div>
@@ -587,8 +587,8 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 次にエネルギーを見てみましょう。</span>
-<span class="n">response</span><span class="o">.</span><span class="n">energies</span>
+<span></span># 次にエネルギーを見てみましょう。
+response.energies
 </pre></div>
 </div>
 </div>
@@ -610,7 +610,7 @@ array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">indices</span>
+<span></span>response.indices
 </pre></div>
 </div>
 </div>
@@ -629,7 +629,7 @@ array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">first</span>
+<span></span>response.first
 </pre></div>
 </div>
 </div>
@@ -665,12 +665,12 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Q_ij を辞書型でつくります。</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
-<span class="c1"># QUBOを解く時は .sample_qubo を使います。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+<span></span># Q_ij を辞書型でつくります。
+Q = {(0, 0): -1, (0, 1): -1, (1, 2): 1, (2, 2): 1}
+sampler = oj.SASampler()
+# QUBOを解く時は .sample_qubo を使います。
+response = sampler.sample_qubo(Q)
+print(response.states)
 </pre></div>
 </div>
 </div>
@@ -696,14 +696,14 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="c1"># ランダムにQij を作る</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)}</span>
+<span></span>N = 50
+# ランダムにQij を作る
+import random
+Q = {(i, j): random.uniform(-1, 1) for i in range(N) for j in range(i+1, N)}
 
-<span class="c1"># OpenJijで解く</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+# OpenJijで解く
+sampler = oj.SASampler()
+response = sampler.sample_qubo(Q, num_reads=100)
 </pre></div>
 </div>
 </div>
@@ -712,8 +712,8 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># エネルギーを少しみてみます。</span>
-<span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+<span></span># エネルギーを少しみてみます。
+response.energies[:5]
 </pre></div>
 </div>
 </div>
@@ -737,11 +737,11 @@ array([-55.69322142, -55.69322142, -55.48148676, -55.48148676,
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span></span>import matplotlib.pyplot as plt
+plt.hist(response.energies, bins=15)
+plt.xlabel(&#39;Energy&#39;, fontsize=15)
+plt.ylabel(&#39;Frequency&#39;, fontsize=15)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -758,10 +758,10 @@ array([-55.69322142, -55.69322142, -55.48148676, -55.48148676,
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span>import numpy as np
 
-<span class="n">min_samples</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span>
-<span class="n">min_samples</span>
+min_samples = response.first
+min_samples
 </pre></div>
 </div>
 </div>

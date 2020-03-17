@@ -349,9 +349,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="ch">#!pip install -U cmake</span>
-<span class="c1">#!pip install openjij</span>
-<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.8 を仮定します
+<span></span>#!pip install -U cmake
+#!pip install openjij
+!pip show openjij  # openjij == 0.0.8 を仮定します
 </pre></div>
 </div>
 </div>
@@ -360,10 +360,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span></span>import random
+import numpy as np
+import matplotlib.pyplot as plt
+import openjij as oj
 </pre></div>
 </div>
 </div>
@@ -372,10 +372,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 反強磁性1次元イジングモデル を作る</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="o">-</span><span class="mi">10</span><span class="p">}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
+<span></span># 反強磁性1次元イジングモデル を作る
+N = 30
+h = {0: -10}
+J = {(i, i+1): 1 for i in range(N-1)}
 </pre></div>
 </div>
 </div>
@@ -393,43 +393,43 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 最適解</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span></span># 最適解
+correct_state = [(-1)**i for i in range(N)]
 
-<span class="c1"># TTS を計算するのに必要なp^R</span>
-<span class="n">pR</span> <span class="o">=</span> <span class="mf">0.99</span>
+# TTS を計算するのに必要なp^R
+pR = 0.99
 
-<span class="c1"># Samplerの引数のstep_num というパラメータに渡すリスト(step_num_list)</span>
-<span class="c1"># step_num はアニーリング中のパラメータ(温度, 横磁場)を下げていくときの分割数</span>
-<span class="c1"># なので増やせば増やすほどゆっくりアニーリングすることになってアニーリング時間が伸びる</span>
-<span class="n">step_num_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># [10, 20, 30, 40, 50]</span>
+# Samplerの引数のstep_num というパラメータに渡すリスト(step_num_list)
+# step_num はアニーリング中のパラメータ(温度, 横磁場)を下げていくときの分割数
+# なので増やせば増やすほどゆっくりアニーリングすることになってアニーリング時間が伸びる
+step_num_list = list(range(10, 51, 10))  # [10, 20, 30, 40, 50]
 
-<span class="n">TTS_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 各計算時間に対するTTSを格納しておくリスト</span>
-<span class="n">tau_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 計算時間を格納しておくリスト</span>
+TTS_list = []  # 各計算時間に対するTTSを格納しておくリスト
+tau_list = []  # 計算時間を格納しておくリスト
 
-<span class="c1">#  計算の過程で、成功確率が求まるので、ついでにリストにしておきましょう</span>
-<span class="n">ps_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 成功確率を格納しておくリスト</span>
+#  計算の過程で、成功確率が求まるので、ついでにリストにしておきましょう
+ps_list = []  # 成功確率を格納しておくリスト
 
-<span class="n">iteration</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># 確率を計算するために1回のアニーリングを行う回数</span>
+iteration = 100  # 確率を計算するために1回のアニーリングを行う回数
 
-<span class="k">for</span> <span class="n">step_num</span> <span class="ow">in</span> <span class="n">step_num_list</span><span class="p">:</span>
-    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_sweeps</span><span class="o">=</span><span class="n">step_num</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="n">iteration</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+for step_num in step_num_list:
+    sampler = oj.SASampler(num_sweeps=step_num, iteration=iteration)
+    response = sampler.sample_ising(h, J)
 
-    <span class="c1"># 返ってきた解であっている状態の数を数えて最適解を得た確率を計算する</span>
-    <span class="n">tau</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span>
-    <span class="n">ps</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="n">correct_state</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">])</span><span class="o">/</span><span class="n">iteration</span>
+    # 返ってきた解であっている状態の数を数えて最適解を得た確率を計算する
+    tau = response.info[&#39;execution_time&#39;]
+    ps = sum([1 if state == correct_state else 0 for state in response.states])/iteration
 
-    <span class="c1"># ps=0だとTTSが無限大になってしまうのでそこは回避</span>
-    <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">continue</span>
+    # ps=0だとTTSが無限大になってしまうのでそこは回避
+    if ps == 0:
+        continue
 
-    <span class="c1"># TTSを計算する</span>
-    <span class="n">TTS_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pR</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span><span class="p">)</span>
-    <span class="n">tau_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+    # TTSを計算する
+    TTS_list.append(np.log(1-pR)/np.log(1-ps)*tau)
+    tau_list.append(tau)
 
-    <span class="c1"># 成功確率を計算する</span>
-    <span class="n">ps_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    # 成功確率を計算する
+    ps_list.append(ps)
 </pre></div>
 </div>
 </div>
@@ -438,17 +438,17 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span> <span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span></span>fig, (axL, axR) = plt.subplots(ncols=2, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
 
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">TTS_list</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+fontsize = 10
+axL.plot(tau_list, TTS_list)
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">ps_list</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axR.plot(tau_list, ps_list)
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
@@ -510,18 +510,18 @@ Response.info に入っている実行時間と紐づくキーを指定します
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 最適解</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span></span># 最適解
+correct_state = [(-1)**i for i in range(N)]
 
-<span class="c1"># ステップ数とアニーリングの反復数を与えます</span>
-<span class="n">step_num_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># [10, 20, 30, 40, 50]</span>
-<span class="n">iteration</span> <span class="o">=</span> <span class="mi">100</span>
+# ステップ数とアニーリングの反復数を与えます
+step_num_list = list(range(10, 51, 10))  # [10, 20, 30, 40, 50]
+iteration = 100
 
-<span class="c1"># benchmark 関数で TTS 残留エネルギー 成功確率を計算</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">solver_benchmark</span><span class="p">(</span>
-                      <span class="n">solver</span><span class="o">=</span><span class="k">lambda</span> <span class="n">time</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">:</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">step_num</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="n">iteration</span><span class="p">)</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">J</span><span class="p">),</span>
-                      <span class="n">time_list</span><span class="o">=</span><span class="n">step_num_list</span><span class="p">,</span> <span class="n">solutions</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">p_r</span><span class="o">=</span><span class="mf">0.99</span>
-            <span class="p">)</span>
+# benchmark 関数で TTS 残留エネルギー 成功確率を計算
+result = oj.solver_benchmark(
+                      solver=lambda time, **args: oj.SASampler(step_num=time, iteration=iteration).sample_ising(h,J),
+                      time_list=step_num_list, solutions=[correct_state], p_r=0.99
+            )
 </pre></div>
 </div>
 </div>
@@ -530,21 +530,21 @@ Response.info に入っている実行時間と紐づくキーを指定します
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span></span>fig, (axL,axC,axR) = plt.subplots(ncols=3, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
 
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+fontsize = 10
+axL.plot(result[&#39;time&#39;], result[&#39;tts&#39;])
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;residual_energy&#39;</span><span class="p">])</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axC.plot(result[&#39;time&#39;], result[&#39;residual_energy&#39;])
+axC.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axC.set_ylabel(&#39;Residual energy&#39;, fontsize=fontsize)
 
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success_prob&#39;</span><span class="p">])</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axR.plot(result[&#39;time&#39;], result[&#39;success_prob&#39;])
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
@@ -575,36 +575,36 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="k">def</span> <span class="nf">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    すべて 1 と [1,-1,1,...] と [-1,1,-1,...] の3つの状態からランダムに選ぶ</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span></span>import time
+def anti_ferro_solver(time_param, iteration, h, J):
+    &quot;&quot;&quot;
+    すべて 1 と [1,-1,1,...] と [-1,1,-1,...] の3つの状態からランダムに選ぶ
+    &quot;&quot;&quot;
 
-    <span class="c1"># 入力された h と J から添字の集合をつくる</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span> <span class="o">|</span> <span class="nb">set</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">J</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]))</span>
+    # 入力された h と J から添字の集合をつくる
+    indices = set(h.keys())
+    indices = list(indices | set([key for keys in J.keys() for key in keys]))
 
-    <span class="n">ones_state</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>        <span class="c1"># all 1</span>
+    ones_state = list(np.ones(len(indices), dtype=int))        # all 1
 
-    <span class="n">minus_plus_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">minus_plus_state</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>                                         <span class="c1"># -1, 1, -1, 1, ...</span>
-    <span class="n">plus_minus_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">minus_plus_state</span>                   <span class="c1"># 1, -1, 1, -1</span>
+    minus_plus_state = np.ones(len(indices), dtype=int)
+    minus_plus_state[::2] *= -1                                         # -1, 1, -1, 1, ...
+    plus_minus_state = -1 * minus_plus_state                   # 1, -1, 1, -1
 
-    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">ones_state</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">minus_plus_state</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">plus_minus_state</span><span class="p">)]</span>
-    <span class="n">state_record</span> <span class="o">=</span> <span class="p">[</span><span class="n">_states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iteration</span><span class="p">)]</span>   <span class="c1"># 3つの状態からランダムにひとつ選ぶ</span>
-    <span class="n">exec_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">time_param</span>                                <span class="c1"># 適当に計算時間を伸ばしておきます</span>
+    start = time.time()
+    _states = [ones_state, list(minus_plus_state), list(plus_minus_state)]
+    state_record = [_states[np.random.randint(3)] for _ in range(iteration)]   # 3つの状態からランダムにひとつ選ぶ
+    exec_time = (time.time()-start) * 10**6 * time_param                                # 適当に計算時間を伸ばしておきます
 
-    <span class="n">energies</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">state_record</span><span class="p">]</span>                                     <span class="c1"># エネルギーの計算はてきとうです</span>
+    energies = [sum(state) for state in state_record]                                     # エネルギーの計算はてきとうです
 
 
-    <span class="c1"># Responseクラスに状態とエネルギーを格納します</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">var_type</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-    <span class="n">response</span><span class="o">.</span><span class="n">update_ising_states_energies</span><span class="p">(</span><span class="n">state_record</span><span class="p">,</span> <span class="n">energies</span><span class="p">)</span>
-    <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_time</span>
+    # Responseクラスに状態とエネルギーを格納します
+    response = oj.Response(indices=indices, var_type=&#39;SPIN&#39;)
+    response.update_ising_states_energies(state_record, energies)
+    response.info[&#39;execution_time&#39;] = exec_time
 
-    <span class="k">return</span> <span class="n">response</span>
+    return response
 </pre></div>
 </div>
 </div>
@@ -613,18 +613,18 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 最適解</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>  <span class="c1"># 1, -1, 1, -1</span>
+<span></span># 最適解
+correct_state = [(-1)**i for i in range(N)]  # 1, -1, 1, -1
 
-<span class="c1"># ステップ数とアニーリングの反復数を与えます</span>
-<span class="n">time_param_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># [10, 20, 30, 40, 50]</span>
-<span class="n">iteration</span> <span class="o">=</span> <span class="mi">2000</span>
+# ステップ数とアニーリングの反復数を与えます
+time_param_list = list(range(10, 51, 10))  # [10, 20, 30, 40, 50]
+iteration = 2000
 
-<span class="c1"># benchmark 関数で TTS 残留エネルギー 成功確率を計算。</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">solver_benchmark</span><span class="p">(</span>
-                      <span class="n">solver</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">time_param</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">:</span> <span class="n">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">),</span>
-                      <span class="n">time_list</span><span class="o">=</span><span class="n">time_param_list</span><span class="p">,</span> <span class="n">solutions</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">p_r</span><span class="o">=</span><span class="mf">0.99</span>
-              <span class="p">)</span>
+# benchmark 関数で TTS 残留エネルギー 成功確率を計算。
+result = oj.solver_benchmark(
+                      solver= lambda time_param, **args: anti_ferro_solver(time_param, iteration, h, J),
+                      time_list=time_param_list, solutions=[correct_state], p_r=0.99
+              )
 </pre></div>
 </div>
 </div>
@@ -633,21 +633,21 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span></span>fig, (axL,axC,axR) = plt.subplots(ncols=3, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
 
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+fontsize = 10
+axL.plot(result[&#39;time&#39;], result[&#39;tts&#39;])
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;residual_energy&#39;</span><span class="p">])</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axC.plot(result[&#39;time&#39;], result[&#39;residual_energy&#39;])
+axC.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axC.set_ylabel(&#39;Residual energy&#39;, fontsize=fontsize)
 
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success_prob&#39;</span><span class="p">])</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axR.plot(result[&#39;time&#39;], result[&#39;success_prob&#39;])
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
