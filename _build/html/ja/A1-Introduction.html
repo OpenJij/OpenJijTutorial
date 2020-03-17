@@ -7,13 +7,12 @@
     <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial  documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -70,15 +69,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
+  <h3>Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -92,16 +91,16 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
     background: none;
     border: none;
     padding: 0 0;
@@ -110,13 +109,13 @@ div.nboutput.container div[class*=highlight] pre {
 }
 
 /* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
+div.nboutput div[class*=highlight] pre {
     line-height: normal;
 }
 
 /* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
+div.nbinput,
+div.nboutput {
     display: -webkit-flex;
     display: flex;
     align-items: flex-start;
@@ -124,91 +123,92 @@ div.nboutput.container {
     width: 100%;
 }
 @media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
+    div.nbinput,
+    div.nboutput {
         flex-direction: column;
     }
 }
 
 /* input container */
-div.nbinput.container {
+div.nbinput {
     padding-top: 5px;
 }
 
 /* last container */
-div.nblast.container {
+div.nblast {
     padding-bottom: 5px;
 }
 
 /* input prompt */
-div.nbinput.container div.prompt pre {
+div.nbinput div.prompt pre {
     color: #307FC1;
 }
 
 /* output prompt */
-div.nboutput.container div.prompt pre {
+div.nboutput div.prompt pre {
     color: #BF5B3D;
 }
 
 /* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    min-width: 5.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 7ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
     text-align: right;
     flex: 0;
 }
 @media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
         text-align: left;
         padding: 0.4em;
     }
-    div.nboutput.container div.prompt.empty {
+    div.nboutput div.prompt.empty {
         padding: 0;
     }
 }
 
 /* disable scrollbars on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
     overflow: hidden;
 }
 
 /* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
 }
 @media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
         width: 100%;
     }
 }
 
 /* input area */
-div.nbinput.container div.input_area {
+div.nbinput div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
+div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
 /* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
+div.nboutput div.math p {
     text-align: left;
 }
 
 /* standard error */
-div.nboutput.container div.output_area.stderr {
+div.nboutput div.output_area.stderr {
     background: #fdd;
 }
 
@@ -251,27 +251,6 @@ div.nboutput.container div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
-
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
-    display: none;
-}
 
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
@@ -328,8 +307,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>!pip install openjij
-!pip show openjij
+<span></span><span class="o">!</span>pip install openjij
+<span class="o">!</span>pip show openjij
 </pre></div>
 </div>
 </div>
@@ -380,43 +359,43 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span># core interfaceではopenjijの代わりにcxxjijをインポートします。
-import cxxjij as cj
+<span></span><span class="c1"># core interfaceではopenjijの代わりにcxxjijをインポートします。</span>
+<span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
 
-# まず相互作用行列を作成してあげます。Graphモジュールを使います。
-import cxxjij.graph as G
+<span class="c1"># まず相互作用行列を作成してあげます。Graphモジュールを使います。</span>
+<span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
 
-# 問題サイズN=5の密結合グラフ(Dense)を定義します。
-N = 5
-J = G.Dense(N)
-# 相互作用を設定してあげます。
-for i in range(N):
-    for j in range(N):
-        #J[i,i]以外に-1を入力
-        J[i,j] = 0 if i == j else -1.0
+<span class="c1"># 問題サイズN=5の密結合グラフ(Dense)を定義します。</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="c1"># 相互作用を設定してあげます。</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="c1">#J[i,i]以外に-1を入力</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
 
-# 縦磁場を設定してあげます。
-for i in range(N):
-    # J[i,i] = -1でも同じ結果となります。
-    J[i] = -1
+<span class="c1"># 縦磁場を設定してあげます。</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="c1"># J[i,i] = -1でも同じ結果となります。</span>
+    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-# 続いてGraphから計算を行うためのSystemを作成します。
-import cxxjij.system as S
+<span class="c1"># 続いてGraphから計算を行うためのSystemを作成します。</span>
+<span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
 
-# 今回は通常の古典モンテカルロ計算のシステムを使用します。
-system = S.make_classical_ising_Eigen(J.gen_spin(), J)
-# アニーリングスケジュールを設定します。Utilityモジュールを使用します。
-import cxxjij.utility as U
-schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)
+<span class="c1"># 今回は通常の古典モンテカルロ計算のシステムを使用します。</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising_Eigen</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">J</span><span class="p">)</span>
+<span class="c1"># アニーリングスケジュールを設定します。Utilityモジュールを使用します。</span>
+<span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
-# 実際にアニーリングを走らせます。Algorithmモジュールを使用します。
-# モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。
-import cxxjij.algorithm as A
-A.Algorithm_SingleSpinFlip_run(system, schedule)
+<span class="c1"># 実際にアニーリングを走らせます。Algorithmモジュールを使用します。</span>
+<span class="c1"># モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。</span>
+<span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
+<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
 
-# 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。
-import cxxjij.result as R
-print(&quot;The solution is {}.&quot;.format(R.get_solution(system)))
+<span class="c1"># 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。</span>
+<span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solution is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -435,7 +414,7 @@ The solution is [1, 1, 1, 1, 1].
 <p>コード例に出てきたように、OpenJij core interfaceでは主に<code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>などのモジュールから成り立っており、それぞれのモジュールを組み合わせることで様々な種類、アルゴリズムを用いてイジングモデルを計算することが可能になっています。また新たにアルゴリズムを実装する際に拡張が容易であるという特徴を備えています。次章以降で詳細な説明を行います。</p>
 <div class="section" id="Graph">
 <h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
-<p>イジングハミルトニアンの係数<span class="math notranslate nohighlight">\(J_{ij}\)</span>を保持するためのモジュールです。基本的に密結合 (全てのJijが0以外の値を持つモデルに適している)を扱う<code class="docutils literal notranslate"><span class="pre">Dense</span></code>と疎結合 (Jijの多くの値が0であるモデルに適している)<code class="docutils literal notranslate"><span class="pre">Sparse</span></code>などがあります。</p>
+<p>イジングハミルトニアンの係数<span class="math notranslate nohighlight">\(J_{ij}\)</span>を保持するためのモジュールです。基本的に密結合 (全てのJijが0以外の値を持つモデルに適している)を扱う``Dense``と疎結合 (Jijの多くの値が0であるモデルに適している)``Sparse``などがあります。</p>
 </div>
 <div class="section" id="System">
 <h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
@@ -504,7 +483,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, OpenJij.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>
