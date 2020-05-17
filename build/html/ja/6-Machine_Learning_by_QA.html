@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>6-量子アニーリングによる機械学習 (Qboost) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7-MonteCarlo Sampling" href="7-MonteCarloSampling.html" />
+    <link rel="prev" title="5-OpenJij GPU" href="5_OpenJijGPU.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="7-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="5_OpenJijGPU.html" title="5-OpenJij GPU"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6-量子アニーリングによる機械学習 (Qboost)</a><ul>
+<li><a class="reference internal" href="#クラスタリング">クラスタリング</a><ul>
+<li><a class="reference internal" href="#人工データを生成する">人工データを生成する</a></li>
+<li><a class="reference internal" href="#PyQUBOによるクラスタリング">PyQUBOによるクラスタリング</a></li>
+<li><a class="reference internal" href="#Openjijのソルバーを用いたクラスタリング">Openjijのソルバーを用いたクラスタリング</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#QBoost">QBoost</a><ul>
+<li><a class="reference internal" href="#弱学習器の作成">弱学習器の作成</a></li>
+<li><a class="reference internal" href="#D-WaveサンプラーでQBoostを実行する">D-WaveサンプラーでQBoostを実行する</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="5_OpenJijGPU.html"
+                        title="previous chapter">5-OpenJij GPU</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="7-MonteCarloSampling.html"
+                        title="next chapter">7-MonteCarlo Sampling</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/6-Machine_Learning_by_QA.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="6-量子アニーリングによる機械学習-(Qboost)">
+<h1>6-量子アニーリングによる機械学習 (Qboost)<a class="headerlink" href="#6-量子アニーリングによる機械学習-(Qboost)" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/6-Machine_Learning_by_QA.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="line-block">
+<div class="line">このチュートリアルでは、量子アニーリングの最適化の応用の一例として機械学習(クラスタリング、Qboost)を取り上げます。</div>
+<div class="line">まず、前半部分ではPyQUBOとOpenjijを利用したクラスタリングを行います。</div>
+<div class="line">後半では、PyQUBOとD-Waveのサンプラーを用いてQboostというアンサンブル学習を行います。</div>
+</div>
+<div class="section" id="クラスタリング">
+<h2>クラスタリング<a class="headerlink" href="#クラスタリング" title="Permalink to this headline">¶</a></h2>
+<p>クラスタリングとは与えられたデータを 𝑛 個のクラスターに分けるというタスクです。( 𝑛 は外部から与えられているとします。) 今回は　クラスター数が2の場合を考えていきます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># ライブラリのインポート</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
+<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">Placeholder</span><span class="p">,</span> <span class="n">solve_qubo</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="人工データを生成する">
+<h3>人工データを生成する<a class="headerlink" href="#人工データを生成する" title="Permalink to this headline">¶</a></h3>
+<p>今回は人工的に、二次元平面上の明らかに線形分離可能なデータを生成し、それをクラスタリングします。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">cls</span> <span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span><span class="o">&gt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">]))</span>
+    <span class="n">label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+<span class="n">df1</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># データセットの確認</span>
+<span class="n">df1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_6-Machine_Learning_by_QA_8_0.svg" src="../_images/ja_6-Machine_Learning_by_QA_8_0.svg" /></div>
+</div>
+<p>今回は、以下のハミルトニアンを最小化することでクラスタリングを行います。</p>
+<div class="math notranslate nohighlight">
+\[H = - \sum_{i, j} \frac{1}{2}d_{i,j} (1 - \sigma _i \sigma_j)\]</div>
+<div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(i, j\)</span>はサンプルの番号、<span class="math notranslate nohighlight">\(d_{i,j}\)</span>は２つのサンプル間の距離、<span class="math notranslate nohighlight">\(\sigma_i=\{-1,1\}\)</span> この<span class="math notranslate nohighlight">\(\sigma_i\)</span>は２つのクラスターのどちらかに属しているかを表しています。 このハミルトニアンの和の各項は</div>
+<div class="line">- $:nbsphinx-math:<cite>sigma</cite>_i = <span class="math">\sigma</span>_j $のとき、0 - $:nbsphinx-math:<cite>sigma</cite>_i <span class="math">\neq `:nbsphinx-math:</span>sigma`<em>j :math:`のとき、`d</em>{i,j}$</div>
+</div>
+<p>になるので、右辺のマイナスに注意すると、ハミルトニアン全体では「異なるクラスに属しているサンプル同士の距離を最大にする<span class="math notranslate nohighlight">\(\{\sigma _1, \sigma _2 \ldots \}\)</span>の組を選べ 」という問題に帰着することがわかります。</p>
+</div>
+<div class="section" id="PyQUBOによるクラスタリング">
+<h3>PyQUBOによるクラスタリング<a class="headerlink" href="#PyQUBOによるクラスタリング" title="Permalink to this headline">¶</a></h3>
+<p>まずは、PyQUBOで上のハミルトニアンを定式化し、さらに、 <code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>を用いてシュミレーテッドアニーリングを行います。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">clustering_pyqubo</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="c1"># 距離行列</span>
+    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># spin</span>
+    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ハミルトニアン</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+    <span class="c1"># 解を求める</span>
+    <span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s2">&quot;spin&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="n">energy</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">labels</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span><span class="n">clustering_pyqubo</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+label [0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0]
+energy -14849.635830331572
+</pre></div></div>
+</div>
+<p>可視化をしてみましょう</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span>  <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_6-Machine_Learning_by_QA_15_0.svg" src="../_images/ja_6-Machine_Learning_by_QA_15_0.svg" /></div>
+</div>
+</div>
+<div class="section" id="Openjijのソルバーを用いたクラスタリング">
+<h3>Openjijのソルバーを用いたクラスタリング<a class="headerlink" href="#Openjijのソルバーを用いたクラスタリング" title="Permalink to this headline">¶</a></h3>
+<p>次はOpenjijのソルバーを用いてクラスタリングをしてみましょう。なお、QUBOの定式化のためにPyQUBOも併用します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">clustering_openjij</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="c1"># 距離行列</span>
+    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># spin</span>
+    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+
+    <span class="c1"># ハミルトニアン</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
+    <span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+    <span class="c1"># 解を求める</span>
+    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_sweeps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+    <span class="n">raw_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)]))</span>
+
+
+    <span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s2">&quot;spin&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="p">)</span> <span class="k">for</span> <span class="n">idx</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span>  <span class="nb">sum</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">labels</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span><span class="n">clustering_openjij</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+label [1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1]
+energy -148496.35830331547
+</pre></div></div>
+</div>
+<p>こちらも、可視化をしてみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span>  <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_6-Machine_Learning_by_QA_20_0.svg" src="../_images/ja_6-Machine_Learning_by_QA_20_0.svg" /></div>
+</div>
+</div>
+</div>
+<div class="section" id="QBoost">
+<h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">QBoostは量子アニーリングを用いたアンサンブル学習の一つです。</div>
+<div class="line">アンサンブル学習は弱い予測器を多数用意して、その予測器の各予測結果の組み合わせて最終的な予測結果を得ます。</div>
+</div>
+<div class="line-block">
+<div class="line">QBoostでは、与えられた学習データに対して最適な学習器の組み合わせを量子アニーリングを用いて最適化します。今回は分類問題を扱います。</div>
+<div class="line">まず、<span class="math notranslate nohighlight">\(D\)</span>個の学習データの集合を<span class="math notranslate nohighlight">\(\{\vec x^{(d)}\}(d=1, ..., D)\)</span>、対応するラベルを<span class="math notranslate nohighlight">\(\{y^{(d)}\}(d=1, ..., D), y^{(d)}\in \{-1, 1\}\)</span>とします。また、<span class="math notranslate nohighlight">\(N\)</span>個の弱学習器の（関数の）集合を<span class="math notranslate nohighlight">\(\{C_i\}(i=1, ..., N)\)</span>とします。なお、あるデータ<span class="math notranslate nohighlight">\(\vec x^{(d)}\)</span> に対して、<span class="math notranslate nohighlight">\(C_i(\vec x^{(d)})\in \{-1, 1\}\)</span>です。このとき、最終的な分類のラベルは以下のようになります。</div>
+</div>
+<div class="math notranslate nohighlight">
+\[y^{(d)} ={\rm sgn}\left( \sum_{i=1}^{N} w_i C_i(x_d)\right)\]</div>
+<div class="line-block">
+<div class="line">ただし、<span class="math notranslate nohighlight">\(w_i\in\{0, 1\} (N=1, ..., N)\)</span>とし、各予測器の重み(予測器を最終的な予測に採用するか採用しないかのbool値)とします。</div>
+<div class="line">QBoostではこの<span class="math notranslate nohighlight">\(w_i\)</span>を弱学習器の個数を刈り込みつつ、最終的な予測が教師データに一致する組み合わせを最適化を行います。 この問題におけるハミルトニアンは、以下のようになります。</div>
+</div>
+<div class="math notranslate nohighlight">
+\[H(\vec w) = \sum_{d=1}^{D} \left( \frac{1}{N}\sum_{i=1}^{N} w_i C_i(\vec x^{(d)})-y^{(d)} \right)^2 + \lambda \sum _i^N w_i\]</div>
+<div class="line-block">
+<div class="line">このハミルトニアンの第一項目は弱分類器と正解ラベルの差を表しており、第二項目は最終的な分類器に採用する弱分類器の個数の程度を表しています。なお、<span class="math notranslate nohighlight">\(\lambda\)</span>は第二項の弱分類器の個数がハミルトニアンにどのくらい影響するかを調節する正則化パラメータになっています。</div>
+<div class="line">このハミルトニアンを量子アニーリングで最小化することにより、学習データに最も適合するような弱分類器の組み合わせを得ることができます。</div>
+</div>
+<p>それでは、実際にQBoostを試してみましょう。今回は、scikit-learnの癌識別のデータセットを使用します。なお、簡単のために、学習に用いるのは“0”と“1”の２つの文字種とします。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># ライブラリをインポート</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 今回は2クラスで分類します。</span>
+<span class="c1"># データのロードを行います。</span>
+<span class="n">cancerdata</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="c1"># 学習用データと検証用データの個数です</span>
+<span class="n">num_train</span> <span class="o">=</span> <span class="mi">450</span>
+</pre></div>
+</div>
+</div>
+<p>今回はデモンストレーションのために、ノイズとなる特徴量がある場合を考えます。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">data_noisy</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">30</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_noisy</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(569, 60)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># labelを{0, 1}から{-1, 1}につけ直します</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">target</span> <span class="o">-</span><span class="mf">0.5</span> <span class="p">)</span><span class="o">*</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># データセットを学習用と検証用に分割します</span>
+<span class="n">X_train</span> <span class="o">=</span><span class="n">data_noisy</span><span class="p">[:</span><span class="n">num_train</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">data_noisy</span><span class="p">[</span><span class="n">num_train</span><span class="p">:,</span> <span class="p">:]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:</span><span class="n">num_train</span><span class="p">]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">num_train</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 弱学習器の結果から</span>
+<span class="k">def</span> <span class="nf">aggre_mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">,</span>  <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="弱学習器の作成">
+<h3>弱学習器の作成<a class="headerlink" href="#弱学習器の作成" title="Permalink to this headline">¶</a></h3>
+<p>ます、はじめにscikit-learnで弱分類器を作成します。今回は、弱分類器として、decision stumpを用います。decision stumpとは、一層の決定木のことを指します。今回は、弱分類器として用いるので分割に用いる特徴量はランダムに選ぶこととします。(一層のランダムフォレストを行うという理解で良いと思います。)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">num_clf</span> <span class="o">=</span> <span class="mi">32</span> <span class="c1">#弱分類機の個数</span>
+<span class="n">sample_train</span> <span class="o">=</span> <span class="mi">40</span> <span class="c1"># bootstrap samplingで一つのサンプルに対して取り出すサンプルの個数</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span> <span class="k">as</span> <span class="n">DTC</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">[</span> <span class="n">DTC</span><span class="p">(</span><span class="n">splitter</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_clf</span><span class="p">)]</span>
+
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">train_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">sample_train</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
+
+<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">y_pred_list_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+
+<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
+<span class="n">y_pred_train</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>すべての弱学習器を最終的な分類器として、精度を見てみましょう。以後、この組み合わせをbaselineとします。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+    <span class="n">y_pred_list_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+<span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">)</span>
+<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="n">acc_test_base</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.9411764705882353
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">class</span> <span class="nc">QBoost</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">=</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># spinを定義</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 正規化項の大きさ</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">)</span>
+
+        <span class="c1">#　弱分類器の組み合わせのハミルトニアン</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">([</span><span class="n">W</span><span class="o">*</span><span class="n">C</span> <span class="k">for</span> <span class="n">W</span><span class="p">,</span> <span class="n">C</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">,</span> <span class="n">y_clf</span><span class="p">)])</span><span class="o">-</span> <span class="n">y_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_clf</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="c1"># 正規化項のハミルトニアン</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">W</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">]),</span> <span class="s2">&quot;norm&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ハミルトニアンの全体</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span>
+
+        <span class="c1"># モデルをコンパイル</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">to_qubo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_param</span><span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm_param</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">qboost</span> <span class="o">=</span> <span class="n">QBoost</span><span class="p">(</span><span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">=</span><span class="n">y_pred_list_train</span><span class="p">)</span>
+<span class="n">qubo</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="D-WaveサンプラーでQBoostを実行する">
+<h3>D-WaveサンプラーでQBoostを実行する<a class="headerlink" href="#D-WaveサンプラーでQBoostを実行する" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
+<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">DWaveSampler</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 計算を実行</span>
+<span class="c1"># num_readsで何回D-Waveのサンプラーで計算を実行するかを指定します</span>
+<span class="n">sampleset</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 結果を確認します</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+weight[0] weight[10] weight[11] ... weight[9]      energy num_oc. ...
+18         1          1          1 ...         1 -271.951172       1 ...
+33         1          1          1 ...         1 -271.951172       1 ...
+1          1          1          1 ...         1 -271.943359       1 ...
+4          1          1          1 ...         1   -271.9375       1 ...
+5          1          1          1 ...         1 -271.818359       1 ...
+9          1          1          1 ...         1 -271.818359       1 ...
+15         1          1          1 ...         1 -271.818359       1 ...
+22         1          1          1 ...         1 -271.818359       1 ...
+28         1          1          1 ...         1 -271.818359       1 ...
+34         1          1          1 ...         1 -271.818359       1 ...
+39         1          1          1 ...         1 -271.734375       1 ...
+11         1          1          1 ...         1 -271.607422       1 ...
+40         1          1          1 ...         1 -271.607422       1 ...
+30         1          1          1 ...         1 -271.519531       1 ...
+85         1          1          1 ...         1 -271.511719       1 ...
+20         1          1          0 ...         1 -271.404297       1 ...
+57         1          1          1 ...         1 -271.365234       1 ...
+48         1          1          1 ...         1 -271.359375       1 ...
+42         1          1          1 ...         1 -271.351562       1 ...
+19         1          1          1 ...         1 -271.289062       1 ...
+23         1          1          1 ...         1 -271.289062       1 ...
+62         1          1          1 ...         1 -271.207031       2 ...
+81         1          1          1 ...         1 -271.207031       1 ...
+64         0          1          1 ...         1   -271.1875       1 ...
+10         1          1          1 ...         1 -271.091797       1 ...
+37         1          1          1 ...         1 -271.091797       1 ...
+12         1          1          1 ...         1 -271.068359       1 ...
+68         1          1          1 ...         1 -270.880859       1 ...
+90         1          1          1 ...         1 -270.880859       1 ...
+32         1          1          1 ...         1 -270.841797       1 ...
+89         1          1          1 ...         1 -270.810547       1 ...
+36         1          1          1 ...         1 -270.765625       1 ...
+86         1          1          1 ...         1 -270.730469       1 ...
+74         1          1          1 ...         1 -270.703125       1 ...
+76         1          1          1 ...         1 -270.703125       1 ...
+50         1          1          1 ...         1 -270.699219       1 ...
+53         1          1          1 ...         1 -270.699219       1 ...
+72         1          1          0 ...         1 -270.667969       1 ...
+26         1          1          1 ...         1 -270.652344       1 ...
+55         1          1          1 ...         1 -270.615234       1 ...
+63         1          1          1 ...         1 -270.615234       1 ...
+82         1          1          1 ...         1 -270.615234       1 ...
+83         1          1          1 ...         1 -270.615234       1 ...
+87         1          1          1 ...         1 -270.615234       1 ...
+73         1          1          1 ...         1 -270.560547       1 ...
+80         1          1          1 ...         1 -270.488281       1 ...
+69         1          1          1 ...         1 -270.332031       1 ...
+56         1          1          1 ...         1 -270.328125       1 ...
+60         1          1          1 ...         1 -270.328125       1 ...
+84         1          1          1 ...         1 -270.328125       1 ...
+58         1          1          1 ...         1 -270.287109       1 ...
+44         1          1          1 ...         1 -270.169922       1 ...
+61         1          1          1 ...         1 -270.074219       1 ...
+67         1          1          1 ...         1 -270.074219       1 ...
+2          1          1          1 ...         1 -270.019531       1 ...
+88         1          1          1 ...         1 -269.904297       1 ...
+70         1          1          1 ...         1 -269.654297       1 ...
+92         1          1          1 ...         1 -269.402344       1 ...
+93         1          1          1 ...         1 -269.402344       1 ...
+94         1          1          1 ...         1 -269.402344       1 ...
+96         1          1          1 ...         1 -269.402344       1 ...
+97         1          1          1 ...         1 -269.402344       1 ...
+98         1          1          1 ...         1 -269.402344       1 ...
+91         1          1          1 ...         1 -269.162109       1 ...
+95         1          1          1 ...         1 -269.162109       1 ...
+3          0          1          1 ...         1 -269.076172       1 ...
+79         1          1          1 ...         1 -268.998047       1 ...
+24         0          1          1 ...         1 -268.677734       1 ...
+8          0          1          1 ...         1 -268.412109       1 ...
+46         1          1          1 ...         1 -268.310547       1 ...
+71         1          1          1 ...         1 -268.310547       1 ...
+6          1          1          1 ...         1 -267.488281       1 ...
+51         0          1          1 ...         1 -267.042969       1 ...
+25         0          1          1 ...         1 -266.787109       1 ...
+0          0          1          1 ...         1 -266.421875       1 ...
+7          0          1          1 ...         1 -266.328125       1 ...
+16         0          1          1 ...         1 -266.328125       1 ...
+21         0          1          1 ...         1 -266.328125       1 ...
+27         0          1          1 ...         1 -266.328125       1 ...
+38         0          1          1 ...         1 -266.328125       1 ...
+47         0          1          1 ...         1 -266.328125       1 ...
+17         1          1          1 ...         1 -266.277344       1 ...
+31         1          1          1 ...         1 -266.277344       1 ...
+41         1          1          1 ...         1 -266.078125       1 ...
+75         1          1          1 ...         1 -266.078125       1 ...
+35         0          1          1 ...         1 -266.023438       1 ...
+13         0          1          1 ...         1 -265.933594       1 ...
+14         0          1          1 ...         1 -265.933594       1 ...
+29         0          1          1 ...         1 -265.933594       1 ...
+52         0          1          1 ...         1 -264.443359       1 ...
+45         0          1          1 ...         1 -264.255859       1 ...
+49         0          1          1 ...         1 -263.583984       1 ...
+54         0          1          1 ...         1 -263.583984       1 ...
+43         0          1          1 ...         1 -263.490234       1 ...
+65         0          1          1 ...         1 -263.490234       1 ...
+59         0          1          1 ...         1 -263.419922       1 ...
+78         0          1          1 ...         1 -263.419922       1 ...
+66         0          1          1 ...         1 -262.552734       1 ...
+77         0          1          1 ...         1 -260.792969       1 ...
+[&#39;BINARY&#39;, 99 rows, 100 samples, 32 variables]
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># 各計算結果についてPyQUBOでdecodeします</span>
+<span class="n">decoded_solutions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">brokens</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">energies</span> <span class="o">=</span><span class="p">[]</span>
+
+<span class="n">decoded_sol</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">decode_dimod_response</span><span class="p">(</span><span class="n">sampleset</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">qboost</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">d_sol</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="n">decoded_sol</span><span class="p">:</span>
+    <span class="n">decoded_solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_sol</span><span class="p">)</span>
+    <span class="n">brokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>D-Waveで得られた弱分類器の組み合わせを使った場合の、学習データ/検証データでの精度を確認しましょう</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">accs_train_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">accs_test_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">for</span> <span class="n">decoded_solution</span> <span class="ow">in</span> <span class="n">decoded_solutions</span><span class="p">:</span>
+    <span class="n">idx_clf_DWave</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">idx_clf_DWave</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="n">y_pred_train_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">y_pred_test_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">acc_train_DWave</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_train_DWave</span><span class="p">)</span>
+    <span class="n">acc_test_DWave</span><span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test_DWave</span><span class="p">)</span>
+    <span class="n">accs_train_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_train_DWave</span><span class="p">)</span>
+    <span class="n">accs_test_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_test_DWave</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>エネルギーと精度の関係をグラフにしてみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_train_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train&quot;</span> <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_test_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;energy: D-wave&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;relationship between energy and accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_6-Machine_Learning_by_QA_45_0.svg" src="../_images/ja_6-Machine_Learning_by_QA_45_0.svg" /></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;base accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;average accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+base accuracy is 0.9411764705882353
+max accuracy　of QBoost is 0.957983193277311
+average accuracy　of QBoost is 0.9398183515830576
+</pre></div></div>
+</div>
+<p>D-Waveによるサンプリングは短時間で数百サンプリング以上サンプリングできるので、精度が最大になる結果を使えば、baselineよりも高精度の分類器を作成できます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="7-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="5_OpenJijGPU.html" title="5-OpenJij GPU"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

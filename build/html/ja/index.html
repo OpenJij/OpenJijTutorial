@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>OpenJij チュートリアル &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenJij チュートリアル" href="README.html" />
+    <link rel="prev" title="1-An Introduction to OpenJij" href="../en/1-Introduction.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="README.html" title="OpenJij チュートリアル"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../en/1-Introduction.html" title="1-An Introduction to OpenJij"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../en/1-Introduction.html"
+                        title="previous chapter">1-An Introduction to OpenJij</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="README.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="openjij">
+<h1>OpenJij チュートリアル<a class="headerlink" href="#openjij" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">OpenJij チュートリアル</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="README.html#id1">コメント</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1-Introduction.html">1-OpenJij 入門</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Ising-model">Ising model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Sampler">Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#sample_ising(h,-J)">sample_ising(h, J)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Response">Response</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2-Evaluation.html">2-アニーリングアルゴリズムの評価</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#Time-to-solution">Time to solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#TTSを計算してみる">TTSを計算してみる</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#solver_benchmark関数">solver_benchmark関数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2-Evaluation_errorbar.html">ベンチマーク関数 標準誤差機能 の使い方</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation_errorbar.html#ライブラリのインストール、モデルの準備">ライブラリのインストール、モデルの準備</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation_errorbar.html#ベンチマーク関数">ベンチマーク関数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html">3-PyQUBO with OpenJij</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#PyQUBO-を使った-QUBOの定式化">PyQUBO を使った QUBOの定式化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#OpenJij-に投げる">OpenJij に投げる</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#まとめ">まとめ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3-plus-CMOSAnnealer.html">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3-plus-CMOSAnnealer.html#token-取得">token 取得</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-plus-CMOSAnnealer.html#OpenJij-でアクセスする">OpenJij でアクセスする</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-plus-CMOSAnnealer.html#他のSamplerと同じ-辞書型で渡す">他のSamplerと同じ 辞書型で渡す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-plus-CMOSAnnealer.html#キンググラフ上の2次元座標で相互作用を渡す">キンググラフ上の2次元座標で相互作用を渡す</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-plus-CMOSAnnealer.html#QUBOを解く">QUBOを解く</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4-DWaveOceanSDK.html">4-D-Wave Ocean SDK 入門</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="4-DWaveOceanSDK.html#定式化">定式化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4-DWaveOceanSDK.html#D-Waveマシンによる最適化">D-Waveマシンによる最適化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4-DWaveOceanSDK.html#結言">結言</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="5_OpenJijGPU.html">5-OpenJij GPU</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="5_OpenJijGPU.html#キメラグラフ">キメラグラフ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="6-Machine_Learning_by_QA.html">6-量子アニーリングによる機械学習 (Qboost)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="6-Machine_Learning_by_QA.html#クラスタリング">クラスタリング</a></li>
+<li class="toctree-l2"><a class="reference internal" href="6-Machine_Learning_by_QA.html#QBoost">QBoost</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="7-MonteCarloSampling.html">7-MonteCarlo Sampling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="7-MonteCarloSampling.html#Binder-cumulant">Binder cumulant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="A1-Introduction.html">A1 - OpenJij core interface入門 (core python interface)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="A1-Introduction.html#OpenJij-core-interface-について">OpenJij core interface について</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A1-Introduction.html#問題を投げてみる">問題を投げてみる</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A1-Introduction.html#モジュール一覧">モジュール一覧</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="A2-CppIntroduction.html">A2 - OpenJij core interface入門 (C++ interface)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="A2-CppIntroduction.html#問題を投げてみる">問題を投げてみる</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="A3-LargeScaleMC.html">A3 - 古典イジング模型</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="A3-LargeScaleMC.html#システムの設定---System--">システムの設定 - System -</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A3-LargeScaleMC.html#アルゴリズムの実行--Updater,-Algorithm-">アルゴリズムの実行 -Updater, Algorithm-</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A3-LargeScaleMC.html#結果の取得--Result-">結果の取得 -Result-</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A3-LargeScaleMC.html#C++-core-interface">C++ core interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="A4-QuantumSystem.html">A4 - 量子イジング模型</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="A4-QuantumSystem.html#横磁場イジング模型">横磁場イジング模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A4-QuantumSystem.html#連続虚時間量子モンテカルロ">連続虚時間量子モンテカルロ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="A5-OpenJijGPU.html">A5-OpenJij GPU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="A6-MonteCarloCalc.html">A6-Monte-Carlo Calculation</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="README.html" title="OpenJij チュートリアル"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../en/1-Introduction.html" title="1-An Introduction to OpenJij"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>
