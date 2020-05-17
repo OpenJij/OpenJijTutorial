@@ -8,7 +8,9 @@ Welcome to OpenJij's Tutorial!
    :caption: Contents:
    :glob:
 
-   日本語 Tutorial <ja/index>
+   English Tutorial <en/index>
+   日本語 (Japanease) Tutorial <ja/index>
+   How to contribute to the project. <HowToContribute>
 
 GitHub Links:
    * `OpenJij: GitHub repository <https://github.com/OpenJij/OpenJij>`_
