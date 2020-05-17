@@ -58,6 +58,12 @@ html_theme = 'sphinxdoc'
 html_static_path = ['_static']
 
 
+# for "Edit on Github" link
+rst_prolog = """
+:github_url: https://github.com/OpenJij/OpenJijTutorial
+"""
+
+
 
 # for Markdown text
 

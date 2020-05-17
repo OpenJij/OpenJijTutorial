@@ -10,6 +10,9 @@ Welcome to OpenJij's Tutorial!
 
    日本語 Tutorial <ja/index>
 
+GitHub Links:
+   * `OpenJij: GitHub repository <https://github.com/OpenJij/OpenJij>`_
+   * `OpenJij Tutorial: GitHub repository <https://github.com/OpenJij/OpenJijTutorial>`_
 
 
 

@@ -17,6 +17,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2-アニーリングアルゴリズムの評価" href="2-Evaluation.html" />
     <link rel="prev" title="OpenJij チュートリアル" href="README.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -25,6 +26,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="2-Evaluation.html" title="2-アニーリングアルゴリズムの評価"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="README.html" title="OpenJij チュートリアル"
              accesskey="P">previous</a> |</li>
@@ -56,6 +60,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="README.html"
                         title="previous chapter">OpenJij チュートリアル</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2-Evaluation.html"
+                        title="next chapter">2-アニーリングアルゴリズムの評価</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -314,7 +321,6 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<p><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></p>
 <div class="section" id="1-OpenJij-入門">
 <h1>1-OpenJij 入門<a class="headerlink" href="#1-OpenJij-入門" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/ja/1-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
@@ -756,7 +762,7 @@ array([-55.69322142, -55.69322142, -55.48148676, -55.48148676,
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_1-Introduction_24_0.png" src="../_images/ja_1-Introduction_24_0.png" />
+<img alt="../_images/ja_1-Introduction_25_0.png" src="../_images/ja_1-Introduction_25_0.png" />
 </div>
 </div>
 <p>エネルギーが低いほど良い状態を算出したことになりますが、稀にエネルギーが高い状態も算出されていることが上のヒストグラムからわかります。しかし大半の計算結果はエネルギーが最低の状態を算出しています。 解いた(サンプルした)状態のうち一番低い解が最適解に近いはずなので、その解を.statesから探しましょう。 &gt; 注意: SAは必ずしも最適解を導くものではありません。よってエネルギーが一番低い解を選んでも最適解であるという保証はありません。あくまで近似解です。</p>
@@ -809,6 +815,9 @@ Sample(sample={0: 1, 1: 1, 2: 1, 3: 0, 4: 1, 5: 1, 6: 1, 7: 1, 8: 0, 9: 0, 10: 1
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="2-Evaluation.html" title="2-アニーリングアルゴリズムの評価"
+             >next</a> |</li>
         <li class="right" >
           <a href="README.html" title="OpenJij チュートリアル"
              >previous</a> |</li>
