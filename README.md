@@ -6,7 +6,8 @@ You can learn how to use "OpenJij," how to use D-Wave Leap, how to use annealing
 
 [Tutorial Home Link](https://openjij.github.io/OpenJijTutorial/build/html/index.html)
 
-- [Japanease tutorial](https://openjij.github.io/OpenJijTutorial/build/html/en/index.html)
+- [English tutorial](https://openjij.github.io/OpenJijTutorial/build/html/en/index.html)
+- [Japanease tutorial](https://openjij.github.io/OpenJijTutorial/build/html/ja/index.html)
 
 # Build HTML files
 
