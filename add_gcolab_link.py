@@ -1,8 +1,19 @@
 import json
 import glob
 
+from logging import getLogger, StreamHandler, Formatter, DEBUG, INFO
 
-def add_googleClab_link(nb_name, github_link):
+
+logger = getLogger(__name__)
+logger.setLevel(DEBUG)
+handler = StreamHandler()
+formatter = Formatter('{} - %(levelname)s - %(message)s'.format(__file__))
+handler.setFormatter(formatter)
+handler.setLevel(DEBUG)
+logger.addHandler(handler)
+
+
+def add_google_colab_link(nb_name, github_link, output_nb):
     with open(nb_name, "r", encoding='utf-8') as f:
         nb_json = json.load(f)
 
@@ -17,6 +28,7 @@ def add_googleClab_link(nb_name, github_link):
     exist_colab_link = check_colab_link(nb_json['cells'][1])
 
     if exist_colab_link:
+        logger.debug('\tThis notebook already has a colab link.')
         return None
 
     colab_img = 'https://colab.research.google.com/assets/colab-badge.svg' 
@@ -33,17 +45,20 @@ def add_googleClab_link(nb_name, github_link):
     nb_json['cells'].insert(1, colab_cell)
 
 
-    with open('sample.ipynb', 'w') as fw:
+    with open(output_nb, 'w') as fw:
         json.dump(nb_json, fw)
+    logger.info("add Colab Link to '{}'".format(output_nb))
 
 
 def add_colablink_to_notebooks():
     nb_list = glob.glob('./source/**/*.ipynb')
-    print(nb_list)
+    logger.debug('Find {} notebooks.'.format(len(nb_list)))
+    for nb in nb_list:
+        logger.debug('Notebook: {}'.format(nb))
+        add_google_colab_link(nb, github_link='', output_nb=nb)
 
 
 
 
 if __name__ == "__main__":
-    add_googleClab_link("source/ja/2-Evaluation_errorbar.ipynb", github_link='')
-    add_all_notebooks()
+    add_colablink_to_notebooks()
