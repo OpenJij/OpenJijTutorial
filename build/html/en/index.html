@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenJij Tutorial &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,9 +33,57 @@
         <li class="right" >
           <a href="../index.html" title="Welcome to OpenJij’s Tutorial!"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">OpenJij Tutorial</a></li> 
       </ul>
-    </div>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="openjij-tutorial">
+<h1>OpenJij Tutorial<a class="headerlink" href="#openjij-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">OpenJij Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="README.html#comment">Comment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1-Introduction.html">1-An Introduction to OpenJij</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#The-Ising-model">The Ising model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Sampler">Sampler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#sample_ising(h,-J)">sample_ising(h, J)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Response">Response</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2-Evaluation.html">2-An Evaluation of Annealing Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#Time-to-solution">Time to solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#Compute-TTS">Compute TTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation.html#solver_benchmark-function">solver_benchmark function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2-Evaluation_errorbar.html">How to use the standard error function of benchmark functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation_errorbar.html#Install-Libraries-and-model-preparation">Install Libraries and model preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-Evaluation_errorbar.html#Benchmark-function">Benchmark function</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html">3-PyQUBO with OpenJij</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#Formulation-of-QUBO-with-PyQUBO">Formulation of QUBO with PyQUBO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#Run-with-OpenJij">Run with OpenJij</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-PyQUBO_2_OpenJij.html#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
@@ -62,35 +111,6 @@
 <script>$('#searchbox').show(0);</script>
         </div>
       </div>
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="openjij-tutorial">
-<h1>OpenJij Tutorial<a class="headerlink" href="#openjij-tutorial" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="README.html">OpenJij Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="README.html#comment">Comment</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="1-Introduction.html">1-An Introduction to OpenJij</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#The-Ising-model">The Ising model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Sampler">Sampler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#sample_ising(h,-J)">sample_ising(h, J)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="1-Introduction.html#Response">Response</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
-
-          </div>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -105,12 +125,13 @@
         <li class="right" >
           <a href="../index.html" title="Welcome to OpenJij’s Tutorial!"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">OpenJij Tutorial</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>

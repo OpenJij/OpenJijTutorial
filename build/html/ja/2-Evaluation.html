@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2-アニーリングアルゴリズムの評価 &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,49 +34,10 @@
           <a href="1-Introduction.html" title="1-OpenJij 入門"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">2-アニーリングアルゴリズムの評価</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">2-アニーリングアルゴリズムの評価</a><ul>
-<li><a class="reference internal" href="#Time-to-solution">Time to solution</a><ul>
-<li><a class="reference internal" href="#OpenJij-で実験を行ってTTSを測る">OpenJij で実験を行ってTTSを測る</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#TTSを計算してみる">TTSを計算してみる</a></li>
-<li><a class="reference internal" href="#solver_benchmark関数">solver_benchmark関数</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="1-Introduction.html"
-                        title="previous chapter">1-OpenJij 入門</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="2-Evaluation_errorbar.html"
-                        title="next chapter">ベンチマーク関数 標準誤差機能 の使い方</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/2-Evaluation.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -729,7 +691,48 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2-アニーリングアルゴリズムの評価</a><ul>
+<li><a class="reference internal" href="#Time-to-solution">Time to solution</a><ul>
+<li><a class="reference internal" href="#OpenJij-で実験を行ってTTSを測る">OpenJij で実験を行ってTTSを測る</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#TTSを計算してみる">TTSを計算してみる</a></li>
+<li><a class="reference internal" href="#solver_benchmark関数">solver_benchmark関数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="1-Introduction.html"
+                        title="previous chapter">1-OpenJij 入門</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2-Evaluation_errorbar.html"
+                        title="next chapter">ベンチマーク関数 標準誤差機能 の使い方</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/2-Evaluation.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -747,12 +750,13 @@ Text(0, 0.5, &#39;Success probability&#39;)
           <a href="1-Introduction.html" title="1-OpenJij 入門"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">2-アニーリングアルゴリズムの評価</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
     </div>
   </body>
 </html>

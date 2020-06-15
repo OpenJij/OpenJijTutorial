@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-PyQUBO with OpenJij &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="prev" title="How to use the standard error function of benchmark functions" href="2-Evaluation_errorbar.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="2-Evaluation_errorbar.html" title="How to use the standard error function of benchmark functions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">3-PyQUBO with OpenJij</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="3-PyQUBO-with-OpenJij">
+<h1>3-PyQUBO with OpenJij<a class="headerlink" href="#3-PyQUBO-with-OpenJij" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/3-PyQUBO_2_OpenJij.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>In this chapter, we explain how to convert the cost function to QUBO with PyQUBO, Simulated Annealing, and pass variables to OpenJij. Let us show you “Creek Coverage Problem” as an example.</p>
+<p>We install <code class="docutils literal notranslate"><span class="pre">pyqubo</span></code> with the following command using <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install pyqubo
+</pre></div>
+</div>
+</div>
+<div class="section" id="Formulation-of-QUBO-with-PyQUBO">
+<h2>Formulation of QUBO with PyQUBO<a class="headerlink" href="#Formulation-of-QUBO-with-PyQUBO" title="Permalink to this headline">¶</a></h2>
+<p>PyQUBO is a intuitive library for fomulating QUBO &amp; Ising models. In the previous chapters, we have shown the case withou PyQUBO. In the previous chapters, we had to formulate QUBO, then expand the expressions ourselves and put them into the Python script. However, we can eliminate that hassles with PyQUBO.</p>
+<p>PyQUBO is a handy library that can help us reduce the computational and implementation errors in our QUBO and Ising model transformations.</p>
+<p>Let us use PyQUBO as as example for the Creek Coverage Problem.</p>
+<p>For more details of this problem, see also <a class="reference external" href="https://qard.is.tohoku.ac.jp/T-Wave/?p=434">here (T-Wave: creek coverage problem (only Japanese))</a>.</p>
+<p>We introduce the formulation of the creek coverage problem in QUBO representation.</p>
+<p>This problem is whethre the graph <span class="math notranslate nohighlight">\(G=(V, E)\)</span> can be covered by <span class="math notranslate nohighlight">\(n\)</span> creeks.</p>
+<p>It can be expressed in QUBO as follows.</p>
+<div class="math notranslate nohighlight">
+\[H = A\sum_v \left(1-\sum^n_{i=1} x_{v, i}\right)^2
++ B \sum^n_{i=1}\left[
+\frac{1}{2}\left(-1+\sum_{v \in V} x_{v,i}\right)\sum_{v \in V} x_{v, i}
+- \sum_{(u, v)\in E} x_{u,i} x_{v, i}\right]\]</div>
+<p>First term is constraint where only one color is painted on each vertex. Second shows how close the split subgraph is to creek (complete graph). Both term must be zero. However, we treat the first term as a penalty term, and second as a cost(objective function).</p>
+<p>Let us represent this QUBO using PyQUBO.</p>
+<p>We give the Graph and the number of creek <span class="math notranslate nohighlight">\(n\)</span> as follows in this time.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># set the number of vertex</span>
+<span class="n">N_VER</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="c1"># set the number of colors</span>
+<span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1"># set the graph. define them which vertices are connected to each other</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Formulation-with-PyQUBO">
+<h3>Formulation with PyQUBO<a class="headerlink" href="#Formulation-with-PyQUBO" title="Permalink to this headline">¶</a></h3>
+<p>We import the required classes from PyQUBO.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">solve_qubo</span>
+</pre></div>
+</div>
+</div>
+<p>At First, we prepare variables for representing QUBO. We set an array of variables using <code class="docutils literal notranslate"><span class="pre">Array</span></code>. In this time, we need the number of (N_VER) x (N_COLOR), therefore we set <code class="docutils literal notranslate"><span class="pre">shape</span></code> argument as follows.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">We could create binary variable ‘x’ with N_VER rows and N_COLOR columns.</div>
+<div class="line">Next, we set QUBO. PyQUBO allows us to follow the formula.</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># define first term (constraint)</span>
+<span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
+<span class="c1"># define seconde term (cost, objective function)</span>
+<span class="n">H_B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">))</span>
+<span class="c1"># set the entire Hamiltonian</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">H_A</span><span class="o">+</span><span class="n">H_B</span>
+</pre></div>
+</div>
+</div>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">Constraint</span></code> function in the first term to make the script recognize that “this term is constraint”. The cost function is easily converted to QUBO (Python dictionary type) with <code class="docutils literal notranslate"><span class="pre">Q.compile().to_qubo()</span></code>.</p>
+<p>In OpenJij and D-Wave Ocean, QUBO is assumed to be represented by a Python dictionary type.</p>
+<p>We can run it on each solver by <code class="docutils literal notranslate"><span class="pre">.compile</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># compile this model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">qubo</span></code> is set to QUBO and <code class="docutils literal notranslate"><span class="pre">offset</span></code> is set to the constant that appears when it is converted to QUBO.</p>
+<p>PyQUBO also has a Simulated Annealing solver. This solver execute neal of D-Wave Ocean inside. This is used with <code class="docutils literal notranslate"><span class="pre">solve_qubo(qubo)</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Here is an example of how to use PyQUBO&#39;s SA</span>
+<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;x[0][1]&#39;: 0, &#39;x[0][2]&#39;: 0, &#39;x[0][3]&#39;: 1, &#39;x[1][1]&#39;: 0, &#39;x[1][2]&#39;: 0, &#39;x[1][3]&#39;: 1, &#39;x[2][1]&#39;: 0, &#39;x[2][2]&#39;: 0, &#39;x[2][3]&#39;: 1, &#39;x[3][1]&#39;: 0, &#39;x[3][2]&#39;: 1, &#39;x[3][3]&#39;: 0, &#39;x[4][1]&#39;: 0, &#39;x[4][2]&#39;: 1, &#39;x[4][3]&#39;: 0, &#39;x[5][1]&#39;: 1, &#39;x[5][2]&#39;: 0, &#39;x[5][3]&#39;: 0, &#39;x[6][1]&#39;: 1, &#39;x[6][2]&#39;: 0, &#39;x[6][3]&#39;: 0, &#39;x[7][1]&#39;: 1, &#39;x[7][2]&#39;: 0, &#39;x[7][3]&#39;: 0}
+</pre></div></div>
+</div>
+<p>Let’s look at the solutions obtained. We can see that is is stored in a dictionary type with the string as the key like ‘x[0][0]’: 1.</p>
+<p>In this form, it is difficult to analyze from now on.</p>
+<p>PyQUBO has the <code class="docutils literal notranslate"><span class="pre">.decode_solution</span></code> function to convert it into a more manageable form.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># decode (convert) result into a manageable form</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: {1: 1, 2: 0, 3: 0},
+ 1: {1: 1, 2: 0, 3: 0},
+ 2: {1: 1, 2: 0, 3: 0},
+ 3: {1: 0, 2: 0, 3: 1},
+ 4: {1: 0, 2: 0, 3: 1},
+ 5: {1: 0, 2: 1, 3: 0},
+ 6: {1: 0, 2: 1, 3: 0},
+ 7: {1: 0, 2: 1, 3: 0}}
+</pre></div></div>
+</div>
+<p>We can see three groups, (0,1,2), (3, 4), (5,6,7).</p>
+<p>This solution forms creeks on each of the graphs given this time.</p>
+<p><code class="docutils literal notranslate"><span class="pre">broken</span></code> has record of how the penalty term is broken (when penalty is not equal to 0).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{}
+</pre></div></div>
+</div>
+<p>In this time, We can see empty dictionary because constraint is satisfied.</p>
+<p><code class="docutils literal notranslate"><span class="pre">decode</span></code> function is very useful that can automatically check the constraints is satisfied or not.</p>
+</div>
+</div>
+<div class="section" id="Run-with-OpenJij">
+<h2>Run with OpenJij<a class="headerlink" href="#Run-with-OpenJij" title="Permalink to this headline">¶</a></h2>
+<p>We just solved creek coverage problem in PyQUBO SA. Next, let’s use OpenJij.</p>
+<p>Similarly, OpenJij can perform SA, but we use SQA, which is not implemented in PyQUBO.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># import OpenJij</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+
+<span class="c1"># solve this problem with SQA</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">()</span>
+<span class="c1"># substitute into QUBO what we created using .to_qubo</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can run with other algorithms and machines by replaceing <code class="docutils literal notranslate"><span class="pre">sampler</span></code> part.</p>
+<p>Finally, we decode the result with OpenJij using PyQUBO decoder.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># get the state of lowest energy</span>
+<span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
+<span class="c1"># decode</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1"># sort the dictionary type to make it easier to read</span>
+<span class="n">x_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+<span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">x_solution</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: {1: 0, 2: 1, 3: 0},
+ 1: {1: 0, 2: 1, 3: 0},
+ 2: {1: 0, 2: 1, 3: 0},
+ 3: {1: 1, 2: 0, 3: 0},
+ 4: {1: 1, 2: 0, 3: 0},
+ 5: {1: 0, 2: 0, 3: 1},
+ 6: {1: 0, 2: 0, 3: 1},
+ 7: {1: 0, 2: 0, 3: 1}}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<p>We learned how to formulate it using PyQUBO and how it works with OpenJij.</p>
+<p>Procedures are as follows.</p>
+<ol class="arabic simple">
+<li><p>set up variables in pyqubo.Array</p></li>
+<li><p>formulate QUBO</p></li>
+<li><p>compile QUBO and convert it to a dictionary type</p></li>
+<li><p>solve optimization problems using solvers such as OpenJij that accepts dictionary type QUBOs.</p></li>
+<li><p>decode solution as a dictionary with the subscript as a key.</p></li>
+</ol>
+<p>PyQUBO is useful and powerful tool for formulationg and evaluating constraints. When we use in conjunction with OpenJij, which provides a variety of solvers, it provides comfortable development experience.</p>
+<p>Reference：PyQUBO official document <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create">https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3-PyQUBO with OpenJij</a><ul>
+<li><a class="reference internal" href="#Formulation-of-QUBO-with-PyQUBO">Formulation of QUBO with PyQUBO</a><ul>
+<li><a class="reference internal" href="#Formulation-with-PyQUBO">Formulation with PyQUBO</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Run-with-OpenJij">Run with OpenJij</a></li>
+<li><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2-Evaluation_errorbar.html"
+                        title="previous chapter">How to use the standard error function of benchmark functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ja/index.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/3-PyQUBO_2_OpenJij.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="2-Evaluation_errorbar.html" title="How to use the standard error function of benchmark functions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">3-PyQUBO with OpenJij</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>
