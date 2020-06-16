@@ -1,0 +1,1118 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4-Introduction to D-Wave Ocean SDK &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="prev" title="3-PyQUBO with OpenJij" href="3-PyQUBO_2_OpenJij.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">4-Introduction to D-Wave Ocean SDK</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="4-Introduction-to-D-Wave-Ocean-SDK">
+<h1>4-Introduction to D-Wave Ocean SDK<a class="headerlink" href="#4-Introduction-to-D-Wave-Ocean-SDK" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/4-DWaveOceanSDK.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>D-Wave Ocean SDK (Ocean) is a collection of software that uses D-Wave Machines. It is easy to use various features from Python.</p>
+<div class="line-block">
+<div class="line">Github: <a class="reference external" href="https://github.com/dwavesystems/dwave-ocean-sdk">https://github.com/dwavesystems/dwave-ocean-sdk</a></div>
+<div class="line">Document: <a class="reference external" href="https://docs.ocean.dwavesys.com/en/latest/">https://docs.ocean.dwavesys.com/en/latest/</a></div>
+</div>
+<p>To install Ocean, use pip as described in the link above, or clone the github repository.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install dwave-ocean-sdk
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
+<span class="o">!</span><span class="nb">cd</span> dwave-ocean-sdk
+<span class="o">!</span>python setup.py install
+</pre></div>
+</div>
+</div>
+<p>In this section, we will discuss the following through the number division problem.</p>
+<ul class="simple">
+<li><p>How to make QUBO and Ising models</p></li>
+<li><p>How to use Ocean</p></li>
+<li><p>Optimization for different annealing parameters</p></li>
+</ul>
+<div class="section" id="Formulation">
+<h2>Formulation<a class="headerlink" href="#Formulation" title="Permalink to this headline">¶</a></h2>
+<p>There are two formats tha can be run on D-Wave machine: Ising model and QUBO. We won’t got into the details here, will describe the minimum requirements for using Ocean.</p>
+<div class="section" id="QUBO-and-Ising-model">
+<h3>QUBO and Ising model<a class="headerlink" href="#QUBO-and-Ising-model" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="QUBO">
+<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
+<p>In the case of QUBO, we consider the following Hamiltonian for binary variable <span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
+<p>In solving QUBO, the classical computer calculates <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and <span class="math notranslate nohighlight">\(Q_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
+</div>
+<div class="section" id="Ising-model">
+<h4>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this headline">¶</a></h4>
+<p>In the case of Ising model, we consider the following Hamiltonian for spin variable <span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
+<p>In solving Ising model, the classical computer calculates <span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
+</div>
+<div class="section" id="Reciprocal-conversion">
+<h4>Reciprocal conversion<a class="headerlink" href="#Reciprocal-conversion" title="Permalink to this headline">¶</a></h4>
+<p>QUBO and Ising model canbe converted to each other by the conversion formula <span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>. It doesn’t matter which way you formulate the Hamiltonian, so we can choose the one that is easier to consider from the subject matter. However, it should be noted that the D-Wave machine may behave differently for two different forms of the same problem.</p>
+</div>
+</div>
+<div class="section" id="Number-division-problem">
+<h3>Number division problem<a class="headerlink" href="#Number-division-problem" title="Permalink to this headline">¶</a></h3>
+<p>We consider dividing a fiven set of integers into two groups. The problem of dividing each group so that the sum of each group is the same is called a number division problem.</p>
+<p>For example, we divide the following set of intergers <span class="math notranslate nohighlight">\(C\)</span> into two groups.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># set integers C</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>In this case, There are 23 optimal solutions where the difference between the sum of the two is zero. There are multiple states in which the energy, called the difference in sums, is the same value, but the solutions are different. These states are called “degenerate” in physical terms. For example, a optimal solution is <span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span> (both of the sum of two is 27).</p>
+<div class="section" id="id1">
+<h4>QUBO<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>We will make the formulation with the goal of making the difference between the sum of the two groups equal to zero.</p>
+<p>(Sum of the numbers belonging to group A) - (Sum of the numbers belonging to group B) = 0</p>
+<p>We need binary variables <span class="math notranslate nohighlight">\(q_{i}\)</span>. We define <span class="math notranslate nohighlight">\(q_{i} = 0\)</span> if the <span class="math notranslate nohighlight">\(i\)</span>th number belongs to group A and <span class="math notranslate nohighlight">\(q_{i} = 1\)</span> if it belongs to group B.</p>
+<p>Then the sum of group A is <span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}q_{i}\)</span> and the sum of group B is <span class="math notranslate nohighlight">\(\sum_{i=1}^{N}c_{i}(1 - q_{i})\)</span>, so we obtain</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)=0\]</div>
+<p>Since we want to solver the problem in that this equality holds, this must represent a <code class="docutils literal notranslate"><span class="pre">constraint</span></code>.</p>
+<p>We use the fine method as a way of expressiong such an equality constraint.</p>
+<blockquote>
+<div><p>(the fine method) Let <span class="math notranslate nohighlight">\(f(x)\)</span> be the cost (objective function) to be minimized and <span class="math notranslate nohighlight">\(g(x)=0\)</span> for the constraint. Solving the optimization problem by adding the following terms usig the hyperparameter <span class="math notranslate nohighlight">\(\lambda\)</span> to solve the optimization problem is called a fine method.</p>
+<div class="math notranslate nohighlight">
+\[\min_{x} \left\{ f(x) + \lambda g(x)^2\right\}\]</div>
+</div></blockquote>
+<p>Therefore, QUBO for number division problem is as follows.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{q_{i}\right\}\right)=\left(\sum_{i=1}^{N} c_{i} q_{i}-\sum_{i=1}^{N} c_{i}\left(1-q_{i}\right)\right)^{2}\]</div>
+<p>In order to perform the calculation on the D-Wave machine, we need to find the value of <span class="math notranslate nohighlight">\(Q_{i j}\)</span>. We expand and organize <span class="math notranslate nohighlight">\(H\left(\left\{\sigma_{i}\right\}\right)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{q_{i}\right\}\right)=\left(2\sum_{i=1}^{N} c_{i} q_{i} - \sum_{i=1}^{N} c_{i} \right)^{2} =4 \sum_{i=1}^{N} c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right) q_{i}+8 \sum_{i=1}^{N} \sum_{j=i+1}^{N} c_{i} c_{j} q_{i} q_{j}+\left(\sum_{i=1}^{N} c_{i}\right)^{2}\]</div>
+<p>Therefore, we obtain</p>
+<div class="math notranslate nohighlight">
+\[Q_{i i} = 4 c_{i} \left( c_{i} - \sum_{j=1}^{N} c_{j}\right)\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}Q_{i j} = 8 c_{i} c_{j}\\The last term is a constant that does not depends on :math:`\{ q_i\}`. We can ignore this term in looking for combinations of :math:`\{ q_i\}` that minimize :math:`H{(\{q_i\})}`.\end{aligned}\end{align} \]</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># set the above Q_{ii} &amp; Q_{ij} as a dictionary type such as {(i, j): Q_{ij}}</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>In order to under stand target issues such as degree of coupling and coefficient ratios, we visualize QUBO.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">GnBu</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">n_qubo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">np_qubo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_qubo</span><span class="p">,</span> <span class="n">n_qubo</span><span class="p">))</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">),</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">qubo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">np_qubo</span><span class="p">[</span><span class="n">pos_x</span><span class="p">][</span><span class="n">pos_y</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np_qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/en_4-DWaveOceanSDK_15_0.png" src="../_images/en_4-DWaveOceanSDK_15_0.png" />
+</div>
+</div>
+<p>The diagonal component represents <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and the non-diagonal component represents <span class="math notranslate nohighlight">\(Q_{ij}\)</span>. It turns out that the number division problem is and all-coupling problem, where there is an interaction between all the qubits.</p>
+</div>
+<div class="section" id="id2">
+<h4>Ising model<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>From the formula for Ising model and teh QUBO interconversion, the number division problem can be expressed in the ising model in the following concise formula.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right) = \left(\sum_{i} c_{i} \sigma_{i}\right)^2\]</div>
+<p>Same as QUBO, In order to perform the calculation on the D-Wave machine, we need to find the value of <span class="math notranslate nohighlight">\(h_i, J_{ij}\)</span>. Note that <span class="math notranslate nohighlight">\(\sigma_i^2 = 1\)</span>, we expand <span class="math notranslate nohighlight">\(H\left(\left{\sigma_{i}\right\}\right)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[H\left(\left\{\sigma_{i}\right\}\right) = \sum_{i} c_{i}^2 \sigma_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j} = \sum_{i} c_{i}^2 + 2 \sum_{i &lt; j} c_{i} c_{j} \sigma_{i} \sigma_{j}\]</div>
+<p>Therefore, we obtain</p>
+<div class="math notranslate nohighlight">
+\[h_{i} = 0\]</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}J_{i j} = 2 c_{i} c_{j}\\As with the discussion in QUBO, we ignore the constant term.\end{aligned}\end{align} \]</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># set h_i &amp; J_ij</span>
+<span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">J</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>Ocean’s basic library, dimod <code class="docutils literal notranslate"><span class="pre">.BinaryQuadraticModel()</span></code> allows Ising model and QUBO’s interconversion.</p>
+<ul class="simple">
+<li><p>.BinaryQuadraticModel(linear, quadratic, offset, vartype)</p>
+<ul>
+<li><p>linear: dict, h_i(or Q_{ii})</p></li>
+<li><p>quadratic: dict, J_ij(or Q_{ij})</p></li>
+<li><p>offset: number, Energy offset in conversion</p></li>
+<li><p>vartype: set ‘SPIN’ if use ising model or ‘BINARY’ if use QUBO</p></li>
+</ul>
+</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">dimod</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># convert from ising model to QUBO</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/en_4-DWaveOceanSDK_22_0.png" src="../_images/en_4-DWaveOceanSDK_22_0.png" />
+</div>
+</div>
+<p>We have expanded the constructed Hamiltonian to find the coefficient matrices such as <span class="math notranslate nohighlight">\(Q_{i i}, Q_{i j}\)</span> and <span class="math notranslate nohighlight">\(h_{i}, J_{i j}\)</span>. However, When dealing with more complex Hamiltonian, manual calculations are more complicated and may result in errors. Therefore, we can use PyQUBO, domain-specific language developed by Recruit Communications and create QUBO and ising models without having to expand Hamiltonian. For more details of PyQUBO, see also documents below.</p>
+<ul class="simple">
+<li><p>Github: <a class="reference external" href="https://github.com/recruit-communications/pyqubo">https://github.com/recruit-communications/pyqubo</a></p></li>
+<li><p>Document: <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/">https://pyqubo.readthedocs.io/en/latest/</a></p></li>
+<li><p>OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></p></li>
+<li><p>Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="Optimization-on-D-Wave-machine">
+<h2>Optimization on D-Wave machine<a class="headerlink" href="#Optimization-on-D-Wave-machine" title="Permalink to this headline">¶</a></h2>
+<p>Let us consider optimizing this problem using D-Wave machine. In this tutorial, we show (1). solving simply, (2). solving by varying the number of readings, (3). solving by changing annealing time.</p>
+<div class="section" id="Solve-Ising-model">
+<h3>Solve Ising model<a class="headerlink" href="#Solve-Ising-model" title="Permalink to this headline">¶</a></h3>
+<p>We use D-Wave machin sampler <code class="docutils literal notranslate"><span class="pre">DWaveSampler</span></code>, and use <code class="docutils literal notranslate"><span class="pre">EmbeddingComposite</span></code> for Embedding the problem in the chimeragraph of D-Wave machine.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
+<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># set the connection information as an option</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;https://cloud.dwavesys.com/sapi&#39;</span>
+<span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;##########&#39;</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;DW_2000Q_VFYC_5&#39;</span>
+
+<span class="c1"># use DWaveSampler</span>
+<span class="n">dw</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
+<span class="c1"># embed to Chimera graph</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># in the case of ising model, use the following</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># in the case of QUBO, use the following</span>
+<span class="c1"># response = sampler.sample_qubo(Q, num_reads=100)</span>
+</pre></div>
+</div>
+</div>
+<p>Let us check result. We can see states of solution, energy, frequence of occurrence, and percentage of broken chain on D-Wave machine with <code class="docutils literal notranslate"><span class="pre">.record</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">record</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1, -1,  1], -174., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([ 1, -1,  1, -1, -1,  1, -1,  1,  1, -1], -174., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([ 1, -1,  1,  1,  1,  1, -1,  1, -1, -1], -334., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1, -1, -1], -270., 3, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1,  1, -1,  1],  206., 2, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 2, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 3, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1,  1,  1],  306., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 3, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 4, 0.8),
+           ([ 1, -1, -1, -1,  1,  1, -1,  1,  1, -1], -270., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1,  1,  1,  1, -1], -354., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 2, 0.8),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 4, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 2, 0.8),
+           ([-1,  1,  1,  1, -1, -1,  1, -1,  1,  1], -114., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([ 1, -1,  1,  1,  1,  1, -1,  1, -1, -1], -334., 1, 0.8),
+           ([-1,  1,  1,  1,  1, -1,  1, -1, -1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 1, 0.8),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1, -1,  1,  1, -1], -354., 1, 0.8),
+           ([ 1, -1,  1, -1, -1,  1,  1,  1,  1, -1], -354., 1, 0.8),
+           ([-1,  1, -1,  1,  1, -1, -1, -1,  1,  1], -366., 1, 0.8),
+           ([ 1, -1,  1, -1,  1,  1,  1,  1, -1, -1], -306., 1, 0.8),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 2, 0.8),
+           ([-1,  1, -1, -1,  1, -1,  1, -1,  1,  1], -354., 1, 0.8),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 2, 0.8),
+           ([-1,  1, -1,  1,  1, -1,  1, -1,  1,  1],   30., 1, 0.8),
+           ([ 1, -1, -1,  1, -1,  1, -1,  1,  1, -1], -354., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1,  1, -1,  1,  1],  306., 3, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1,  1, -1], -334., 1, 1. ),
+           ([ 1, -1,  1,  1, -1,  1, -1,  1,  1, -1], -366., 1, 1. ),
+           ([ 1, -1, -1, -1, -1,  1,  1,  1,  1, -1], -366., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1, -1, -1], -370., 1, 1. ),
+           ([-1,  1,  1,  1, -1, -1, -1, -1,  1,  1], -366., 1, 1. ),
+           ([ 1, -1,  1, -1,  1,  1,  1, -1,  1, -1], -354., 2, 1. ),
+           ([ 1, -1,  1,  1,  1,  1, -1, -1,  1, -1], -366., 2, 1. ),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 1. ),
+           ([-1,  1,  1, -1, -1, -1,  1, -1,  1,  1], -370., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1, -1, -1,  1,  1], -306., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1, -1, -1], -370., 1, 1. ),
+           ([-1,  1,  1,  1,  1, -1, -1, -1,  1,  1], -306., 1, 1. ),
+           ([-1,  1,  1,  1, -1, -1, -1, -1,  1,  1], -366., 1, 1. ),
+           ([-1,  1, -1,  1,  1, -1, -1,  1, -1,  1], -334., 1, 1. ),
+           ([-1,  1, -1,  1, -1, -1,  1,  1,  1,  1],   30., 1, 1. ),
+           ([ 1, -1, -1,  1,  1,  1, -1,  1,  1, -1], -334., 1, 1. ),
+           ([-1,  1,  1, -1,  1, -1,  1, -1,  1,  1], -270., 1, 1. )],
+          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (10,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;), (&#39;chain_break_fraction&#39;, &#39;&lt;f8&#39;)])
+</pre></div></div>
+</div>
+<p>We find out how much of this includes the optimal solution. In order to detect optimal solurion, here we find the energy value of each solution.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;BINARY&#39;</span><span class="p">:</span>
+        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># offset</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+                <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;SPIN&#39;</span><span class="p">:</span>
+        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+                <span class="n">ene</span> <span class="o">+=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ene</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># count the number of optimal solution</span>
+<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">twenty_sol</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="c1"># 0th contains a list of state, 2nd contains the number of occurrences in .record</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># compute energy</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+    <span class="c1"># count up the times when the energy is zero</span>
+    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
+        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="c1"># preserve a result of 20 µs (we use later)</span>
+    <span class="n">twenty_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">num_optimal_sol</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3
+</pre></div></div>
+</div>
+<p>We obtain three optimal solutions including duplicates. The two groups are as follows.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">optimal_sol</span><span class="p">:</span>
+    <span class="n">group_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">group_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="o">==-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group A: &#39;</span><span class="p">,</span> <span class="n">group_A</span><span class="p">,</span> <span class="s1">&#39;, Sum = &#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_A</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group B: &#39;</span><span class="p">,</span> <span class="n">group_B</span><span class="p">,</span> <span class="s1">&#39;, Sum = &#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_B</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A:  [2, 8, 5, 7, 5] , Sum =  27
+Group B:  [10, 3, 9, 3, 2] , Sum =  27
+[-1  1  1 -1 -1 -1  1 -1  1  1]
+Group A:  [10, 3, 9, 3, 2] , Sum =  27
+Group B:  [2, 8, 5, 7, 5] , Sum =  27
+[ 1 -1 -1  1  1  1 -1  1 -1 -1]
+Group A:  [2, 8, 5, 7, 5] , Sum =  27
+Group B:  [10, 3, 9, 3, 2] , Sum =  27
+</pre></div></div>
+</div>
+<p>We can see that the sum of the two groups is equal in these cases. Also, result that return from D-Wave machine has many information including solution. For more details, see the documents <a class="reference external" href="https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html#dimod.SampleSet">SampleSet</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">data_vectors</span></code> has a list of energy, number of state appearances and percentage of broken chain on D-Wave machine only.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">data_vectors</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;energy&#39;: array([-226.,   30., -270., -270., -174., -174.,   30., -174., -270.,
+        -174., -114.,   30., -270., -270., -270., -174., -114., -334.,
+          30., -270., -114.,  206., -114., -366., -366.,   30., -354.,
+         306., -366.,   30.,   30., -306., -270., -354.,   30., -270.,
+        -366.,   30., -114., -114., -354., -334.,   30., -306.,   30.,
+        -354., -354., -366., -306., -366., -354., -270.,   30., -354.,
+         306., -334., -366., -366., -370., -366., -354., -366., -270.,
+        -370., -306., -370., -306., -366., -334.,   30., -334., -270.]),
+ &#39;num_occurrences&#39;: array([1, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 3, 1, 2,
+        2, 1, 1, 3, 1, 1, 1, 3, 1, 4, 1, 2, 2, 1, 4, 1, 2, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 3, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1]),
+ &#39;chain_break_fraction&#39;: array([0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+        0.8, 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. , 1. ,
+        1. , 1. , 1. , 1. , 1. , 1. , 1. ])}
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">info</span></code> has information about QPU(Quantum Processing Unit) at execution</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;qpu_sampling_time&#39;: 31496,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;qpu_readout_time_per_sample&#39;: 274,
+  &#39;qpu_access_time&#39;: 40886,
+  &#39;qpu_access_overhead_time&#39;: 2407,
+  &#39;qpu_programming_time&#39;: 9390,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;total_post_processing_time&#39;: 1355,
+  &#39;post_processing_overhead_time&#39;: 1355,
+  &#39;total_real_time&#39;: 40886,
+  &#39;run_time_chip&#39;: 31496,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;readout_time_per_run&#39;: 274},
+ &#39;problem_id&#39;: &#39;7a565c51-5378-430b-a5d3-c957cf832d02&#39;}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Change-the-number-of-reading">
+<h3>Change the number of reading<a class="headerlink" href="#Change-the-number-of-reading" title="Permalink to this headline">¶</a></h3>
+<p>In this part, let’s see how the solution we get changes when we change the number of readings. We can set the value of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> to speciry the number of readings Default number of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> is 1. Before we set 100, now we try to set 1000.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[122]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># in the case of ising model, use the following</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># in the case of QUBO, use the following</span>
+<span class="c1"># response = sampler.sample_qubo(Q, num_reads=1000)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[123]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># count up the number of occurrences of optimal solution</span>
+<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="c1"># 0th is a list of states, 2nd is the number of occurrence in .record</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># compute energy</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+    <span class="c1"># count up the times when the energy is zero</span>
+    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
+        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">num_optimal_sol</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+77
+</pre></div></div>
+</div>
+<p>The number of optimal solution increase because the number of reading increase. On the other hand, short annealing time (per one annealing) is 20µs, increasing the number of readings doesn’t make much difference in real time.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;timing&#39;: {&#39;qpu_sampling_time&#39;: 314960,
+  &#39;qpu_anneal_time_per_sample&#39;: 20,
+  &#39;qpu_readout_time_per_sample&#39;: 274,
+  &#39;qpu_access_time&#39;: 324337,
+  &#39;qpu_access_overhead_time&#39;: 1875,
+  &#39;qpu_programming_time&#39;: 9377,
+  &#39;qpu_delay_time_per_sample&#39;: 21,
+  &#39;total_post_processing_time&#39;: 18907,
+  &#39;post_processing_overhead_time&#39;: 18907,
+  &#39;total_real_time&#39;: 324337,
+  &#39;run_time_chip&#39;: 314960,
+  &#39;anneal_time_per_run&#39;: 20,
+  &#39;readout_time_per_run&#39;: 274},
+ &#39;problem_id&#39;: &#39;ac673401-ba8e-4a86-a7ef-b9037f882250&#39;}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Change-annealing-time">
+<h3>Change annealing time<a class="headerlink" href="#Change-annealing-time" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">Finally, we look at how the solution we get changes when we change the annealing time. We can specify the annealing time by setting the value of ‘annealing_time’ in sample_ising() or sample_qubo() (unit: µs).</div>
+<div class="line">In the previous example, we used the default value 20µs. Now we try to annealing with 50µs.</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># In the case of ising model, use the following</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">annealing_time</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># In the case of QUBO, use the following</span>
+<span class="c1"># response = sampler.sample_qubo(Q, num_reads=100, annealing_time=50)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># count up the number of times the optimal solution was found</span>
+<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fifty_sol</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="c1"># 0th contains a list of states, 2nd contains the number of occurrences of states in .record</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># compute energy</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+    <span class="c1"># count up when the energy is 0</span>
+    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
+        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+    <span class="c1"># preserve a result of 50µs</span>
+    <span class="n">fifty_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">num_optimal_sol</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+6
+</pre></div></div>
+</div>
+<p>The number of optimal solutions doesn’t seem to increase dramaticall. So let’s see if changing the annealing time makes any difference to the solutions. We visualize histogram of energy of solution.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[129]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">twenty_sol</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;20μs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">fifty_sol</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;50μs&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/en_4-DWaveOceanSDK_51_0.png" src="../_images/en_4-DWaveOceanSDK_51_0.png" />
+</div>
+</div>
+<p>From the histogram above, we can see that the number of optimal solutions obtained decreased as the annealing time was increased, but we found more low energy solutions. However, it’s not as simple as just increasing the annealing time. Sometimes the optimization works better when the annealing time is small. This dependency depends on each problem. In addition, quantum annealing and other annealing methods are meta-heuristic altorigthms. It is also important to note that each time you execute,
+the results you get will be different.</p>
+</div>
+</div>
+<div class="section" id="Conclusion">
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Through the optimization of number division problem, we introduced D-Wave Ocean. We can do a lot of things just by holding on to what we’ve discussed in this tutorial. For example, we can investigate as follows.</p>
+<ul class="simple">
+<li><p>success probability (percentage of optimal solutions) relative to the number of readings, annealing time</p></li>
+<li><p>energy relative to the number of readings, annealing time</p></li>
+<li><p>the percentage of optimal solutions obtained relative to multiple optimal solutions.</p></li>
+</ul>
+<p>As of April 2019, we can use the D-Wave machine for free for 1 minute per month. You should try.</p>
+<p>D-Wave Leap: <a class="reference external" href="https://cloud.dwavesys.com/leap/">https://cloud.dwavesys.com/leap/</a></p>
+<p>There are other annealing parameters that are not mentioned in this tutorial. For example, by specitying and annealing schedule, we can perform different techniques from normal annealing, such as reverse annealing.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4-Introduction to D-Wave Ocean SDK</a><ul>
+<li><a class="reference internal" href="#Formulation">Formulation</a><ul>
+<li><a class="reference internal" href="#QUBO-and-Ising-model">QUBO and Ising model</a><ul>
+<li><a class="reference internal" href="#QUBO">QUBO</a></li>
+<li><a class="reference internal" href="#Ising-model">Ising model</a></li>
+<li><a class="reference internal" href="#Reciprocal-conversion">Reciprocal conversion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Number-division-problem">Number division problem</a><ul>
+<li><a class="reference internal" href="#id1">QUBO</a></li>
+<li><a class="reference internal" href="#id2">Ising model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Optimization-on-D-Wave-machine">Optimization on D-Wave machine</a><ul>
+<li><a class="reference internal" href="#Solve-Ising-model">Solve Ising model</a></li>
+<li><a class="reference internal" href="#Change-the-number-of-reading">Change the number of reading</a></li>
+<li><a class="reference internal" href="#Change-annealing-time">Change annealing time</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
+                        title="previous chapter">3-PyQUBO with OpenJij</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ja/index.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/4-DWaveOceanSDK.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">4-Introduction to D-Wave Ocean SDK</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>
