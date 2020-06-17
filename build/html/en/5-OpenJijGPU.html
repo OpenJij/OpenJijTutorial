@@ -280,61 +280,48 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="5-OpenJij-GPU">
 <h1>5-OpenJij GPU<a class="headerlink" href="#5-OpenJij-GPU" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/5_OpenJijGPU.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>OpenJijでは現在(0.0.6)キメラグラフ構造のみGPUでのSQAに対応しています。</p>
-<p>このセクションではGPUでSQAを行ってきます。</p>
-<p>一般にPCにはGPGPUは載っていないのでこのノートブックは実行できないことが多いかもしれませんが、Google colaboratory を使えば誰でもGPGPUを使うことができます。</p>
-<p>このノートブックを Google colaboratory で開いて、</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ランタイム</span> <span class="o">-&gt;</span> <span class="n">ランタイムのタイプを変更</span>　<span class="o">-&gt;</span> <span class="n">ハードウェアアクセラレータをGPUに選択</span>
+<p>In this section, we introduce a method of Simulated Quantum Annealing (SQA) with GPU.</p>
+<div class="section" id="Setup-and-installation-in-Google-Colab">
+<h2>Setup and installation in Google Colab<a class="headerlink" href="#Setup-and-installation-in-Google-Colab" title="Permalink to this headline">¶</a></h2>
+<p>The average PC may not have a CUDA environment, or may not have an NVIDIA GPU. However, with <strong>Google colaboratory</strong>, anyone can use GPGPUs.</p>
+<div class="section" id="GPU-Settings">
+<h3>GPU Settings<a class="headerlink" href="#GPU-Settings" title="Permalink to this headline">¶</a></h3>
+<p>We open Jupyter Notebook file we want to run on GPU with Google Colab.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Runtime</span> <span class="o">&gt;</span> <span class="n">Change</span> <span class="n">runtime</span> <span class="nb">type</span> <span class="o">&gt;</span> <span class="n">choose</span> <span class="n">Hardware</span> <span class="n">accelerator</span> <span class="n">GPU</span>
 </pre></div>
 </div>
-<p>を行います。そのあとにopenjijをインストールすればGPU向けのコンパイルが行われるのでGPUのSamplerが使えるようになります。</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<p>This setting allows you to run Jupyter Notebook on GPU.</p>
+</div>
+<div class="section" id="Installation-of-OpenJij">
+<h3>Installation of OpenJij<a class="headerlink" href="#Installation-of-OpenJij" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">CMake</span></code> that pre-installed in Google Colab is an older version. Let us upgrade it with <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install -U cmake
+</pre></div>
+</div>
+</div>
+<p>After that, we install OpenJij.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="o">!</span>pip install openjij
-<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.6 を仮定します
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Requirement already satisfied: openjij in /usr/local/lib/python3.6/dist-packages (0.0.6)
-Requirement already satisfied: numpy in /usr/local/lib/python3.6/dist-packages (from openjij) (1.16.3)
-Requirement already satisfied: requests in /usr/local/lib/python3.6/dist-packages (from openjij) (2.21.0)
-Requirement already satisfied: urllib3&lt;1.25,&gt;=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (1.24.3)
-Requirement already satisfied: idna&lt;2.9,&gt;=2.5 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (2.8)
-Requirement already satisfied: chardet&lt;3.1.0,&gt;=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (3.0.4)
-Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (2019.3.9)
-Name: openjij
-Version: 0.0.6
-Summary: Framework for the Ising model and QUBO
-Home-page: https://openjij.github.io/OpenJij/
-Author: Jij Inc.
-Author-email: openjij@j-ij.com
-License: Apache License 2.0
-Location: /usr/local/lib/python3.6/dist-packages
-Requires: requests, numpy
-Required-by:
-</pre></div></div>
 </div>
-<div class="section" id="キメラグラフ">
-<h2>キメラグラフ<a class="headerlink" href="#キメラグラフ" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Calculation-with-GPUSQA">
+<h2>Calculation with GPUSQA<a class="headerlink" href="#Calculation-with-GPUSQA" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line">OpenJijのGPUではキメラグラフのみが扱えます。</div>
-<div class="line">キメラグラフは以下の画像のような形です。</div>
+<div class="line">OpenJij GPUs support Monte Carlo calculations on Chimeragraphs.</div>
+<div class="line">We make GPUSQASampler instance at first.</div>
 </div>
-<p>キメラグラフを満たさない添字の相互作用を指定するとエラーになります。 <code class="docutils literal notranslate"><span class="pre">GPUChimeraSQASampler</span></code> では</p>
-<ul class="simple">
-<li><p>キメラグラフのノードに一つずつ番号をつけた添字</p></li>
-</ul>
-<p>が使えます。</p>
-<p>早速具体的なコードをみてみましょう。</p>
-<p>まずは GPUChimeraSQASampler のインスタンスを作ります。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -342,17 +329,24 @@ Required-by:
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 
-<span class="n">sampler</span><span class="o">=</span><span class="n">oj</span><span class="o">.</span><span class="n">GPUChimeraSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="line-block">
-<div class="line">ここで <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> はキメラユニットセルが並ぶ2次元格子の1辺の長さを指定します。</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">unit_num_L=2</span></code>では 2×2=4つのキメラユニットセルが並んでいる系を作ることになります。</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> specifies the length of one side of the two-dimensional lattice of chimera-unit cells.</div>
+<div class="line">In the example above, we have created a system with 2x2=4 chimera-unit cells.</div>
 </div>
-<p>GPUChimeraSQASampler では のちに sample_qubo などで少ない変数を指定しても、 ここで作ったキメラグラフの系のサイズだけ SQAを回すので <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>は無駄に大きすぎないようにしてください。</p>
-<p>また<code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>はコンストラクタで指定しなくても、<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>を実行するときに引数に指定できます。</p>
-<p>ではSQAを回してみましょう。他のsampler と一緒で sample_qubo (or sample_ising) でOKです。</p>
+<p>Since a chimera-unit cell consists of one 8-bit, the total number of bits is calculated as follows.</p>
+<p><span class="math notranslate nohighlight">\({\rm total\_num} = {\rm unit\_num\_L}^2 \times 8\)</span></p>
+<p>The GPUSQASampler perform SQA calculations for the size of the system of chimeragraphs created here, even if you specify fewer variables, such as sampler_qubo, later. We note that <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> is not too large. Also, <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> is not specified in the constructor but is used as an argument to run <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>.</p>
+</div>
+<div class="section" id="Execution">
+<h2>Execution<a class="headerlink" href="#Execution" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="実行">
+<h2>実行<a class="headerlink" href="#実行" title="Permalink to this headline">¶</a></h2>
+<p>Next we execute SQA. As with Sampler before we introduce, we can use <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code> (or <code class="docutils literal notranslate"><span class="pre">sample_ising</span></code>). However, if you specify an interaction for a subscript that does not satisfy the chimeragraph, error occurs.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -420,32 +414,59 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],
-          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (4,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;)]), [0, 4, 5, 12], {&#39;system&#39;: [], &#39;sampling_time&#39;: 393885.4129992251, &#39;execution_time&#39;: 3178.1388703893754, &#39;list_exec_times&#39;: array([8798.91399745, 3455.1839999 , 3429.37000096, 3447.03500014,
-       3424.60699903, 3444.63000147, 3453.83500098, 3613.29299994,
-       3457.84800083, 3406.19299823, 3439.38100195, 3433.23900233,
-       3423.40300267, 3452.73799758, 3405.74199799, 3408.88899882,
-       3404.67099886, 3417.60499941, 3414.43499929, 3420.70600163,
-       3404.37099658, 3386.27900055, 3422.43499836, 3430.56000202,
-       3346.02700241, 3374.39800205, 3340.05100012, 3355.68299852,
-       3366.27800061, 3345.96500034, 3367.9090011 , 3511.80100188,
-       3397.61100258, 3345.86399913, 3390.97800315, 3355.59999803,
-       3366.43700211, 3371.82500152, 3448.69000037, 3340.149     ,
-       3331.85800264, 3367.54000091, 3393.97800053, 3346.99599989,
-       3353.58099983, 3374.21400036, 3404.61400265, 3369.41700152,
-       3364.24499983, 3365.49599888, 3400.11200024, 3362.90400082,
-       3367.16899983, 3361.52199816, 3355.35900012, 3353.03000247,
-       3351.89500038, 3380.5230014 , 3371.27000239, 3332.19000095,
-       3358.82199943, 3396.95200091, 3357.32700114, 3386.16900262,
-       3364.67200032, 3348.88200086, 3346.09900165, 3362.80400006,
-       2640.11499894, 2544.75800102, 2544.4870007 , 2527.90800005,
-       2528.7760036 , 2563.5910024 , 2546.8979984 , 2514.41300134,
-       2545.99400068, 2551.40599984, 2558.14900083, 2534.84800123,
-       2534.01699956, 2497.31100121, 2528.01799797, 2589.88600035,
-       2527.06399988, 2580.05200158, 2533.75099783, 2521.50399683,
-       2648.1169989 , 2579.22300079, 2568.34000174, 2576.03999853,
-       2565.58500041, 2575.2420006 , 2556.1370021 , 2543.83599895,
-       2582.48600221, 2554.00199967, 2571.78699758, 2529.87700151]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1.0, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
+          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (4,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;)]), [0, 4, 5, 12], {&#39;system&#39;: [], &#39;sampling_time&#39;: 1006372.1469999792, &#39;execution_time&#39;: 8902.872740002294, &#39;list_exec_times&#39;: array([230796.36600005,   8290.07499999,   8871.43699998,   8162.024     ,
+         8042.78700002,   8098.51899999,   8169.03100002,   8717.89000001,
+         8071.55399997,   8079.75599997,   8075.238     ,   6575.44399996,
+         6622.51900002,   6544.86100001,   6475.21600001,   6579.81400002,
+         6559.83600001,   6517.41999997,   6585.95900001,   6518.605     ,
+         6509.76200001,   6516.95900001,   6503.829     ,   6554.55100002,
+         6598.15200004,   6559.86600003,   6580.816     ,   6562.29000003,
+         6500.42199999,   6466.57100003,   6406.80800001,   6390.24500003,
+         6659.54599998,   6464.876     ,   6436.83500004,   6504.48300001,
+         6446.07499999,   6446.44600004,   6454.87499997,   6475.223     ,
+         6496.00200001,   6466.11100001,   6495.32799997,   6542.35499997,
+         6453.81700002,   6432.13699999,   6491.07499999,   6461.52799999,
+         6558.50099997,   6534.26299999,   6422.665     ,   6566.92900003,
+         6421.17799998,   6433.25700003,   6465.06299995,   6422.80899996,
+         6564.92299998,   6492.88800003,   6604.65999999,   6561.19299998,
+         6598.88999996,   6510.924     ,   6470.13299999,   6447.51300001,
+         6428.63399997,   6432.77900002,   6463.92600004,   6585.03200003,
+         6444.74300003,   6514.35600003,   6400.51799996,   6425.93499998,
+         6458.08000002,   6452.91300003,   6434.88699995,   6418.80799998,
+         6496.19200004,   6432.80900005,   6431.72100001,   6411.84699998,
+         6447.61000001,   6426.49400004,   6448.77500002,   6412.73499997,
+         6453.15699995,   6386.89399995,   6430.19299997,   6480.221     ,
+         6432.088     ,   6409.78600001,   6450.62400002,   6441.75000002,
+         6413.32800001,   6472.07700001,   6458.86699999,   6480.93900003,
+         6443.80400001,   6411.399     ,   6422.54800005,   6423.68199999]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1.0, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
 </pre></div></div>
+</div>
+</div>
+<div class="section" id="Embedding-the-All-Coupled-Model-in-Chimeragraph">
+<h2>Embedding the All-Coupled Model in Chimeragraph<a class="headerlink" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph" title="Permalink to this headline">¶</a></h2>
+<p>We introduced the calculation of only those interactions that exist on the chimeragraph. Below is script for embedding comples interactions into chimeragraph, such as problems of all-coupled.</p>
+<p>In order to embed in chimeragraph, we use <code class="docutils literal notranslate"><span class="pre">EmbeddingComposite</span></code> of <code class="docutils literal notranslate"><span class="pre">dwave</span></code>. We install <code class="docutils literal notranslate"><span class="pre">dwave-system</span></code> with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install dwave-system
+</pre></div>
+</div>
+</div>
+<p>そしてsampler部分のスクリプトを以下のように書き換えます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+
+<span class="n">gpusqa</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">gpusqa</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -460,7 +481,15 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
-<li><a class="reference internal" href="#キメラグラフ">キメラグラフ</a></li>
+<li><a class="reference internal" href="#Setup-and-installation-in-Google-Colab">Setup and installation in Google Colab</a><ul>
+<li><a class="reference internal" href="#GPU-Settings">GPU Settings</a></li>
+<li><a class="reference internal" href="#Installation-of-OpenJij">Installation of OpenJij</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Calculation-with-GPUSQA">Calculation with GPUSQA</a></li>
+<li><a class="reference internal" href="#Execution">Execution</a></li>
+<li><a class="reference internal" href="#実行">実行</a></li>
+<li><a class="reference internal" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph">Embedding the All-Coupled Model in Chimeragraph</a></li>
 </ul>
 </li>
 </ul>
