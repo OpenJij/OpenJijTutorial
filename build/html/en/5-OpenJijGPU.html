@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-OpenJij GPU &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="prev" title="4-Introduction to D-Wave Ocean SDK" href="4-DWaveOceanSDK.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="5-OpenJij-GPU">
+<h1>5-OpenJij GPU<a class="headerlink" href="#5-OpenJij-GPU" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/5_OpenJijGPU.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>OpenJijでは現在(0.0.6)キメラグラフ構造のみGPUでのSQAに対応しています。</p>
+<p>このセクションではGPUでSQAを行ってきます。</p>
+<p>一般にPCにはGPGPUは載っていないのでこのノートブックは実行できないことが多いかもしれませんが、Google colaboratory を使えば誰でもGPGPUを使うことができます。</p>
+<p>このノートブックを Google colaboratory で開いて、</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ランタイム</span> <span class="o">-&gt;</span> <span class="n">ランタイムのタイプを変更</span>　<span class="o">-&gt;</span> <span class="n">ハードウェアアクセラレータをGPUに選択</span>
+</pre></div>
+</div>
+<p>を行います。そのあとにopenjijをインストールすればGPU向けのコンパイルが行われるのでGPUのSamplerが使えるようになります。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install openjij
+<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.6 を仮定します
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requirement already satisfied: openjij in /usr/local/lib/python3.6/dist-packages (0.0.6)
+Requirement already satisfied: numpy in /usr/local/lib/python3.6/dist-packages (from openjij) (1.16.3)
+Requirement already satisfied: requests in /usr/local/lib/python3.6/dist-packages (from openjij) (2.21.0)
+Requirement already satisfied: urllib3&lt;1.25,&gt;=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (1.24.3)
+Requirement already satisfied: idna&lt;2.9,&gt;=2.5 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (2.8)
+Requirement already satisfied: chardet&lt;3.1.0,&gt;=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (3.0.4)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests-&gt;openjij) (2019.3.9)
+Name: openjij
+Version: 0.0.6
+Summary: Framework for the Ising model and QUBO
+Home-page: https://openjij.github.io/OpenJij/
+Author: Jij Inc.
+Author-email: openjij@j-ij.com
+License: Apache License 2.0
+Location: /usr/local/lib/python3.6/dist-packages
+Requires: requests, numpy
+Required-by:
+</pre></div></div>
+</div>
+<div class="section" id="キメラグラフ">
+<h2>キメラグラフ<a class="headerlink" href="#キメラグラフ" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">OpenJijのGPUではキメラグラフのみが扱えます。</div>
+<div class="line">キメラグラフは以下の画像のような形です。</div>
+</div>
+<p>キメラグラフを満たさない添字の相互作用を指定するとエラーになります。 <code class="docutils literal notranslate"><span class="pre">GPUChimeraSQASampler</span></code> では</p>
+<ul class="simple">
+<li><p>キメラグラフのノードに一つずつ番号をつけた添字</p></li>
+</ul>
+<p>が使えます。</p>
+<p>早速具体的なコードをみてみましょう。</p>
+<p>まずは GPUChimeraSQASampler のインスタンスを作ります。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+
+<span class="n">sampler</span><span class="o">=</span><span class="n">oj</span><span class="o">.</span><span class="n">GPUChimeraSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">ここで <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> はキメラユニットセルが並ぶ2次元格子の1辺の長さを指定します。</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">unit_num_L=2</span></code>では 2×2=4つのキメラユニットセルが並んでいる系を作ることになります。</div>
+</div>
+<p>GPUChimeraSQASampler では のちに sample_qubo などで少ない変数を指定しても、 ここで作ったキメラグラフの系のサイズだけ SQAを回すので <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>は無駄に大きすぎないようにしてください。</p>
+<p>また<code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>はコンストラクタで指定しなくても、<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>を実行するときに引数に指定できます。</p>
+<p>ではSQAを回してみましょう。他のsampler と一緒で sample_qubo (or sample_ising) でOKです。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+<span class="n">response</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
+           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],
+          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (4,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;)]), [0, 4, 5, 12], {&#39;system&#39;: [], &#39;sampling_time&#39;: 393885.4129992251, &#39;execution_time&#39;: 3178.1388703893754, &#39;list_exec_times&#39;: array([8798.91399745, 3455.1839999 , 3429.37000096, 3447.03500014,
+       3424.60699903, 3444.63000147, 3453.83500098, 3613.29299994,
+       3457.84800083, 3406.19299823, 3439.38100195, 3433.23900233,
+       3423.40300267, 3452.73799758, 3405.74199799, 3408.88899882,
+       3404.67099886, 3417.60499941, 3414.43499929, 3420.70600163,
+       3404.37099658, 3386.27900055, 3422.43499836, 3430.56000202,
+       3346.02700241, 3374.39800205, 3340.05100012, 3355.68299852,
+       3366.27800061, 3345.96500034, 3367.9090011 , 3511.80100188,
+       3397.61100258, 3345.86399913, 3390.97800315, 3355.59999803,
+       3366.43700211, 3371.82500152, 3448.69000037, 3340.149     ,
+       3331.85800264, 3367.54000091, 3393.97800053, 3346.99599989,
+       3353.58099983, 3374.21400036, 3404.61400265, 3369.41700152,
+       3364.24499983, 3365.49599888, 3400.11200024, 3362.90400082,
+       3367.16899983, 3361.52199816, 3355.35900012, 3353.03000247,
+       3351.89500038, 3380.5230014 , 3371.27000239, 3332.19000095,
+       3358.82199943, 3396.95200091, 3357.32700114, 3386.16900262,
+       3364.67200032, 3348.88200086, 3346.09900165, 3362.80400006,
+       2640.11499894, 2544.75800102, 2544.4870007 , 2527.90800005,
+       2528.7760036 , 2563.5910024 , 2546.8979984 , 2514.41300134,
+       2545.99400068, 2551.40599984, 2558.14900083, 2534.84800123,
+       2534.01699956, 2497.31100121, 2528.01799797, 2589.88600035,
+       2527.06399988, 2580.05200158, 2533.75099783, 2521.50399683,
+       2648.1169989 , 2579.22300079, 2568.34000174, 2576.03999853,
+       2565.58500041, 2575.2420006 , 2556.1370021 , 2543.83599895,
+       2582.48600221, 2554.00199967, 2571.78699758, 2529.87700151]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1.0, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
+<li><a class="reference internal" href="#キメラグラフ">キメラグラフ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="4-DWaveOceanSDK.html"
+                        title="previous chapter">4-Introduction to D-Wave Ocean SDK</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ja/index.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/5-OpenJijGPU.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>
