@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A2 - OpenJij core interface入門 (C++ interface) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <title>A2 - Introduction to OpenJij core interface (C++ interface) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -18,8 +18,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="A3 - 古典イジング模型" href="A3-LargeScaleMC.html" />
-    <link rel="prev" title="A1 - OpenJij core interface入門 (core python interface)" href="A1-Introduction.html" /> 
+    <link rel="next" title="A3 - Classical ising model" href="A3-LargeScaleMC.html" />
+    <link rel="prev" title="A1 - Introduction to OpenJij core interface (core Python interface)" href="A1-Introduction.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,14 +28,14 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="A3-LargeScaleMC.html" title="A3 - 古典イジング模型"
+          <a href="A3-LargeScaleMC.html" title="A3 - Classical ising model"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="A1-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+          <a href="A1-Introduction.html" title="A1 - Introduction to OpenJij core interface (core Python interface)"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A2 - OpenJij core interface入門 (C++ interface)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A2 - Introduction to OpenJij core interface (C++ interface)</a></li> 
       </ul>
     </div>  
 
@@ -277,23 +277,20 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A2---OpenJij-core-interface入門-(C++-interface)">
-<h1>A2 - OpenJij core interface入門 (C++ interface)<a class="headerlink" href="#A2---OpenJij-core-interface入門-(C++-interface)" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="A2---Introduction-to-OpenJij-core-interface-(C++-interface)">
+<h1>A2 - Introduction to OpenJij core interface (C++ interface)<a class="headerlink" href="#A2---Introduction-to-OpenJij-core-interface-(C++-interface)" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A2-CppIntroduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>この章ではOpenJijのcore interface (C++ interface)をご紹介します。core Python interfaceのみを取り扱いたい方はこの章をスキップしても問題ありません。</p>
-<p>C++ interfaceはOpenJijの最下層レイヤーのAPIです。core Python interfaceも内部でこのC++ interfaceを読み出しています。 Pythonを使わずにC++のみを用いてOpenJijのパフォーマンスを最大限に引き出したい用途で使うことができます。</p>
-<div class="section" id="問題を投げる">
-<h2>問題を投げる<a class="headerlink" href="#問題を投げる" title="Permalink to this headline">¶</a></h2>
-<p>まずはgithubからリポジトリをcloneしましょう</p>
+<p>In this section, we introduce core interface (C++ interface) of OpenJij. If you only want to deal with the core Python interface, you can skip this section.</p>
+<p>C++ interface is the lowest layer API of OpenJij. Core Python interface read out C++ interface internally. It can be used in applications where we want to get the best performance out of OpenJij using only C++, but not Python.</p>
+<div class="section" id="Run-a-problem">
+<h2>Run a problem<a class="headerlink" href="#Run-a-problem" title="Permalink to this headline">¶</a></h2>
+<p>First, we clone repository from github.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/OpenJij/OpenJij
 $ <span class="nb">cd</span> OpenJij
 </pre></div>
 </div>
-<div class="line-block">
-<div class="line">OpenJijは基本的にヘッダオンリーなライブラリです。よって<code class="docutils literal notranslate"><span class="pre">src</span></code>ディレクトリのパスをコンパイル時に指定するだけでC++ interfaceが使えるようになります。</div>
-<div class="line">GPUアルゴリズム等を使う際にはライブラリをCMakeでビルドする必要があります。<code class="docutils literal notranslate"><span class="pre">build_gcc.sh</span></code>を実行すると自動でビルドを行うことができます。</div>
-</div>
-<p>前章のPython interfaceと全く同じ動作をするコードは、 次のように書くことができます(<code class="docutils literal notranslate"><span class="pre">project_template/template.cpp</span></code>に同じ記述があります)。</p>
+<p>OpenJij is essentially a header-only library. Hence, we only need to specify the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory path at compile to be able to use the C++ interface. We need to build library with CMake if we want to use GPU algorithms. Executing <code class="docutils literal notranslate"><span class="pre">build_gcc.sh</span></code> allows you to build automatically.</p>
+<p>The code that output exactly the same result as the Python interface in the previous section can be written as follows (The same description can be found in <code class="docutils literal notranslate"><span class="pre">project_template/template.cpp</span></code>).</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
@@ -308,38 +305,38 @@ $ <span class="nb">cd</span> OpenJij
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
 
-    <span class="c1">//まず相互作用行列を作成します。Graphモジュールを使います。</span>
-    <span class="c1">//問題サイズN=5の密結合グラフ(Dense)を定義します。</span>
+    <span class="c1">// set interaction matrix. use Graph module</span>
+    <span class="c1">// define Dense graph of problem size N=5</span>
     <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
     <span class="k">auto</span> <span class="n">dense</span> <span class="o">=</span> <span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
 
-    <span class="c1">//相互作用を設定します。</span>
+    <span class="c1">// set interaction</span>
     <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
         <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">){</span>
             <span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="c1">//縦磁場を設定します。</span>
+    <span class="c1">// set longitudinal magnetic fields</span>
     <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
         <span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="c1">//乱数生成器(メルセンヌ・ツイスター)を定義します。</span>
+    <span class="c1">// define random number generator (Mersenne Twister)</span>
     <span class="k">auto</span> <span class="n">rand_engine</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span>
 
-    <span class="c1">//次にGraphから計算を行うためのSystemを作成します。</span>
-    <span class="c1">//今回は通常の古典モンテカルロ計算のシステムを使用します。</span>
+    <span class="c1">// set System to compute from Graph</span>
+    <span class="c1">// use system of normal classical MonteCarlo calculation</span>
     <span class="k">auto</span> <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">::</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span> <span class="n">dense</span><span class="p">);</span>
 
-    <span class="c1">//アニーリングスケジュールを設定します。Utilityモジュールを使用します。</span>
+    <span class="c1">// set schedules of annealing. use Utility module</span>
     <span class="k">auto</span> <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">utility</span><span class="o">::</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
 
-    <span class="c1">//実際にアニーリングを実行します。Algorithmモジュールを使用します。</span>
-    <span class="c1">//モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。</span>
+    <span class="c1">// execute annealing. use Algorithm module</span>
+    <span class="c1">// use simple SingleSpinFlip as a updating MonteCarlo step</span>
     <span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">rand_engine</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">);</span>
 
-    <span class="c1">//結果を取得します。</span>
+    <span class="c1">// get result</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="nl">elem</span> <span class="p">:</span> <span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span>
         <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elem</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
@@ -349,8 +346,11 @@ $ <span class="nb">cd</span> OpenJij
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">project_template</span></code>内で<code class="docutils literal notranslate"><span class="pre">make</span></code>を実行し、<code class="docutils literal notranslate"><span class="pre">./tutorial</span></code>を実行します。すると同じように<span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span> が解として出力されるのがわかります。 コンパイルオプションなどの詳細については、<code class="docutils literal notranslate"><span class="pre">project_template</span></code>内の<code class="docutils literal notranslate"><span class="pre">Makefile</span></code>を参考にしてください。特にGPUを用いたアルゴリズムを利用する際には<code class="docutils literal notranslate"><span class="pre">build_gcc.sh</span></code>でビルドしたCUDAライブラリをリンクする必要がありますので注意してください。</p>
-<p>前章のcore Python interfaceのサンプルコードと見比べると分かるように、Pythonインターフェースとほぼ同じように記述することが可能です。</p>
+<div class="line-block">
+<div class="line">At First, we execute <code class="docutils literal notranslate"><span class="pre">make</span></code> in <code class="docutils literal notranslate"><span class="pre">project_template</span></code>, and second we execute <code class="docutils literal notranslate"><span class="pre">./tutorial</span></code>. Then we can see that <span class="math notranslate nohighlight">\([1, 1, 1, 1, 1]\)</span> is output as a solution just as before.</div>
+<div class="line">For more details of compile option, see also <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> in <code class="docutils literal notranslate"><span class="pre">projecto_template</span></code>. Especially, when we use altorithms on GPUs, we can use <code class="docutils literal notranslate"><span class="pre">build_gcc.sh</span></code> to build them. Note that we need to link the CUDA library.</div>
+</div>
+<p>Comparison with sample script of core Python interface, it can be written in much the same way as a Python interface.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -372,22 +372,22 @@ $ <span class="nb">cd</span> OpenJij
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">A2 - OpenJij core interface入門 (C++ interface)</a><ul>
-<li><a class="reference internal" href="#問題を投げる">問題を投げる</a></li>
+<li><a class="reference internal" href="#">A2 - Introduction to OpenJij core interface (C++ interface)</a><ul>
+<li><a class="reference internal" href="#Run-a-problem">Run a problem</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="A1-Introduction.html"
-                        title="previous chapter">A1 - OpenJij core interface入門 (core python interface)</a></p>
+                        title="previous chapter">A1 - Introduction to OpenJij core interface (core Python interface)</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="A3-LargeScaleMC.html"
-                        title="next chapter">A3 - 古典イジング模型</a></p>
+                        title="next chapter">A3 - Classical ising model</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/ja/A2-CppIntroduction.ipynb.txt"
+      <li><a href="../_sources/en/A2-CppIntroduction.ipynb.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -412,14 +412,14 @@ $ <span class="nb">cd</span> OpenJij
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="A3-LargeScaleMC.html" title="A3 - 古典イジング模型"
+          <a href="A3-LargeScaleMC.html" title="A3 - Classical ising model"
              >next</a> |</li>
         <li class="right" >
-          <a href="A1-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+          <a href="A1-Introduction.html" title="A1 - Introduction to OpenJij core interface (core Python interface)"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A2 - OpenJij core interface入門 (C++ interface)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A2 - Introduction to OpenJij core interface (C++ interface)</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

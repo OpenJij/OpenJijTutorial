@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# A3 - 古典イジング模型"
+    "# A3 - Classical ising model"
    ]
   },
   {
@@ -21,12 +21,14 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。\n",
+    "In this section, we explain how to use core interface (core Python interface) of OpenJij and demonstrate simple calculation.\n",
     "\n",
-    "core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIです。対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定します。次のような目的を持った読者を想定しています。\n",
+    "Core interface is lower layer API than tutorials in previous section. It is assumed that the target reader has done though the previous OpenJij tutorials and is familiar with terms such as ising models and MonteCarlo methods.\n",
     "\n",
-    "* 最適化問題だけでなくサンプリングや研究用途などより専門的な用途にOpenJijを用いたい\n",
-    "* アニーリングスケジュールの設定や使用するアルゴリズム等を直接触りたい"
+    "We envision a readership with the following objectives.\n",
+    "\n",
+    "* want to use OpenJij not only for optimization problem but also for more specialized application such as sampling and reserach activity.\n",
+    "* want to set annealing schedules and directly improve the algorithms used."
    ]
   },
   {
@@ -36,11 +38,11 @@
    "outputs": [],
    "source": [
     "import cxxjij.graph as G\n",
-    "#問題サイズを100とします。\n",
+    "# set problem size N = 100\n",
     "N = 100\n",
     "\n",
     "graph = G.Dense(N)\n",
-    "#sparseの場合は以下を使用します。\n",
+    "# for sparse, use the following\n",
     "#graph = G.Sparse(N)"
    ]
   },
@@ -48,7 +50,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "$J_{ij}, h_i$を設定します。今回は平均0、標準偏差1のGauss分布から生成される値を設定します。"
+    "We set $J_{ij}, h_i$. In this time, we set the value generated from the Gauss distribution with a mean of 0 and a standard deviation of 1."
    ]
   },
   {
@@ -57,7 +59,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "!pip install numpy #乱数生成にnumpyを使います。"
+    "!pip install numpy # use numpy for random number generation"
    ]
   },
   {
@@ -71,7 +73,7 @@
     "\n",
     "for i in range(N):\n",
     "    for j in range(N):\n",
-    "        #Jijの値が大きくなりすぎてしまうので、1/Nで規格化を行なっています。\n",
+    "        # to avoid a large Jij value, normalize in 1/N\n",
     "        graph[i,j] = 0 if i == j else np.random.normal()/N\n",
     "\n",
     "for i in range(N):\n",
@@ -82,7 +84,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "縦磁場に関しては、`graph[i]`でも、`graph[i,i]`でもどちらでもアクセスできます。また、イジングモデルの定義上、$J_{ij}$と$J_{ji}$は自動で同じ値となります。試しに以下のように出力を行なってみましょう。"
+    "For longitudinal magnetic fields, both `graph[i]` and `graph[i,i]` can be used to access it. In addition, by definition of ising model, $J_{ij}$ and $J_{ji}$ are automatically the same value. Let us try output as follows."
    ]
   },
   {
@@ -114,11 +116,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## システムの設定 - System -\n",
+    "## Set System\n",
     "\n",
-    "続いて計算を行うためのシステムを定義します。ここでは古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。  \n",
+    "Next, we define system for calculation. We can choose classcal ising model or transverse magnetic field ising model or other models.\n",
     "\n",
-    "まずは古典イジング模型のシステムを作成してみます。`system.make_classical_ising`で作成できます。"
+    "In order to create system of classical ising model, we choose `system.make_classical_ising`."
    ]
   },
   {
@@ -136,9 +138,9 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "ここで、1つ目の引数にはランダムに生成したスピン、2つめにはGraphそのものを代入します。これにより初期のスピン配位が`graph.gen_spin()`となる古典イジング模型のシステムの作成ができます。\n",
+    "The first argument is randomly generated spins, and the second is the Graph. We can make a system of classical ising model with an initial spin configuration of `graph.gen_spin`. \n",
     "\n",
-    "システムに直接アクセスして、値を読むことも可能です。"
+    "We can access system directly and can read values."
    ]
   },
   {
@@ -167,27 +169,26 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "古典イジング模型以外にも様々なシステムが用意されており、これを用途別に使うことが出来ます。用いるSystemによって初期化の方法は多少異なります。これは後ほど少しずつ紹介していきます。\n",
+    "Various other systems including classcal ising models are available, which can be used for different purpose. A method of initialization differs slightly depending on the system to be used. We will introduce this later.\n",
     "\n",
-    "## アルゴリズムの実行 -Updater, Algorithm-\n",
+    "## Run algorithms -Updater, Algorithm-\n",
     "\n",
-    "Systemを定義した後はUpdaterを選択し、Algorithmを実行していきます。\n",
+    "After definition of System, we choose Updater and run Algorithm.\n",
     "\n",
     "### Updater\n",
     "\n",
-    "Systemに対して使用できるUpdaterは決められており、古典イジング模型に対するUpdaterは主に\n",
+    "There are certain updaters that can be used for the System. There are two main Updater for classical ising model, \n",
     "\n",
-    "- [SingleSpinFlip](https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/single_spin_flip.hpp#L40) (メトロポリス・ヘイスティング法によるスピン1つずつのアップデート)\n",
-    "- [SwendsenWang](https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45) (SwendsenWang法によるクラスターアップデート)\n",
-    "\n",
-    "の2つが用意されています。\n",
-    "Algorithmを実行するには、**スケジュールリスト**が必要になります。まずスケジュールリストを作成するところから始めましょう。\n",
+    "- [SingleSpinFlip](https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/single_spin_flip.hpp#L40) (Update one spin at a time using the Metropilis Hastings method)\n",
+    "- [SwendsenWang](https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45) (Cluster update scheme using SwendsenWang method)\n",
     "\n",
     "### Algorithm\n",
     "\n",
-    "#### スケジュールリスト\n",
+    "Algorithm needs a **schedule list** to be executed. First, we begin with making schedule list.\n",
     "\n",
-    "スケジュールリストは`(パラメータ, モンテカルロステップ数)`のリストで与えられるものです。パラメータ部分に入力する値はSystemによって異なります。例えば、古典イジング模型ならばパラメータとして温度の逆数である逆温度$\\beta$を設定します。例として以下のように設定してみましょう。"
+    "#### Schedule list\n",
+    "\n",
+    "Schedule list is a list of `(parameters, the number of MonteCarlo steps)`. The value you enter in the parameter part depends on the system. For example, in the case of classical ising model, parameter is the inverse of the temperature, $\\beta$. Let's take a look at the settings as follows."
    ]
   },
   {
@@ -203,8 +204,8 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "この場合、逆温度$\\beta=0.01$で10モンテカルロステップ、$\\beta=10$で80ステップ、$\\beta=0.1$で30ステップの計120モンテカルロステップを実行することを意味します。  \n",
-    "アニーリングを実行するにあたっては、逆温度は等比級数で増加させていくことが多いため、以下のように`utility`にある`make_classical_schedule_list`を使うとより便利です。"
+    "In above setting, 10 MonteCarlo steps at an inverse temperature $\\beta=0.01$, 80 steps at $\\beta=10$, 30 steps at $\\beta=0.1$, for total of 120 MonteCarlo steps.\n",
+    "Since the inverse temperature is often increased by the geometric series, it is more convenient to use `make_classical_schedule_list` in `utility` as follows."
    ]
   },
   {
@@ -230,11 +231,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "上の例では$\\beta=0.1$から$\\beta=50$まで、各温度で20モンテカルロステップ計算しながら10段階で温度を変えていく設定例です。計200モンテカルロステップの計算を行います。\n",
+    "In above example, we set calculations are performed in 20 steps each, varying the temperature in 10 steps from $\\beta=0.1$ to $\\beta=50$.\n",
     "\n",
-    "#### Algorithmの実行\n",
+    "#### Run Algorithm\n",
     "\n",
-    "続いて、Algorithmを実行します。`Algorithm_[Updater]_run`のように書くことで、指定したUpdaterで計算を行います。次の例ではSingleSpinFlipを実行しています。"
+    "Next, we run Algorithm. By writing `Algorithm_[Updater]_run`, the calculation is performed in the specified Updater. The following example shows SingleSpinFlip."
    ]
   },
   {
@@ -251,16 +252,18 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "一瞬で処理が終わりましたが、この間に計200モンテカルロステップの計算が行われています。\n",
-    "> `A.Algorithm_SingleSpinFlip_run(mysystem, seed, schedule_list)`とすることで、seedを固定したまま計算を行うことができます。結果に再現性をもたせたい際に使うことができます。"
+    "The process took an instant but a total of 200 MonteCarlo steps were computed during this time.\n",
+    "\n",
+    "> `A.Algorithm_SingleSpinFlip_run(mysystem, seed, schedule_list)`, we can keep the seed fixed. It can be used when we want our results to be reproducible."
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "callbackを使用することで、Algorithmの実行中に1モンテカルロステップごとのシステムを取得することができます。古典イジング模型の場合は、システムとパラメータ (逆温度)を引数を持つ関数を作成すれば良いです。  \n",
-    "例として、以下ではシステムのエネルギーの値を記録するcallbackを作っています。"
+    "We can use callback to get the system at every single MonteCarlo step during Algorithm execution. In the case of classical ising model, we just need to create a funciton with a system and a parameter (inverse temperature) as arguments.\n",
+    "\n",
+    "The following example shows callback which record energy values."
    ]
   },
   {
@@ -272,7 +275,7 @@
     "energies = []\n",
     "\n",
     "def callback_log_energy(system, beta):\n",
-    "    #graphは以前にGraphモジュールにて定義したオブジェクトです\n",
+    "    # graph is defined in Graphe module before\n",
     "    energies.append(graph.calc_energy(system.spin))"
    ]
   },
@@ -280,7 +283,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "このcallbackを用いて同じAlgorithmを実行します。"
+    "We execute same Algorithm with this callback."
    ]
   },
   {
@@ -289,7 +292,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "#スケジュールをもっと長く取ります (計20000モンテカルロステップ)\n",
+    "# we take long schedule (a total of 20000 MonteCarlo step)\n",
     "schedule_list = U.make_classical_schedule_list(0.1, 50, 200, 100)\n",
     "A.Algorithm_SingleSpinFlip_run(mysystem, schedule_list, callback_log_energy)"
    ]
@@ -298,7 +301,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "記録したシステムのエネルギーを、横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。"
+    "Let us make the energy of the recorded system with MonteCarlo steps on x-axis, and energy on y-axis, we get following figure."
    ]
   },
   {
@@ -341,11 +344,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "アニーリングが進むに連れ徐々にエネルギーが低くなっているのが分かります。Algorithmの動作中にシステムの様子を知りたい時に有用です。\n",
+    "We can see that the energy is gradually getting lower and lower as the annealing progresses. It is useful when we want to know how to system looks like while Algorighm is running.\n",
     "\n",
-    "## 結果の取得 -Result-\n",
+    "## Get result -Result-\n",
     "\n",
-    "`result.get_solution`で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接`mysystem.spin`を参照することで、スピン列を取得も可能です。しかし、`result.get_solution`はそれ以外のシステムについてもスピン列を取得できる便利なメソッドです。"
+    "We get spin sequence of calculation result using `result.get_solution`. In the case of classical ising model, we get it from `mysystem.spin` directly. However, `result.get_solution` is a useful method to get spin sequence from other systems."
    ]
   },
   {
@@ -370,7 +373,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "このスピン列がアニーリングによって得られた答えです。ハミルトニアンの基底状態 (に近い状態)であることが期待されます。"
+    "This sequence is result of execution. It is expected to be in Hamiltonian groud state (or close to ground state)"
    ]
   },
   {
@@ -379,12 +382,12 @@
    "source": [
     "## C++ core interface\n",
     "\n",
-    "多少の違いはありますが、C++ core interfaceでも上記とほぼ同じことが可能です。以下の点に留意しましょう。\n",
+    "We can do almost the same things with C++ core interface as above, with a few differences. We note two points the following. \n",
     "\n",
-    "- seed値を入れる引数には、乱数生成器 (C++11 random)を代入する必要があります。\n",
-    "- Graphクラスで、$J_{ij}, h_i$へのアクセス方法が多少異なります。\n",
+    "- need to input random number generator (C++11 random) to argument of seed.\n",
+    "- in the Graph class, the access to $J_{ij}, h_i$ is slightly different.\n",
     "\n",
-    "今までの内容をC++ core interfaceで記述すると次のようになります。"
+    "The content so far can be described in C++ core interface as follows."
    ]
   },
   {

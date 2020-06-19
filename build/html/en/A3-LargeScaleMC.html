@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A3 - 古典イジング模型 &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <title>A3 - Classical ising model &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -18,8 +18,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="A4 - 量子イジング模型" href="A4-QuantumSystem.html" />
-    <link rel="prev" title="A2 - OpenJij core interface入門 (C++ interface)" href="A2-CppIntroduction.html" /> 
+    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="prev" title="A2 - Introduction to OpenJij core interface (C++ interface)" href="A2-CppIntroduction.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,14 +28,14 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="A4-QuantumSystem.html" title="A4 - 量子イジング模型"
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="A2-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
+          <a href="A2-CppIntroduction.html" title="A2 - Introduction to OpenJij core interface (C++ interface)"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A3 - 古典イジング模型</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A3 - Classical ising model</a></li> 
       </ul>
     </div>  
 
@@ -277,14 +277,15 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A3---古典イジング模型">
-<h1>A3 - 古典イジング模型<a class="headerlink" href="#A3---古典イジング模型" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="A3---Classical-ising-model">
+<h1>A3 - Classical ising model<a class="headerlink" href="#A3---Classical-ising-model" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A3-LargeScaleMC.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
-<p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIです。対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定します。次のような目的を持った読者を想定しています。</p>
+<p>In this section, we explain how to use core interface (core Python interface) of OpenJij and demonstrate simple calculation.</p>
+<p>Core interface is lower layer API than tutorials in previous section. It is assumed that the target reader has done though the previous OpenJij tutorials and is familiar with terms such as ising models and MonteCarlo methods.</p>
+<p>We envision a readership with the following objectives.</p>
 <ul class="simple">
-<li><p>最適化問題だけでなくサンプリングや研究用途などより専門的な用途にOpenJijを用いたい</p></li>
-<li><p>アニーリングスケジュールの設定や使用するアルゴリズム等を直接触りたい</p></li>
+<li><p>want to use OpenJij not only for optimization problem but also for more specialized application such as sampling and reserach activity.</p></li>
+<li><p>want to set annealing schedules and directly improve the algorithms used.</p></li>
 </ul>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -292,22 +293,22 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
-<span class="c1">#問題サイズを100とします。</span>
+<span class="c1"># set problem size N = 100</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1">#sparseの場合は以下を使用します。</span>
+<span class="c1"># for sparse, use the following</span>
 <span class="c1">#graph = G.Sparse(N)</span>
 </pre></div>
 </div>
 </div>
-<p><span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>を設定します。今回は平均0、標準偏差1のGauss分布から生成される値を設定します。</p>
+<p>We set <span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>. In this time, we set the value generated from the Gauss distribution with a mean of 0 and a standard deviation of 1.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install numpy #乱数生成にnumpyを使います。
+<span></span><span class="o">!</span>pip install numpy # use numpy <span class="k">for</span> random number generation
 </pre></div>
 </div>
 </div>
@@ -321,7 +322,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#Jijの値が大きくなりすぎてしまうので、1/Nで規格化を行なっています。</span>
+        <span class="c1"># to avoid a large Jij value, normalize in 1/N</span>
         <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -329,7 +330,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>縦磁場に関しては、<code class="docutils literal notranslate"><span class="pre">graph[i]</span></code>でも、<code class="docutils literal notranslate"><span class="pre">graph[i,i]</span></code>でもどちらでもアクセスできます。また、イジングモデルの定義上、<span class="math notranslate nohighlight">\(J_{ij}\)</span>と<span class="math notranslate nohighlight">\(J_{ji}\)</span>は自動で同じ値となります。試しに以下のように出力を行なってみましょう。</p>
+<p>For longitudinal magnetic fields, both <code class="docutils literal notranslate"><span class="pre">graph[i]</span></code> and <code class="docutils literal notranslate"><span class="pre">graph[i,i]</span></code> can be used to access it. In addition, by definition of ising model, <span class="math notranslate nohighlight">\(J_{ij}\)</span> and <span class="math notranslate nohighlight">\(J_{ji}\)</span> are automatically the same value. Let us try output as follows.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -355,10 +356,10 @@ div.rendered_html tbody tr:hover {
 -0.6
 </pre></div></div>
 </div>
-<div class="section" id="システムの設定---System--">
-<h2>システムの設定 - System -<a class="headerlink" href="#システムの設定---System--" title="Permalink to this headline">¶</a></h2>
-<p>続いて計算を行うためのシステムを定義します。ここでは古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。</p>
-<p>まずは古典イジング模型のシステムを作成してみます。<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>で作成できます。</p>
+<div class="section" id="Set-System">
+<h2>Set System<a class="headerlink" href="#Set-System" title="Permalink to this headline">¶</a></h2>
+<p>Next, we define system for calculation. We can choose classcal ising model or transverse magnetic field ising model or other models.</p>
+<p>In order to create system of classical ising model, we choose <code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -370,8 +371,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>ここで、1つ目の引数にはランダムに生成したスピン、2つめにはGraphそのものを代入します。これにより初期のスピン配位が<code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>となる古典イジング模型のシステムの作成ができます。</p>
-<p>システムに直接アクセスして、値を読むことも可能です。</p>
+<p>The first argument is randomly generated spins, and the second is the Graph. We can make a system of classical ising model with an initial spin configuration of <code class="docutils literal notranslate"><span class="pre">graph.gen_spin</span></code>.</p>
+<p>We can access system directly and can read values.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -394,25 +395,25 @@ div.rendered_html tbody tr:hover {
  -1.  1. -1. -1.  1. -1.  1.  1. -1. -1.  1.]
 </pre></div></div>
 </div>
-<p>古典イジング模型以外にも様々なシステムが用意されており、これを用途別に使うことが出来ます。用いるSystemによって初期化の方法は多少異なります。これは後ほど少しずつ紹介していきます。</p>
+<p>Various other systems including classcal ising models are available, which can be used for different purpose. A method of initialization differs slightly depending on the system to be used. We will introduce this later.</p>
 </div>
-<div class="section" id="アルゴリズムの実行--Updater,-Algorithm-">
-<h2>アルゴリズムの実行 -Updater, Algorithm-<a class="headerlink" href="#アルゴリズムの実行--Updater,-Algorithm-" title="Permalink to this headline">¶</a></h2>
-<p>Systemを定義した後はUpdaterを選択し、Algorithmを実行していきます。</p>
+<div class="section" id="Run-algorithms--Updater,-Algorithm-">
+<h2>Run algorithms -Updater, Algorithm-<a class="headerlink" href="#Run-algorithms--Updater,-Algorithm-" title="Permalink to this headline">¶</a></h2>
+<p>After definition of System, we choose Updater and run Algorithm.</p>
 <div class="section" id="Updater">
 <h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
-<p>Systemに対して使用できるUpdaterは決められており、古典イジング模型に対するUpdaterは主に</p>
+<p>There are certain updaters that can be used for the System. There are two main Updater for classical ising model,</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/single_spin_flip.hpp#L40">SingleSpinFlip</a> (メトロポリス・ヘイスティング法によるスピン1つずつのアップデート)</p></li>
-<li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45">SwendsenWang</a> (SwendsenWang法によるクラスターアップデート)</p></li>
+<li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/single_spin_flip.hpp#L40">SingleSpinFlip</a> (Update one spin at a time using the Metropilis Hastings method)</p></li>
+<li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45">SwendsenWang</a> (Cluster update scheme using SwendsenWang method)</p></li>
 </ul>
-<p>の2つが用意されています。 Algorithmを実行するには、<strong>スケジュールリスト</strong>が必要になります。まずスケジュールリストを作成するところから始めましょう。</p>
 </div>
 <div class="section" id="Algorithm">
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="スケジュールリスト">
-<h4>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h4>
-<p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられるものです。パラメータ部分に入力する値はSystemによって異なります。例えば、古典イジング模型ならばパラメータとして温度の逆数である逆温度<span class="math notranslate nohighlight">\(\beta\)</span>を設定します。例として以下のように設定してみましょう。</p>
+<p>Algorithm needs a <strong>schedule list</strong> to be executed. First, we begin with making schedule list.</p>
+<div class="section" id="Schedule-list">
+<h4>Schedule list<a class="headerlink" href="#Schedule-list" title="Permalink to this headline">¶</a></h4>
+<p>Schedule list is a list of <code class="docutils literal notranslate"><span class="pre">(parameters,</span> <span class="pre">the</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">MonteCarlo</span> <span class="pre">steps)</span></code>. The value you enter in the parameter part depends on the system. For example, in the case of classical ising model, parameter is the inverse of the temperature, <span class="math notranslate nohighlight">\(\beta\)</span>. Let’s take a look at the settings as follows.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -422,10 +423,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="line-block">
-<div class="line">この場合、逆温度<span class="math notranslate nohighlight">\(\beta=0.01\)</span>で10モンテカルロステップ、<span class="math notranslate nohighlight">\(\beta=10\)</span>で80ステップ、<span class="math notranslate nohighlight">\(\beta=0.1\)</span>で30ステップの計120モンテカルロステップを実行することを意味します。</div>
-<div class="line">アニーリングを実行するにあたっては、逆温度は等比級数で増加させていくことが多いため、以下のように<code class="docutils literal notranslate"><span class="pre">utility</span></code>にある<code class="docutils literal notranslate"><span class="pre">make_classical_schedule_list</span></code>を使うとより便利です。</div>
-</div>
+<p>In above setting, 10 MonteCarlo steps at an inverse temperature <span class="math notranslate nohighlight">\(\beta=0.01\)</span>, 80 steps at <span class="math notranslate nohighlight">\(\beta=10\)</span>, 30 steps at <span class="math notranslate nohighlight">\(\beta=0.1\)</span>, for total of 120 MonteCarlo steps. Since the inverse temperature is often increased by the geometric series, it is more convenient to use <code class="docutils literal notranslate"><span class="pre">make_classical_schedule_list</span></code> in <code class="docutils literal notranslate"><span class="pre">utility</span></code> as follows.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -445,11 +443,11 @@ div.rendered_html tbody tr:hover {
 [((beta: 0.100000) mcs: 20), ((beta: 0.199474) mcs: 20), ((beta: 0.397897) mcs: 20), ((beta: 0.793701) mcs: 20), ((beta: 1.583223) mcs: 20), ((beta: 3.158114) mcs: 20), ((beta: 6.299605) mcs: 20), ((beta: 12.566053) mcs: 20), ((beta: 25.065966) mcs: 20), ((beta: 50.000000) mcs: 20)]
 </pre></div></div>
 </div>
-<p>上の例では<span class="math notranslate nohighlight">\(\beta=0.1\)</span>から<span class="math notranslate nohighlight">\(\beta=50\)</span>まで、各温度で20モンテカルロステップ計算しながら10段階で温度を変えていく設定例です。計200モンテカルロステップの計算を行います。</p>
+<p>In above example, we set calculations are performed in 20 steps each, varying the temperature in 10 steps from <span class="math notranslate nohighlight">\(\beta=0.1\)</span> to <span class="math notranslate nohighlight">\(\beta=50\)</span>.</p>
 </div>
-<div class="section" id="Algorithmの実行">
-<h4>Algorithmの実行<a class="headerlink" href="#Algorithmの実行" title="Permalink to this headline">¶</a></h4>
-<p>続いて、Algorithmを実行します。<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>のように書くことで、指定したUpdaterで計算を行います。次の例ではSingleSpinFlipを実行しています。</p>
+<div class="section" id="Run-Algorithm">
+<h4>Run Algorithm<a class="headerlink" href="#Run-Algorithm" title="Permalink to this headline">¶</a></h4>
+<p>Next, we run Algorithm. By writing <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>, the calculation is performed in the specified Updater. The following example shows SingleSpinFlip.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -460,11 +458,12 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>一瞬で処理が終わりましたが、この間に計200モンテカルロステップの計算が行われています。 &gt; <code class="docutils literal notranslate"><span class="pre">A.Algorithm_SingleSpinFlip_run(mysystem,</span> <span class="pre">seed,</span> <span class="pre">schedule_list)</span></code>とすることで、seedを固定したまま計算を行うことができます。結果に再現性をもたせたい際に使うことができます。</p>
-<div class="line-block">
-<div class="line">callbackを使用することで、Algorithmの実行中に1モンテカルロステップごとのシステムを取得することができます。古典イジング模型の場合は、システムとパラメータ (逆温度)を引数を持つ関数を作成すれば良いです。</div>
-<div class="line">例として、以下ではシステムのエネルギーの値を記録するcallbackを作っています。</div>
-</div>
+<p>The process took an instant but a total of 200 MonteCarlo steps were computed during this time.</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">A.Algorithm_SingleSpinFlip_run(mysystem,</span> <span class="pre">seed,</span> <span class="pre">schedule_list)</span></code>, we can keep the seed fixed. It can be used when we want our results to be reproducible.</p>
+</div></blockquote>
+<p>We can use callback to get the system at every single MonteCarlo step during Algorithm execution. In the case of classical ising model, we just need to create a funciton with a system and a parameter (inverse temperature) as arguments.</p>
+<p>The following example shows callback which record energy values.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -473,24 +472,24 @@ div.rendered_html tbody tr:hover {
 <span></span><span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">def</span> <span class="nf">callback_log_energy</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
-    <span class="c1">#graphは以前にGraphモジュールにて定義したオブジェクトです</span>
+    <span class="c1"># graph is defined in Graphe module before</span>
     <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">calc_energy</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">spin</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-<p>このcallbackを用いて同じAlgorithmを実行します。</p>
+<p>We execute same Algorithm with this callback.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#スケジュールをもっと長く取ります (計20000モンテカルロステップ)</span>
+<span></span><span class="c1"># we take long schedule (a total of 20000 MonteCarlo step)</span>
 <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">,</span> <span class="n">callback_log_energy</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<p>記録したシステムのエネルギーを、横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。</p>
+<p>Let us make the energy of the recorded system with MonteCarlo steps on x-axis, and energy on y-axis, we get following figure.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -518,16 +517,16 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_A3-LargeScaleMC_26_0.png" src="../_images/ja_A3-LargeScaleMC_26_0.png" />
+<img alt="../_images/en_A3-LargeScaleMC_26_0.png" src="../_images/en_A3-LargeScaleMC_26_0.png" />
 </div>
 </div>
-<p>アニーリングが進むに連れ徐々にエネルギーが低くなっているのが分かります。Algorithmの動作中にシステムの様子を知りたい時に有用です。</p>
+<p>We can see that the energy is gradually getting lower and lower as the annealing progresses. It is useful when we want to know how to system looks like while Algorighm is running.</p>
 </div>
 </div>
 </div>
-<div class="section" id="結果の取得--Result-">
-<h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照することで、スピン列を取得も可能です。しかし、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できる便利なメソッドです。</p>
+<div class="section" id="Get-result--Result-">
+<h2>Get result -Result-<a class="headerlink" href="#Get-result--Result-" title="Permalink to this headline">¶</a></h2>
+<p>We get spin sequence of calculation result using <code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>. In the case of classical ising model, we get it from <code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code> directly. However, <code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code> is a useful method to get spin sequence from other systems.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -546,16 +545,16 @@ div.rendered_html tbody tr:hover {
 [-1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, 1, -1]
 </pre></div></div>
 </div>
-<p>このスピン列がアニーリングによって得られた答えです。ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
+<p>This sequence is result of execution. It is expected to be in Hamiltonian groud state (or close to ground state)</p>
 </div>
 <div class="section" id="C++-core-interface">
 <h2>C++ core interface<a class="headerlink" href="#C++-core-interface" title="Permalink to this headline">¶</a></h2>
-<p>多少の違いはありますが、C++ core interfaceでも上記とほぼ同じことが可能です。以下の点に留意しましょう。</p>
+<p>We can do almost the same things with C++ core interface as above, with a few differences. We note two points the following.</p>
 <ul class="simple">
-<li><p>seed値を入れる引数には、乱数生成器 (C++11 random)を代入する必要があります。</p></li>
-<li><p>Graphクラスで、<span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>へのアクセス方法が多少異なります。</p></li>
+<li><p>need to input random number generator (C++11 random) to argument of seed.</p></li>
+<li><p>in the Graph class, the access to <span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span> is slightly different.</p></li>
 </ul>
-<p>今までの内容をC++ core interfaceで記述すると次のようになります。</p>
+<p>The content so far can be described in C++ core interface as follows.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
@@ -643,18 +642,18 @@ div.rendered_html tbody tr:hover {
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">A3 - 古典イジング模型</a><ul>
-<li><a class="reference internal" href="#システムの設定---System--">システムの設定 - System -</a></li>
-<li><a class="reference internal" href="#アルゴリズムの実行--Updater,-Algorithm-">アルゴリズムの実行 -Updater, Algorithm-</a><ul>
+<li><a class="reference internal" href="#">A3 - Classical ising model</a><ul>
+<li><a class="reference internal" href="#Set-System">Set System</a></li>
+<li><a class="reference internal" href="#Run-algorithms--Updater,-Algorithm-">Run algorithms -Updater, Algorithm-</a><ul>
 <li><a class="reference internal" href="#Updater">Updater</a></li>
 <li><a class="reference internal" href="#Algorithm">Algorithm</a><ul>
-<li><a class="reference internal" href="#スケジュールリスト">スケジュールリスト</a></li>
-<li><a class="reference internal" href="#Algorithmの実行">Algorithmの実行</a></li>
+<li><a class="reference internal" href="#Schedule-list">Schedule list</a></li>
+<li><a class="reference internal" href="#Run-Algorithm">Run Algorithm</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#結果の取得--Result-">結果の取得 -Result-</a></li>
+<li><a class="reference internal" href="#Get-result--Result-">Get result -Result-</a></li>
 <li><a class="reference internal" href="#C++-core-interface">C++ core interface</a></li>
 </ul>
 </li>
@@ -662,14 +661,14 @@ div.rendered_html tbody tr:hover {
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="A2-CppIntroduction.html"
-                        title="previous chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
+                        title="previous chapter">A2 - Introduction to OpenJij core interface (C++ interface)</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="A4-QuantumSystem.html"
-                        title="next chapter">A4 - 量子イジング模型</a></p>
+  <p class="topless"><a href="../ja/index.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/ja/A3-LargeScaleMC.ipynb.txt"
+      <li><a href="../_sources/en/A3-LargeScaleMC.ipynb.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -694,14 +693,14 @@ div.rendered_html tbody tr:hover {
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="A4-QuantumSystem.html" title="A4 - 量子イジング模型"
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
              >next</a> |</li>
         <li class="right" >
-          <a href="A2-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
+          <a href="A2-CppIntroduction.html" title="A2 - Introduction to OpenJij core interface (C++ interface)"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A3 - 古典イジング模型</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A3 - Classical ising model</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
