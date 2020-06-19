@@ -18,7 +18,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="next" title="6-Machine Learning (QBoost) with Quantum Annealing" href="6-Machine_Learning_by_QA.html" />
     <link rel="prev" title="4-Introduction to D-Wave Ocean SDK" href="4-DWaveOceanSDK.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -28,7 +28,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../ja/index.html" title="OpenJij チュートリアル"
+          <a href="6-Machine_Learning_by_QA.html" title="6-Machine Learning (QBoost) with Quantum Annealing"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
@@ -343,9 +343,6 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="Execution">
 <h2>Execution<a class="headerlink" href="#Execution" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="実行">
-<h2>実行<a class="headerlink" href="#実行" title="Permalink to this headline">¶</a></h2>
 <p>Next we execute SQA. As with Sampler before we introduce, we can use <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code> (or <code class="docutils literal notranslate"><span class="pre">sample_ising</span></code>). However, if you specify an interaction for a subscript that does not satisfy the chimeragraph, error occurs.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -455,7 +452,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </pre></div>
 </div>
 </div>
-<p>そしてsampler部分のスクリプトを以下のように書き換えます。</p>
+<p>Then we rewrite the sampler part of the script as follows.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -488,7 +485,6 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </li>
 <li><a class="reference internal" href="#Calculation-with-GPUSQA">Calculation with GPUSQA</a></li>
 <li><a class="reference internal" href="#Execution">Execution</a></li>
-<li><a class="reference internal" href="#実行">実行</a></li>
 <li><a class="reference internal" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph">Embedding the All-Coupled Model in Chimeragraph</a></li>
 </ul>
 </li>
@@ -498,8 +494,8 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
   <p class="topless"><a href="4-DWaveOceanSDK.html"
                         title="previous chapter">4-Introduction to D-Wave Ocean SDK</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../ja/index.html"
-                        title="next chapter">OpenJij チュートリアル</a></p>
+  <p class="topless"><a href="6-Machine_Learning_by_QA.html"
+                        title="next chapter">6-Machine Learning (QBoost) with Quantum Annealing</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -528,7 +524,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../ja/index.html" title="OpenJij チュートリアル"
+          <a href="6-Machine_Learning_by_QA.html" title="6-Machine Learning (QBoost) with Quantum Annealing"
              >next</a> |</li>
         <li class="right" >
           <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
