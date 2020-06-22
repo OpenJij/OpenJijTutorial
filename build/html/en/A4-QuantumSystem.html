@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A4 - 量子イジング模型 &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <title>A4 - Quantum ising models &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -18,8 +18,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="A5-OpenJij GPU" href="A5-OpenJijGPU.html" />
-    <link rel="prev" title="A3 - 古典イジング模型" href="A3-LargeScaleMC.html" /> 
+    <link rel="next" title="OpenJij チュートリアル" href="../ja/index.html" />
+    <link rel="prev" title="A3 - Classical ising model" href="A3-LargeScaleMC.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,14 +28,14 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="A5-OpenJijGPU.html" title="A5-OpenJij GPU"
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="A3-LargeScaleMC.html" title="A3 - 古典イジング模型"
+          <a href="A3-LargeScaleMC.html" title="A3 - Classical ising model"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A4 - 量子イジング模型</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A4 - Quantum ising models</a></li> 
       </ul>
     </div>  
 
@@ -277,12 +277,12 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A4---量子イジング模型">
-<h1>A4 - 量子イジング模型<a class="headerlink" href="#A4---量子イジング模型" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="A4---Quantum-ising-models">
+<h1>A4 - Quantum ising models<a class="headerlink" href="#A4---Quantum-ising-models" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A4-QuantumSystem.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
-<div class="line">この章では量子 (主に横磁場)効果の入ったイジング模型をご紹介します。</div>
-<div class="line">まずはGraphを定義し、<span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>を決定しておきましょう。</div>
+<div class="line">In this section, we introduce ising model with quantum effects (mainly transverse magnetic fields).</div>
+<div class="line">First, let us define the Graph and determine <span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>.</div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -290,7 +290,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
-<span class="c1">#問題サイズを100とします。</span>
+<span class="c1"># set the size of problem 100</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
@@ -307,7 +307,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。</span>
+        <span class="c1"># normalize with 1/N to avoid large Jij</span>
         <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -315,16 +315,15 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="横磁場イジング模型">
-<h2>横磁場イジング模型<a class="headerlink" href="#横磁場イジング模型" title="Permalink to this headline">¶</a></h2>
-<p>今回はシステムに横磁場イジング模型</p>
+<div class="section" id="Transeverse-field-ising-model">
+<h2>Transeverse field ising model<a class="headerlink" href="#Transeverse-field-ising-model" title="Permalink to this headline">¶</a></h2>
+<p>In this case, transverse field ising model is used for the system.</p>
 <p><span class="math">\begin{align}
 H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^z \right) - \sum_{i=1}\Gamma (1-s) \sigma_i^x \\
 \end{align}</span></p>
-<p>を用います。</p>
 </div>
-<div class="section" id="連続虚時間量子モンテカルロ">
-<h2>連続虚時間量子モンテカルロ<a class="headerlink" href="#連続虚時間量子モンテカルロ" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Continuous-imaginary-time-quantum-MonteCarlo">
+<h2>Continuous imaginary-time quantum MonteCarlo<a class="headerlink" href="#Continuous-imaginary-time-quantum-MonteCarlo" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -346,23 +345,23 @@ H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">A4 - 量子イジング模型</a><ul>
-<li><a class="reference internal" href="#横磁場イジング模型">横磁場イジング模型</a></li>
-<li><a class="reference internal" href="#連続虚時間量子モンテカルロ">連続虚時間量子モンテカルロ</a></li>
+<li><a class="reference internal" href="#">A4 - Quantum ising models</a><ul>
+<li><a class="reference internal" href="#Transeverse-field-ising-model">Transeverse field ising model</a></li>
+<li><a class="reference internal" href="#Continuous-imaginary-time-quantum-MonteCarlo">Continuous imaginary-time quantum MonteCarlo</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="A3-LargeScaleMC.html"
-                        title="previous chapter">A3 - 古典イジング模型</a></p>
+                        title="previous chapter">A3 - Classical ising model</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="A5-OpenJijGPU.html"
-                        title="next chapter">A5-OpenJij GPU</a></p>
+  <p class="topless"><a href="../ja/index.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/ja/A4-QuantumSystem.ipynb.txt"
+      <li><a href="../_sources/en/A4-QuantumSystem.ipynb.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -387,14 +386,14 @@ H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="A5-OpenJijGPU.html" title="A5-OpenJij GPU"
+          <a href="../ja/index.html" title="OpenJij チュートリアル"
              >next</a> |</li>
         <li class="right" >
-          <a href="A3-LargeScaleMC.html" title="A3 - 古典イジング模型"
+          <a href="A3-LargeScaleMC.html" title="A3 - Classical ising model"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A4 - 量子イジング模型</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A4 - Quantum ising models</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
