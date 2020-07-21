@@ -43,8 +43,12 @@
 <li><a class="reference internal" href="#">A3 - 古典イジング模型</a><ul>
 <li><a class="reference internal" href="#システムの設定---System--">システムの設定 - System -</a></li>
 <li><a class="reference internal" href="#アルゴリズムの実行--Updater,-Algorithm-">アルゴリズムの実行 -Updater, Algorithm-</a><ul>
+<li><a class="reference internal" href="#Updater">Updater</a></li>
+<li><a class="reference internal" href="#Algorithm">Algorithm</a><ul>
 <li><a class="reference internal" href="#スケジュールリスト">スケジュールリスト</a></li>
-<li><a class="reference internal" href="#Algorithm">Algorithm</a></li>
+<li><a class="reference internal" href="#Algorithmの実行">Algorithmの実行</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#結果の取得--Result-">結果の取得 -Result-</a></li>
@@ -321,12 +325,11 @@ div.rendered_html tbody tr:hover {
 <h1>A3 - 古典イジング模型<a class="headerlink" href="#A3---古典イジング模型" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A3-LargeScaleMC.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
-<p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIとなるため、対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定しており、</p>
+<p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIです。対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定します。次のような目的を持った読者を想定しています。</p>
 <ul class="simple">
 <li><p>最適化問題だけでなくサンプリングや研究用途などより専門的な用途にOpenJijを用いたい</p></li>
 <li><p>アニーリングスケジュールの設定や使用するアルゴリズム等を直接触りたい</p></li>
 </ul>
-<p>といった目的に使用できます。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -337,7 +340,7 @@ div.rendered_html tbody tr:hover {
 <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1">#sparseの場合</span>
+<span class="c1">#sparseの場合は以下を使用します。</span>
 <span class="c1">#graph = G.Sparse(N)</span>
 </pre></div>
 </div>
@@ -362,7 +365,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#Jijの値が大きくなりすぎてしまうので、全体の係数を1/Nしています。</span>
+        <span class="c1">#Jijの値が大きくなりすぎてしまうので、1/Nで規格化を行なっています。</span>
         <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span><span class="o">/</span><span class="n">N</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -370,8 +373,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>ここで、縦磁場に関しては、<code class="docutils literal notranslate"><span class="pre">graph[i]</span></code>でも、<code class="docutils literal notranslate"><span class="pre">graph[i,i]</span></code>でもどちらでもアクセスできます。</p>
-<p>また、イジングモデルの定義上、<span class="math notranslate nohighlight">\(J_{ij}\)</span>と<span class="math notranslate nohighlight">\(J_{ji}\)</span>は自動で同じ値となります。</p>
+<p>縦磁場に関しては、<code class="docutils literal notranslate"><span class="pre">graph[i]</span></code>でも、<code class="docutils literal notranslate"><span class="pre">graph[i,i]</span></code>でもどちらでもアクセスできます。また、イジングモデルの定義上、<span class="math notranslate nohighlight">\(J_{ij}\)</span>と<span class="math notranslate nohighlight">\(J_{ji}\)</span>は自動で同じ値となります。試しに以下のように出力を行なってみましょう。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -399,7 +401,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="システムの設定---System--">
 <h2>システムの設定 - System -<a class="headerlink" href="#システムの設定---System--" title="Permalink to this headline">¶</a></h2>
-<p>続いて計算を行うためのシステムを定義します。ここで古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。</p>
+<p>続いて計算を行うためのシステムを定義します。ここでは古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。</p>
 <p>まずは古典イジング模型のシステムを作成してみます。<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>で作成できます。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -412,11 +414,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="line-block">
-<div class="line">ここで、引数の1つめにはランダムに生成したスピン、2つめはGraphそのものを代入しています。</div>
-<div class="line">これにより初期スピン配位が<code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>となる古典イジング模型のシステムが作成できます。</div>
-</div>
-<p>システムに直接アクセスして、値を読むこともできます。</p>
+<p>ここで、1つ目の引数にはランダムに生成したスピン、2つめにはGraphそのものを代入します。これにより初期のスピン配位が<code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>となる古典イジング模型のシステムの作成ができます。</p>
+<p>システムに直接アクセスして、値を読むことも可能です。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -439,28 +438,25 @@ div.rendered_html tbody tr:hover {
  -1.  1. -1. -1.  1. -1.  1.  1. -1. -1.  1.]
 </pre></div></div>
 </div>
-<div class="line-block">
-<div class="line">古典イジング模型以外にも様々なシステムが用意されており、用途別に使うことが出来ます。また、Systemによって初期化の方法は多少異なります。</div>
-<div class="line">後ほど少しずつ紹介していきます。</div>
-</div>
+<p>古典イジング模型以外にも様々なシステムが用意されており、これを用途別に使うことが出来ます。用いるSystemによって初期化の方法は多少異なります。これは後ほど少しずつ紹介していきます。</p>
 </div>
 <div class="section" id="アルゴリズムの実行--Updater,-Algorithm-">
 <h2>アルゴリズムの実行 -Updater, Algorithm-<a class="headerlink" href="#アルゴリズムの実行--Updater,-Algorithm-" title="Permalink to this headline">¶</a></h2>
-<div class="line-block">
-<div class="line">Systemを定義した後はUpdaterを選択してAlgorithmを実行していきます。</div>
-<div class="line">Systemに大して使用できるUpdaterは決められており、古典イジング模型に対するUpdaterは主に</div>
-</div>
+<p>Systemを定義した後はUpdaterを選択し、Algorithmを実行していきます。</p>
+<div class="section" id="Updater">
+<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
+<p>Systemに対して使用できるUpdaterは決められており、古典イジング模型に対するUpdaterは主に</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/single_spin_flip.hpp#L40">SingleSpinFlip</a> (メトロポリス・ヘイスティング法によるスピン1つずつのアップデート)</p></li>
 <li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45">SwendsenWang</a> (SwendsenWang法によるクラスターアップデート)</p></li>
 </ul>
-<div class="line-block">
-<div class="line">が用意されています。</div>
-<div class="line">Algorithmを実行するにはまず<strong>スケジュールリスト</strong>が必要となるため、まずスケジュールリストを作成するところから始めます。</div>
+<p>の2つが用意されています。 Algorithmを実行するには、<strong>スケジュールリスト</strong>が必要になります。まずスケジュールリストを作成するところから始めましょう。</p>
 </div>
+<div class="section" id="Algorithm">
+<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="スケジュールリスト">
-<h3>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h3>
-<p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられ、パラメータにいれる値はSystemによって異なります。例えば古典イジング模型ならばパラメータとして温度の逆数である逆温度<span class="math notranslate nohighlight">\(\beta\)</span>を設定します。 例えばスケジュールリストとして</p>
+<h4>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h4>
+<p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられるものです。パラメータ部分に入力する値はSystemによって異なります。例えば、古典イジング模型ならばパラメータとして温度の逆数である逆温度<span class="math notranslate nohighlight">\(\beta\)</span>を設定します。例として以下のように設定してみましょう。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -470,8 +466,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>と設定された場合、逆温度<span class="math notranslate nohighlight">\(\beta=0.01\)</span>で10モンテカルロステップ、<span class="math notranslate nohighlight">\(\beta=10\)</span>で80ステップ、<span class="math notranslate nohighlight">\(\beta=0.1\)</span>で30ステップの計120モンテカルロステップを実行することを意味します。</p>
-<p>アニーリングを実行するにあたっては、逆温度は等比級数で増加させていくことが多いため、<code class="docutils literal notranslate"><span class="pre">utility</span></code>にある<code class="docutils literal notranslate"><span class="pre">make_classical_schedule_list</span></code>を使うと便利です。</p>
+<div class="line-block">
+<div class="line">この場合、逆温度<span class="math notranslate nohighlight">\(\beta=0.01\)</span>で10モンテカルロステップ、<span class="math notranslate nohighlight">\(\beta=10\)</span>で80ステップ、<span class="math notranslate nohighlight">\(\beta=0.1\)</span>で30ステップの計120モンテカルロステップを実行することを意味します。</div>
+<div class="line">アニーリングを実行するにあたっては、逆温度は等比級数で増加させていくことが多いため、以下のように<code class="docutils literal notranslate"><span class="pre">utility</span></code>にある<code class="docutils literal notranslate"><span class="pre">make_classical_schedule_list</span></code>を使うとより便利です。</div>
+</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -491,11 +489,11 @@ div.rendered_html tbody tr:hover {
 [((beta: 0.100000) mcs: 20), ((beta: 0.199474) mcs: 20), ((beta: 0.397897) mcs: 20), ((beta: 0.793701) mcs: 20), ((beta: 1.583223) mcs: 20), ((beta: 3.158114) mcs: 20), ((beta: 6.299605) mcs: 20), ((beta: 12.566053) mcs: 20), ((beta: 25.065966) mcs: 20), ((beta: 50.000000) mcs: 20)]
 </pre></div></div>
 </div>
-<p>上の例では<span class="math notranslate nohighlight">\(\beta=0.1\)</span>から<span class="math notranslate nohighlight">\(\beta=50\)</span>まで、各温度で20モンテカルロステップ計算しながら10段階で温度を変えていくため、計200モンテカルロステップの計算となります。</p>
+<p>上の例では<span class="math notranslate nohighlight">\(\beta=0.1\)</span>から<span class="math notranslate nohighlight">\(\beta=50\)</span>まで、各温度で20モンテカルロステップ計算しながら10段階で温度を変えていく設定例です。計200モンテカルロステップの計算を行います。</p>
 </div>
-<div class="section" id="Algorithm">
-<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
-<p>続いて、Algorithmを実行していきます。<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>のように書くことで、指定したUpdaterで計算を行うことができます。次例ではSingleSpinFlipを用います。</p>
+<div class="section" id="Algorithmの実行">
+<h4>Algorithmの実行<a class="headerlink" href="#Algorithmの実行" title="Permalink to this headline">¶</a></h4>
+<p>続いて、Algorithmを実行します。<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>のように書くことで、指定したUpdaterで計算を行います。次の例ではSingleSpinFlipを実行しています。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -506,9 +504,11 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>一瞬で処理が終わりましたが、この間に計200モンテカルロステップの計算が終わっています。 &gt; <code class="docutils literal notranslate"><span class="pre">A.Algorithm_SingleSpinFlip_run(mysystem,</span> <span class="pre">seed,</span> <span class="pre">schedule_list)</span></code>とすることで、seedを固定したまま計算を行うことができます。結果に再現性をもたせたい際に使うことができます。</p>
-<p>callbackを使用することでAlgorithmの実行中に1モンテカルロステップごとのシステムを取得することができます。古典イジング模型の場合は、システムとパラメータ (逆温度)を引数を持つ関数を作成すれば良いです。</p>
-<p>ためしにシステムのエネルギーの値を記録するcallbackを作ってみましょう</p>
+<p>一瞬で処理が終わりましたが、この間に計200モンテカルロステップの計算が行われています。 &gt; <code class="docutils literal notranslate"><span class="pre">A.Algorithm_SingleSpinFlip_run(mysystem,</span> <span class="pre">seed,</span> <span class="pre">schedule_list)</span></code>とすることで、seedを固定したまま計算を行うことができます。結果に再現性をもたせたい際に使うことができます。</p>
+<div class="line-block">
+<div class="line">callbackを使用することで、Algorithmの実行中に1モンテカルロステップごとのシステムを取得することができます。古典イジング模型の場合は、システムとパラメータ (逆温度)を引数を持つ関数を作成すれば良いです。</div>
+<div class="line">例として、以下ではシステムのエネルギーの値を記録するcallbackを作っています。</div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -534,7 +534,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>記録したシステムのエネルギーを横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。</p>
+<p>記録したシステムのエネルギーを、横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -565,12 +565,13 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/ja_A3-LargeScaleMC_26_0.png" src="../_images/ja_A3-LargeScaleMC_26_0.png" />
 </div>
 </div>
-<p>このように、アニーリングが進むに連れ徐々にエネルギーが低くなっているのが分かります。Algorithmの動作中にシステムの様子を知りたい時に有用です。</p>
+<p>アニーリングが進むに連れ徐々にエネルギーが低くなっているのが分かります。Algorithmの動作中にシステムの様子を知りたい時に有用です。</p>
+</div>
 </div>
 </div>
 <div class="section" id="結果の取得--Result-">
 <h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照すればスピン列を取得できますが、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できます。</p>
+<p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照することで、スピン列を取得も可能です。しかし、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できる便利なメソッドです。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -589,13 +590,13 @@ div.rendered_html tbody tr:hover {
 [-1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, 1, 1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, 1, -1]
 </pre></div></div>
 </div>
-<p>このスピン列がアニーリングによって得られた答えなので、ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
+<p>このスピン列がアニーリングによって得られた答えです。ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
 </div>
 <div class="section" id="C++-core-interface">
 <h2>C++ core interface<a class="headerlink" href="#C++-core-interface" title="Permalink to this headline">¶</a></h2>
-<p>C++ core interfaceでも上記とほぼ同じことが可能ですが、多少の違いがあり、</p>
+<p>多少の違いはありますが、C++ core interfaceでも上記とほぼ同じことが可能です。以下の点に留意しましょう。</p>
 <ul class="simple">
-<li><p>seed値を入れる引数には、乱数生成器 (C++11 random)を代入する必要があります。今までのコードはC++で次のようになります。</p></li>
+<li><p>seed値を入れる引数には、乱数生成器 (C++11 random)を代入する必要があります。</p></li>
 <li><p>Graphクラスで、<span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>へのアクセス方法が多少異なります。</p></li>
 </ul>
 <p>今までの内容をC++ core interfaceで記述すると次のようになります。</p>

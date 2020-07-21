@@ -324,17 +324,7 @@ div.rendered_html tbody tr:hover {
 <p>OpenJij のリポジトリから Fork した自分のリポジトリ内に、さらに feature/error_bar リポジトリを branch しました。 標準誤差関数が実装されるまでは、自分のGitHubから、 OpenJij をインストールして、実行ができます。</p>
 <p>反強磁性1次元イジングモデルの準備</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="ch">#!pip install -U cmake</span>
-<span class="c1">#!pip install git+https://github.com/kumagaimasahito/OpenJij.git@feature/error_bar</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -375,7 +365,7 @@ div.rendered_html tbody tr:hover {
 <li><p>se_upper_tts: TTSの上位誤差のリスト 成功確率の下位誤差を基に算出したTTSの下位誤差</p></li>
 </ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -395,27 +385,17 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># seaborn を使うとグラフが見やすくなる</span>
-<span class="c1"># !pip install seaborn</span>
+<span class="o">!</span>pip install seaborn
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/usr/local/miniconda3/envs/openjij3/lib/python3.7/site-packages/matplotlib/__init__.py:886: MatplotlibDeprecationWarning:
-examples.directory is deprecated; in the future, examples will be found relative to the &#39;datapath&#39; directory.
-  &#34;found relative to the &#39;datapath&#39; directory.&#34;.format(key))
-</pre></div></div>
 </div>
 <div class="section" id="TTS-残留エネルギー-成功確率">
 <h3>TTS 残留エネルギー 成功確率<a class="headerlink" href="#TTS-残留エネルギー-成功確率" title="Permalink to this headline">¶</a></h3>
@@ -456,7 +436,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_2-Evaluation_errorbar_10_1.svg" src="../_images/ja_2-Evaluation_errorbar_10_1.svg" /></div>
+<img alt="../_images/ja_2-Evaluation_errorbar_9_1.svg" src="../_images/ja_2-Evaluation_errorbar_9_1.svg" /></div>
 </div>
 </div>
 <div class="section" id="標準誤差">
@@ -528,7 +508,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_2-Evaluation_errorbar_13_1.svg" src="../_images/ja_2-Evaluation_errorbar_13_1.svg" /></div>
+<img alt="../_images/ja_2-Evaluation_errorbar_12_1.svg" src="../_images/ja_2-Evaluation_errorbar_12_1.svg" /></div>
 </div>
 <p>1回のアニーリング時間が延びると、成功確率と残留エネルギーについて標準誤差のエラーバーが短くなっていくことが確認できました。</p>
 </div>

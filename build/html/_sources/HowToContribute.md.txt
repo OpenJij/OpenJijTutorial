@@ -29,8 +29,9 @@ First, clone from [GitHub repository](https://github.com/OpenJij/OpenJijTutorial
 
 
 Environment reproduction by pipenv
+
 ```
-$ pipenv sync
+$ pipenv update
 ```
 
 If `pandoc` is not in your environment, you may be required to install it. 

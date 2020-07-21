@@ -324,18 +324,18 @@ div.rendered_html tbody tr:hover {
 <h1>A1 - OpenJij core interface入門 (core python interface)<a class="headerlink" href="#A1---OpenJij-core-interface入門-(core-python-interface)" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A1-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
-<p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIとなるため、対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定しており、</p>
+<p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIです。対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定しています。具体的には</p>
 <ul class="simple">
-<li><p>最適化問題だけでなくサンプリングや研究用途などより専門的な用途にOpenJijを用いたい</p></li>
-<li><p>アニーリングスケジュールの設定や使用するアルゴリズム等を直接触りたい</p></li>
+<li><p>最適化問題だけでなくサンプリングや研究用途など、より専門的な用途にOpenJijを用いたい</p></li>
+<li><p>アニーリングスケジュールの設定や、使用するアルゴリズム等を直接触りたい</p></li>
 </ul>
-<p>といった目的に使用できます。</p>
+<p>といった目的に利用できます。</p>
 <div class="section" id="OpenJij-core-interface-について">
 <h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
-<p>前回までのチュートリアルではOpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきましたが、OpenJijは最下層の部分は統計物理学の数値計算手法であるマルコフ連鎖モンテカルロ法をベースにC++を用いて実装されており、今まで触れてきたpythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形で実装されています。図にすると次のような包含関係があります。</p>
-<p><a class="reference internal" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a></p>
-<p>core interfaceを用いることでOpenJij上の全ての機能を使用することができるため、最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。 また、C++インターフェースを用いることでより高速な演算を行うことができます。</p>
-<p>本チュートリアルではpythonインターフェースのcxxjijと、C++インターフェースの両方を紹介します。 インストールにはpipを使用します。</p>
+<p>前回までのチュートリアルでは、OpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきました。OpenJijは最下層の部分は統計物理学の数値計算手法である、マルコフ連鎖モンテカルロ法(MCMC)をベースにC++を用いて実装されています。今まで触れてきたPythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形となっています。図にすると次のような包含関係があります。</p>
+<p><a class="reference internal" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a></p>
+<p>core interfaceを用いることでOpenJij上の全ての機能を使用することができます。よって最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。また、C++インターフェースを用いることで、より高速な演算を行うことができます。</p>
+<p>本チュートリアルではPythonインターフェースのcxxjijと、C++インターフェースの両方をご紹介します。 インストールにはpipを使用します。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -384,9 +384,9 @@ H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
 <p><span class="math">\begin{align}
 h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\ j
 \end{align}</span></p>
-<p>の場合、各スピンは1の値をとった方がエネルギーが低くなるため、<span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1,1,1,1,1\}\)</span>が最適解となります。この問題を解いてみましょう。 pythonコードを用いた一通りの流れは次のようになります。</p>
+<p>の場合、各スピンは1の値をとった方がエネルギーが低くなるため、<span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1,1,1,1,1\}\)</span>が最適解となります。この問題を解いてみましょう。 Pythonコードを用いた一通りの流れは次のようになります。</p>
 <blockquote>
-<div><p>core interfaceはイジング問題に特化したソルバのため、QUBOとの変換は実装されていません。QUBOとの変換を行うには今までのチュートリアルを参照し、core interfaceを呼ぶ前にQUBOからイジング問題へ変換してください。</p>
+<div><p>core interfaceはイジング問題に特化したソルバです。このためQUBOとの変換は実装されていません。QUBOとの変換を行うには今までのチュートリアルを参照し、core interfaceを呼ぶ前にQUBOからイジング問題へ変換してください。</p>
 </div></blockquote>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -441,24 +441,24 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 The solution is [1, 1, 1, 1, 1].
 </pre></div></div>
 </div>
-<p>出てきた答えが<span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>になったのが確認できます。 低レイヤーのAPIのため、設定する項目は多いですがその分詳細な設定が可能となります。</p>
+<p>出てきた答えが<span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>であることが確認できます。低レイヤーのAPIのため設定する項目は多いですが、その分詳細な設定が可能となります。</p>
 </div>
 <div class="section" id="モジュール一覧">
 <h2>モジュール一覧<a class="headerlink" href="#モジュール一覧" title="Permalink to this headline">¶</a></h2>
-<p>コード例に出てきたように、OpenJij core interfaceでは主に<code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>などのモジュールから成り立っており、それぞれのモジュールを組み合わせることで様々な種類、アルゴリズムを用いてイジングモデルを計算することが可能になっています。また新たにアルゴリズムを実装する際に拡張が容易であるという特徴を備えています。次章以降で詳細な説明を行います。</p>
+<p>コード例に出てきたように、OpenJij core interfaceでは主に<code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>などのモジュールから構成されています。それぞれのモジュールを組み合わせることで様々な種類、アルゴリズムでイジングモデルを計算することが可能となります。また新たにアルゴリズムを実装する際に拡張が容易であるという特徴を備えています。次章以降で詳細な説明を行います。</p>
 <div class="section" id="Graph">
 <h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
 <p>イジングハミルトニアンの係数<span class="math notranslate nohighlight">\(J_{ij}\)</span>を保持するためのモジュールです。基本的に密結合 (全てのJijが0以外の値を持つモデルに適している)を扱う<code class="docutils literal notranslate"><span class="pre">Dense</span></code>と疎結合 (Jijの多くの値が0であるモデルに適している)<code class="docutils literal notranslate"><span class="pre">Sparse</span></code>などがあります。</p>
 </div>
 <div class="section" id="System">
 <h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">system</span></code>ではモンテカルロ等の計算における、現在のシステムの状態を保持するためのデータ構造が定義されています。具体的には</p>
+<p><code class="docutils literal notranslate"><span class="pre">system</span></code>では、モンテカルロ等の計算における現在のシステムの状態を保持するためのデータ構造が定義されています。具体的には</p>
 <ul class="simple">
 <li><p>古典イジングモデル (スピン配列)</p></li>
 <li><p>横磁場イジングモデル (トロッター分解も含んだスピン配列)</p></li>
 <li><p>GPU実装古典、量子イジングモデル</p></li>
 </ul>
-<p>等が定義されています。モンテカルロ法を始めとする計算手法には様々な手法がある (もしくは今後新しい手法が開発されていく)ため、OpenJijでは各々の計算手法に対応するデータ構造とアルゴリズム、また計算結果の取得インターフェースを分離することにより、様々なアルゴリズムを追加することが容易に行えるように設計されています。</p>
+<p>等が定義されています。モンテカルロ法を始めとする計算手法には様々な手法があります(もしくは今後新しい手法が開発されていくことでしょう)。そのため、OpenJijでは各々の計算手法に対応するデータ構造とアルゴリズム、そして計算結果の取得インターフェースを分離することにより、様々なアルゴリズムを追加することが容易に行えるように設計されています。</p>
 </div>
 <div class="section" id="Updater">
 <h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
@@ -467,14 +467,14 @@ The solution is [1, 1, 1, 1, 1].
 <li><p>SingleSpinFlip Update</p></li>
 <li><p>SwendsenWang Update</p></li>
 </ul>
-<p>などの手法が実装されています。Systemの種類によって使用できるUpdaterは決まっており、</p>
+<p>などの手法が実装されています。Systemの種類によって使用できるUpdaterは決まっています。</p>
 <blockquote>
-<div><p>core python interfaceでは<code class="docutils literal notranslate"><span class="pre">algorithm</span></code>と統合されています。</p>
+<div><p>core python interfaceでは<code class="docutils literal notranslate"><span class="pre">algorithm</span></code>に統合されています。</p>
 </div></blockquote>
 </div>
 <div class="section" id="Algorithm">
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">updater</span></code>を用いてどのようなスケジュールでアニーリングアルゴリズムを実行するか等、アルゴリズムを実行する役割を担います。 <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updaterの種類]_run</span></code>で、対応したUpdaterを用いて実行することができます。</p>
+<p><code class="docutils literal notranslate"><span class="pre">updater</span></code>を用いてどのようなスケジュールでアニーリングアルゴリズムを実行するかなど、アルゴリズムを実行する役割を担います。 <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updaterの種類]_run</span></code>で、対応したUpdaterを用いて実行することができます。</p>
 </div>
 <div class="section" id="Result">
 <h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
@@ -482,13 +482,22 @@ The solution is [1, 1, 1, 1, 1].
 </div>
 <div class="section" id="コーディングフロー">
 <h3>コーディングフロー<a class="headerlink" href="#コーディングフロー" title="Permalink to this headline">¶</a></h3>
-<p>基本的に以下の流れとなります。問題の規模が大きくなってもこの流れは基本的に変わりません。</p>
+<p>コーディングの流れは基本的には以下に示すようなものとなります。問題の規模が大きくなってもこの流れは変わりません。</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">graph</span></code>モジュールで<span class="math notranslate nohighlight">\(J_{ij}, h_{i}\)</span>を定義</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">graph</span></code>モジュールを元に<code class="docutils literal notranslate"><span class="pre">system</span></code>の作成</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">system</span></code>に対応する<code class="docutils literal notranslate"><span class="pre">updater</span></code>を選択し、<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updaterの種類]_run</span></code>でアルゴリズムの実行</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">result.get_solution(system)</span></code>でシステムのスピン配位を取得、もしくは<code class="docutils literal notranslate"><span class="pre">system</span></code>から直に取得</p></li>
 </ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A1 - OpenJij core interface入門 (core python interface)" href="A1-Introduction.html" />
-    <link rel="prev" title="6-量子アニーリングによる機械学習 (Qboost)" href="6-Machine_Learning_by_QA.html" /> 
+    <link rel="prev" title="6-量子アニーリングによる機械学習 (QBoost)" href="6-Machine_Learning_by_QA.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,7 +30,7 @@
           <a href="A1-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="6-Machine_Learning_by_QA.html" title="6-量子アニーリングによる機械学習 (Qboost)"
+          <a href="6-Machine_Learning_by_QA.html" title="6-量子アニーリングによる機械学習 (QBoost)"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
@@ -42,13 +42,14 @@
   <ul>
 <li><a class="reference internal" href="#">7-MonteCarlo Sampling</a><ul>
 <li><a class="reference internal" href="#Binder-cumulant">Binder cumulant</a></li>
+<li><a class="reference internal" href="#結言">結言</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="6-Machine_Learning_by_QA.html"
-                        title="previous chapter">6-量子アニーリングによる機械学習 (Qboost)</a></p>
+                        title="previous chapter">6-量子アニーリングによる機械学習 (QBoost)</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="A1-Introduction.html"
                         title="next chapter">A1 - OpenJij core interface入門 (core python interface)</a></p>
@@ -313,19 +314,28 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="7-MonteCarlo-Sampling">
 <h1>7-MonteCarlo Sampling<a class="headerlink" href="#7-MonteCarlo-Sampling" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/7-MonteCarloSampling.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>OpenJij は Simulated annealing を実行しますが、温度を一定に保てば、その温度でのボルツマン分布</p>
+<p>OpenJijはSimulated annealing (SA)を実行します。温度を一定に保てば、その温度でのカノニカル分布</p>
 <div class="math notranslate nohighlight">
-\[p(\{\sigma\}) = \frac{\exp(-\beta E(\{\sigma\}))}{Z},~Z = \sum_{\{\sigma\}}\exp(-\beta E(\{\sigma\}))\]</div>
-<p>からスピン配列をサンプルすることができます。</p>
+\[p(\{\sigma\}) = \frac{\exp(-\beta E(\{\sigma\}))}{Z}, \ Z = \sum_{\{\sigma\}}\exp(-\beta E(\{\sigma\}))\]</div>
+<p>からスピン配列をサンプルすることが可能です。</p>
+<p>以下では全結合の強磁性イジングモデル</p>
+<div class="math notranslate nohighlight">
+\[E(\{\sigma\}) = \frac{J}{N} \sum_{i&lt;j} \sigma_i \sigma_j \ (J&lt;0)\]</div>
+<p>を取り扱います。エネルギーをシステムサイズ<span class="math notranslate nohighlight">\(N\)</span>で割ることで、ハミルトニアンを<span class="math notranslate nohighlight">\(N\)</span>と同じ程度の大きさに規格化しています。またここでは<span class="math notranslate nohighlight">\(J = -1\)</span>です。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span></span><span class="c1"># ライブラリのインポート</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># サンプラーの設定</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
+<span class="c1"># 全結合問題の定義</span>
 <span class="k">def</span> <span class="nf">fully_connected</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">J</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -333,17 +343,27 @@ div.rendered_html tbody tr:hover {
             <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span>
     <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span>
 
+<span class="c1"># h, Jの設定</span>
 <span class="n">h</span><span class="p">,</span> <span class="n">J</span> <span class="o">=</span> <span class="n">fully_connected</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<p>各温度での磁化</p>
+<div class="math notranslate nohighlight">
+\[m = \frac{1}{N} \sum_i \sigma_i\]</div>
+<div class="line-block">
+<div class="line">を計算してみましょう。この値が1に近いほど、スピンが揃っている状態(強磁性)を表します。逆にこの値が0に近いほど、スピンがバラバラな状態(常磁性)を表します。</div>
+<div class="line">温度を一定にしてOpenJijで計算を行うと、温度が1.0付近で磁化の値が0に近づいていくことがわかります。これは温度が上昇するとスピンがバラバラになりやすいためです。</div>
+</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">temp_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span></span><span class="c1"># 温度のリストの作成</span>
+<span class="n">temp_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 
+<span class="c1"># 磁化とその分散を計算</span>
 <span class="n">mag</span><span class="p">,</span> <span class="n">mag_std</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temp_list</span><span class="p">:</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">temp</span>
@@ -356,12 +376,11 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
+<span></span><span class="c1"># 結果の可視化</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">temp_list</span><span class="p">,</span> <span class="n">mag</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">mag_std</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp_list</span><span class="p">,</span> <span class="n">mag</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
@@ -374,43 +393,56 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_7-MonteCarloSampling_5_0.png" src="../_images/ja_7-MonteCarloSampling_5_0.png" />
+<img alt="../_images/ja_7-MonteCarloSampling_6_0.png" src="../_images/ja_7-MonteCarloSampling_6_0.png" />
 </div>
+</div>
+<div class="line-block">
+<div class="line">ある温度を境に値が大きく変わる、このような現象を<strong>相転移</strong>と呼びます。今回の模型では(システムサイズを無限大に近づけると)温度が1.0の時に相転移が起こることが、理論的に証明されています。</div>
+<div class="line">ただし、実際のモデルではどの程度の温度で相転移が起きるかを理論的に計算できない場合が多々あります。そのため、モンテカルロシミュレーションを用いて相転移に関する性質を数値的に研究する手法が多く取られています。</div>
 </div>
 <div class="section" id="Binder-cumulant">
 <h2>Binder cumulant<a class="headerlink" href="#Binder-cumulant" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">それでは、仮に相転移する温度を事前に知らなかったとして、数値計算からできるだけ正確に相転移する温度を求めてみましょう。上図を見ると、確かに磁化は温度が上がるにつれて0に近づいています。しかしどの温度が相転移点なのかまでははっきりしていません。これは、相転移現象は理論的にはサイズが無限大のシステムで起こる現象ですが、シミュレーションでは有限のサイズしか扱えないことにより理論との誤差が出てくることに起因します。これを<strong>有限サイズ効果</strong>と呼びます。</div>
+<div class="line">サイズが無限大のシステムの解析を数値的に行うことは、一見無理なことのように思われます。しかし、統計力学の数値計算分野に置いて、有限のシステムサイズから無限大のシステムサイズの情報を得る手法が開発されてきました。</div>
+<div class="line">そのうちの一つが<strong>Binder cumulant</strong>という量を用いる方法です。</div>
+</div>
 <div class="math notranslate nohighlight">
-\[U_4 = \frac{\langle m^4\rangle}{\langle m^2\rangle^2}\]</div>
+\[U_4 \equiv \frac{1}{2}\left( 3- \frac{\langle m^4\rangle}{\langle m^2\rangle^2} \right)\]</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">def</span> <span class="nf">u_4</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
+<span></span><span class="c1"># U_4の計算</span>
+<span class="k">def</span> <span class="nf">u_4</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+<p>詳細は統計力学の教科書に譲りますが、この量は磁化が1に近づく強磁性では1に近づき、磁化が0に近づく常磁性では0になることが示せます。さらに相転移点ではシステムサイズに依存しない値を取ることが知られています。そのため、いくつかのシステムサイズで上述のような数値実験を行い、<span class="math notranslate nohighlight">\(U_4\)</span>のグラフが1点で交わる箇所が相転移点であると言えます。以下で実際の計算を行いましょう。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">n_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">]</span>
+<span></span><span class="c1"># 系のサイズをリストで定義</span>
+<span class="n">n_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">160</span><span class="p">]</span>
+<span class="c1"># 温度をリストで定義</span>
 <span class="n">temp_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 
+<span class="c1"># サンプラーを設定</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 
 <span class="n">u4_list_n</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_list</span><span class="p">:</span>
-    <span class="c1"># make instance</span>
+    <span class="c1"># インスタンス作成</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">J</span> <span class="o">=</span> <span class="n">fully_connected</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="n">u4_temp</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temp_list</span><span class="p">:</span>
         <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">temp</span>
         <span class="n">schedule</span> <span class="o">=</span> <span class="p">[[</span><span class="n">beta</span><span class="p">,</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="mf">0.9</span> <span class="k">else</span> <span class="mi">300</span><span class="p">]]</span>
-
         <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span>
                                         <span class="n">schedule</span><span class="o">=</span><span class="n">schedule</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                         <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span> <span class="k">if</span> <span class="n">temp</span> <span class="o">&lt;</span> <span class="mf">0.9</span> <span class="k">else</span> <span class="mi">1000</span>
@@ -421,14 +453,13 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
+<span></span><span class="c1"># 可視化</span>
 <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">u4_beta</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n_list</span><span class="p">,</span><span class="n">u4_list_n</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp_list</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u4_beta</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;n=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temp_list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">u4_beta</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;n=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$U_4$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
@@ -441,9 +472,20 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_7-MonteCarloSampling_9_0.png" src="../_images/ja_7-MonteCarloSampling_9_0.png" />
+<img alt="../_images/ja_7-MonteCarloSampling_12_0.png" src="../_images/ja_7-MonteCarloSampling_12_0.png" />
 </div>
 </div>
+<div class="line-block">
+<div class="line">統計が十分でないため、データにばらつきがあります。しかしおおよそ相転移点である温度が1付近で4つのシステムサイズのデータが1点で交わっていることとがわかります。</div>
+<div class="line">Binder cumulant による相転移点の推定は数値解析の最前線でよく用いられる手法です。</div>
+</div>
+<blockquote>
+<div><p>当然ですが、学術的な研究では十分な統計を取ることはもちろん、誤差評価(エラーバーの計算)なども真面目に行う必要があるでしょう。今回の計算は概要の説明だけに留めてあるため、正確な誤差評価等は省略しています。</p>
+</div></blockquote>
+</div>
+<div class="section" id="結言">
+<h2>結言<a class="headerlink" href="#結言" title="Permalink to this headline">¶</a></h2>
+<p>アニーリングを用いてMonteCarlo samplingを行う方法をご紹介しました。それを応用して統計物理学における相転移の計算例を示しました。ここからもわかるように、OpenJijはアイデア次第で様々な応用が可能です。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -472,7 +514,7 @@ div.rendered_html tbody tr:hover {
           <a href="A1-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
              >next</a> |</li>
         <li class="right" >
-          <a href="6-Machine_Learning_by_QA.html" title="6-量子アニーリングによる機械学習 (Qboost)"
+          <a href="6-Machine_Learning_by_QA.html" title="6-量子アニーリングによる機械学習 (QBoost)"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 

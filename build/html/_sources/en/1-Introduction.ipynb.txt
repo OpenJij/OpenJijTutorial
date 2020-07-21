@@ -1,609 +1,1511 @@
 {
-    "cells": [
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "Y4hVgt6yQyOa"
-            },
-            "source": [
-                "# 1-An Introduction to OpenJij"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "view-in-github"
-            },
-            "source": [
-                "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/1-Introduction.ipynb)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "OpenJij is a heuristic optimization library of the Ising model and QUBO.\n",
-                "It has a Python interface, therefore it can be easily written in Python, although the core part of the optimization is implemented with C++.\n",
-                "\n",
-                "Let's install OpenJij by pip.   \n",
-                "(If you're using Colab, you'll need to install cmake first ``$ !pip install cmake``.)"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 30,
-            "metadata": {
-                "colab": {},
-                "colab_type": "code",
-                "id": "JZW9IAE9QyOd"
-            },
-            "outputs": [],
-            "source": [
-                "# !pip install openjij"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "x9a_Imk1QyOn"
-            },
-            "source": [
-                "### The Ising model\n",
-                "\n",
-                "The Ising model is a model treated in physics and is written as follows.\n",
-                "\n",
-                "$$H(\\{\\sigma_i\\}) = \\sum_{i > j} J_{ij}\\sigma_i \\sigma_j + \\sum_{i=1}^N h_i \\sigma_i$$\n",
-                "$$\\sigma_i \\in \\{-1, 1\\}, i=1,\\cdots N$$\n",
-                "\n",
-                "$H(\\{\\sigma_i\\})$ is called Hamiltonian, it is like an energy or a cost function.  \n",
-                "$\\sigma_i$ is a binary variable it takes only two values $\\{1, -1\\}$.\n",
-                "\n",
-                "> $\\sigma_i$ corresponds to the physical quantity called spin in physics, it is sometimes called a spin variable or spin simply.\n",
-                "> Spin seems a micro magnet. The value of this variable corresponds to the physical state (the orientation of the magnet).\n",
-                "> $\\sigma_i = -1$ means the magnet is up and 1 means magnet is down.\n",
-                "\n",
-                "\n",
-                "$H$ depends on the combination of variables $\\{\\sigma_i\\} = \\{\\sigma_1, \\sigma_2, \\cdots, \\sigma_N\\}$.  \n",
-                "$J_{ij}, h_i$ represents the problem, and they are called interaction coefficients, longitudinal magnetic fields respectively.\n",
-                "\n",
-                "OpenJij is a library which searches a combination of spin variables $\\{\\sigma_i\\}$ that minimizes $H(\\{\\sigma_i\\})$ when given $J_{ij}$ and $h_i$.\n",
-                "\n",
-                "Let me show you a example."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "j0iZqoWtQyOn"
-            },
-            "source": [
-                "## Solve a problem with OpenJij\n",
-                "\n",
-                "We assume that the number of variables is $N=5$, \n",
-                "and the longitudinal field and interaction are\n",
-                "\n",
-                "$$h_i = -1~\\text{for} ~\\forall i, ~ J_{ij} = -1~\\text{for} ~\\forall i, j$$\n",
-                "\n",
-                "respectively.\n",
-                "\n",
-                "In this case, since all interaction coefficients are negative, the energy is lower when each spin variable takes the same value.\n",
-                "Also, since all longitudinal magnetic fields are negative, the energy is lower when each spin takes 1.\n",
-                "Therefore, we can predict the answer of this problem is $\\{\\sigma_i\\} = \\{1, 1, 1, 1, 1\\}$.\n",
-                "\n",
-                "Now let's solve the Ising model using OpenJij."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 1,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "h_i:  {0: -1, 1: -1, 2: -1, 3: -1, 4: -1}\nJij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (1, 4): -1, (2, 3): -1, (2, 4): -1, (3, 4): -1}\n"
-                }
-            ],
-            "source": [
-                "import openjij as oj\n",
-                "\n",
-                "# Create interaction coefficients and longitudinal magnetic fields that represent the problem.\n",
-                "# OpenJij accepts problems in dictionary type.\n",
-                "\n",
-                "N = 5\n",
-                "h = {i: -1 for i in range(N)}\n",
-                "J = {(i, j): -1 for i in range(N) for j in range(i+1, N)}\n",
-                "\n",
-                "print('h_i: ', h)\n",
-                "print('Jij: ', J)"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 2,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "[[1 1 1 1 1]]\n[{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}]\n"
-                }
-            ],
-            "source": [
-                "# First, create an instance of Sampler to solve the problem.\n",
-                "sampler = oj.SASampler(num_reads=1)\n",
-                "# Solve the problem(h, J) by using the method of sampler.\n",
-                "response = sampler.sample_ising(h, J)\n",
-                "\n",
-                "# The results (states) of calculation is in result.states.\n",
-                "print(response.states)\n",
-                "\n",
-                "# If you want to see the result with subscript, use response.samples.\n",
-                "print([s for s in response.samples()])"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "## Explanation of OpenJij\n",
-                "\n",
-                "Then, I will explain the code showed above.\n",
-                "OpenJij has two interfaces currently. One of them used above is the same interface as D-Wave Ocean.\n",
-                "Therefore, if you get used to using OpenJij, easy changing to Ocean.\n",
-                "\n",
-                "> Another interface will not be explained here, but it can be easily extended by using the structure of OpenJij (graph, updater, and algorithm) directly. \n",
-                "> In the present situation, however, it would be sufficient to be able to use the interface which treated in the cell above."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "### Sampler\n",
-                "\n",
-                "In the above, we created an instance of Sampler after creating the problem in the dictionary type.\n",
-                "\n",
-                "```python\n",
-                "sampler = oj.SASampler(num_reads=1)\n",
-                "```\n",
-                "\n",
-                "Here, this Sampler is the object of selecting what algorithm and hardware you use.\n",
-                "When you want to try the other algorithm, change this Sampler.\n",
-                "\n",
-                "> The algorithm treated in OpenJij is a heuristic and stochastic algorithm, it may return the different solutions each time the problem is solved, so it may not always obtain the optimal solution. \n",
-                "> Therefore, we solve the problem many times and search for a good solution. So we call Sampler which means that we sample the solutions.\n",
-                "\n",
-                "``SASampler`` treated in the above cell is a sampler that samples the solution by using an algorithm called ``Simulated annealing``.\n",
-                "For example, we can choose other samples below.\n",
-                "\n",
-                "- SQASampler: An algorithm for simulating quantum annealing called Simulated Quantum Annealing (SQA) with a classical computer.\n",
-                "\n",
-                "- GPUSQASampler: It runs SQA on GPU. It can treat only a special structure called Chimera graph."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "### sample_ising(h, J)\n",
-                "\n",
-                "When you want to solve the Ising model, you can use ``.sample_ising(h, J)``.\n",
-                "As I will explain later, when you treat QUBO which equivalent to the Ising model optimization, use ``.sample_qubo(Q)``.\n",
-                "\n",
-                "\n",
-                "### Response\n",
-                "\n",
-                "``.sample_ising(h, J)`` returns the Response class.\n",
-                "This class contains results of solutions and energies that Sampler solved.\n",
-                "\n",
-                "- .states:\n",
-                "    - type: list (list (int))\n",
-                "    - This list contains solutions to the number of iteration. > In physics, an array of spins called a state. Since .states stores the solutions to the number of iteration, we defined as .states from the meaning that multiple states are stored.\n",
-                "\n",
-                "- .energies:\n",
-                "    - type: list (float)\n",
-                "    - This list contains the energy of each solution to the number of iteration.\n",
-                "\n",
-                "The Response class inherits the SampleSet class of D-Wave's dimod. More detailed information can be found at the following links\n",
-                "[SampleSet: dimod documantation](https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html).\n",
-                "\n",
-                "Let's look at the acutual code."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 3,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "{'a': 1, 'b': 1, 'c': -1}\n-4.0\n"
-                }
-            ],
-            "source": [
-                "# keys of h, J dictionaries can treat not only numbers.\n",
-                "h = {'a': -1, 'b': -1}\n",
-                "J = {('a', 'b'): -1, ('b', 'c'): 1}\n",
-                "# # Try solving 10 times by SA at a time. With the argument called num_reads.\n",
-                "sampler = oj.SASampler(num_reads=10)  \n",
-                "response = sampler.sample_ising(h, J)\n",
-                "print(response.first.sample)\n",
-                "print(response.first.energy)"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 4,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "stream",
-                    "name": "stdout",
-                    "text": "[[ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]\n [ 1  1 -1]]\n"
-                }
-            ],
-            "source": [
-                "print(response.states)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "You can see that the response.states contains 10 solutions when you open it.\n",
-                "Since this problem is easy, returned the same answer is ``[1, -1, 1]`` every iterations."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "4mekWlvTQyO4"
-            },
-            "source": [
-                "> The parameters passed in the constructor such as ``num_reads`` can be overwritten by the method that executes sampling such as ``.sample_ising``.\n",
-                ">\n",
-                "> ```\n",
-                "> response = sampler.sample_ising(h, J, num_reads=2)\n",
-                "> response.states\n",
-                "> > [[1, 1, -1],[1, 1, -1]]\n",
-                "> ```"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 41,
-            "metadata": {},
-            "outputs": [
-                {
-                    "data": {
-                        "text/plain": [
-                            "array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])"
-                        ]
-                    },
-                    "execution_count": 41,
-                    "metadata": {},
-                    "output_type": "execute_result"
-                }
-            ],
-            "source": [
-                "# Next, let's look the energies.\n",
-                "response.energies"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "NYAnma_WQyO7"
-            },
-            "source": [
-                "Of course, the energies also take the same value every iterations.\n",
-                "The solutions in response.states are list type, so you confuse the corresponding to the strings ``\"a\", \"b\", \"c\"`` when you set the problem.\n",
-                "That is in response.indices."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 5,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "execute_result",
-                    "data": {
-                        "text/plain": "['a', 'b', 'c']"
-                    },
-                    "metadata": {},
-                    "execution_count": 5
-                }
-            ],
-            "source": [
-                "response.indices"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "5rf7wB7LQyPJ"
-            },
-            "source": [
-                "``.first`` is useful if you only want to know the state with the lowest energy value."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 6,
-            "metadata": {
-                "colab": {},
-                "colab_type": "code",
-                "id": "-J1utQATQyPK",
-                "outputId": "839e1260-3b1c-432d-a4b6-7b318ba1048c"
-            },
-            "outputs": [
-                {
-                    "output_type": "execute_result",
-                    "data": {
-                        "text/plain": "Sample(sample={'a': 1, 'b': 1, 'c': -1}, energy=-4.0, num_occurrences=1)"
-                    },
-                    "metadata": {},
-                    "execution_count": 6
-                }
-            ],
-            "source": [
-                "response.first"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "## Let's try to solve QUBO\n",
-                "\n",
-                "When you want to solve social problems,\n",
-                "it is often easier to formulate as QUBO(Quadratic Unconstraited Binary Optimization, ) than the Ising model.\n",
-                "Basically, it returns the same solution when using the Ising model.\n",
-                "\n",
-                "> Also, QUBO is often called as UBQP (Unconstraited binary quadratic optimization problems).\n",
-                "\n",
-                "QUBO is written as follows.\n",
-                "\n",
-                "$$H(\\{q_i\\}) = \\sum_{i\\geq j} Q_{ij}q_i q_j$$\n",
-                "$$q_i \\in \\{0, 1\\}$$\n",
-                "\n",
-                "Binary variables take 0 or 1, that is difference between QUBO and the Ising model.\n",
-                "\n",
-                "There are other ways to define $\\sum$ and $Q_{ij}$ (for example, make $Q_{ij}$ a symmetric matrix), but in this time we have formulated it as above.\n",
-                "\n",
-                "> The Ising model and QUBO are equivalent for the reason why they be converted to each other. You can convert these equation: $q_i=(\\sigma_i + 1)/2$\n",
-                "\n",
-                "In the case of QUBO, you search a combination of $\\{q_i\\}$ that minimizes $H(\\{q_i\\})$ under the $Q_{ij}$ which is given by a problem.\n",
-                "\n",
-                "Also, since $q_i^2 = q_i$ (because $q_i$ takes only 0 or 1),\n",
-                "you can write as fllows\n",
-                "\n",
-                "$$H(\\{q_i\\}) = \\sum_{i > j} Q_{ij}q_i q_j + \\sum_i Q_{ii} q_i$$\n",
-                "\n",
-                "Namely, the diagonal components of $Q_{ij}$ is corresponds to the coefficients of the first-order term of $q_i$.\n",
-                "\n",
-                "Let's solve QUBO with OpenJij"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 44,
-            "metadata": {},
-            "outputs": [
-                {
-                    "name": "stdout",
-                    "output_type": "stream",
-                    "text": [
-                        "[[1 1 0]]\n"
-                    ]
-                }
-            ],
-            "source": [
-                "# Q_ij (dict)\n",
-                "Q = {(0, 0): -1, (0, 1): -1, (1, 2): 1, (2, 2): 1}\n",
-                "sampler = oj.SASampler()\n",
-                "# use .sample_qubo to solve QUBO\n",
-                "response = sampler.sample_qubo(Q)\n",
-                "print(response.states)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "CxbDNkSuQyPU"
-            },
-            "source": [
-                "In QUBO, the solutions are made by 0 or 1 because the variables take 0 or 1."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "8IRw4pHOQyPV"
-            },
-            "source": [
-                "## Let's solve a little difficult problem\n",
-                "\n",
-                "You want to solve a problem of QUBO which has $Q_{ij}$ given by 50 random variables."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 15,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "N = 100\n",
-                "# Create Q_ij randomly\n",
-                "import random\n",
-                "Q = {(i, j): random.uniform(-1, 1) for i in range(N) for j in range(i+1, N)}\n",
-                "\n",
-                "# Solve by OpenJij\n",
-                "sampler = oj.SASampler()\n",
-                "response = sampler.sample_qubo(Q, num_reads=100)"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 16,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "execute_result",
-                    "data": {
-                        "text/plain": "array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,\n       -192.6801102])"
-                    },
-                    "metadata": {},
-                    "execution_count": 16
-                }
-            ],
-            "source": [
-                "# Look at some energies.\n",
-                "response.energies[:5]"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "syclwqyyQyPg"
-            },
-            "source": [
-                "You will realize that the energies takes a different values than before.\n",
-                "If you make $Q_{ij}$ randomly, the problem becomes difficult generally.\n",
-                "Therefore, SASampler does not necessarily give the same solution every time.\n",
-                "Now let's look at the histogram of energies."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 17,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "display_data",
-                    "data": {
-                        "text/plain": "<Figure size 432x288 with 1 Axes>",
-                        "image/svg+xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\r\n  \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n<!-- Created with matplotlib (https://matplotlib.org/) -->\r\n<svg height=\"267.035312pt\" version=\"1.1\" viewBox=\"0 0 397.106577 267.035312\" width=\"397.106577pt\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n <defs>\r\n  <style type=\"text/css\">\r\n*{stroke-linecap:butt;stroke-linejoin:round;}\r\n  </style>\r\n </defs>\r\n <g id=\"figure_1\">\r\n  <g id=\"patch_1\">\r\n   <path d=\"M 0 267.035312 \r\nL 397.106577 267.035312 \r\nL 397.106577 0 \r\nL 0 0 \r\nz\r\n\" style=\"fill:none;\"/>\r\n  </g>\r\n  <g id=\"axes_1\">\r\n   <g id=\"patch_2\">\r\n    <path d=\"M 45.442188 224.64 \r\nL 380.242188 224.64 \r\nL 380.242188 7.2 \r\nL 45.442188 7.2 \r\nz\r\n\" style=\"fill:#ffffff;\"/>\r\n   </g>\r\n   <g id=\"patch_3\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 60.660369 224.64 \r\nL 80.951278 224.64 \r\nL 80.951278 17.554286 \r\nL 60.660369 17.554286 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_4\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 80.951278 224.64 \r\nL 101.242187 224.64 \r\nL 101.242187 224.64 \r\nL 80.951278 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_5\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 101.242187 224.64 \r\nL 121.533097 224.64 \r\nL 121.533097 224.64 \r\nL 101.242187 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_6\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 121.533097 224.64 \r\nL 141.824006 224.64 \r\nL 141.824006 224.64 \r\nL 121.533097 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_7\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 141.824006 224.64 \r\nL 162.114915 224.64 \r\nL 162.114915 224.64 \r\nL 141.824006 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_8\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 162.114915 224.64 \r\nL 182.405824 224.64 \r\nL 182.405824 224.64 \r\nL 162.114915 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_9\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 182.405824 224.64 \r\nL 202.696733 224.64 \r\nL 202.696733 224.64 \r\nL 182.405824 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_10\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 202.696733 224.64 \r\nL 222.987642 224.64 \r\nL 222.987642 224.64 \r\nL 202.696733 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_11\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 222.987642 224.64 \r\nL 243.278551 224.64 \r\nL 243.278551 224.64 \r\nL 222.987642 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_12\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 243.278551 224.64 \r\nL 263.56946 224.64 \r\nL 263.56946 217.499113 \r\nL 243.278551 217.499113 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_13\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 263.56946 224.64 \r\nL 283.860369 224.64 \r\nL 283.860369 224.64 \r\nL 263.56946 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_14\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 283.860369 224.64 \r\nL 304.151278 224.64 \r\nL 304.151278 224.64 \r\nL 283.860369 224.64 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_15\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 304.151278 224.64 \r\nL 324.442187 224.64 \r\nL 324.442187 217.499113 \r\nL 304.151278 217.499113 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_16\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 324.442187 224.64 \r\nL 344.733097 224.64 \r\nL 344.733097 210.358227 \r\nL 324.442187 210.358227 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_17\">\r\n    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 344.733097 224.64 \r\nL 365.024006 224.64 \r\nL 365.024006 222.259704 \r\nL 344.733097 222.259704 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"matplotlib.axis_1\">\r\n    <g id=\"xtick_1\">\r\n     <g id=\"line2d_1\">\r\n      <defs>\r\n       <path d=\"M 0 0 \r\nL 0 3.5 \r\n\" id=\"m42c5992e07\" style=\"stroke:#000000;stroke-width:0.8;\"/>\r\n      </defs>\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"47.86634\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_1\">\r\n      <!-- \u2212192.75 -->\r\n      <defs>\r\n       <path d=\"M 10.59375 35.5 \r\nL 73.1875 35.5 \r\nL 73.1875 27.203125 \r\nL 10.59375 27.203125 \r\nz\r\n\" id=\"DejaVuSans-8722\"/>\r\n       <path d=\"M 12.40625 8.296875 \r\nL 28.515625 8.296875 \r\nL 28.515625 63.921875 \r\nL 10.984375 60.40625 \r\nL 10.984375 69.390625 \r\nL 28.421875 72.90625 \r\nL 38.28125 72.90625 \r\nL 38.28125 8.296875 \r\nL 54.390625 8.296875 \r\nL 54.390625 0 \r\nL 12.40625 0 \r\nz\r\n\" id=\"DejaVuSans-49\"/>\r\n       <path d=\"M 10.984375 1.515625 \r\nL 10.984375 10.5 \r\nQ 14.703125 8.734375 18.5 7.8125 \r\nQ 22.3125 6.890625 25.984375 6.890625 \r\nQ 35.75 6.890625 40.890625 13.453125 \r\nQ 46.046875 20.015625 46.78125 33.40625 \r\nQ 43.953125 29.203125 39.59375 26.953125 \r\nQ 35.25 24.703125 29.984375 24.703125 \r\nQ 19.046875 24.703125 12.671875 31.3125 \r\nQ 6.296875 37.9375 6.296875 49.421875 \r\nQ 6.296875 60.640625 12.9375 67.421875 \r\nQ 19.578125 74.21875 30.609375 74.21875 \r\nQ 43.265625 74.21875 49.921875 64.515625 \r\nQ 56.59375 54.828125 56.59375 36.375 \r\nQ 56.59375 19.140625 48.40625 8.859375 \r\nQ 40.234375 -1.421875 26.421875 -1.421875 \r\nQ 22.703125 -1.421875 18.890625 -0.6875 \r\nQ 15.09375 0.046875 10.984375 1.515625 \r\nz\r\nM 30.609375 32.421875 \r\nQ 37.25 32.421875 41.125 36.953125 \r\nQ 45.015625 41.5 45.015625 49.421875 \r\nQ 45.015625 57.28125 41.125 61.84375 \r\nQ 37.25 66.40625 30.609375 66.40625 \r\nQ 23.96875 66.40625 20.09375 61.84375 \r\nQ 16.21875 57.28125 16.21875 49.421875 \r\nQ 16.21875 41.5 20.09375 36.953125 \r\nQ 23.96875 32.421875 30.609375 32.421875 \r\nz\r\n\" id=\"DejaVuSans-57\"/>\r\n       <path d=\"M 19.1875 8.296875 \r\nL 53.609375 8.296875 \r\nL 53.609375 0 \r\nL 7.328125 0 \r\nL 7.328125 8.296875 \r\nQ 12.9375 14.109375 22.625 23.890625 \r\nQ 32.328125 33.6875 34.8125 36.53125 \r\nQ 39.546875 41.84375 41.421875 45.53125 \r\nQ 43.3125 49.21875 43.3125 52.78125 \r\nQ 43.3125 58.59375 39.234375 62.25 \r\nQ 35.15625 65.921875 28.609375 65.921875 \r\nQ 23.96875 65.921875 18.8125 64.3125 \r\nQ 13.671875 62.703125 7.8125 59.421875 \r\nL 7.8125 69.390625 \r\nQ 13.765625 71.78125 18.9375 73 \r\nQ 24.125 74.21875 28.421875 74.21875 \r\nQ 39.75 74.21875 46.484375 68.546875 \r\nQ 53.21875 62.890625 53.21875 53.421875 \r\nQ 53.21875 48.921875 51.53125 44.890625 \r\nQ 49.859375 40.875 45.40625 35.40625 \r\nQ 44.1875 33.984375 37.640625 27.21875 \r\nQ 31.109375 20.453125 19.1875 8.296875 \r\nz\r\n\" id=\"DejaVuSans-50\"/>\r\n       <path d=\"M 10.6875 12.40625 \r\nL 21 12.40625 \r\nL 21 0 \r\nL 10.6875 0 \r\nz\r\n\" id=\"DejaVuSans-46\"/>\r\n       <path d=\"M 8.203125 72.90625 \r\nL 55.078125 72.90625 \r\nL 55.078125 68.703125 \r\nL 28.609375 0 \r\nL 18.3125 0 \r\nL 43.21875 64.59375 \r\nL 8.203125 64.59375 \r\nz\r\n\" id=\"DejaVuSans-55\"/>\r\n       <path d=\"M 10.796875 72.90625 \r\nL 49.515625 72.90625 \r\nL 49.515625 64.59375 \r\nL 19.828125 64.59375 \r\nL 19.828125 46.734375 \r\nQ 21.96875 47.46875 24.109375 47.828125 \r\nQ 26.265625 48.1875 28.421875 48.1875 \r\nQ 40.625 48.1875 47.75 41.5 \r\nQ 54.890625 34.8125 54.890625 23.390625 \r\nQ 54.890625 11.625 47.5625 5.09375 \r\nQ 40.234375 -1.421875 26.90625 -1.421875 \r\nQ 22.3125 -1.421875 17.546875 -0.640625 \r\nQ 12.796875 0.140625 7.71875 1.703125 \r\nL 7.71875 11.625 \r\nQ 12.109375 9.234375 16.796875 8.0625 \r\nQ 21.484375 6.890625 26.703125 6.890625 \r\nQ 35.15625 6.890625 40.078125 11.328125 \r\nQ 45.015625 15.765625 45.015625 23.390625 \r\nQ 45.015625 31 40.078125 35.4375 \r\nQ 35.15625 39.890625 26.703125 39.890625 \r\nQ 22.75 39.890625 18.8125 39.015625 \r\nQ 14.890625 38.140625 10.796875 36.28125 \r\nz\r\n\" id=\"DejaVuSans-53\"/>\r\n      </defs>\r\n      <g transform=\"translate(26.181183 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-55\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_2\">\r\n     <g id=\"line2d_2\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"93.631351\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_2\">\r\n      <!-- \u2212192.50 -->\r\n      <defs>\r\n       <path d=\"M 31.78125 66.40625 \r\nQ 24.171875 66.40625 20.328125 58.90625 \r\nQ 16.5 51.421875 16.5 36.375 \r\nQ 16.5 21.390625 20.328125 13.890625 \r\nQ 24.171875 6.390625 31.78125 6.390625 \r\nQ 39.453125 6.390625 43.28125 13.890625 \r\nQ 47.125 21.390625 47.125 36.375 \r\nQ 47.125 51.421875 43.28125 58.90625 \r\nQ 39.453125 66.40625 31.78125 66.40625 \r\nz\r\nM 31.78125 74.21875 \r\nQ 44.046875 74.21875 50.515625 64.515625 \r\nQ 56.984375 54.828125 56.984375 36.375 \r\nQ 56.984375 17.96875 50.515625 8.265625 \r\nQ 44.046875 -1.421875 31.78125 -1.421875 \r\nQ 19.53125 -1.421875 13.0625 8.265625 \r\nQ 6.59375 17.96875 6.59375 36.375 \r\nQ 6.59375 54.828125 13.0625 64.515625 \r\nQ 19.53125 74.21875 31.78125 74.21875 \r\nz\r\n\" id=\"DejaVuSans-48\"/>\r\n      </defs>\r\n      <g transform=\"translate(71.946195 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-53\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_3\">\r\n     <g id=\"line2d_3\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"139.396363\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_3\">\r\n      <!-- \u2212192.25 -->\r\n      <g transform=\"translate(117.711207 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_4\">\r\n     <g id=\"line2d_4\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"185.161374\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_4\">\r\n      <!-- \u2212192.00 -->\r\n      <g transform=\"translate(163.476218 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-48\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_5\">\r\n     <g id=\"line2d_5\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"230.926386\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_5\">\r\n      <!-- \u2212191.75 -->\r\n      <g transform=\"translate(209.24123 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-55\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_6\">\r\n     <g id=\"line2d_6\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"276.691397\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_6\">\r\n      <!-- \u2212191.50 -->\r\n      <g transform=\"translate(255.006241 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-53\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_7\">\r\n     <g id=\"line2d_7\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"322.456409\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_7\">\r\n      <!-- \u2212191.25 -->\r\n      <g transform=\"translate(300.771253 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"xtick_8\">\r\n     <g id=\"line2d_8\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"368.221421\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_8\">\r\n      <!-- \u2212191.00 -->\r\n      <g transform=\"translate(346.536264 239.238437)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-48\"/>\r\n       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"text_9\">\r\n     <!-- Energy -->\r\n     <defs>\r\n      <path d=\"M 9.8125 72.90625 \r\nL 55.90625 72.90625 \r\nL 55.90625 64.59375 \r\nL 19.671875 64.59375 \r\nL 19.671875 43.015625 \r\nL 54.390625 43.015625 \r\nL 54.390625 34.71875 \r\nL 19.671875 34.71875 \r\nL 19.671875 8.296875 \r\nL 56.78125 8.296875 \r\nL 56.78125 0 \r\nL 9.8125 0 \r\nz\r\n\" id=\"DejaVuSans-69\"/>\r\n      <path d=\"M 54.890625 33.015625 \r\nL 54.890625 0 \r\nL 45.90625 0 \r\nL 45.90625 32.71875 \r\nQ 45.90625 40.484375 42.875 44.328125 \r\nQ 39.84375 48.1875 33.796875 48.1875 \r\nQ 26.515625 48.1875 22.3125 43.546875 \r\nQ 18.109375 38.921875 18.109375 30.90625 \r\nL 18.109375 0 \r\nL 9.078125 0 \r\nL 9.078125 54.6875 \r\nL 18.109375 54.6875 \r\nL 18.109375 46.1875 \r\nQ 21.34375 51.125 25.703125 53.5625 \r\nQ 30.078125 56 35.796875 56 \r\nQ 45.21875 56 50.046875 50.171875 \r\nQ 54.890625 44.34375 54.890625 33.015625 \r\nz\r\n\" id=\"DejaVuSans-110\"/>\r\n      <path d=\"M 56.203125 29.59375 \r\nL 56.203125 25.203125 \r\nL 14.890625 25.203125 \r\nQ 15.484375 15.921875 20.484375 11.0625 \r\nQ 25.484375 6.203125 34.421875 6.203125 \r\nQ 39.59375 6.203125 44.453125 7.46875 \r\nQ 49.3125 8.734375 54.109375 11.28125 \r\nL 54.109375 2.78125 \r\nQ 49.265625 0.734375 44.1875 -0.34375 \r\nQ 39.109375 -1.421875 33.890625 -1.421875 \r\nQ 20.796875 -1.421875 13.15625 6.1875 \r\nQ 5.515625 13.8125 5.515625 26.8125 \r\nQ 5.515625 40.234375 12.765625 48.109375 \r\nQ 20.015625 56 32.328125 56 \r\nQ 43.359375 56 49.78125 48.890625 \r\nQ 56.203125 41.796875 56.203125 29.59375 \r\nz\r\nM 47.21875 32.234375 \r\nQ 47.125 39.59375 43.09375 43.984375 \r\nQ 39.0625 48.390625 32.421875 48.390625 \r\nQ 24.90625 48.390625 20.390625 44.140625 \r\nQ 15.875 39.890625 15.1875 32.171875 \r\nz\r\n\" id=\"DejaVuSans-101\"/>\r\n      <path d=\"M 41.109375 46.296875 \r\nQ 39.59375 47.171875 37.8125 47.578125 \r\nQ 36.03125 48 33.890625 48 \r\nQ 26.265625 48 22.1875 43.046875 \r\nQ 18.109375 38.09375 18.109375 28.8125 \r\nL 18.109375 0 \r\nL 9.078125 0 \r\nL 9.078125 54.6875 \r\nL 18.109375 54.6875 \r\nL 18.109375 46.1875 \r\nQ 20.953125 51.171875 25.484375 53.578125 \r\nQ 30.03125 56 36.53125 56 \r\nQ 37.453125 56 38.578125 55.875 \r\nQ 39.703125 55.765625 41.0625 55.515625 \r\nz\r\n\" id=\"DejaVuSans-114\"/>\r\n      <path d=\"M 45.40625 27.984375 \r\nQ 45.40625 37.75 41.375 43.109375 \r\nQ 37.359375 48.484375 30.078125 48.484375 \r\nQ 22.859375 48.484375 18.828125 43.109375 \r\nQ 14.796875 37.75 14.796875 27.984375 \r\nQ 14.796875 18.265625 18.828125 12.890625 \r\nQ 22.859375 7.515625 30.078125 7.515625 \r\nQ 37.359375 7.515625 41.375 12.890625 \r\nQ 45.40625 18.265625 45.40625 27.984375 \r\nz\r\nM 54.390625 6.78125 \r\nQ 54.390625 -7.171875 48.1875 -13.984375 \r\nQ 42 -20.796875 29.203125 -20.796875 \r\nQ 24.46875 -20.796875 20.265625 -20.09375 \r\nQ 16.0625 -19.390625 12.109375 -17.921875 \r\nL 12.109375 -9.1875 \r\nQ 16.0625 -11.328125 19.921875 -12.34375 \r\nQ 23.78125 -13.375 27.78125 -13.375 \r\nQ 36.625 -13.375 41.015625 -8.765625 \r\nQ 45.40625 -4.15625 45.40625 5.171875 \r\nL 45.40625 9.625 \r\nQ 42.625 4.78125 38.28125 2.390625 \r\nQ 33.9375 0 27.875 0 \r\nQ 17.828125 0 11.671875 7.65625 \r\nQ 5.515625 15.328125 5.515625 27.984375 \r\nQ 5.515625 40.671875 11.671875 48.328125 \r\nQ 17.828125 56 27.875 56 \r\nQ 33.9375 56 38.28125 53.609375 \r\nQ 42.625 51.21875 45.40625 46.390625 \r\nL 45.40625 54.6875 \r\nL 54.390625 54.6875 \r\nz\r\n\" id=\"DejaVuSans-103\"/>\r\n      <path d=\"M 32.171875 -5.078125 \r\nQ 28.375 -14.84375 24.75 -17.8125 \r\nQ 21.140625 -20.796875 15.09375 -20.796875 \r\nL 7.90625 -20.796875 \r\nL 7.90625 -13.28125 \r\nL 13.1875 -13.28125 \r\nQ 16.890625 -13.28125 18.9375 -11.515625 \r\nQ 21 -9.765625 23.484375 -3.21875 \r\nL 25.09375 0.875 \r\nL 2.984375 54.6875 \r\nL 12.5 54.6875 \r\nL 29.59375 11.921875 \r\nL 46.6875 54.6875 \r\nL 56.203125 54.6875 \r\nz\r\n\" id=\"DejaVuSans-121\"/>\r\n     </defs>\r\n     <g transform=\"translate(186.582813 256.715781)scale(0.15 -0.15)\">\r\n      <use xlink:href=\"#DejaVuSans-69\"/>\r\n      <use x=\"63.183594\" xlink:href=\"#DejaVuSans-110\"/>\r\n      <use x=\"126.5625\" xlink:href=\"#DejaVuSans-101\"/>\r\n      <use x=\"188.085938\" xlink:href=\"#DejaVuSans-114\"/>\r\n      <use x=\"227.449219\" xlink:href=\"#DejaVuSans-103\"/>\r\n      <use x=\"290.925781\" xlink:href=\"#DejaVuSans-121\"/>\r\n     </g>\r\n    </g>\r\n   </g>\r\n   <g id=\"matplotlib.axis_2\">\r\n    <g id=\"ytick_1\">\r\n     <g id=\"line2d_9\">\r\n      <defs>\r\n       <path d=\"M 0 0 \r\nL -3.5 0 \r\n\" id=\"ma8ed222602\" style=\"stroke:#000000;stroke-width:0.8;\"/>\r\n      </defs>\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"224.64\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_10\">\r\n      <!-- 0 -->\r\n      <g transform=\"translate(32.079688 228.439219)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"ytick_2\">\r\n     <g id=\"line2d_10\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"177.034089\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_11\">\r\n      <!-- 20 -->\r\n      <g transform=\"translate(25.717188 180.833307)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-50\"/>\r\n       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"ytick_3\">\r\n     <g id=\"line2d_11\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"129.428177\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_12\">\r\n      <!-- 40 -->\r\n      <defs>\r\n       <path d=\"M 37.796875 64.3125 \r\nL 12.890625 25.390625 \r\nL 37.796875 25.390625 \r\nz\r\nM 35.203125 72.90625 \r\nL 47.609375 72.90625 \r\nL 47.609375 25.390625 \r\nL 58.015625 25.390625 \r\nL 58.015625 17.1875 \r\nL 47.609375 17.1875 \r\nL 47.609375 0 \r\nL 37.796875 0 \r\nL 37.796875 17.1875 \r\nL 4.890625 17.1875 \r\nL 4.890625 26.703125 \r\nz\r\n\" id=\"DejaVuSans-52\"/>\r\n      </defs>\r\n      <g transform=\"translate(25.717188 133.227396)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-52\"/>\r\n       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"ytick_4\">\r\n     <g id=\"line2d_12\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"81.822266\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_13\">\r\n      <!-- 60 -->\r\n      <defs>\r\n       <path d=\"M 33.015625 40.375 \r\nQ 26.375 40.375 22.484375 35.828125 \r\nQ 18.609375 31.296875 18.609375 23.390625 \r\nQ 18.609375 15.53125 22.484375 10.953125 \r\nQ 26.375 6.390625 33.015625 6.390625 \r\nQ 39.65625 6.390625 43.53125 10.953125 \r\nQ 47.40625 15.53125 47.40625 23.390625 \r\nQ 47.40625 31.296875 43.53125 35.828125 \r\nQ 39.65625 40.375 33.015625 40.375 \r\nz\r\nM 52.59375 71.296875 \r\nL 52.59375 62.3125 \r\nQ 48.875 64.0625 45.09375 64.984375 \r\nQ 41.3125 65.921875 37.59375 65.921875 \r\nQ 27.828125 65.921875 22.671875 59.328125 \r\nQ 17.53125 52.734375 16.796875 39.40625 \r\nQ 19.671875 43.65625 24.015625 45.921875 \r\nQ 28.375 48.1875 33.59375 48.1875 \r\nQ 44.578125 48.1875 50.953125 41.515625 \r\nQ 57.328125 34.859375 57.328125 23.390625 \r\nQ 57.328125 12.15625 50.6875 5.359375 \r\nQ 44.046875 -1.421875 33.015625 -1.421875 \r\nQ 20.359375 -1.421875 13.671875 8.265625 \r\nQ 6.984375 17.96875 6.984375 36.375 \r\nQ 6.984375 53.65625 15.1875 63.9375 \r\nQ 23.390625 74.21875 37.203125 74.21875 \r\nQ 40.921875 74.21875 44.703125 73.484375 \r\nQ 48.484375 72.75 52.59375 71.296875 \r\nz\r\n\" id=\"DejaVuSans-54\"/>\r\n      </defs>\r\n      <g transform=\"translate(25.717188 85.621485)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-54\"/>\r\n       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"ytick_5\">\r\n     <g id=\"line2d_13\">\r\n      <g>\r\n       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"34.216355\"/>\r\n      </g>\r\n     </g>\r\n     <g id=\"text_14\">\r\n      <!-- 80 -->\r\n      <defs>\r\n       <path d=\"M 31.78125 34.625 \r\nQ 24.75 34.625 20.71875 30.859375 \r\nQ 16.703125 27.09375 16.703125 20.515625 \r\nQ 16.703125 13.921875 20.71875 10.15625 \r\nQ 24.75 6.390625 31.78125 6.390625 \r\nQ 38.8125 6.390625 42.859375 10.171875 \r\nQ 46.921875 13.96875 46.921875 20.515625 \r\nQ 46.921875 27.09375 42.890625 30.859375 \r\nQ 38.875 34.625 31.78125 34.625 \r\nz\r\nM 21.921875 38.8125 \r\nQ 15.578125 40.375 12.03125 44.71875 \r\nQ 8.5 49.078125 8.5 55.328125 \r\nQ 8.5 64.0625 14.71875 69.140625 \r\nQ 20.953125 74.21875 31.78125 74.21875 \r\nQ 42.671875 74.21875 48.875 69.140625 \r\nQ 55.078125 64.0625 55.078125 55.328125 \r\nQ 55.078125 49.078125 51.53125 44.71875 \r\nQ 48 40.375 41.703125 38.8125 \r\nQ 48.828125 37.15625 52.796875 32.3125 \r\nQ 56.78125 27.484375 56.78125 20.515625 \r\nQ 56.78125 9.90625 50.3125 4.234375 \r\nQ 43.84375 -1.421875 31.78125 -1.421875 \r\nQ 19.734375 -1.421875 13.25 4.234375 \r\nQ 6.78125 9.90625 6.78125 20.515625 \r\nQ 6.78125 27.484375 10.78125 32.3125 \r\nQ 14.796875 37.15625 21.921875 38.8125 \r\nz\r\nM 18.3125 54.390625 \r\nQ 18.3125 48.734375 21.84375 45.5625 \r\nQ 25.390625 42.390625 31.78125 42.390625 \r\nQ 38.140625 42.390625 41.71875 45.5625 \r\nQ 45.3125 48.734375 45.3125 54.390625 \r\nQ 45.3125 60.0625 41.71875 63.234375 \r\nQ 38.140625 66.40625 31.78125 66.40625 \r\nQ 25.390625 66.40625 21.84375 63.234375 \r\nQ 18.3125 60.0625 18.3125 54.390625 \r\nz\r\n\" id=\"DejaVuSans-56\"/>\r\n      </defs>\r\n      <g transform=\"translate(25.717188 38.015573)scale(0.1 -0.1)\">\r\n       <use xlink:href=\"#DejaVuSans-56\"/>\r\n       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n      </g>\r\n     </g>\r\n    </g>\r\n    <g id=\"text_15\">\r\n     <!-- Frequency -->\r\n     <defs>\r\n      <path d=\"M 9.8125 72.90625 \r\nL 51.703125 72.90625 \r\nL 51.703125 64.59375 \r\nL 19.671875 64.59375 \r\nL 19.671875 43.109375 \r\nL 48.578125 43.109375 \r\nL 48.578125 34.8125 \r\nL 19.671875 34.8125 \r\nL 19.671875 0 \r\nL 9.8125 0 \r\nz\r\n\" id=\"DejaVuSans-70\"/>\r\n      <path d=\"M 14.796875 27.296875 \r\nQ 14.796875 17.390625 18.875 11.75 \r\nQ 22.953125 6.109375 30.078125 6.109375 \r\nQ 37.203125 6.109375 41.296875 11.75 \r\nQ 45.40625 17.390625 45.40625 27.296875 \r\nQ 45.40625 37.203125 41.296875 42.84375 \r\nQ 37.203125 48.484375 30.078125 48.484375 \r\nQ 22.953125 48.484375 18.875 42.84375 \r\nQ 14.796875 37.203125 14.796875 27.296875 \r\nz\r\nM 45.40625 8.203125 \r\nQ 42.578125 3.328125 38.25 0.953125 \r\nQ 33.9375 -1.421875 27.875 -1.421875 \r\nQ 17.96875 -1.421875 11.734375 6.484375 \r\nQ 5.515625 14.40625 5.515625 27.296875 \r\nQ 5.515625 40.1875 11.734375 48.09375 \r\nQ 17.96875 56 27.875 56 \r\nQ 33.9375 56 38.25 53.625 \r\nQ 42.578125 51.265625 45.40625 46.390625 \r\nL 45.40625 54.6875 \r\nL 54.390625 54.6875 \r\nL 54.390625 -20.796875 \r\nL 45.40625 -20.796875 \r\nz\r\n\" id=\"DejaVuSans-113\"/>\r\n      <path d=\"M 8.5 21.578125 \r\nL 8.5 54.6875 \r\nL 17.484375 54.6875 \r\nL 17.484375 21.921875 \r\nQ 17.484375 14.15625 20.5 10.265625 \r\nQ 23.53125 6.390625 29.59375 6.390625 \r\nQ 36.859375 6.390625 41.078125 11.03125 \r\nQ 45.3125 15.671875 45.3125 23.6875 \r\nL 45.3125 54.6875 \r\nL 54.296875 54.6875 \r\nL 54.296875 0 \r\nL 45.3125 0 \r\nL 45.3125 8.40625 \r\nQ 42.046875 3.421875 37.71875 1 \r\nQ 33.40625 -1.421875 27.6875 -1.421875 \r\nQ 18.265625 -1.421875 13.375 4.4375 \r\nQ 8.5 10.296875 8.5 21.578125 \r\nz\r\nM 31.109375 56 \r\nz\r\n\" id=\"DejaVuSans-117\"/>\r\n      <path d=\"M 48.78125 52.59375 \r\nL 48.78125 44.1875 \r\nQ 44.96875 46.296875 41.140625 47.34375 \r\nQ 37.3125 48.390625 33.40625 48.390625 \r\nQ 24.65625 48.390625 19.8125 42.84375 \r\nQ 14.984375 37.3125 14.984375 27.296875 \r\nQ 14.984375 17.28125 19.8125 11.734375 \r\nQ 24.65625 6.203125 33.40625 6.203125 \r\nQ 37.3125 6.203125 41.140625 7.25 \r\nQ 44.96875 8.296875 48.78125 10.40625 \r\nL 48.78125 2.09375 \r\nQ 45.015625 0.34375 40.984375 -0.53125 \r\nQ 36.96875 -1.421875 32.421875 -1.421875 \r\nQ 20.0625 -1.421875 12.78125 6.34375 \r\nQ 5.515625 14.109375 5.515625 27.296875 \r\nQ 5.515625 40.671875 12.859375 48.328125 \r\nQ 20.21875 56 33.015625 56 \r\nQ 37.15625 56 41.109375 55.140625 \r\nQ 45.0625 54.296875 48.78125 52.59375 \r\nz\r\n\" id=\"DejaVuSans-99\"/>\r\n     </defs>\r\n     <g transform=\"translate(18.597656 154.664531)rotate(-90)scale(0.15 -0.15)\">\r\n      <use xlink:href=\"#DejaVuSans-70\"/>\r\n      <use x=\"50.269531\" xlink:href=\"#DejaVuSans-114\"/>\r\n      <use x=\"89.132812\" xlink:href=\"#DejaVuSans-101\"/>\r\n      <use x=\"150.65625\" xlink:href=\"#DejaVuSans-113\"/>\r\n      <use x=\"214.132812\" xlink:href=\"#DejaVuSans-117\"/>\r\n      <use x=\"277.511719\" xlink:href=\"#DejaVuSans-101\"/>\r\n      <use x=\"339.035156\" xlink:href=\"#DejaVuSans-110\"/>\r\n      <use x=\"402.414062\" xlink:href=\"#DejaVuSans-99\"/>\r\n      <use x=\"457.394531\" xlink:href=\"#DejaVuSans-121\"/>\r\n     </g>\r\n    </g>\r\n   </g>\r\n   <g id=\"patch_18\">\r\n    <path d=\"M 45.442188 224.64 \r\nL 45.442188 7.2 \r\n\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n   </g>\r\n   <g id=\"patch_19\">\r\n    <path d=\"M 380.242188 224.64 \r\nL 380.242188 7.2 \r\n\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n   </g>\r\n   <g id=\"patch_20\">\r\n    <path d=\"M 45.442187 224.64 \r\nL 380.242187 224.64 \r\n\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n   </g>\r\n   <g id=\"patch_21\">\r\n    <path d=\"M 45.442187 7.2 \r\nL 380.242187 7.2 \r\n\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n   </g>\r\n  </g>\r\n </g>\r\n <defs>\r\n  <clipPath id=\"p2de4e8ccfb\">\r\n   <rect height=\"217.44\" width=\"334.8\" x=\"45.442188\" y=\"7.2\"/>\r\n  </clipPath>\r\n </defs>\r\n</svg>\r\n",
-                        "image/png": "iVBORw0KGgoAAAANSUhEUgAAAY0AAAELCAYAAAAlTtoUAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAADh0RVh0U29mdHdhcmUAbWF0cGxvdGxpYiB2ZXJzaW9uMy4yLjEsIGh0dHA6Ly9tYXRwbG90bGliLm9yZy+j8jraAAAVj0lEQVR4nO3de7QlZX3m8e8jHVAgUQjNRRC7TdAJMhdji2hWHCISTTCiRiIuL63LDLMMyahjRsFMFCZmBjUrUUcdbbmIo1EIMkKEiKQDiRMV6PYWEFvkpmAD7QUEFAjDb/6o6rg5nNNddc6+VHd/P2vttc9+67J/XV3dz6m3qt5KVSFJUhcPm3UBkqRth6EhSerM0JAkdWZoSJI6MzQkSZ0tm3UBi7XXXnvVihUrZl2GJG1T1q9f/72qWr7Y5bfZ0FixYgXr1q2bdRmStE1JcuNSlrd7SpLUmaEhSerM0JAkdWZoSJI6MzQkSZ0ZGpKkzgwNSVJnhoYkqTNDQ5LU2TZ7R/hSrDjhgrGu74ZTjhrr+iRpqDzSkCR1ZmhIkjozNCRJnRkakqTODA1JUmeGhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTOph4aSV6f5KokVyb5eJKHJ9kzycVJrmnf95h2XZKkrZtqaCTZH/hPwKqqOgTYCTgWOAFYW1UHAWvbz5KkgZlF99Qy4BFJlgG7At8FjgbObKefCTx/BnVJkrZiqqFRVTcDfwZ8G9gI3FFVnwX2qaqN7Twbgb3nWz7JcUnWJVm3adOmaZUtSWpNu3tqD5qjipXAo4Hdkrys6/JVtaaqVlXVquXLl0+qTEnSAqbdPfUs4Pqq2lRV/wycCzwduDXJfgDt+21TrkuS1MG0Q+PbwGFJdk0S4AjgauB8YHU7z2rgvCnXJUnqYKrPCK+qy5KcA3wJuB/4MrAG2B04O8mraYLlmGnWJUnqZqqhAVBVbwXeOqf5XpqjDknSgHlHuCSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTODA1JUmeGhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTODA1JUmeGhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTODA1JUmeGhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTODA1JUmeGhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnRkakqTOph4aSR6V5Jwk30hydZKnJdkzycVJrmnf95h2XZKkrZvFkca7gc9U1b8C/i1wNXACsLaqDgLWtp8lSQPTKzSSHLKUL0vyc8AzgNMAquq+qrodOBo4s53tTOD5S/keSdJk9D3S+FqSK5K8JsmjFvF9jwM2AWck+XKSU5PsBuxTVRsB2ve951s4yXFJ1iVZt2nTpkV8vSRpKfqGxhHA14F3AN9N8vEkRyZJx+WXAb8M/K+qehJwNz26oqpqTVWtqqpVy5cv71m6JGmpeoVGVV1SVauBfYHfB/YHLgJuTPInSX5hK6u4Cbipqi5rP59DEyK3JtkPoH2/rU9dkqTpWNSJ8Kq6u6pOr6pnAI8HbgDeDHwzyd8necECy90CfCfJE9qmzUcu5wOr27bVwHmLqUuSNFnLFrtgkhXAK4FXAI8BLgQ+BTwbOCvJ+6rq9fMs+gfAx5LsDFwHvIomvM5O8mrg28Axi61LkjQ5vUIjya7Ai2j+o/9V4HrgQ8CHN5/IBk5L8iqaS2sfEhpV9RVg1TyrP6JPLZKk6et7pHELsBNwLvCsqrp0gfmuAL6/hLokSQPUNzROAD5WVXdsaaaquhJYueiqJEmD1Cs0qur9kypEkjR8fe8IPz3JWQtM+3iSU8dTliRpiPpecnskzb0V8/kk8OtLK0eSNGR9Q2M58IMFpv2QBYb/kCRtH/qGxo00Aw7O5xk0d3xLkrZTfUPjw8CbkhyfZHeAJLsn+T3gjYDnNCRpO9b3ktu3A78A/E/gPUnuBnYDAqxpp0uStlN9L7l9APjdJO8EngnsSXMT399V1TcnUJ8kaUAWNfZUVW0ANoy5FknSwC0qNJI8HjgAePjcaVV14VKLkiQNU98BCw8GzgIOpjmPMVfRjE0lSdoO9T3S+CCwM/BCmudg3Df2iiRJg9U3NJ4EHFtVn55EMZKkYet7n8a1zHMeQ5K0Y+gbGm8A3pzkcZMoRpI0bH27p/4HsD/wjSQ3ALfPnaGqDh1DXZKkAeobGle2L0nSDqjvHeGvmlQhkqTh63tOA4A0HpPk6Ul2G3dRkqRh6h0a7Yi2N9MMk/454Alt+7lJXjfe8iRJQ9L3ca//Bfhz4EM0AxaO3hV+KfDisVUmSRqcvifCjwfeUlXvSDJ3uJANwOPHU5YkaYj6dk/tC6xfYNoDeOOfJG3X+obGt4B/v8C0Z9CMRyVJ2k717Z56F/D+JPcB57Rteyd5NfCfgf8wzuIkScPS9z6NU5PsAbwFOLltvhD4MXBSVf3lmOuTJA1I74cwVdU7k3wAeDrw88APgC9U1R3jLk6SNCyLfdzrncBFY65FkjRwfZ/c93tbm6eq3r/4ciRJQ9b3SOO9W5hW7buhIUnbqV6X3FbVw+a+gD2BlwBfpXl2uCRpO7Wocxqjqup24Kwkj6R5hvjhS12nJGmYFjXK7QKuB1aNcX2SpIEZS2gk2Y/mUbDXj2N9kqRh6nv11CZ+esJ7s52BnwXuAV44prokSQPU95zG+3hoaNwD3AR8pqq+P5aqJEmD1HcYkZPG8aXtsOrrgJur6rlJ9gTOAlYANwC/U1U/HMd3SZLGZ5wnwvt4LXD1yOcTgLVVdRCwtv0sSRqYvuc0rueh3VMLqqrHzbOOA4CjgD+lGRkX4Gh+eqnumTRPAXxTn9okSZPX95zGOcCxwK7AxcBtwN7AkcDdNF1MW/Mu4I00J88326eqNgJU1cYke/esS5I0BX1D44fAtcBRVXX35sYkuwOfBu6oqrcttHCS5wK3VdX6JIf3LTbJccBxAAceeGDfxSVJS9T3nMbxwDtHAwOgqu4C/qydviW/AjwvyQ3AJ4BnJvkocGt7r8fmez5um2/hqlpTVauqatXy5ct7li5JWqq+ofFIYJ8Fpu0L7L6lhavqxKo6oKpW0HRz/V1VvQw4H1jdzrYaOK9nXZKkKegbGucD70zyoiS7ACTZJckxwNuBv15kHacARya5hub8yCmLXI8kaYL6ntN4DfBh4GygktxJc0I7NIHymq4rqqpLaa6Sor0p8IietUiSpqzvzX13AC9I8kTgKTRdVbcAV1TV1ydQnyRpQBb7uNergKvGXIskaeB63xGeZO8kb0+yNsmG9qiDJK9N8rTxlyhJGopeoZHkUOAa4Ldpxoj6RWCXdvLm4dElSdupvkcafwFcAjwe+I80J8A3uxw4dEx1SZIGqO85jV8Gjq6qB5JkzrTv0wwpIknaTvU90rgDWOhW7McBty6tHEnSkPUNjfOAk5OMjl5bSfYC/hA4d2yVSZIGp29onAD8CPg68A9t2weADcBPgLeMrzRJ0tD0vbnvh0kOA15Ocwf33cAPgFOBj1TVveMvUZI0FJ1DI8nDaYYK+e9VdRpw2sSqkiQNUufuqaq6h2bokJ0mV44kacgWM8rt8ydRiCRp+Prep3ERzdDo+wEX0lxi+6BnhlfVhWOqTZI0MH1D46Pt+wvb11yF3VeStN3aamgk+SzwB1W1AVhJM3TIEcBlwJ2TLU+SNCRdjjSeRfOYV6rqxiQ7AWuAp1TVjZMsTpI0LL2HRm/NHXdKkrQDWGxoSJJ2QF1Dozq2SZK2Y12vnrooyf1z2tbO00ZVOTy6JG2nuoTGyROvQpK0TdhqaFSVoSFJAjwRLknqwdCQJHVmaEiSOjM0JEmdGRqSpM4MDUlSZ4aGJKkzQ0OS1JmhIUnqzNCQJHVmaEiSOjM0JEmdGRqSpM4MDUlSZ4aGJKkzQ0OS1NlUQyPJY5JckuTqJFcleW3bvmeSi5Nc077vMc26JEndTPtI437gDVX1S8BhwPFJDgZOANZW1UHA2vazJGlgphoaVbWxqr7U/nwncDWwP3A0cGY725nA86dZlySpm5md00iyAngScBmwT1VthCZYgL0XWOa4JOuSrNu0adO0SpUktWYSGkl2Bz4JvK6qftR1uapaU1WrqmrV8uXLJ1egJGleUw+NJD9DExgfq6pz2+Zbk+zXTt8PuG3adUmStm7aV08FOA24uqr+fGTS+cDq9ufVwHnTrEuS1M2yKX/frwAvB/4pyVfatjcDpwBnJ3k18G3gmCnXJUnqYKqhUVX/F8gCk4+YZi2SpP68I1yS1JmhIUnqzNCQJHVmaEiSOjM0JEmdGRqSpM4MDUlSZ4aGJKkzQ0OS1JmhIUnqzNCQJHVmaEiSOjM0JEmdGRqSpM4MDUlSZ4aGJKkzQ0OS1JmhIUnqzNCQJHVmaEiSOjM0JEmdGRqSpM4MDUlSZ4aGJKkzQ0OS1JmhIUnqzNCQJHVmaEiSOls26wIkaUhWnHDBWNd3wylHjXV9s+aRhiSpM0NDktSZoSFJ6szQkCR1ZmhIkjozNCRJnXnJrbQd2REvFx33n1lb5pGGJKkzQ0OS1JmhIUnqbDDnNJI8B3g3sBNwalWdMuOSJGnJJnHOZZbnmgZxpJFkJ+B9wG8ABwMvSXLwbKuSJM01iNAADgW+VVXXVdV9wCeAo2dckyRpjqF0T+0PfGfk803AU+fOlOQ44Lj2411JNgB7Ad+beIVbkLcvarGZ171I1j09M6/ZfXuY5vy99K37sUv57qGERuZpq4c0VK0B1jxowWRdVa2aVGGTYt3TtS3WvS3WDNY9bdOueyjdUzcBjxn5fADw3RnVIklawFBC4wrgoCQrk+wMHAucP+OaJElzDKJ7qqruT/L7wEU0l9yeXlVXdVx8zdZnGSTrnq5tse5tsWaw7mmbat2pesipA0mS5jWU7ilJ0jbA0JAkdTao0EhyTJKrkjyQZNVI+85JzkjyT0m+muTwtn3XJBck+Ua73LxDjyR5aZKvjLweSPLv2mmXJtkwMm3vgdS8IslPRur6wMi0J7fr/VaS9ySZ75LlWdV9ZJL17fLrkzxzZNqStvUk627nPbHdphuSPHukferbu532p0m+k+SuLax3Yvv2hOue2P49wZoHtW93rbudb3z7dlUN5gX8EvAE4FJg1Uj78cAZ7c97A+tpAm9X4Nfa9p2BzwG/sZXv+NfAdSOfH/RdQ6kZWAFcucB3Xg48jeb+lr/Z2p95ynU/CXh0+/MhwM3j2tYTrvtg4KvALsBK4Fpgp1lt7/bzYcB+wF0dv2Os+/Yk657k/j3Bmge1b/eoe6z79qCONKrq6qraMM+kg4G17Ty3AbfTbNQfV9Ulbft9wJdo7vHYkpcAH9/Gav4XSfYDfq6qvlDN3/pHgOcPpe6q+nJVbb7H5irg4Ul26VvftOumGbbmE1V1b1VdD3wLOHRW27v9/MWq2tjja8a6b7c1TKPufzGO7T2pmoe2b3etmzHv24MKjS34KnB0kmVJVgJP5sE3A5LkUcBv0W7cLXgxD/2HdUZ7SPnHi+l6mGDNK5N8OcnfJ/nVtm1/mpshN7upbRuXcW7r3wa+XFX3jrRNYluPo+75hrLZnwFs7x6mtW/DeOqe9v49zm09qH17K8a6b0/9Po0kfwvsO8+kP6qq8xZY7HSaQ7d1wI3A54H7R9a5jOYfy3uq6rotfPdTgR9X1ZUjzS+tqpuT/CzwSeDlNIk765o3AgdW1feTPBn4VJIn0nHIlRnWvXm+JwJvB359pHmr23qGdS+0XWe6vbta7L49w7qXtH/PeFsPat/uUvI8bb327VFTD42qetYilrkfeP3mz0k+D1wzMssa4JqqetdWVnUsc34Tq6qb2/c7k/wlzYi7H5kzz9Rrbn+Dubf9eX2Sa4HH0/w2MNq9suCQK7Pa1kkOAP4P8IqqunZk3Vvd1jOse6GhbGa9vbta1L7dTp963Uvdv2e1rQe6b2/NkvftUdtE91SaK2B2a38+Eri/qr7efn4b8EjgdVtZx8OAY2iGXd/ctizJXu3PPwM8F7hy/jVMt+Yky9M8Z4QkjwMOojnJuRG4M8lh7SHwK4CFfkOZRd2PAi4ATqyqfxxpn9i2HkfdNMPWHJtkl7YL4CDg8llu7x7rmOq+PY66Z7F/j6Hmwe3bHY13364lnO0f9wt4AU363QvcClxUP73SYgNwNfC3wGPb9gNoDqeuBr7Svn63nfY84L+NrPtw4Itzvm83misRvkZzYuvdtFcVzLpmmj7Tq2j6M78E/NbId66i2SmvBd5Le2f/QOr+r8DdI/N8heaKjyVv6ynsI3/UbtMNjFxFMovt3U57R7vMA+37SdPctydZNxPcvydY86D27Z77yNj2bYcRkSR1tk10T0mShsHQkCR1ZmhIkjozNCRJnRkakqTODA3tUJKclKQWeL1s1vVJQzeIx71KU3YH8Jx52r817UKkbY2hoR3R/VX1xVl8cZJHVNVPZvHd0jjYPSWNSPNwoEryO0k+mOSOJDclObkdrmN03kPSPODpzvb1V0n2HZl+eLuuZyc5P82Dct7bTvs3ST6f5J40D975zSTrkny4nX5UmofxrJzznSvb9udNfmtID2VoaIfUjhf0oNecWd4B3AW8CPgo8Jb2583L/yLwj8DDaUY0fSXwROCv23F8Rp1GM1zG84DTkuwKXAQ8guYZGG8D/gI4cGSZz9AMHrd6zrpeCWwCLuz/p5aWzu4p7Yh+HvjnuY1zfqv/h6p6Q/vzxUmeA7wQOLtteytwC804Pve1y38N+AbwmzQD2232V1X1xyPfc3xbw6pqR0dtR3m9bPM8VfX/2qOO1UlOrqpqw2g18L+rGflUmjqPNLQjugN4yjyv0WGhPztnma/z4GGkn0UzRPYDI0cq1wM30D5VbcQFcz4/BVi/OTAAqupymkHqRp0OPJZmQEKAX2s/n7HFP500QR5paEd0f1Wtm2/CSM/S7XMm3UfTFbXZXsCb2tdcc5+qNjcM9qXpYprrQW1VdV2SS4FXAZe075dX1VXz1S5Ng6EhLc4PaI40Tp1n2vfmfJ47lPQtwBPmWW75PG2nAh9KciJN99gb5plHmhpDQ1qctcAhNN1MfZ8vcAXw0iT7j5zTOBTYZ555zwXeR/OApYcx8qAlaRYMDe2IliU5bJ727/RYx0nA5cAFSU6nObrYHzgS+HBVXbqFZc+geaDPp5OcTHMV1ck03VMPjM5YVfck+RhwPPDxqprbbSZNlSfCtSN6JPCFeV6v6rqCqvomcBjwY5rnj/8NzX/897KVO8ur6sc0d6T/BDiLJoDeSHMe5UfzLPKp9v30rvVJk+KT+6QBaC/3/SZwXFWdMWfaO4AXAyur6oH5lpemxe4paQbaE9vfBW6kuanvRJruqU+OzPME4GDgNcDJBoaGwNCQZqNobhB8NE2X1ueAP6yq0e6pDwJPBc4H3jP1CqV52D0lSerME+GSpM4MDUlSZ4aGJKkzQ0OS1JmhIUnq7P8DLU8DuKyJ1hUAAAAASUVORK5CYII=\n"
-                    },
-                    "metadata": {
-                        "needs_background": "light"
-                    }
-                }
-            ],
-            "source": [
-                "import matplotlib.pyplot as plt\n",
-                "plt.hist(response.energies, bins=15)\n",
-                "plt.xlabel('Energy', fontsize=15)\n",
-                "plt.ylabel('Frequency', fontsize=15)\n",
-                "plt.show()"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "K61nEm6fQyPl"
-            },
-            "source": [
-                "The lower the energy, the better, but you can find that the high energy solutions appear sometimes.\n",
-                "However, almost half of them seem to have the lowest energy.\n",
-                "\n",
-                "Openjij solved the problem 100 times.\n",
-                "Since the optimal solution is the lowest energy,\n",
-                "the lowest energy solution among the solved (sampled) solutions should be close to the optimal solution.\n",
-                "Therefore, we search for the solution from ``.states``.\n",
-                "\n",
-                "> Caution: SA can not always give an optimal solution.\n",
-                "Therefore, there is no guarantee that the solution with the lowest energy in this time is an optimal solution.\n",
-                "It is an approximate solution.\n"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 18,
-            "metadata": {},
-            "outputs": [
-                {
-                    "output_type": "execute_result",
-                    "data": {
-                        "text/plain": "Sample(sample={0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 0, 22: 1, 23: 1, 24: 0, 25: 1, 26: 0, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 0, 33: 0, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 0, 40: 0, 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 0, 52: 1, 53: 1, 54: 1, 55: 1, 56: 0, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 0, 63: 0, 64: 1, 65: 1, 66: 1, 67: 0, 68: 0, 69: 1, 70: 0, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 0, 77: 0, 78: 0, 79: 1, 80: 0, 81: 1, 82: 1, 83: 1, 84: 0, 85: 0, 86: 0, 87: 0, 88: 0, 89: 0, 90: 1, 91: 1, 92: 1, 93: 0, 94: 1, 95: 1, 96: 1, 97: 0, 98: 1, 99: 1}, energy=-192.6801102019457, num_occurrences=1)"
-                    },
-                    "metadata": {},
-                    "execution_count": 18
-                }
-            ],
-            "source": [
-                "import numpy as np\n",
-                "\n",
-                "min_samples = response.first\n",
-                "min_samples"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "XBp8gWZEQyPr"
-            },
-            "source": [
-                "Now you get the lowest energy solution.\n",
-                "The solution which is contained in this min_states is the approximate solution in this time.\n",
-                "Contained solutions have the same energy,\n",
-                "but the arrangement of spins may differ in some cases (In the case of \"degenerated state\").\n",
-                "\n",
-                "So, after choosing the lowest energy state as above, choose the spin orientation from min_state as you like.\n",
-                "Then, we solved the problem approximately.\n",
-                "\n",
-                "Next section, \u201c2-Evaluation\u201d, we will explain the index(\"time to solution\" and \"the residual energy\" etc.) for evaluate the solution."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
-            "metadata": {},
-            "outputs": [],
-            "source": []
-        }
-    ],
-    "metadata": {
-        "colab": {
-            "include_colab_link": true,
-            "name": "1-Introduction.ipynb",
-            "provenance": [],
-            "version": "0.3.2"
-        },
-        "kernelspec": {
-            "display_name": "Python 3.8.2 64-bit",
-            "language": "python",
-            "name": "python38264bitfcdb88d1f35743289d90a25209e75391"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython3",
-            "version": "3.8.2-final"
-        }
-    },
-    "nbformat": 4,
-    "nbformat_minor": 4
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "Y4hVgt6yQyOa"
+   },
+   "source": [
+    "# 1-An Introduction to OpenJij"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "view-in-github"
+   },
+   "source": [
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/1-Introduction.ipynb)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "OpenJij is a heuristic optimization library of the Ising model and QUBO.\n",
+    "It has a Python interface, therefore it can be easily written in Python, although the core part of the optimization is implemented with C++.\n",
+    "\n",
+    "Let's install OpenJij by pip.   \n",
+    "(If you're using Colab, you'll need to install cmake first ``$ !pip install cmake``.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {
+    "colab": {},
+    "colab_type": "code",
+    "id": "JZW9IAE9QyOd"
+   },
+   "outputs": [],
+   "source": [
+    "# !pip install openjij"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "x9a_Imk1QyOn"
+   },
+   "source": [
+    "### The Ising model\n",
+    "\n",
+    "The Ising model is a model treated in physics and is written as follows.\n",
+    "\n",
+    "$$H(\\{\\sigma_i\\}) = \\sum_{i > j} J_{ij}\\sigma_i \\sigma_j + \\sum_{i=1}^N h_i \\sigma_i$$\n",
+    "$$\\sigma_i \\in \\{-1, 1\\}, i=1,\\cdots N$$\n",
+    "\n",
+    "$H(\\{\\sigma_i\\})$ is called Hamiltonian, it is like an energy or a cost function.  \n",
+    "$\\sigma_i$ is a binary variable it takes only two values $\\{1, -1\\}$.\n",
+    "\n",
+    "> $\\sigma_i$ corresponds to the physical quantity called spin in physics, it is sometimes called a spin variable or spin simply.\n",
+    "> Spin seems a micro magnet. The value of this variable corresponds to the physical state (the orientation of the magnet).\n",
+    "> $\\sigma_i = -1$ means the magnet is up and 1 means magnet is down.\n",
+    "\n",
+    "\n",
+    "$H$ depends on the combination of variables $\\{\\sigma_i\\} = \\{\\sigma_1, \\sigma_2, \\cdots, \\sigma_N\\}$.  \n",
+    "$J_{ij}, h_i$ represents the problem, and they are called interaction coefficients, longitudinal magnetic fields respectively.\n",
+    "\n",
+    "OpenJij is a library which searches a combination of spin variables $\\{\\sigma_i\\}$ that minimizes $H(\\{\\sigma_i\\})$ when given $J_{ij}$ and $h_i$.\n",
+    "\n",
+    "Let me show you a example."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "j0iZqoWtQyOn"
+   },
+   "source": [
+    "## Solve a problem with OpenJij\n",
+    "\n",
+    "We assume that the number of variables is $N=5$, \n",
+    "and the longitudinal field and interaction are\n",
+    "\n",
+    "$$h_i = -1~\\text{for} ~\\forall i, ~ J_{ij} = -1~\\text{for} ~\\forall i, j$$\n",
+    "\n",
+    "respectively.\n",
+    "\n",
+    "In this case, since all interaction coefficients are negative, the energy is lower when each spin variable takes the same value.\n",
+    "Also, since all longitudinal magnetic fields are negative, the energy is lower when each spin takes 1.\n",
+    "Therefore, we can predict the answer of this problem is $\\{\\sigma_i\\} = \\{1, 1, 1, 1, 1\\}$.\n",
+    "\n",
+    "Now let's solve the Ising model using OpenJij."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "h_i:  {0: -1, 1: -1, 2: -1, 3: -1, 4: -1}\n",
+      "Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (1, 4): -1, (2, 3): -1, (2, 4): -1, (3, 4): -1}\n"
+     ]
+    }
+   ],
+   "source": [
+    "import openjij as oj\n",
+    "\n",
+    "# Create interaction coefficients and longitudinal magnetic fields that represent the problem.\n",
+    "# OpenJij accepts problems in dictionary type.\n",
+    "\n",
+    "N = 5\n",
+    "h = {i: -1 for i in range(N)}\n",
+    "J = {(i, j): -1 for i in range(N) for j in range(i+1, N)}\n",
+    "\n",
+    "print('h_i: ', h)\n",
+    "print('Jij: ', J)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[1 1 1 1 1]]\n",
+      "[{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# First, create an instance of Sampler to solve the problem.\n",
+    "sampler = oj.SASampler(num_reads=1)\n",
+    "# Solve the problem(h, J) by using the method of sampler.\n",
+    "response = sampler.sample_ising(h, J)\n",
+    "\n",
+    "# The results (states) of calculation is in result.states.\n",
+    "print(response.states)\n",
+    "\n",
+    "# If you want to see the result with subscript, use response.samples.\n",
+    "print([s for s in response.samples()])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Explanation of OpenJij\n",
+    "\n",
+    "Then, I will explain the code showed above.\n",
+    "OpenJij has two interfaces currently. One of them used above is the same interface as D-Wave Ocean.\n",
+    "Therefore, if you get used to using OpenJij, easy changing to Ocean.\n",
+    "\n",
+    "> Another interface will not be explained here, but it can be easily extended by using the structure of OpenJij (graph, updater, and algorithm) directly. \n",
+    "> In the present situation, however, it would be sufficient to be able to use the interface which treated in the cell above."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Sampler\n",
+    "\n",
+    "In the above, we created an instance of Sampler after creating the problem in the dictionary type.\n",
+    "\n",
+    "```python\n",
+    "sampler = oj.SASampler(num_reads=1)\n",
+    "```\n",
+    "\n",
+    "Here, this Sampler is the object of selecting what algorithm and hardware you use.\n",
+    "When you want to try the other algorithm, change this Sampler.\n",
+    "\n",
+    "> The algorithm treated in OpenJij is a heuristic and stochastic algorithm, it may return the different solutions each time the problem is solved, so it may not always obtain the optimal solution. \n",
+    "> Therefore, we solve the problem many times and search for a good solution. So we call Sampler which means that we sample the solutions.\n",
+    "\n",
+    "``SASampler`` treated in the above cell is a sampler that samples the solution by using an algorithm called ``Simulated annealing``.\n",
+    "For example, we can choose other samples below.\n",
+    "\n",
+    "- SQASampler: An algorithm for simulating quantum annealing called Simulated Quantum Annealing (SQA) with a classical computer.\n",
+    "\n",
+    "- GPUSQASampler: It runs SQA on GPU. It can treat only a special structure called Chimera graph."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### sample_ising(h, J)\n",
+    "\n",
+    "When you want to solve the Ising model, you can use ``.sample_ising(h, J)``.\n",
+    "As I will explain later, when you treat QUBO which equivalent to the Ising model optimization, use ``.sample_qubo(Q)``.\n",
+    "\n",
+    "\n",
+    "### Response\n",
+    "\n",
+    "``.sample_ising(h, J)`` returns the Response class.\n",
+    "This class contains results of solutions and energies that Sampler solved.\n",
+    "\n",
+    "- .states:\n",
+    "    - type: list (list (int))\n",
+    "    - This list contains solutions to the number of iteration. > In physics, an array of spins called a state. Since .states stores the solutions to the number of iteration, we defined as .states from the meaning that multiple states are stored.\n",
+    "\n",
+    "- .energies:\n",
+    "    - type: list (float)\n",
+    "    - This list contains the energy of each solution to the number of iteration.\n",
+    "\n",
+    "The Response class inherits the SampleSet class of D-Wave's dimod. More detailed information can be found at the following links\n",
+    "[SampleSet: dimod documantation](https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html).\n",
+    "\n",
+    "Let's look at the acutual code."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'a': 1, 'b': 1, 'c': -1}\n",
+      "-4.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "# keys of h, J dictionaries can treat not only numbers.\n",
+    "h = {'a': -1, 'b': -1}\n",
+    "J = {('a', 'b'): -1, ('b', 'c'): 1}\n",
+    "# # Try solving 10 times by SA at a time. With the argument called num_reads.\n",
+    "sampler = oj.SASampler(num_reads=10)  \n",
+    "response = sampler.sample_ising(h, J)\n",
+    "print(response.first.sample)\n",
+    "print(response.first.energy)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]\n",
+      " [ 1  1 -1]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(response.states)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can see that the response.states contains 10 solutions when you open it.\n",
+    "Since this problem is easy, returned the same answer is ``[1, -1, 1]`` every iterations."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "4mekWlvTQyO4"
+   },
+   "source": [
+    "> The parameters passed in the constructor such as ``num_reads`` can be overwritten by the method that executes sampling such as ``.sample_ising``.\n",
+    ">\n",
+    "> ```\n",
+    "> response = sampler.sample_ising(h, J, num_reads=2)\n",
+    "> response.states\n",
+    "> > [[1, 1, -1],[1, 1, -1]]\n",
+    "> ```"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Next, let's look the energies.\n",
+    "response.energies"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "NYAnma_WQyO7"
+   },
+   "source": [
+    "Of course, the energies also take the same value every iterations.\n",
+    "The solutions in response.states are list type, so you confuse the corresponding to the strings ``\"a\", \"b\", \"c\"`` when you set the problem.\n",
+    "That is in response.indices."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['a', 'b', 'c']"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "response.indices"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "5rf7wB7LQyPJ"
+   },
+   "source": [
+    "``.first`` is useful if you only want to know the state with the lowest energy value."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "colab": {},
+    "colab_type": "code",
+    "id": "-J1utQATQyPK",
+    "outputId": "839e1260-3b1c-432d-a4b6-7b318ba1048c"
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Sample(sample={'a': 1, 'b': 1, 'c': -1}, energy=-4.0, num_occurrences=1)"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "response.first"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Let's try to solve QUBO\n",
+    "\n",
+    "When you want to solve social problems,\n",
+    "it is often easier to formulate as QUBO(Quadratic Unconstraited Binary Optimization, ) than the Ising model.\n",
+    "Basically, it returns the same solution when using the Ising model.\n",
+    "\n",
+    "> Also, QUBO is often called as UBQP (Unconstraited binary quadratic optimization problems).\n",
+    "\n",
+    "QUBO is written as follows.\n",
+    "\n",
+    "$$H(\\{q_i\\}) = \\sum_{i\\geq j} Q_{ij}q_i q_j$$\n",
+    "$$q_i \\in \\{0, 1\\}$$\n",
+    "\n",
+    "Binary variables take 0 or 1, that is difference between QUBO and the Ising model.\n",
+    "\n",
+    "There are other ways to define $\\sum$ and $Q_{ij}$ (for example, make $Q_{ij}$ a symmetric matrix), but in this time we have formulated it as above.\n",
+    "\n",
+    "> The Ising model and QUBO are equivalent for the reason why they be converted to each other. You can convert these equation: $q_i=(\\sigma_i + 1)/2$\n",
+    "\n",
+    "In the case of QUBO, you search a combination of $\\{q_i\\}$ that minimizes $H(\\{q_i\\})$ under the $Q_{ij}$ which is given by a problem.\n",
+    "\n",
+    "Also, since $q_i^2 = q_i$ (because $q_i$ takes only 0 or 1),\n",
+    "you can write as fllows\n",
+    "\n",
+    "$$H(\\{q_i\\}) = \\sum_{i > j} Q_{ij}q_i q_j + \\sum_i Q_{ii} q_i$$\n",
+    "\n",
+    "Namely, the diagonal components of $Q_{ij}$ is corresponds to the coefficients of the first-order term of $q_i$.\n",
+    "\n",
+    "Let's solve QUBO with OpenJij"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[1 1 0]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Q_ij (dict)\n",
+    "Q = {(0, 0): -1, (0, 1): -1, (1, 2): 1, (2, 2): 1}\n",
+    "sampler = oj.SASampler()\n",
+    "# use .sample_qubo to solve QUBO\n",
+    "response = sampler.sample_qubo(Q)\n",
+    "print(response.states)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "CxbDNkSuQyPU"
+   },
+   "source": [
+    "In QUBO, the solutions are made by 0 or 1 because the variables take 0 or 1."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "8IRw4pHOQyPV"
+   },
+   "source": [
+    "## Let's solve a little difficult problem\n",
+    "\n",
+    "You want to solve a problem of QUBO which has $Q_{ij}$ given by 50 random variables."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "N = 100\n",
+    "# Create Q_ij randomly\n",
+    "import random\n",
+    "Q = {(i, j): random.uniform(-1, 1) for i in range(N) for j in range(i+1, N)}\n",
+    "\n",
+    "# Solve by OpenJij\n",
+    "sampler = oj.SASampler()\n",
+    "response = sampler.sample_qubo(Q, num_reads=100)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,\n",
+       "       -192.6801102])"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Look at some energies.\n",
+    "response.energies[:5]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "syclwqyyQyPg"
+   },
+   "source": [
+    "You will realize that the energies takes a different values than before.\n",
+    "If you make $Q_{ij}$ randomly, the problem becomes difficult generally.\n",
+    "Therefore, SASampler does not necessarily give the same solution every time.\n",
+    "Now let's look at the histogram of energies."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "image/svg+xml": [
+       "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n",
+       "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\r\n",
+       "  \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n",
+       "<!-- Created with matplotlib (https://matplotlib.org/) -->\r\n",
+       "<svg height=\"267.035312pt\" version=\"1.1\" viewBox=\"0 0 397.106577 267.035312\" width=\"397.106577pt\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n",
+       " <defs>\r\n",
+       "  <style type=\"text/css\">\r\n",
+       "*{stroke-linecap:butt;stroke-linejoin:round;}\r\n",
+       "  </style>\r\n",
+       " </defs>\r\n",
+       " <g id=\"figure_1\">\r\n",
+       "  <g id=\"patch_1\">\r\n",
+       "   <path d=\"M 0 267.035312 \r\n",
+       "L 397.106577 267.035312 \r\n",
+       "L 397.106577 0 \r\n",
+       "L 0 0 \r\n",
+       "z\r\n",
+       "\" style=\"fill:none;\"/>\r\n",
+       "  </g>\r\n",
+       "  <g id=\"axes_1\">\r\n",
+       "   <g id=\"patch_2\">\r\n",
+       "    <path d=\"M 45.442188 224.64 \r\n",
+       "L 380.242188 224.64 \r\n",
+       "L 380.242188 7.2 \r\n",
+       "L 45.442188 7.2 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#ffffff;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_3\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 60.660369 224.64 \r\n",
+       "L 80.951278 224.64 \r\n",
+       "L 80.951278 17.554286 \r\n",
+       "L 60.660369 17.554286 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_4\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 80.951278 224.64 \r\n",
+       "L 101.242187 224.64 \r\n",
+       "L 101.242187 224.64 \r\n",
+       "L 80.951278 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_5\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 101.242187 224.64 \r\n",
+       "L 121.533097 224.64 \r\n",
+       "L 121.533097 224.64 \r\n",
+       "L 101.242187 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_6\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 121.533097 224.64 \r\n",
+       "L 141.824006 224.64 \r\n",
+       "L 141.824006 224.64 \r\n",
+       "L 121.533097 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_7\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 141.824006 224.64 \r\n",
+       "L 162.114915 224.64 \r\n",
+       "L 162.114915 224.64 \r\n",
+       "L 141.824006 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_8\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 162.114915 224.64 \r\n",
+       "L 182.405824 224.64 \r\n",
+       "L 182.405824 224.64 \r\n",
+       "L 162.114915 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_9\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 182.405824 224.64 \r\n",
+       "L 202.696733 224.64 \r\n",
+       "L 202.696733 224.64 \r\n",
+       "L 182.405824 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_10\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 202.696733 224.64 \r\n",
+       "L 222.987642 224.64 \r\n",
+       "L 222.987642 224.64 \r\n",
+       "L 202.696733 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_11\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 222.987642 224.64 \r\n",
+       "L 243.278551 224.64 \r\n",
+       "L 243.278551 224.64 \r\n",
+       "L 222.987642 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_12\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 243.278551 224.64 \r\n",
+       "L 263.56946 224.64 \r\n",
+       "L 263.56946 217.499113 \r\n",
+       "L 243.278551 217.499113 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_13\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 263.56946 224.64 \r\n",
+       "L 283.860369 224.64 \r\n",
+       "L 283.860369 224.64 \r\n",
+       "L 263.56946 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_14\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 283.860369 224.64 \r\n",
+       "L 304.151278 224.64 \r\n",
+       "L 304.151278 224.64 \r\n",
+       "L 283.860369 224.64 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_15\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 304.151278 224.64 \r\n",
+       "L 324.442187 224.64 \r\n",
+       "L 324.442187 217.499113 \r\n",
+       "L 304.151278 217.499113 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_16\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 324.442187 224.64 \r\n",
+       "L 344.733097 224.64 \r\n",
+       "L 344.733097 210.358227 \r\n",
+       "L 324.442187 210.358227 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_17\">\r\n",
+       "    <path clip-path=\"url(#p2de4e8ccfb)\" d=\"M 344.733097 224.64 \r\n",
+       "L 365.024006 224.64 \r\n",
+       "L 365.024006 222.259704 \r\n",
+       "L 344.733097 222.259704 \r\n",
+       "z\r\n",
+       "\" style=\"fill:#1f77b4;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"matplotlib.axis_1\">\r\n",
+       "    <g id=\"xtick_1\">\r\n",
+       "     <g id=\"line2d_1\">\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 0 0 \r\n",
+       "L 0 3.5 \r\n",
+       "\" id=\"m42c5992e07\" style=\"stroke:#000000;stroke-width:0.8;\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"47.86634\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_1\">\r\n",
+       "      <!-- −192.75 -->\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 10.59375 35.5 \r\n",
+       "L 73.1875 35.5 \r\n",
+       "L 73.1875 27.203125 \r\n",
+       "L 10.59375 27.203125 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-8722\"/>\r\n",
+       "       <path d=\"M 12.40625 8.296875 \r\n",
+       "L 28.515625 8.296875 \r\n",
+       "L 28.515625 63.921875 \r\n",
+       "L 10.984375 60.40625 \r\n",
+       "L 10.984375 69.390625 \r\n",
+       "L 28.421875 72.90625 \r\n",
+       "L 38.28125 72.90625 \r\n",
+       "L 38.28125 8.296875 \r\n",
+       "L 54.390625 8.296875 \r\n",
+       "L 54.390625 0 \r\n",
+       "L 12.40625 0 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-49\"/>\r\n",
+       "       <path d=\"M 10.984375 1.515625 \r\n",
+       "L 10.984375 10.5 \r\n",
+       "Q 14.703125 8.734375 18.5 7.8125 \r\n",
+       "Q 22.3125 6.890625 25.984375 6.890625 \r\n",
+       "Q 35.75 6.890625 40.890625 13.453125 \r\n",
+       "Q 46.046875 20.015625 46.78125 33.40625 \r\n",
+       "Q 43.953125 29.203125 39.59375 26.953125 \r\n",
+       "Q 35.25 24.703125 29.984375 24.703125 \r\n",
+       "Q 19.046875 24.703125 12.671875 31.3125 \r\n",
+       "Q 6.296875 37.9375 6.296875 49.421875 \r\n",
+       "Q 6.296875 60.640625 12.9375 67.421875 \r\n",
+       "Q 19.578125 74.21875 30.609375 74.21875 \r\n",
+       "Q 43.265625 74.21875 49.921875 64.515625 \r\n",
+       "Q 56.59375 54.828125 56.59375 36.375 \r\n",
+       "Q 56.59375 19.140625 48.40625 8.859375 \r\n",
+       "Q 40.234375 -1.421875 26.421875 -1.421875 \r\n",
+       "Q 22.703125 -1.421875 18.890625 -0.6875 \r\n",
+       "Q 15.09375 0.046875 10.984375 1.515625 \r\n",
+       "z\r\n",
+       "M 30.609375 32.421875 \r\n",
+       "Q 37.25 32.421875 41.125 36.953125 \r\n",
+       "Q 45.015625 41.5 45.015625 49.421875 \r\n",
+       "Q 45.015625 57.28125 41.125 61.84375 \r\n",
+       "Q 37.25 66.40625 30.609375 66.40625 \r\n",
+       "Q 23.96875 66.40625 20.09375 61.84375 \r\n",
+       "Q 16.21875 57.28125 16.21875 49.421875 \r\n",
+       "Q 16.21875 41.5 20.09375 36.953125 \r\n",
+       "Q 23.96875 32.421875 30.609375 32.421875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-57\"/>\r\n",
+       "       <path d=\"M 19.1875 8.296875 \r\n",
+       "L 53.609375 8.296875 \r\n",
+       "L 53.609375 0 \r\n",
+       "L 7.328125 0 \r\n",
+       "L 7.328125 8.296875 \r\n",
+       "Q 12.9375 14.109375 22.625 23.890625 \r\n",
+       "Q 32.328125 33.6875 34.8125 36.53125 \r\n",
+       "Q 39.546875 41.84375 41.421875 45.53125 \r\n",
+       "Q 43.3125 49.21875 43.3125 52.78125 \r\n",
+       "Q 43.3125 58.59375 39.234375 62.25 \r\n",
+       "Q 35.15625 65.921875 28.609375 65.921875 \r\n",
+       "Q 23.96875 65.921875 18.8125 64.3125 \r\n",
+       "Q 13.671875 62.703125 7.8125 59.421875 \r\n",
+       "L 7.8125 69.390625 \r\n",
+       "Q 13.765625 71.78125 18.9375 73 \r\n",
+       "Q 24.125 74.21875 28.421875 74.21875 \r\n",
+       "Q 39.75 74.21875 46.484375 68.546875 \r\n",
+       "Q 53.21875 62.890625 53.21875 53.421875 \r\n",
+       "Q 53.21875 48.921875 51.53125 44.890625 \r\n",
+       "Q 49.859375 40.875 45.40625 35.40625 \r\n",
+       "Q 44.1875 33.984375 37.640625 27.21875 \r\n",
+       "Q 31.109375 20.453125 19.1875 8.296875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-50\"/>\r\n",
+       "       <path d=\"M 10.6875 12.40625 \r\n",
+       "L 21 12.40625 \r\n",
+       "L 21 0 \r\n",
+       "L 10.6875 0 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-46\"/>\r\n",
+       "       <path d=\"M 8.203125 72.90625 \r\n",
+       "L 55.078125 72.90625 \r\n",
+       "L 55.078125 68.703125 \r\n",
+       "L 28.609375 0 \r\n",
+       "L 18.3125 0 \r\n",
+       "L 43.21875 64.59375 \r\n",
+       "L 8.203125 64.59375 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-55\"/>\r\n",
+       "       <path d=\"M 10.796875 72.90625 \r\n",
+       "L 49.515625 72.90625 \r\n",
+       "L 49.515625 64.59375 \r\n",
+       "L 19.828125 64.59375 \r\n",
+       "L 19.828125 46.734375 \r\n",
+       "Q 21.96875 47.46875 24.109375 47.828125 \r\n",
+       "Q 26.265625 48.1875 28.421875 48.1875 \r\n",
+       "Q 40.625 48.1875 47.75 41.5 \r\n",
+       "Q 54.890625 34.8125 54.890625 23.390625 \r\n",
+       "Q 54.890625 11.625 47.5625 5.09375 \r\n",
+       "Q 40.234375 -1.421875 26.90625 -1.421875 \r\n",
+       "Q 22.3125 -1.421875 17.546875 -0.640625 \r\n",
+       "Q 12.796875 0.140625 7.71875 1.703125 \r\n",
+       "L 7.71875 11.625 \r\n",
+       "Q 12.109375 9.234375 16.796875 8.0625 \r\n",
+       "Q 21.484375 6.890625 26.703125 6.890625 \r\n",
+       "Q 35.15625 6.890625 40.078125 11.328125 \r\n",
+       "Q 45.015625 15.765625 45.015625 23.390625 \r\n",
+       "Q 45.015625 31 40.078125 35.4375 \r\n",
+       "Q 35.15625 39.890625 26.703125 39.890625 \r\n",
+       "Q 22.75 39.890625 18.8125 39.015625 \r\n",
+       "Q 14.890625 38.140625 10.796875 36.28125 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-53\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g transform=\"translate(26.181183 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-55\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_2\">\r\n",
+       "     <g id=\"line2d_2\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"93.631351\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_2\">\r\n",
+       "      <!-- −192.50 -->\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 31.78125 66.40625 \r\n",
+       "Q 24.171875 66.40625 20.328125 58.90625 \r\n",
+       "Q 16.5 51.421875 16.5 36.375 \r\n",
+       "Q 16.5 21.390625 20.328125 13.890625 \r\n",
+       "Q 24.171875 6.390625 31.78125 6.390625 \r\n",
+       "Q 39.453125 6.390625 43.28125 13.890625 \r\n",
+       "Q 47.125 21.390625 47.125 36.375 \r\n",
+       "Q 47.125 51.421875 43.28125 58.90625 \r\n",
+       "Q 39.453125 66.40625 31.78125 66.40625 \r\n",
+       "z\r\n",
+       "M 31.78125 74.21875 \r\n",
+       "Q 44.046875 74.21875 50.515625 64.515625 \r\n",
+       "Q 56.984375 54.828125 56.984375 36.375 \r\n",
+       "Q 56.984375 17.96875 50.515625 8.265625 \r\n",
+       "Q 44.046875 -1.421875 31.78125 -1.421875 \r\n",
+       "Q 19.53125 -1.421875 13.0625 8.265625 \r\n",
+       "Q 6.59375 17.96875 6.59375 36.375 \r\n",
+       "Q 6.59375 54.828125 13.0625 64.515625 \r\n",
+       "Q 19.53125 74.21875 31.78125 74.21875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-48\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g transform=\"translate(71.946195 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_3\">\r\n",
+       "     <g id=\"line2d_3\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"139.396363\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_3\">\r\n",
+       "      <!-- −192.25 -->\r\n",
+       "      <g transform=\"translate(117.711207 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_4\">\r\n",
+       "     <g id=\"line2d_4\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"185.161374\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_4\">\r\n",
+       "      <!-- −192.00 -->\r\n",
+       "      <g transform=\"translate(163.476218 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_5\">\r\n",
+       "     <g id=\"line2d_5\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"230.926386\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_5\">\r\n",
+       "      <!-- −191.75 -->\r\n",
+       "      <g transform=\"translate(209.24123 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-55\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_6\">\r\n",
+       "     <g id=\"line2d_6\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"276.691397\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_6\">\r\n",
+       "      <!-- −191.50 -->\r\n",
+       "      <g transform=\"translate(255.006241 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_7\">\r\n",
+       "     <g id=\"line2d_7\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"322.456409\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_7\">\r\n",
+       "      <!-- −191.25 -->\r\n",
+       "      <g transform=\"translate(300.771253 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-53\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"xtick_8\">\r\n",
+       "     <g id=\"line2d_8\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"368.221421\" xlink:href=\"#m42c5992e07\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_8\">\r\n",
+       "      <!-- −191.00 -->\r\n",
+       "      <g transform=\"translate(346.536264 239.238437)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-8722\"/>\r\n",
+       "       <use x=\"83.789062\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"147.412109\" xlink:href=\"#DejaVuSans-57\"/>\r\n",
+       "       <use x=\"211.035156\" xlink:href=\"#DejaVuSans-49\"/>\r\n",
+       "       <use x=\"274.658203\" xlink:href=\"#DejaVuSans-46\"/>\r\n",
+       "       <use x=\"306.445312\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "       <use x=\"370.068359\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"text_9\">\r\n",
+       "     <!-- Energy -->\r\n",
+       "     <defs>\r\n",
+       "      <path d=\"M 9.8125 72.90625 \r\n",
+       "L 55.90625 72.90625 \r\n",
+       "L 55.90625 64.59375 \r\n",
+       "L 19.671875 64.59375 \r\n",
+       "L 19.671875 43.015625 \r\n",
+       "L 54.390625 43.015625 \r\n",
+       "L 54.390625 34.71875 \r\n",
+       "L 19.671875 34.71875 \r\n",
+       "L 19.671875 8.296875 \r\n",
+       "L 56.78125 8.296875 \r\n",
+       "L 56.78125 0 \r\n",
+       "L 9.8125 0 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-69\"/>\r\n",
+       "      <path d=\"M 54.890625 33.015625 \r\n",
+       "L 54.890625 0 \r\n",
+       "L 45.90625 0 \r\n",
+       "L 45.90625 32.71875 \r\n",
+       "Q 45.90625 40.484375 42.875 44.328125 \r\n",
+       "Q 39.84375 48.1875 33.796875 48.1875 \r\n",
+       "Q 26.515625 48.1875 22.3125 43.546875 \r\n",
+       "Q 18.109375 38.921875 18.109375 30.90625 \r\n",
+       "L 18.109375 0 \r\n",
+       "L 9.078125 0 \r\n",
+       "L 9.078125 54.6875 \r\n",
+       "L 18.109375 54.6875 \r\n",
+       "L 18.109375 46.1875 \r\n",
+       "Q 21.34375 51.125 25.703125 53.5625 \r\n",
+       "Q 30.078125 56 35.796875 56 \r\n",
+       "Q 45.21875 56 50.046875 50.171875 \r\n",
+       "Q 54.890625 44.34375 54.890625 33.015625 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-110\"/>\r\n",
+       "      <path d=\"M 56.203125 29.59375 \r\n",
+       "L 56.203125 25.203125 \r\n",
+       "L 14.890625 25.203125 \r\n",
+       "Q 15.484375 15.921875 20.484375 11.0625 \r\n",
+       "Q 25.484375 6.203125 34.421875 6.203125 \r\n",
+       "Q 39.59375 6.203125 44.453125 7.46875 \r\n",
+       "Q 49.3125 8.734375 54.109375 11.28125 \r\n",
+       "L 54.109375 2.78125 \r\n",
+       "Q 49.265625 0.734375 44.1875 -0.34375 \r\n",
+       "Q 39.109375 -1.421875 33.890625 -1.421875 \r\n",
+       "Q 20.796875 -1.421875 13.15625 6.1875 \r\n",
+       "Q 5.515625 13.8125 5.515625 26.8125 \r\n",
+       "Q 5.515625 40.234375 12.765625 48.109375 \r\n",
+       "Q 20.015625 56 32.328125 56 \r\n",
+       "Q 43.359375 56 49.78125 48.890625 \r\n",
+       "Q 56.203125 41.796875 56.203125 29.59375 \r\n",
+       "z\r\n",
+       "M 47.21875 32.234375 \r\n",
+       "Q 47.125 39.59375 43.09375 43.984375 \r\n",
+       "Q 39.0625 48.390625 32.421875 48.390625 \r\n",
+       "Q 24.90625 48.390625 20.390625 44.140625 \r\n",
+       "Q 15.875 39.890625 15.1875 32.171875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-101\"/>\r\n",
+       "      <path d=\"M 41.109375 46.296875 \r\n",
+       "Q 39.59375 47.171875 37.8125 47.578125 \r\n",
+       "Q 36.03125 48 33.890625 48 \r\n",
+       "Q 26.265625 48 22.1875 43.046875 \r\n",
+       "Q 18.109375 38.09375 18.109375 28.8125 \r\n",
+       "L 18.109375 0 \r\n",
+       "L 9.078125 0 \r\n",
+       "L 9.078125 54.6875 \r\n",
+       "L 18.109375 54.6875 \r\n",
+       "L 18.109375 46.1875 \r\n",
+       "Q 20.953125 51.171875 25.484375 53.578125 \r\n",
+       "Q 30.03125 56 36.53125 56 \r\n",
+       "Q 37.453125 56 38.578125 55.875 \r\n",
+       "Q 39.703125 55.765625 41.0625 55.515625 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-114\"/>\r\n",
+       "      <path d=\"M 45.40625 27.984375 \r\n",
+       "Q 45.40625 37.75 41.375 43.109375 \r\n",
+       "Q 37.359375 48.484375 30.078125 48.484375 \r\n",
+       "Q 22.859375 48.484375 18.828125 43.109375 \r\n",
+       "Q 14.796875 37.75 14.796875 27.984375 \r\n",
+       "Q 14.796875 18.265625 18.828125 12.890625 \r\n",
+       "Q 22.859375 7.515625 30.078125 7.515625 \r\n",
+       "Q 37.359375 7.515625 41.375 12.890625 \r\n",
+       "Q 45.40625 18.265625 45.40625 27.984375 \r\n",
+       "z\r\n",
+       "M 54.390625 6.78125 \r\n",
+       "Q 54.390625 -7.171875 48.1875 -13.984375 \r\n",
+       "Q 42 -20.796875 29.203125 -20.796875 \r\n",
+       "Q 24.46875 -20.796875 20.265625 -20.09375 \r\n",
+       "Q 16.0625 -19.390625 12.109375 -17.921875 \r\n",
+       "L 12.109375 -9.1875 \r\n",
+       "Q 16.0625 -11.328125 19.921875 -12.34375 \r\n",
+       "Q 23.78125 -13.375 27.78125 -13.375 \r\n",
+       "Q 36.625 -13.375 41.015625 -8.765625 \r\n",
+       "Q 45.40625 -4.15625 45.40625 5.171875 \r\n",
+       "L 45.40625 9.625 \r\n",
+       "Q 42.625 4.78125 38.28125 2.390625 \r\n",
+       "Q 33.9375 0 27.875 0 \r\n",
+       "Q 17.828125 0 11.671875 7.65625 \r\n",
+       "Q 5.515625 15.328125 5.515625 27.984375 \r\n",
+       "Q 5.515625 40.671875 11.671875 48.328125 \r\n",
+       "Q 17.828125 56 27.875 56 \r\n",
+       "Q 33.9375 56 38.28125 53.609375 \r\n",
+       "Q 42.625 51.21875 45.40625 46.390625 \r\n",
+       "L 45.40625 54.6875 \r\n",
+       "L 54.390625 54.6875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-103\"/>\r\n",
+       "      <path d=\"M 32.171875 -5.078125 \r\n",
+       "Q 28.375 -14.84375 24.75 -17.8125 \r\n",
+       "Q 21.140625 -20.796875 15.09375 -20.796875 \r\n",
+       "L 7.90625 -20.796875 \r\n",
+       "L 7.90625 -13.28125 \r\n",
+       "L 13.1875 -13.28125 \r\n",
+       "Q 16.890625 -13.28125 18.9375 -11.515625 \r\n",
+       "Q 21 -9.765625 23.484375 -3.21875 \r\n",
+       "L 25.09375 0.875 \r\n",
+       "L 2.984375 54.6875 \r\n",
+       "L 12.5 54.6875 \r\n",
+       "L 29.59375 11.921875 \r\n",
+       "L 46.6875 54.6875 \r\n",
+       "L 56.203125 54.6875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-121\"/>\r\n",
+       "     </defs>\r\n",
+       "     <g transform=\"translate(186.582813 256.715781)scale(0.15 -0.15)\">\r\n",
+       "      <use xlink:href=\"#DejaVuSans-69\"/>\r\n",
+       "      <use x=\"63.183594\" xlink:href=\"#DejaVuSans-110\"/>\r\n",
+       "      <use x=\"126.5625\" xlink:href=\"#DejaVuSans-101\"/>\r\n",
+       "      <use x=\"188.085938\" xlink:href=\"#DejaVuSans-114\"/>\r\n",
+       "      <use x=\"227.449219\" xlink:href=\"#DejaVuSans-103\"/>\r\n",
+       "      <use x=\"290.925781\" xlink:href=\"#DejaVuSans-121\"/>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"matplotlib.axis_2\">\r\n",
+       "    <g id=\"ytick_1\">\r\n",
+       "     <g id=\"line2d_9\">\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 0 0 \r\n",
+       "L -3.5 0 \r\n",
+       "\" id=\"ma8ed222602\" style=\"stroke:#000000;stroke-width:0.8;\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"224.64\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_10\">\r\n",
+       "      <!-- 0 -->\r\n",
+       "      <g transform=\"translate(32.079688 228.439219)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"ytick_2\">\r\n",
+       "     <g id=\"line2d_10\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"177.034089\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_11\">\r\n",
+       "      <!-- 20 -->\r\n",
+       "      <g transform=\"translate(25.717188 180.833307)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-50\"/>\r\n",
+       "       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"ytick_3\">\r\n",
+       "     <g id=\"line2d_11\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"129.428177\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_12\">\r\n",
+       "      <!-- 40 -->\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 37.796875 64.3125 \r\n",
+       "L 12.890625 25.390625 \r\n",
+       "L 37.796875 25.390625 \r\n",
+       "z\r\n",
+       "M 35.203125 72.90625 \r\n",
+       "L 47.609375 72.90625 \r\n",
+       "L 47.609375 25.390625 \r\n",
+       "L 58.015625 25.390625 \r\n",
+       "L 58.015625 17.1875 \r\n",
+       "L 47.609375 17.1875 \r\n",
+       "L 47.609375 0 \r\n",
+       "L 37.796875 0 \r\n",
+       "L 37.796875 17.1875 \r\n",
+       "L 4.890625 17.1875 \r\n",
+       "L 4.890625 26.703125 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-52\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g transform=\"translate(25.717188 133.227396)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-52\"/>\r\n",
+       "       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"ytick_4\">\r\n",
+       "     <g id=\"line2d_12\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"81.822266\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_13\">\r\n",
+       "      <!-- 60 -->\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 33.015625 40.375 \r\n",
+       "Q 26.375 40.375 22.484375 35.828125 \r\n",
+       "Q 18.609375 31.296875 18.609375 23.390625 \r\n",
+       "Q 18.609375 15.53125 22.484375 10.953125 \r\n",
+       "Q 26.375 6.390625 33.015625 6.390625 \r\n",
+       "Q 39.65625 6.390625 43.53125 10.953125 \r\n",
+       "Q 47.40625 15.53125 47.40625 23.390625 \r\n",
+       "Q 47.40625 31.296875 43.53125 35.828125 \r\n",
+       "Q 39.65625 40.375 33.015625 40.375 \r\n",
+       "z\r\n",
+       "M 52.59375 71.296875 \r\n",
+       "L 52.59375 62.3125 \r\n",
+       "Q 48.875 64.0625 45.09375 64.984375 \r\n",
+       "Q 41.3125 65.921875 37.59375 65.921875 \r\n",
+       "Q 27.828125 65.921875 22.671875 59.328125 \r\n",
+       "Q 17.53125 52.734375 16.796875 39.40625 \r\n",
+       "Q 19.671875 43.65625 24.015625 45.921875 \r\n",
+       "Q 28.375 48.1875 33.59375 48.1875 \r\n",
+       "Q 44.578125 48.1875 50.953125 41.515625 \r\n",
+       "Q 57.328125 34.859375 57.328125 23.390625 \r\n",
+       "Q 57.328125 12.15625 50.6875 5.359375 \r\n",
+       "Q 44.046875 -1.421875 33.015625 -1.421875 \r\n",
+       "Q 20.359375 -1.421875 13.671875 8.265625 \r\n",
+       "Q 6.984375 17.96875 6.984375 36.375 \r\n",
+       "Q 6.984375 53.65625 15.1875 63.9375 \r\n",
+       "Q 23.390625 74.21875 37.203125 74.21875 \r\n",
+       "Q 40.921875 74.21875 44.703125 73.484375 \r\n",
+       "Q 48.484375 72.75 52.59375 71.296875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-54\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g transform=\"translate(25.717188 85.621485)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-54\"/>\r\n",
+       "       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"ytick_5\">\r\n",
+       "     <g id=\"line2d_13\">\r\n",
+       "      <g>\r\n",
+       "       <use style=\"stroke:#000000;stroke-width:0.8;\" x=\"45.442188\" xlink:href=\"#ma8ed222602\" y=\"34.216355\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "     <g id=\"text_14\">\r\n",
+       "      <!-- 80 -->\r\n",
+       "      <defs>\r\n",
+       "       <path d=\"M 31.78125 34.625 \r\n",
+       "Q 24.75 34.625 20.71875 30.859375 \r\n",
+       "Q 16.703125 27.09375 16.703125 20.515625 \r\n",
+       "Q 16.703125 13.921875 20.71875 10.15625 \r\n",
+       "Q 24.75 6.390625 31.78125 6.390625 \r\n",
+       "Q 38.8125 6.390625 42.859375 10.171875 \r\n",
+       "Q 46.921875 13.96875 46.921875 20.515625 \r\n",
+       "Q 46.921875 27.09375 42.890625 30.859375 \r\n",
+       "Q 38.875 34.625 31.78125 34.625 \r\n",
+       "z\r\n",
+       "M 21.921875 38.8125 \r\n",
+       "Q 15.578125 40.375 12.03125 44.71875 \r\n",
+       "Q 8.5 49.078125 8.5 55.328125 \r\n",
+       "Q 8.5 64.0625 14.71875 69.140625 \r\n",
+       "Q 20.953125 74.21875 31.78125 74.21875 \r\n",
+       "Q 42.671875 74.21875 48.875 69.140625 \r\n",
+       "Q 55.078125 64.0625 55.078125 55.328125 \r\n",
+       "Q 55.078125 49.078125 51.53125 44.71875 \r\n",
+       "Q 48 40.375 41.703125 38.8125 \r\n",
+       "Q 48.828125 37.15625 52.796875 32.3125 \r\n",
+       "Q 56.78125 27.484375 56.78125 20.515625 \r\n",
+       "Q 56.78125 9.90625 50.3125 4.234375 \r\n",
+       "Q 43.84375 -1.421875 31.78125 -1.421875 \r\n",
+       "Q 19.734375 -1.421875 13.25 4.234375 \r\n",
+       "Q 6.78125 9.90625 6.78125 20.515625 \r\n",
+       "Q 6.78125 27.484375 10.78125 32.3125 \r\n",
+       "Q 14.796875 37.15625 21.921875 38.8125 \r\n",
+       "z\r\n",
+       "M 18.3125 54.390625 \r\n",
+       "Q 18.3125 48.734375 21.84375 45.5625 \r\n",
+       "Q 25.390625 42.390625 31.78125 42.390625 \r\n",
+       "Q 38.140625 42.390625 41.71875 45.5625 \r\n",
+       "Q 45.3125 48.734375 45.3125 54.390625 \r\n",
+       "Q 45.3125 60.0625 41.71875 63.234375 \r\n",
+       "Q 38.140625 66.40625 31.78125 66.40625 \r\n",
+       "Q 25.390625 66.40625 21.84375 63.234375 \r\n",
+       "Q 18.3125 60.0625 18.3125 54.390625 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-56\"/>\r\n",
+       "      </defs>\r\n",
+       "      <g transform=\"translate(25.717188 38.015573)scale(0.1 -0.1)\">\r\n",
+       "       <use xlink:href=\"#DejaVuSans-56\"/>\r\n",
+       "       <use x=\"63.623047\" xlink:href=\"#DejaVuSans-48\"/>\r\n",
+       "      </g>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "    <g id=\"text_15\">\r\n",
+       "     <!-- Frequency -->\r\n",
+       "     <defs>\r\n",
+       "      <path d=\"M 9.8125 72.90625 \r\n",
+       "L 51.703125 72.90625 \r\n",
+       "L 51.703125 64.59375 \r\n",
+       "L 19.671875 64.59375 \r\n",
+       "L 19.671875 43.109375 \r\n",
+       "L 48.578125 43.109375 \r\n",
+       "L 48.578125 34.8125 \r\n",
+       "L 19.671875 34.8125 \r\n",
+       "L 19.671875 0 \r\n",
+       "L 9.8125 0 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-70\"/>\r\n",
+       "      <path d=\"M 14.796875 27.296875 \r\n",
+       "Q 14.796875 17.390625 18.875 11.75 \r\n",
+       "Q 22.953125 6.109375 30.078125 6.109375 \r\n",
+       "Q 37.203125 6.109375 41.296875 11.75 \r\n",
+       "Q 45.40625 17.390625 45.40625 27.296875 \r\n",
+       "Q 45.40625 37.203125 41.296875 42.84375 \r\n",
+       "Q 37.203125 48.484375 30.078125 48.484375 \r\n",
+       "Q 22.953125 48.484375 18.875 42.84375 \r\n",
+       "Q 14.796875 37.203125 14.796875 27.296875 \r\n",
+       "z\r\n",
+       "M 45.40625 8.203125 \r\n",
+       "Q 42.578125 3.328125 38.25 0.953125 \r\n",
+       "Q 33.9375 -1.421875 27.875 -1.421875 \r\n",
+       "Q 17.96875 -1.421875 11.734375 6.484375 \r\n",
+       "Q 5.515625 14.40625 5.515625 27.296875 \r\n",
+       "Q 5.515625 40.1875 11.734375 48.09375 \r\n",
+       "Q 17.96875 56 27.875 56 \r\n",
+       "Q 33.9375 56 38.25 53.625 \r\n",
+       "Q 42.578125 51.265625 45.40625 46.390625 \r\n",
+       "L 45.40625 54.6875 \r\n",
+       "L 54.390625 54.6875 \r\n",
+       "L 54.390625 -20.796875 \r\n",
+       "L 45.40625 -20.796875 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-113\"/>\r\n",
+       "      <path d=\"M 8.5 21.578125 \r\n",
+       "L 8.5 54.6875 \r\n",
+       "L 17.484375 54.6875 \r\n",
+       "L 17.484375 21.921875 \r\n",
+       "Q 17.484375 14.15625 20.5 10.265625 \r\n",
+       "Q 23.53125 6.390625 29.59375 6.390625 \r\n",
+       "Q 36.859375 6.390625 41.078125 11.03125 \r\n",
+       "Q 45.3125 15.671875 45.3125 23.6875 \r\n",
+       "L 45.3125 54.6875 \r\n",
+       "L 54.296875 54.6875 \r\n",
+       "L 54.296875 0 \r\n",
+       "L 45.3125 0 \r\n",
+       "L 45.3125 8.40625 \r\n",
+       "Q 42.046875 3.421875 37.71875 1 \r\n",
+       "Q 33.40625 -1.421875 27.6875 -1.421875 \r\n",
+       "Q 18.265625 -1.421875 13.375 4.4375 \r\n",
+       "Q 8.5 10.296875 8.5 21.578125 \r\n",
+       "z\r\n",
+       "M 31.109375 56 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-117\"/>\r\n",
+       "      <path d=\"M 48.78125 52.59375 \r\n",
+       "L 48.78125 44.1875 \r\n",
+       "Q 44.96875 46.296875 41.140625 47.34375 \r\n",
+       "Q 37.3125 48.390625 33.40625 48.390625 \r\n",
+       "Q 24.65625 48.390625 19.8125 42.84375 \r\n",
+       "Q 14.984375 37.3125 14.984375 27.296875 \r\n",
+       "Q 14.984375 17.28125 19.8125 11.734375 \r\n",
+       "Q 24.65625 6.203125 33.40625 6.203125 \r\n",
+       "Q 37.3125 6.203125 41.140625 7.25 \r\n",
+       "Q 44.96875 8.296875 48.78125 10.40625 \r\n",
+       "L 48.78125 2.09375 \r\n",
+       "Q 45.015625 0.34375 40.984375 -0.53125 \r\n",
+       "Q 36.96875 -1.421875 32.421875 -1.421875 \r\n",
+       "Q 20.0625 -1.421875 12.78125 6.34375 \r\n",
+       "Q 5.515625 14.109375 5.515625 27.296875 \r\n",
+       "Q 5.515625 40.671875 12.859375 48.328125 \r\n",
+       "Q 20.21875 56 33.015625 56 \r\n",
+       "Q 37.15625 56 41.109375 55.140625 \r\n",
+       "Q 45.0625 54.296875 48.78125 52.59375 \r\n",
+       "z\r\n",
+       "\" id=\"DejaVuSans-99\"/>\r\n",
+       "     </defs>\r\n",
+       "     <g transform=\"translate(18.597656 154.664531)rotate(-90)scale(0.15 -0.15)\">\r\n",
+       "      <use xlink:href=\"#DejaVuSans-70\"/>\r\n",
+       "      <use x=\"50.269531\" xlink:href=\"#DejaVuSans-114\"/>\r\n",
+       "      <use x=\"89.132812\" xlink:href=\"#DejaVuSans-101\"/>\r\n",
+       "      <use x=\"150.65625\" xlink:href=\"#DejaVuSans-113\"/>\r\n",
+       "      <use x=\"214.132812\" xlink:href=\"#DejaVuSans-117\"/>\r\n",
+       "      <use x=\"277.511719\" xlink:href=\"#DejaVuSans-101\"/>\r\n",
+       "      <use x=\"339.035156\" xlink:href=\"#DejaVuSans-110\"/>\r\n",
+       "      <use x=\"402.414062\" xlink:href=\"#DejaVuSans-99\"/>\r\n",
+       "      <use x=\"457.394531\" xlink:href=\"#DejaVuSans-121\"/>\r\n",
+       "     </g>\r\n",
+       "    </g>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_18\">\r\n",
+       "    <path d=\"M 45.442188 224.64 \r\n",
+       "L 45.442188 7.2 \r\n",
+       "\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_19\">\r\n",
+       "    <path d=\"M 380.242188 224.64 \r\n",
+       "L 380.242188 7.2 \r\n",
+       "\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_20\">\r\n",
+       "    <path d=\"M 45.442187 224.64 \r\n",
+       "L 380.242187 224.64 \r\n",
+       "\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n",
+       "   </g>\r\n",
+       "   <g id=\"patch_21\">\r\n",
+       "    <path d=\"M 45.442187 7.2 \r\n",
+       "L 380.242187 7.2 \r\n",
+       "\" style=\"fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;\"/>\r\n",
+       "   </g>\r\n",
+       "  </g>\r\n",
+       " </g>\r\n",
+       " <defs>\r\n",
+       "  <clipPath id=\"p2de4e8ccfb\">\r\n",
+       "   <rect height=\"217.44\" width=\"334.8\" x=\"45.442188\" y=\"7.2\"/>\r\n",
+       "  </clipPath>\r\n",
+       " </defs>\r\n",
+       "</svg>\r\n"
+      ],
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "plt.hist(response.energies, bins=15)\n",
+    "plt.xlabel('Energy', fontsize=15)\n",
+    "plt.ylabel('Frequency', fontsize=15)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "K61nEm6fQyPl"
+   },
+   "source": [
+    "The lower the energy, the better, but you can find that the high energy solutions appear sometimes.\n",
+    "However, almost half of them seem to have the lowest energy.\n",
+    "\n",
+    "Openjij solved the problem 100 times.\n",
+    "Since the optimal solution is the lowest energy,\n",
+    "the lowest energy solution among the solved (sampled) solutions should be close to the optimal solution.\n",
+    "Therefore, we search for the solution from ``.states``.\n",
+    "\n",
+    "> Caution: SA can not always give an optimal solution.\n",
+    "Therefore, there is no guarantee that the solution with the lowest energy in this time is an optimal solution.\n",
+    "It is an approximate solution.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Sample(sample={0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 0, 22: 1, 23: 1, 24: 0, 25: 1, 26: 0, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 0, 33: 0, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 0, 40: 0, 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 0, 52: 1, 53: 1, 54: 1, 55: 1, 56: 0, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 0, 63: 0, 64: 1, 65: 1, 66: 1, 67: 0, 68: 0, 69: 1, 70: 0, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 0, 77: 0, 78: 0, 79: 1, 80: 0, 81: 1, 82: 1, 83: 1, 84: 0, 85: 0, 86: 0, 87: 0, 88: 0, 89: 0, 90: 1, 91: 1, 92: 1, 93: 0, 94: 1, 95: 1, 96: 1, 97: 0, 98: 1, 99: 1}, energy=-192.6801102019457, num_occurrences=1)"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "\n",
+    "min_samples = response.first\n",
+    "min_samples"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "XBp8gWZEQyPr"
+   },
+   "source": [
+    "Now you get the lowest energy solution.\n",
+    "The solution which is contained in this min_states is the approximate solution in this time.\n",
+    "Contained solutions have the same energy,\n",
+    "but the arrangement of spins may differ in some cases (In the case of \"degenerated state\").\n",
+    "\n",
+    "So, after choosing the lowest energy state as above, choose the spin orientation from min_state as you like.\n",
+    "Then, we solved the problem approximately.\n",
+    "\n",
+    "Next section, “2-Evaluation”, we will explain the index(\"time to solution\" and \"the residual energy\" etc.) for evaluate the solution."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "colab": {
+   "include_colab_link": true,
+   "name": "1-Introduction.ipynb",
+   "provenance": [],
+   "version": "0.3.2"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
 }
