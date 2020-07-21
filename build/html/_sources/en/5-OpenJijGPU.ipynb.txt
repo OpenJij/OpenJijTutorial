@@ -17,7 +17,7 @@
     "id": "view-in-github"
    },
    "source": [
-    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/5_OpenJijGPU.ipynb)"
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/5-OpenJijGPU.ipynb)"
    ]
   },
   {
