@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +13,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,10 +33,54 @@
           <a href="7-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A1 - OpenJij core interface入門 (core python interface)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A1 - OpenJij core interface入門 (core python interface)</a><ul>
+<li><a class="reference internal" href="#OpenJij-core-interface-について">OpenJij core interface について</a></li>
+<li><a class="reference internal" href="#問題を投げてみる">問題を投げてみる</a></li>
+<li><a class="reference internal" href="#モジュール一覧">モジュール一覧</a><ul>
+<li><a class="reference internal" href="#Graph">Graph</a></li>
+<li><a class="reference internal" href="#System">System</a></li>
+<li><a class="reference internal" href="#Updater">Updater</a></li>
+<li><a class="reference internal" href="#Algorithm">Algorithm</a></li>
+<li><a class="reference internal" href="#Result">Result</a></li>
+<li><a class="reference internal" href="#コーディングフロー">コーディングフロー</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="7-MonteCarloSampling.html"
+                        title="previous chapter">7-MonteCarlo Sampling</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="A2-CppIntroduction.html"
+                        title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/A1-Introduction.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -290,7 +333,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="OpenJij-core-interface-について">
 <h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
 <p>前回までのチュートリアルでは、OpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきました。OpenJijは最下層の部分は統計物理学の数値計算手法である、マルコフ連鎖モンテカルロ法(MCMC)をベースにC++を用いて実装されています。今まで触れてきたPythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形となっています。図にすると次のような包含関係があります。</p>
-<p><a class="reference internal" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a></p>
+<p><a class="reference internal" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a></p>
 <p>core interfaceを用いることでOpenJij上の全ての機能を使用することができます。よって最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。また、C++インターフェースを用いることで、より高速な演算を行うことができます。</p>
 <p>本チュートリアルではPythonインターフェースのcxxjijと、C++インターフェースの両方をご紹介します。 インストールにはpipを使用します。</p>
 <div class="nbinput docutils container">
@@ -460,53 +503,7 @@ The solution is [1, 1, 1, 1, 1].
 </div>
 
 
-            <div class="clearer"></div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">A1 - OpenJij core interface入門 (core python interface)</a><ul>
-<li><a class="reference internal" href="#OpenJij-core-interface-について">OpenJij core interface について</a></li>
-<li><a class="reference internal" href="#問題を投げてみる">問題を投げてみる</a></li>
-<li><a class="reference internal" href="#モジュール一覧">モジュール一覧</a><ul>
-<li><a class="reference internal" href="#Graph">Graph</a></li>
-<li><a class="reference internal" href="#System">System</a></li>
-<li><a class="reference internal" href="#Updater">Updater</a></li>
-<li><a class="reference internal" href="#Algorithm">Algorithm</a></li>
-<li><a class="reference internal" href="#Result">Result</a></li>
-<li><a class="reference internal" href="#コーディングフロー">コーディングフロー</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="7-MonteCarloSampling.html"
-                        title="previous chapter">7-MonteCarlo Sampling</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="A2-CppIntroduction.html"
-                        title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/A1-Introduction.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -524,13 +521,12 @@ The solution is [1, 1, 1, 1, 1].
           <a href="7-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">A1 - OpenJij core interface入門 (core python interface)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
   </body>
 </html>

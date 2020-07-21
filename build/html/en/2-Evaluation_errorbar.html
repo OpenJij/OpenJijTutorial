@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How to use the standard error function of benchmark functions &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +13,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,10 +33,49 @@
           <a href="2-Evaluation.html" title="2-An Evaluation of Annealing Algorithms"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">How to use the standard error function of benchmark functions</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to use the standard error function of benchmark functions</a><ul>
+<li><a class="reference internal" href="#Install-Libraries-and-model-preparation">Install Libraries and model preparation</a></li>
+<li><a class="reference internal" href="#Benchmark-function">Benchmark function</a><ul>
+<li><a class="reference internal" href="#TTS,-residual-energy-and-success-probability">TTS, residual energy and success probability</a></li>
+<li><a class="reference internal" href="#Standard-error">Standard error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="2-Evaluation.html"
+                        title="previous chapter">2-An Evaluation of Annealing Algorithms</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
+                        title="next chapter">3-PyQUBO with OpenJij</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/2-Evaluation_errorbar.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -290,16 +328,6 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="ch">#!pip install -U cmake</span>
-<span class="c1">#!pip install git+https://github.com/kumagaimasahito/OpenJij.git@feature/error_bar</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -352,8 +380,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -363,16 +391,6 @@ div.rendered_html tbody tr:hover {
 <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/usr/local/miniconda3/envs/openjij3/lib/python3.7/site-packages/matplotlib/__init__.py:886: MatplotlibDeprecationWarning:
-examples.directory is deprecated; in the future, examples will be found relative to the &#39;datapath&#39; directory.
-  &#34;found relative to the &#39;datapath&#39; directory.&#34;.format(key))
-</pre></div></div>
 </div>
 <div class="section" id="TTS,-residual-energy-and-success-probability">
 <h3>TTS, residual energy and success probability<a class="headerlink" href="#TTS,-residual-energy-and-success-probability" title="Permalink to this headline">¶</a></h3>
@@ -413,7 +431,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/en_2-Evaluation_errorbar_10_1.svg" src="../_images/en_2-Evaluation_errorbar_10_1.svg" /></div>
+<img alt="../_images/en_2-Evaluation_errorbar_9_1.svg" src="../_images/en_2-Evaluation_errorbar_9_1.svg" /></div>
 </div>
 </div>
 <div class="section" id="Standard-error">
@@ -483,65 +501,15 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/en_2-Evaluation_errorbar_13_1.svg" src="../_images/en_2-Evaluation_errorbar_13_1.svg" /></div>
+<img alt="../_images/en_2-Evaluation_errorbar_12_1.svg" src="../_images/en_2-Evaluation_errorbar_12_1.svg" /></div>
 </div>
 <p>As annealing time per session increased, error bars of the standard errors for success probability and residual energy become shorter and shorter.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 </div>
 
 
-            <div class="clearer"></div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">How to use the standard error function of benchmark functions</a><ul>
-<li><a class="reference internal" href="#Install-Libraries-and-model-preparation">Install Libraries and model preparation</a></li>
-<li><a class="reference internal" href="#Benchmark-function">Benchmark function</a><ul>
-<li><a class="reference internal" href="#TTS,-residual-energy-and-success-probability">TTS, residual energy and success probability</a></li>
-<li><a class="reference internal" href="#Standard-error">Standard error</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="2-Evaluation.html"
-                        title="previous chapter">2-An Evaluation of Annealing Algorithms</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
-                        title="next chapter">3-PyQUBO with OpenJij</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/en/2-Evaluation_errorbar.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -559,13 +527,12 @@ Text(0, 0.5, &#39;Success probability&#39;)
           <a href="2-Evaluation.html" title="2-An Evaluation of Annealing Algorithms"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">How to use the standard error function of benchmark functions</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
   </body>
 </html>

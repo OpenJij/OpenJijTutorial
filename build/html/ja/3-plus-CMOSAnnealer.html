@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +13,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,10 +33,51 @@
           <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a><ul>
+<li><a class="reference internal" href="#token-取得">token 取得</a></li>
+<li><a class="reference internal" href="#OpenJij-でアクセスする">OpenJij でアクセスする</a><ul>
+<li><a class="reference internal" href="#相互作用とキンググラフ">相互作用とキンググラフ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#他のSamplerと同じ-辞書型で渡す">他のSamplerと同じ 辞書型で渡す</a></li>
+<li><a class="reference internal" href="#キンググラフ上の2次元座標で相互作用を渡す">キンググラフ上の2次元座標で相互作用を渡す</a></li>
+<li><a class="reference internal" href="#QUBOを解く">QUBOを解く</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
+                        title="previous chapter">3-PyQUBO with OpenJij</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="4-DWaveOceanSDK.html"
+                        title="next chapter">4-D-Wave Ocean SDK 入門</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/3-plus-CMOSAnnealer.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -300,12 +340,12 @@ div.rendered_html tbody tr:hover {
 <p>では早速にコード例を示します。</p>
 <p>まずopenjij をインストールしておきましょう</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># !pip install openjij</span>
-<span class="o">!</span>pip show openjij  # <span class="nv">openjij</span> <span class="o">==</span> <span class="m">0</span>.0.5 を仮定します
+<span></span><span class="ch">#!pip install openjij</span>
+<span class="o">!</span>pip show openjij
 </pre></div>
 </div>
 </div>
@@ -315,14 +355,14 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Name: openjij
-Version: 0.0.5
-Summary: Framework for ising model and QUBO
+Version: 0.1.0
+Summary: Framework for the Ising model and QUBO
 Home-page: https://openjij.github.io/OpenJij/
 Author: Jij Inc.
 Author-email: openjij@j-ij.com
 License: Apache License 2.0
-Location: /usr/local/miniconda3/lib/python3.6/site-packages
-Requires: requests, numpy
+Location: /home/jiko/.local/lib/python3.8/site-packages
+Requires: scipy, requests, jij-cimod, numpy, dimod
 Required-by:
 </pre></div></div>
 </div>
@@ -549,50 +589,7 @@ Required-by:
 </div>
 
 
-            <div class="clearer"></div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a><ul>
-<li><a class="reference internal" href="#token-取得">token 取得</a></li>
-<li><a class="reference internal" href="#OpenJij-でアクセスする">OpenJij でアクセスする</a><ul>
-<li><a class="reference internal" href="#相互作用とキンググラフ">相互作用とキンググラフ</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#他のSamplerと同じ-辞書型で渡す">他のSamplerと同じ 辞書型で渡す</a></li>
-<li><a class="reference internal" href="#キンググラフ上の2次元座標で相互作用を渡す">キンググラフ上の2次元座標で相互作用を渡す</a></li>
-<li><a class="reference internal" href="#QUBOを解く">QUBOを解く</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="3-PyQUBO_2_OpenJij.html"
-                        title="previous chapter">3-PyQUBO with OpenJij</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="4-DWaveOceanSDK.html"
-                        title="next chapter">4-D-Wave Ocean SDK 入門</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/3-plus-CMOSAnnealer.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -610,13 +607,12 @@ Required-by:
           <a href="3-PyQUBO_2_OpenJij.html" title="3-PyQUBO with OpenJij"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">3-Plus-Annealing Cloud Web (NEDOのCMOS-Annealer)</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
   </body>
 </html>

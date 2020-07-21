@@ -4,7 +4,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5-OpenJij GPU &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +13,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,10 +33,51 @@
           <a href="4-DWaveOceanSDK.html" title="4-D-Wave Ocean SDK 入門"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
+<li><a class="reference internal" href="#Google-Colabでの設定とインストール">Google Colabでの設定とインストール</a><ul>
+<li><a class="reference internal" href="#GPU設定">GPU設定</a></li>
+<li><a class="reference internal" href="#OpenJijのインストール">OpenJijのインストール</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#GPUSQA計算">GPUSQA計算</a></li>
+<li><a class="reference internal" href="#実行">実行</a></li>
+<li><a class="reference internal" href="#全結合模型のキメラグラフへの埋め込み">全結合模型のキメラグラフへの埋め込み</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="4-DWaveOceanSDK.html"
+                        title="previous chapter">4-D-Wave Ocean SDK 入門</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="6-Machine_Learning_by_QA.html"
+                        title="next chapter">6-量子アニーリングによる機械学習 (QBoost)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/5-OpenJijGPU.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -294,7 +334,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="section" id="OpenJijのインストール">
 <h3>OpenJijのインストール<a class="headerlink" href="#OpenJijのインストール" title="Permalink to this headline">¶</a></h3>
-<p>Google ColabにプリインストールされているCMakeは古いバージョンです。まずはそれをバージョンアップしましょう。</p>
+<p>OpenJijからGPUを用いたモジュールを呼び出すためには、まずpipからのインストールの際にOpenJijをソースコードからビルドする必要があります。 この操作のためにCMakeと呼ばれるツールが必要ですが、Google ColabにプリインストールされているCMakeは古いバージョンです。まずはそれをバージョンアップしましょう。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -304,13 +344,14 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>その後、OpenJijをインストールします。</p>
+<p>その後、OpenJijをインストールし直します。一度アンインストールしてから、ソースコードからビルドするオプションである <code class="docutils literal notranslate"><span class="pre">--no-binary</span> <span class="pre">:all:</span></code>をpipに付け加えてインストールします。 インストールにはしばらく時間がかかります。 &gt; 通常pipは一度インストールしたことのあるアプリケーションであればキャッシュからデータを取ってきてしまうので、それも無効化する <code class="docutils literal notranslate"><span class="pre">--no--cache-dir</span></code>もつけます。初めてOpenJijをインストールする際にはこのオプションは不要です。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install openjij
+<span></span><span class="o">!</span>pip uninstall openjij -y
+<span class="o">!</span>pip install openjij --no-binary :all: --no-cache-dir
 </pre></div>
 </div>
 </div>
@@ -320,16 +361,16 @@ div.rendered_html tbody tr:hover {
 <h2>GPUSQA計算<a class="headerlink" href="#GPUSQA計算" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">OpenJijのGPUでサポートしているのはキメラグラフ上でのモンテカルロ計算です。</div>
-<div class="line">まずは GPUSQASampler のインスタンスを作ります。</div>
+<div class="line">まずは GPUSQASampler のインスタンスを作ります。 もし、GPU関連のモジュールが見つからないとエラーが出た際には、以前のバージョンが読み込まれている可能性があるので、一度再起動するといいかもしれません。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUChimeraSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -348,7 +389,7 @@ div.rendered_html tbody tr:hover {
 <h2>実行<a class="headerlink" href="#実行" title="Permalink to this headline">¶</a></h2>
 <p>ではSQAを実行してみましょう。これまで紹介してきたSamplerと同様に、sample_qubo (or sample_ising) で計算を行うことができます。 ただし、キメラグラフを満たさない添字の相互作用を指定するとエラーになります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -359,7 +400,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -414,31 +455,31 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
            ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],
-          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (4,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;)]), [0, 4, 5, 12], {&#39;system&#39;: [], &#39;sampling_time&#39;: 1006372.1469999792, &#39;execution_time&#39;: 8902.872740002294, &#39;list_exec_times&#39;: array([230796.36600005,   8290.07499999,   8871.43699998,   8162.024     ,
-         8042.78700002,   8098.51899999,   8169.03100002,   8717.89000001,
-         8071.55399997,   8079.75599997,   8075.238     ,   6575.44399996,
-         6622.51900002,   6544.86100001,   6475.21600001,   6579.81400002,
-         6559.83600001,   6517.41999997,   6585.95900001,   6518.605     ,
-         6509.76200001,   6516.95900001,   6503.829     ,   6554.55100002,
-         6598.15200004,   6559.86600003,   6580.816     ,   6562.29000003,
-         6500.42199999,   6466.57100003,   6406.80800001,   6390.24500003,
-         6659.54599998,   6464.876     ,   6436.83500004,   6504.48300001,
-         6446.07499999,   6446.44600004,   6454.87499997,   6475.223     ,
-         6496.00200001,   6466.11100001,   6495.32799997,   6542.35499997,
-         6453.81700002,   6432.13699999,   6491.07499999,   6461.52799999,
-         6558.50099997,   6534.26299999,   6422.665     ,   6566.92900003,
-         6421.17799998,   6433.25700003,   6465.06299995,   6422.80899996,
-         6564.92299998,   6492.88800003,   6604.65999999,   6561.19299998,
-         6598.88999996,   6510.924     ,   6470.13299999,   6447.51300001,
-         6428.63399997,   6432.77900002,   6463.92600004,   6585.03200003,
-         6444.74300003,   6514.35600003,   6400.51799996,   6425.93499998,
-         6458.08000002,   6452.91300003,   6434.88699995,   6418.80799998,
-         6496.19200004,   6432.80900005,   6431.72100001,   6411.84699998,
-         6447.61000001,   6426.49400004,   6448.77500002,   6412.73499997,
-         6453.15699995,   6386.89399995,   6430.19299997,   6480.221     ,
-         6432.088     ,   6409.78600001,   6450.62400002,   6441.75000002,
-         6413.32800001,   6472.07700001,   6458.86699999,   6480.93900003,
-         6443.80400001,   6411.399     ,   6422.54800005,   6423.68199999]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1.0, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
+          dtype=[(&#39;sample&#39;, &#39;i1&#39;, (4,)), (&#39;energy&#39;, &#39;&lt;f8&#39;), (&#39;num_occurrences&#39;, &#39;&lt;i8&#39;)]), [0, 4, 5, 12], {&#39;system&#39;: [], &#39;sampling_time&#39;: 613007.2049982118, &#39;execution_time&#39;: 5268.688350133743, &#39;list_exec_times&#39;: array([8103.3180013 , 7873.31900028, 7825.17199877, 7872.30599963,
+       7792.76800131, 7593.87200014, 7625.91199964, 7482.52899939,
+       7432.99399983, 7417.46600033, 7432.96099972, 7366.36799957,
+       7428.62700099, 7236.23700105, 7419.23100031, 7350.26099937,
+       7386.48200058, 7441.84500036, 7407.03500014, 7415.7250001 ,
+       7299.38800032, 7371.710999  , 7383.22500001, 7377.78900111,
+       7321.36400075, 7398.68399978, 7432.24699909, 7335.25199939,
+       7368.8299999 , 7459.09500074, 5375.03600026, 4531.83100035,
+       4532.1180005 , 4332.65600077, 4344.09799891, 4393.281999  ,
+       4354.3289994 , 4416.1750011 , 4325.57100066, 4285.58099884,
+       4299.46800068, 4286.38800076, 4321.26099986, 4284.26200051,
+       4340.93200056, 4283.38299935, 4287.86399971, 4356.57200069,
+       4270.55      , 4314.58400089, 4254.48100032, 4355.33199925,
+       4280.94700146, 4316.0009991 , 4231.83699968, 4333.81899893,
+       4294.46700036, 4251.12299854, 4235.29399995, 4322.45799857,
+       4257.19499981, 4338.70699999, 4242.10899837, 4298.02899998,
+       4315.735001  , 4312.46000153, 4248.94000025, 4315.61000005,
+       4289.10499977, 4330.03900071, 4282.44599971, 4318.12500028,
+       4310.84400043, 4292.43100007, 4273.68900091, 4292.38300057,
+       4273.35200038, 4315.81399971, 4285.78700121, 4246.03699867,
+       4299.35600005, 4259.02400093, 4238.95799941, 4316.84500109,
+       4248.75200042, 4265.76499922, 4277.85600004, 4279.65800009,
+       4273.97199928, 4290.23499964, 4312.98200056, 4356.32300105,
+       4278.21400081, 4294.05099931, 4196.49500145, 4260.50799979,
+       4256.06900171, 4298.48100066, 4280.20500112, 4282.53600148]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
 </pre></div></div>
 </div>
 </div>
@@ -474,50 +515,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </div>
 
 
-            <div class="clearer"></div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
-<li><a class="reference internal" href="#Google-Colabでの設定とインストール">Google Colabでの設定とインストール</a><ul>
-<li><a class="reference internal" href="#GPU設定">GPU設定</a></li>
-<li><a class="reference internal" href="#OpenJijのインストール">OpenJijのインストール</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#GPUSQA計算">GPUSQA計算</a></li>
-<li><a class="reference internal" href="#実行">実行</a></li>
-<li><a class="reference internal" href="#全結合模型のキメラグラフへの埋め込み">全結合模型のキメラグラフへの埋め込み</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="4-DWaveOceanSDK.html"
-                        title="previous chapter">4-D-Wave Ocean SDK 入門</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="6-Machine_Learning_by_QA.html"
-                        title="next chapter">6-量子アニーリングによる機械学習 (QBoost)</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/5-OpenJijGPU.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -535,13 +533,12 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
           <a href="4-DWaveOceanSDK.html" title="4-D-Wave Ocean SDK 入門"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
     </div>
   </body>
 </html>
