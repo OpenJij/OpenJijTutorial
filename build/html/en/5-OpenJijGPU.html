@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5-OpenJij GPU &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,51 +34,10 @@
           <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
-<li><a class="reference internal" href="#Setup-and-installation-in-Google-Colab">Setup and installation in Google Colab</a><ul>
-<li><a class="reference internal" href="#GPU-Settings">GPU Settings</a></li>
-<li><a class="reference internal" href="#Installation-of-OpenJij">Installation of OpenJij</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#Calculation-with-GPUSQA">Calculation with GPUSQA</a></li>
-<li><a class="reference internal" href="#Execution">Execution</a></li>
-<li><a class="reference internal" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph">Embedding the All-Coupled Model in Chimeragraph</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="4-DWaveOceanSDK.html"
-                        title="previous chapter">4-Introduction to D-Wave Ocean SDK</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="6-Machine_Learning_by_QA.html"
-                        title="next chapter">6-Machine Learning (QBoost) with Quantum Annealing</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/en/5-OpenJijGPU.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -510,7 +470,50 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5-OpenJij GPU</a><ul>
+<li><a class="reference internal" href="#Setup-and-installation-in-Google-Colab">Setup and installation in Google Colab</a><ul>
+<li><a class="reference internal" href="#GPU-Settings">GPU Settings</a></li>
+<li><a class="reference internal" href="#Installation-of-OpenJij">Installation of OpenJij</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Calculation-with-GPUSQA">Calculation with GPUSQA</a></li>
+<li><a class="reference internal" href="#Execution">Execution</a></li>
+<li><a class="reference internal" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph">Embedding the All-Coupled Model in Chimeragraph</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="4-DWaveOceanSDK.html"
+                        title="previous chapter">4-Introduction to D-Wave Ocean SDK</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="6-Machine_Learning_by_QA.html"
+                        title="next chapter">6-Machine Learning (QBoost) with Quantum Annealing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/5-OpenJijGPU.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -528,12 +531,13 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
           <a href="4-DWaveOceanSDK.html" title="4-Introduction to D-Wave Ocean SDK"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">5-OpenJij GPU</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>

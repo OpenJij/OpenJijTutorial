@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>6-量子アニーリングによる機械学習 (QBoost) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,56 +34,10 @@
           <a href="5-OpenJijGPU.html" title="5-OpenJij GPU"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">6-量子アニーリングによる機械学習 (QBoost)</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">6-量子アニーリングによる機械学習 (QBoost)</a><ul>
-<li><a class="reference internal" href="#クラスタリング">クラスタリング</a><ul>
-<li><a class="reference internal" href="#必要なライブラリのインポート">必要なライブラリのインポート</a></li>
-<li><a class="reference internal" href="#人工データの生成">人工データの生成</a></li>
-<li><a class="reference internal" href="#PyQUBOによるクラスタリング">PyQUBOによるクラスタリング</a></li>
-<li><a class="reference internal" href="#Openjijのソルバーを用いたクラスタリング">Openjijのソルバーを用いたクラスタリング</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#QBoost">QBoost</a><ul>
-<li><a class="reference internal" href="#スクリプト">スクリプト</a></li>
-<li><a class="reference internal" href="#弱学習器の作成">弱学習器の作成</a></li>
-<li><a class="reference internal" href="#D-Waveサンプラーを用いてQBoostを実行">D-Waveサンプラーを用いてQBoostを実行</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="5-OpenJijGPU.html"
-                        title="previous chapter">5-OpenJij GPU</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="7-MonteCarloSampling.html"
-                        title="next chapter">7-MonteCarlo Sampling</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/6-Machine_Learning_by_QA.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -1005,7 +960,55 @@ average accuracy　of QBoost is 0.9398183515830576
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6-量子アニーリングによる機械学習 (QBoost)</a><ul>
+<li><a class="reference internal" href="#クラスタリング">クラスタリング</a><ul>
+<li><a class="reference internal" href="#必要なライブラリのインポート">必要なライブラリのインポート</a></li>
+<li><a class="reference internal" href="#人工データの生成">人工データの生成</a></li>
+<li><a class="reference internal" href="#PyQUBOによるクラスタリング">PyQUBOによるクラスタリング</a></li>
+<li><a class="reference internal" href="#Openjijのソルバーを用いたクラスタリング">Openjijのソルバーを用いたクラスタリング</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#QBoost">QBoost</a><ul>
+<li><a class="reference internal" href="#スクリプト">スクリプト</a></li>
+<li><a class="reference internal" href="#弱学習器の作成">弱学習器の作成</a></li>
+<li><a class="reference internal" href="#D-Waveサンプラーを用いてQBoostを実行">D-Waveサンプラーを用いてQBoostを実行</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="5-OpenJijGPU.html"
+                        title="previous chapter">5-OpenJij GPU</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="7-MonteCarloSampling.html"
+                        title="next chapter">7-MonteCarlo Sampling</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/6-Machine_Learning_by_QA.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1023,12 +1026,13 @@ average accuracy　of QBoost is 0.9398183515830576
           <a href="5-OpenJijGPU.html" title="5-OpenJij GPU"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">6-量子アニーリングによる機械学習 (QBoost)</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>
