@@ -4,6 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenJij チュートリアル &#8212; OpenJij Tutorial 0.1.0 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -13,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,36 +33,10 @@
         <li class="right" >
           <a href="../en/A4-QuantumSystem.html" title="A4 - Quantum ising models"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">OpenJij チュートリアル</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../en/A4-QuantumSystem.html"
-                        title="previous chapter">A4 - Quantum ising models</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="README.html"
-                        title="next chapter">OpenJij チュートリアル</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/ja/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -131,6 +106,13 @@
 <li class="toctree-l2"><a class="reference internal" href="7-MonteCarloSampling.html#結言">結言</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="8-KnapsackPyqubo.html#Knapsack問題">Knapsack問題</a></li>
+<li class="toctree-l2"><a class="reference internal" href="8-KnapsackPyqubo.html#QUBO行列への変換方法">QUBO行列への変換方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="8-KnapsackPyqubo.html#PyQUBOへの実装">PyQUBOへの実装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="8-KnapsackPyqubo.html#まとめ">まとめ</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="A1-Introduction.html">A1 - OpenJij core interface入門 (core python interface)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="A1-Introduction.html#OpenJij-core-interface-について">OpenJij core interface について</a></li>
 <li class="toctree-l2"><a class="reference internal" href="A1-Introduction.html#問題を投げてみる">問題を投げてみる</a></li>
@@ -160,7 +142,35 @@
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../en/A4-QuantumSystem.html"
+                        title="previous chapter">A4 - Quantum ising models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="README.html"
+                        title="next chapter">OpenJij チュートリアル</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -177,12 +187,13 @@
         <li class="right" >
           <a href="../en/A4-QuantumSystem.html" title="A4 - Quantum ising models"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">OpenJij チュートリアル</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>
