@@ -287,10 +287,14 @@ div.rendered_html tbody tr:hover {
 <li><p>残留エネルギー : Resudial energy</p></li>
 </ul>
 <p>の3つがあります。特に<strong>TTS</strong>は計算時間を表すもので様々な評価によく用いられます。残留エネルギーは最適解にどれくらい近づけたのかを平均的に示す値です。</p>
+<p>この章では上記の3の評価指標の解説と測定方法について解説します。</p>
 <div class="section" id="Time-to-solution">
 <h2>Time to solution<a class="headerlink" href="#Time-to-solution" title="Permalink to this headline">¶</a></h2>
-<p>アニーリングアルゴリズムはどの計算時間でも何かしらの解を出すことができます。しかしいくら計算が速くても、誤った解が求まるようでは意味がありません。そこで(例えば90%の確率で最適解が得られるのにかかる時間、のように)自分が必要な確率で最適解が算出されるまでにかかる計算時間を指標とします。</p>
+<p>アニーリングアルゴリズムはどの計算時間でも何かしらの近似解を出すことができます。しかしいくら計算が速くても、誤った解が求まるようでは意味がありません。そこで(例えば90%の確率で最適解が得られるのにかかる時間、のように)自分が必要な確率で最適解が算出されるまでにかかる計算時間を指標とします。</p>
 <p>“1-Introduction”でも行なったようにアニーリングアルゴリズムは複数回行った中から最適解を探すため、計算時間を評価するには複数回行うことも考慮に入れる必要があります。</p>
+<blockquote>
+<div><p>例えば短い計算時間<span class="math notranslate nohighlight">\(\tau_{short}\)</span>で最適解を出す確率が低くても、その計算時間<span class="math notranslate nohighlight">\(\tau_{short}\)</span>で複数回アニーリングをした方が、より長い計算時間<span class="math notranslate nohighlight">\(\tau_{long}\)</span>を1回行うよりも計算時間が短くて済むかもしれません。 なので計算時間を考慮するには単純にアニーリング時間を比較するだけでは不十分なことがあります。</p>
+</div></blockquote>
 <p>複数回アニーリングを行うことも考慮に入れて、上述の計算時間を算出したものを<strong>Time to solution(TTS)</strong>と呼びます。TTSは以下のように簡単に導くことができます。</p>
 <p>1回のアニーリング時間を<span class="math notranslate nohighlight">\(\tau\)</span>とし、1回のアニーリングで最適解が算出される確率を<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>としましょう。この<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>が、アルゴリズムの評価に用いられる成功確率です。これらの定義から、1回のアニーリングで最適解が算出されない失敗確率は</p>
 <div class="math notranslate nohighlight">
@@ -323,7 +327,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">上述のIsing modelを解き、1回の計算時間を伸ばすとTTSがどのように変化するかを見てみましょう。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -337,7 +341,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -356,13 +360,16 @@ div.rendered_html tbody tr:hover {
 <div class="line">openjijの<code class="docutils literal notranslate"><span class="pre">sample_ising</span></code>または<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>から返ってくる Response クラスは<code class="docutils literal notranslate"><span class="pre">info</span></code>というメンバ変数を持っています。<code class="docutils literal notranslate"><span class="pre">info</span></code>にはsamplerごとに異なる情報が辞書型で格納されています。ほとんどのSamplerには<code class="docutils literal notranslate"><span class="pre">'execution_time'</span></code>というkeyで、各アルゴリズムの1回の実行時間(単位は<span class="math notranslate nohighlight">\(\mu\)</span> s)が格納されています。</div>
 <div class="line">SASamplerの場合はSimulated Annealingの1回あたりの計算時間を格納しています。</div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># 最適解を作成します。</span>
 <span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="c1"># 最適値を計算しておきます。</span>
+<span class="n">bqm</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="o">.</span><span class="n">from_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+<span class="n">minimum_energy</span> <span class="o">=</span> <span class="n">bqm</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">correct_state</span><span class="p">)</span>
 
 <span class="c1"># TTS を計算するのに必要なpRを定義します。</span>
 <span class="n">pR</span> <span class="o">=</span> <span class="mf">0.99</span>
@@ -370,16 +377,18 @@ div.rendered_html tbody tr:hover {
 <span class="c1"># Samplerの引数の というパラメータに渡すリスト: num_sweeps_listを定義します。</span>
 <span class="c1"># num_sweepsはアニーリング中のパラメータ(温度, 横磁場)を下げていくときの分割数です。</span>
 <span class="c1"># よって増やすほどゆっくりアニーリングをすることに相当し、アニーリング時間が伸びます。</span>
-<span class="n">num_sweeps_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">num_sweeps_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 
-<span class="n">TTS_list</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># 各計算時間に対するTTSを格納しておくリストを定義します。</span>
-<span class="n">tau_list</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># 計算時間を格納しておくリストを定義します。</span>
+<span class="n">TTS_list</span> <span class="o">=</span> <span class="p">[]</span>       <span class="c1"># 各計算時間に対するTTSを格納しておくリストを定義します。</span>
+<span class="n">tau_list</span> <span class="o">=</span> <span class="p">[]</span>        <span class="c1"># 計算時間を格納しておくリストを定義します。</span>
+<span class="n">e_mean_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># エネルギーの平均値</span>
+<span class="n">e_min_list</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># 最小エネルギー</span>
 
 <span class="c1"># 計算の過程で成功確率が求まるので、それを格納しておくリストも定義します。</span>
 <span class="n">ps_list</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># 確率を計算するために1回のアニーリングを行う回数を定義します。</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">1000</span>
 
 <span class="k">for</span> <span class="n">num_sweeps</span> <span class="ow">in</span> <span class="n">num_sweeps_list</span><span class="p">:</span>
     <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_sweeps</span><span class="o">=</span><span class="n">num_sweeps</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
@@ -388,8 +397,9 @@ div.rendered_html tbody tr:hover {
     <span class="c1"># 計算結果のうち、最適解の数を数えて最適解を得た確率を計算します。</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span>
 
-    <span class="c1"># psを計算します。stateはndarrayなので.all()を用いてリストを比較します。</span>
-    <span class="n">ps</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="n">correct_state</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">])</span><span class="o">/</span><span class="n">num_reads</span>
+    <span class="c1"># psを計算します。最適値以下のエネルギーの個数をカウントします。</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">energies</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">[</span><span class="n">energies</span> <span class="o">&lt;=</span> <span class="n">minimum_energy</span><span class="p">])</span><span class="o">/</span><span class="n">num_reads</span>
 
 
     <span class="c1"># ps = 0のときTTSが無限大に発散してしまうため、それを回避します。</span>
@@ -397,28 +407,19 @@ div.rendered_html tbody tr:hover {
         <span class="k">continue</span>
 
     <span class="c1"># TTSを計算します。</span>
-    <span class="n">TTS_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pR</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span><span class="p">)</span>
+    <span class="n">TTS_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pR</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span> <span class="k">if</span> <span class="n">ps</span> <span class="o">&lt;</span> <span class="n">pR</span> <span class="k">else</span> <span class="n">tau</span><span class="p">)</span>
     <span class="n">tau_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
 
     <span class="c1"># 成功確率を計算します。</span>
     <span class="n">ps_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+
+    <span class="n">e_mean_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
+    <span class="n">e_min_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-29.743169725406915
-40.29410003568046
-55.23409017769154
-80.4729093943024
-88.36826986225788
-</pre></div></div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -428,19 +429,19 @@ div.rendered_html tbody tr:hover {
 <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="c1"># TTSを描画します。</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">TTS_list</span><span class="p">)</span>
+<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">TTS_list</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">)</span>
 <span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 <span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 
 <span class="c1"># 成功確率psを描画します。</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">ps_list</span><span class="p">)</span>
+<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">ps_list</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">)</span>
 <span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 <span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -456,6 +457,39 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </div>
 </div>
 <p>このようにして、TTSと成功確率を計算することができます。上の2つの図は両方とも、横軸が1回のアニーリングにかかる計算時間となっています。 アニーリング時間が増加するとTTSも増加する傾向にあります。必要な成功確率が補償できた時点でアニーリングをやめたいときの指標として、これらを有効に使っていきましょう。</p>
+<p>TTSを縦軸に横軸にannealing time を取った図において、最小のTTSが検証したインスタンスに対するアニーリングアルゴリズムの最良な計算時間となります。</p>
+<p>この最小のTTSがアルゴリズムの計算時間としてよく用いられる指標になります。またどれくらいの近似比つまり、コストを下げられたかを評価指標として用いることもあります。物理では残留エネルギーという最適値からの差分の平均値が使われることもあります。</p>
+<p>近似比</p>
+<div class="math notranslate nohighlight">
+\[R = \langle E \rangle / E_{\min}\]</div>
+<p>残留エネルギー</p>
+<div class="math notranslate nohighlight">
+\[E_{\text{res}} = \langle E \rangle - E_{\min}\]</div>
+<p>物理ではコスト値が変数の数<span class="math notranslate nohighlight">\(N\)</span>に比例する問題を扱うことが多いので<span class="math notranslate nohighlight">\((\langle E \rangle - E_{\min})/N\)</span>のようにサイズで規格化したり、 最適値で<span class="math notranslate nohighlight">\((\langle E \rangle - E_{\min})/|E_{\min}|\)</span>のように規格化することもあります。</p>
+<p>アニーリングアルゴリズムは最適解への漸近的な収束性が存在するアルゴリズムなので、ほとんどの場合はアニーリング時間を長くすれば、この残留エネルギーが小さくなっていきます。残留エネルギー vs アニーリング時間をプロットすることで、アニーリングアルゴリズムがうまく動いていることを確認できます。上記のOpenJijのテストでエネルギーの平均値を保存していたので、その結果をプロットしてみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="p">(</span><span class="n">e_mean_list</span> <span class="o">-</span> <span class="n">minimum_energy</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">minimum_energy</span><span class="p">),</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="p">(</span><span class="n">e_min_list</span> <span class="o">-</span> <span class="n">minimum_energy</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">minimum_energy</span><span class="p">),</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;lowest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_02-Evaluation_13_0.png" src="../_images/ja_02-Evaluation_13_0.png" />
+</div>
+</div>
+<p>しっかりアニーリング時間が伸びるごとに平均残留エネルギーが下がっていることがわかります。先ほどは成功確率からTTSなどを計算しましたが、なかなか問題が難しく、最適解が得られない場合にちゃんとアニーリングがうまくいっているかを図る指標としても残留エネルギーは有効です。 また残留エネルギーは得られたエネルギー値を最適値でシフトしているだけなので、最適値を知らない場合でも、エネルギー vs
+アニーリング時間というプロットは有効です。ちゃんとアニーリングが動いているのか？最適値がわからない場合でのアルゴリズムの比較などを行う際に使うことができます。</p>
 <p>ここまでは原理を確認するためにスクリプトを作成しましたが、OpenJijにはデフォルトでTTS, 残留エネルギー, 成功確率を評価してくれるベンチマーク関数<code class="docutils literal notranslate"><span class="pre">openjij.solver_benchmark</span></code>が存在します。</p>
 </div>
 <div class="section" id="solver_benchmark関数">
@@ -550,7 +584,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_02-Evaluation_14_1.png" src="../_images/ja_02-Evaluation_14_1.png" />
+<img alt="../_images/ja_02-Evaluation_17_1.png" src="../_images/ja_02-Evaluation_17_1.png" />
 </div>
 </div>
 <p>このようにして簡単にベンチマークをとることができます。</p>
@@ -669,7 +703,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_02-Evaluation_19_1.png" src="../_images/ja_02-Evaluation_19_1.png" />
+<img alt="../_images/ja_02-Evaluation_22_1.png" src="../_images/ja_02-Evaluation_22_1.png" />
 </div>
 </div>
 <div class="line-block">
