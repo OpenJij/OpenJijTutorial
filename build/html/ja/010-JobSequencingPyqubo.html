@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>10-Solving Job Sequencing Problem with PyQUBO &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="A1 - OpenJij core interface入門 (core python interface)" href="A001-Introduction.html" />
+    <link rel="prev" title="9-Solving Graph Coloring Problem with PyQUBO" href="009-GraphColorPyqubo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="009-GraphColorPyqubo.html" title="9-Solving Graph Coloring Problem with PyQUBO"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">10-Solving Job Sequencing Problem with PyQUBO</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="10-Solving-Job-Sequencing-Problem-with-PyQUBO">
+<h1>10-Solving Job Sequencing Problem with PyQUBO<a class="headerlink" href="#10-Solving-Job-Sequencing-Problem-with-PyQUBO" title="Permalink to this headline">¶</a></h1>
+<p>この節では、<a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> から6.3. Job Eequencing with Integer LengthsをPyQUBOを用いて解きます。</p>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/010-JobSequencingPyqubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="section" id="整数長ジョブスケジューリング問題">
+<h2>整数長ジョブスケジューリング問題<a class="headerlink" href="#整数長ジョブスケジューリング問題" title="Permalink to this headline">¶</a></h2>
+<p>整数長ジョブスケジューリング問題は以下のような状況の最適解を求める問題であり、NP困難な問題の一つです。まずは具体的な問から考えてみましょう。</p>
+</div>
+<div class="section" id="具体例">
+<h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
+<p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
+<div><p><img alt="abf0a2da46ee4b19b367b3aa1d29ee95" src="../_images/job_sequence.png" /></p>
+</div></div>
+<div class="section" id="問題の一般化">
+<h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
+<p>まず、N個の仕事<span class="math notranslate nohighlight">\(\{1,2,\dots ,N \}\)</span>とm個のコンピュータがあるとします。各仕事が<span class="math notranslate nohighlight">\(\alpha\)</span>をindexとして持っているものと考えます。 仕事にかかる時間のリスト<span class="math notranslate nohighlight">\(L\)</span>を作ります。</p>
+<div class="math notranslate nohighlight">
+\[L=\{L_1,L_2,\dots L_N\}\]</div>
+<p>コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>で行われる仕事の集合を<span class="math notranslate nohighlight">\(V_\alpha\)</span>としたとき、コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>で仕事を終えるまでの時間は<span class="math notranslate nohighlight">\(M_\alpha = \sum_{i\in V_\alpha} L_i\)</span>となります。コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>で行う仕事を表すバイナリ変数を<span class="math notranslate nohighlight">\(x_{i,\alpha}\)</span>としたとき、コンピュータが仕事を終わらすためにかかる時間の最大値は以下のように表すことができます。</p>
+<div class="math notranslate nohighlight">
+\[max M_\alpha=M_1 = \sum_i L_ix_{i,1}\tag{1}\]</div>
+<div class="math notranslate nohighlight">
+\[x_{i,\alpha}=\{0,1\}\tag{2}\]</div>
+<div class="math notranslate nohighlight">
+\[(\forall \alpha \in \{1,2,\dots,N\})\]</div>
+<p>この<span class="math notranslate nohighlight">\(M_1\)</span>を最小化することがこの問題の目的となります。</p>
+<div class="section" id="QUBO行列への変換方法">
+<h3>QUBO行列への変換方法<a class="headerlink" href="#QUBO行列への変換方法" title="Permalink to this headline">¶</a></h3>
+<p>まず、<span class="math notranslate nohighlight">\(M_1 = \max M_\alpha\)</span>として一般性を失わないことに注意します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>でも解説されているようにQUBO行列を表現するにあたって式(1)で定義したバイナリ変数<span class="math notranslate nohighlight">\(x_{i,\alpha}\)</span>に加えてコンピュータが仕事にかかる時間を表現するためのスラック変数yを導入します。</p>
+</div>
+</div>
+<div class="section" id="One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義">
+<h2>One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義<a class="headerlink" href="#One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> ではOne-hot encodingを用いて仕事の実行時間を表しています。 バイナリ変数<span class="math notranslate nohighlight">\(y_{n,\alpha}\)</span>をノード1とノード<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の長さの差を表すバイナリ変数とします。</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}y_{n,\alpha} = \begin{cases}
+    1 &amp; (M_1-M_\alpha = n,\alpha\neq 1,n\geq 0) \\
+    0 &amp; (otherwise)
+  \end{cases}\tag{6}\end{split}\]</div>
+<p>よってコンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>の実行時間がコンピュータ1の実行時間より短い点に関して以下の式が成り立たなければなりません。</p>
+<div class="math notranslate nohighlight">
+\[\sum_{n=0}^{\mathcal{M}}ny_{n,\alpha} = \sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha})\tag{7}\]</div>
+<div class="math notranslate nohighlight">
+\[H_{A1} = A\sum_{\alpha=2}^m\left(\sum_{n=0}^{\mathcal{M}}ny_{n,\alpha} - \sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha})\right)^2\tag{8}\]</div>
+<p>このようにハミルトニアンを定めることでエネルギーが最小となった際にこの制約を満たすようなスピン状態を得ることができます。</p>
+<p>そして<span class="math notranslate nohighlight">\(\alpha\)</span>を固定したときにただ一つだけの<span class="math notranslate nohighlight">\(y_{n,\alpha}\)</span>だけが1となり、他は0となる必要もあります。</p>
+<div class="math notranslate nohighlight">
+\[H_{A0} = A\left(1-\sum_{n=0}^{\mathcal{M}}y_{n,\alpha}\right)^2\tag{9}\]</div>
+<p>更に、ある仕事iはいずれか一つのコンピュータで行われるという制約も加える必要があります。</p>
+<div class="math notranslate nohighlight">
+\[H_{A2} = A\left(1-\sum_{i=1}^{N}x_{i,\alpha}\right)^2\tag{10}\]</div>
+<p>これらを踏まえるとハミルトニアンの制約項全体は正の定数<span class="math notranslate nohighlight">\(A\)</span>を用いて次のように定義されます。</p>
+<div class="math notranslate nohighlight">
+\[H_A = A(H_{A0}+H_{A1})+AH_{A2}\tag{11}\]</div>
+<p><span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はユーザーによって選ばれる値であり、コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span> とコンピュータ1の差がどの程度存在するか表しています。最悪の場合<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>は<span class="math notranslate nohighlight">\(N\max L_i\)</span>となります。</p>
+</div>
+<div class="section" id="Log-encoding-によるスラック変数を用いた制約項(2)の定義">
+<h2>Log encoding によるスラック変数を用いた制約項(2)の定義<a class="headerlink" href="#Log-encoding-によるスラック変数を用いた制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>のようにLog encodingを用いて制約項を設定してみましょう。 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はコンピュータ1とコンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の実行時間の差の上限であるため以下の不等式が成り立ちます。</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{M}\geq \sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha}) = M_1-M_\alpha\tag{13}\]</div>
+<p>ここでコンピュータで行われる仕事が一つ以上割り振られ、仕事量が1以上であるとします。するとスラック変数Yを<span class="math notranslate nohighlight">\(0\leq Y \leq \mathcal{M}-1\)</span>を満たすとして定義することができます。</p>
+<p>上記不等式(13)は等式制約に変換できると分かります。</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{M} = Y + M_1-M_\alpha\tag{14}\]</div>
+<p>スラック変数Yを具体的に記述すると以下のようになります。</p>
+<div class="math notranslate nohighlight">
+\[Y = \sum_{n=1}^{\lfloor\log_2(\mathcal{M}-1)\rfloor} 2^n y_n\tag{15}\]</div>
+<p>式(12)の第一項、第二項は以下の項に置き換えることができます。</p>
+<div class="math notranslate nohighlight">
+\[\sum_{\alpha=2}^m \left(\mathcal{M}-\sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha}) - \sum_{n=1}^{\lfloor\log_2(\mathcal{M}-1)\rfloor} 2^n y_n\right)^2\tag{16}\]</div>
+<p>この方法を用いると、One-hot encodingに比べて少ないバイナリ変数<span class="math notranslate nohighlight">\((\lfloor\log_2(\mathcal{M}-1)\rfloor+1)\)</span>個で整数を表現できる上に追加の制約項が不要になります。変数Yの最大値は<span class="math notranslate nohighlight">\(2^{\lfloor\log_2(\mathcal{M}-1)\rfloor}\)</span>となっているからです。また、スラック変数を用いているため、仕事量の差が<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>を上回ることもありません。</p>
+</div>
+<div class="section" id="目的項(1)の定義">
+<h2>目的項(1)の定義<a class="headerlink" href="#目的項(1)の定義" title="Permalink to this headline">¶</a></h2>
+<p>目的項はコンピュータで仕事を終えるまでの最大実行時間を最小化するためのものです。 よってハミルトニアンは以下のように定義するとエネルギーが最小になったときに最大実行時間を最小化した解が得られます。</p>
+<div class="math notranslate nohighlight">
+\[H_B = B\sum_{i=1}^N L_ix_{i,1}\tag{17}\]</div>
+<p>ただし定数A,Bは目的項<span class="math notranslate nohighlight">\(H_B\)</span>によって制約項<span class="math notranslate nohighlight">\(H_A\)</span>を違反してはいけないため、<span class="math notranslate nohighlight">\(0&lt;B \max(L_i)&lt;A\)</span>を満たす必要があります。</p>
+</div>
+<div class="section" id="PyQUBOへの実装">
+<h2>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this headline">¶</a></h2>
+<p>PyQUBOの<a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/integer.html">Documentation</a>では、バイナリ変数を整数に変換するための4つのクラスについて説明されています。その中のLogEncIntegerを用いてスラック変数を定義します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>であるようにLogEncIntegerの使い方は以下のようになっていて、整数のように扱うことができます。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">LogEncInteger</span><span class="p">(</span><span class="s2">&quot;ラベルの名前&quot;</span><span class="p">,</span><span class="n">最小値</span><span class="p">,</span><span class="n">最大値</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>この時、yがとりうる値の最大値は上で指定した数ではなく,<span class="math notranslate nohighlight">\(2^{\lfloor\log_2(\mathcal{M}-1)\rfloor+1}\)</span>となることに注意してください。 #### QUBO行列の生成 では、具体例で示した問題を実際にQUBO行列にしてPyQUBOで解いてみましょう。 まず、仕事の個数Nとコンピュータの数m,仕事の長さのリストLを定義します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#コンピュータの数</span>
+<span class="n">m</span><span class="o">=</span><span class="mi">3</span>
+<span class="c1">#仕事の長さ</span>
+<span class="n">L</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="c1">#仕事の数</span>
+<span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\mathcal{M}\)</span>を選び、Mに代入します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<p>次にバイナリ変数を定義します。スラック変数yに対しては先ほどのLogEncInteger()を使います。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#PYQUBOをimportします</span>
+<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span><span class="n">LogEncInteger</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">m</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span>  <span class="n">LogEncInteger</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">M</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>上の変数を用いて式(10),(16),(17)に従ってハミルトニアンを定義します。</p>
+<div class="math notranslate nohighlight">
+\[H_{A1} = A\sum_{\alpha=2}^m \left(\mathcal{M}-\sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha}) - \sum_{n=1}^{\lfloor\log_2(\mathcal{M}-1)\rfloor} 2^n y_n\right)^2\]</div>
+<div class="math notranslate nohighlight">
+\[H_{A2} = A\left(1-\sum_{i=1}^{N}x_{i,\alpha}\right)^2\]</div>
+<div class="math notranslate nohighlight">
+\[H_A = AH_{A1} + AH_{A2}\tag{18}\]</div>
+<p>しかし,式(18)のハミルトニアンでは良い解が得られません。 そこで<span class="math notranslate nohighlight">\(H_A\)</span>の項をそれぞれ異なる係数に分解し、それぞれ設定することにしましょう。</p>
+<div class="math notranslate nohighlight">
+\[H_A = A_1H_{A1} + A_2H_{A2}\]</div>
+<div class="math notranslate nohighlight">
+\[H_B = B\sum_{i=1}^N L_ix_{i,1}\]</div>
+<p><span class="math notranslate nohighlight">\(A_1,A_2,B\)</span>は<span class="math notranslate nohighlight">\(0&lt;B \max(L_i)&lt;A_1,A_2\)</span>を満たすように選びます。それぞれの大小のバランスは係数がかかっている項のスケールが均等になるように調節します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
+<span class="n">A2</span><span class="o">=</span><span class="mi">36</span>
+
+<span class="n">A1</span><span class="o">=</span><span class="p">(</span><span class="n">A2</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mf">0.12</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">A2</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">/</span><span class="mf">3.6</span>
+
+<span class="c1"># ハミルトニアンの第一項</span>
+<span class="n">const</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">const</span> <span class="o">+=</span> <span class="p">(</span><span class="n">M</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">([</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">HA1</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA1&#39;</span><span class="p">)</span>
+
+<span class="c1"># ハミルトニアンの第二項</span>
+<span class="n">HA2</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA2&#39;</span><span class="p">)</span>
+
+<span class="c1"># ハミルトニアンの第三項</span>
+<span class="n">HB</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+
+<span class="c1"># ハミルトニアン全体を定義します</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">A1</span><span class="o">*</span><span class="n">HA1</span><span class="o">+</span><span class="n">A2</span><span class="o">*</span><span class="n">HA2</span><span class="o">+</span><span class="n">B</span><span class="o">*</span><span class="n">HB</span>
+
+</pre></div>
+</div>
+</div>
+<p>上記の式をPyQUBOで解かせた結果を見てみましょう。 brokenはペナルティ項が破れているとき(0でないとき)、どのように破れたかを記録してくれます。brokenが{}であると、制約が破られていないと分かります。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+
+<span class="c1"># PyQUBOに備わっているSAを使います</span>
+<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1">#結果の表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Inputs]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;N (仕事の数) : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;個&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;m (コンピュータの数): &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の長さのリスト&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A1 : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">A1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A2 : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">A2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Results]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="n">job_length</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[Inputs]
+
+N (仕事の数) : 10個
+m (コンピュータの数): 3
+
+仕事の長さのリスト
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+A1 : 3.0
+A2 : 36
+B : 1.0
+
+[Results]
+
+コンピュータ1で行われる仕事
+9番目の仕事 長さ:9
+10番目の仕事 長さ:10
+仕事の総実行時間:19
+
+コンピュータ2で行われる仕事
+2番目の仕事 長さ:2
+3番目の仕事 長さ:3
+5番目の仕事 長さ:5
+8番目の仕事 長さ:8
+仕事の総実行時間:18
+
+コンピュータ3で行われる仕事
+1番目の仕事 長さ:1
+4番目の仕事 長さ:4
+6番目の仕事 長さ:6
+7番目の仕事 長さ:7
+仕事の総実行時間:18
+
+broken
+{}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="OpenJijに投げる">
+<h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h2>
+<p>次にOpenJijのSQAを用いて解いてみます。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># OpenJijのインポートをします</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span class="c1"># SQAを使います。</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="c1"># PYQUBOで使ったquboを使います。</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">)</span>
+<span class="c1"># エネルギーが一番低い状態を取り出します。</span>
+<span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
+<span class="c1"># デコードします。</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1">#結果の表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Results]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="n">job_length</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[Results]
+
+コンピュータ1で行われる仕事
+4番目の仕事 長さ:4
+6番目の仕事 長さ:6
+9番目の仕事 長さ:9
+仕事の総実行時間:19
+
+コンピュータ2で行われる仕事
+3番目の仕事 長さ:3
+5番目の仕事 長さ:5
+10番目の仕事 長さ:10
+仕事の総実行時間:18
+
+コンピュータ3で行われる仕事
+1番目の仕事 長さ:1
+2番目の仕事 長さ:2
+7番目の仕事 長さ:7
+8番目の仕事 長さ:8
+仕事の総実行時間:18
+
+broken
+{}
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="まとめ">
+<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
+<p>Job Eequencing with Integer LengthsをPyQUBO,OpenJijを使って解く方法について解説しました。</p>
+<p>係数を調整する前では良い解が得られませんが係数を調整すると安定しました。</p>
+<p>また、整数をバイナリ変数で表現する方法は複数ありますが、今回はLog encodingを扱いました。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>と合わせて確認してみてください。</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">10-Solving Job Sequencing Problem with PyQUBO</a><ul>
+<li><a class="reference internal" href="#整数長ジョブスケジューリング問題">整数長ジョブスケジューリング問題</a></li>
+<li><a class="reference internal" href="#具体例">具体例</a></li>
+<li><a class="reference internal" href="#問題の一般化">問題の一般化</a><ul>
+<li><a class="reference internal" href="#QUBO行列への変換方法">QUBO行列への変換方法</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義">One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義</a></li>
+<li><a class="reference internal" href="#Log-encoding-によるスラック変数を用いた制約項(2)の定義">Log encoding によるスラック変数を用いた制約項(2)の定義</a></li>
+<li><a class="reference internal" href="#目的項(1)の定義">目的項(1)の定義</a></li>
+<li><a class="reference internal" href="#PyQUBOへの実装">PyQUBOへの実装</a></li>
+<li><a class="reference internal" href="#OpenJijに投げる">OpenJijに投げる</a></li>
+<li><a class="reference internal" href="#まとめ">まとめ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="009-GraphColorPyqubo.html"
+                        title="previous chapter">9-Solving Graph Coloring Problem with PyQUBO</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="A001-Introduction.html"
+                        title="next chapter">A1 - OpenJij core interface入門 (core python interface)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/010-JobSequencingPyqubo.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="009-GraphColorPyqubo.html" title="9-Solving Graph Coloring Problem with PyQUBO"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">10-Solving Job Sequencing Problem with PyQUBO</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

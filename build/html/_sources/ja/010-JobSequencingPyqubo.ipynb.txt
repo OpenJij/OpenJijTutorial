@@ -1,0 +1,498 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 10-Solving Job Sequencing Problem with PyQUBO\n",
+    "この節では、[Ising formulations of many NP problems](https://arxiv.org/pdf/1302.5843v3.pdf) から6.3. Job Eequencing with Integer LengthsをPyQUBOを用いて解きます。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "view-in-github"
+   },
+   "source": [
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/010-JobSequencingPyqubo.ipynb)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 整数長ジョブスケジューリング問題\n",
+    "整数長ジョブスケジューリング問題は以下のような状況の最適解を求める問題であり、NP困難な問題の一つです。まずは具体的な問から考えてみましょう。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 具体例\n",
+    "分かりやすくするために具体的に以下のような問を考えます。\n",
+    "> 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは$1,2,\\cdots,10$です。\n",
+    "> どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値$\\max M_\\alpha$を最小化できるか考えます。\n",
+    "> 例えば、$V_1=\\{9,10\\},V_2=\\{1,2,7,8\\},V_3=\\{3,4,5,6\\}$とすると$\\max(M_1,M_2,M_3)=19$となって問の最適解となります。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<div>\n",
+    "    <img src=\"images/job_sequence.png\">\n",
+    "</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 問題の一般化\n",
+    "まず、N個の仕事$\\{1,2,\\dots ,N \\}$とm個のコンピュータがあるとします。各仕事が$\\alpha$をindexとして持っているものと考えます。\n",
+    "仕事にかかる時間のリスト$L$を作ります。\n",
+    "\n",
+    "$$L=\\{L_1,L_2,\\dots L_N\\}$$\n",
+    "\n",
+    "コンピュータ$\\alpha$で行われる仕事の集合を$V_\\alpha$としたとき、コンピュータ$\\alpha$で仕事を終えるまでの時間は$M_\\alpha = \\sum_{i\\in V_\\alpha} L_i$となります。コンピュータ$\\alpha$で行う仕事を表すバイナリ変数を$x_{i,\\alpha}$としたとき、コンピュータが仕事を終わらすためにかかる時間の最大値は以下のように表すことができます。\n",
+    "\n",
+    "$$max M_\\alpha=M_1 = \\sum_i L_ix_{i,1}\\tag{1}$$\n",
+    "$$x_{i,\\alpha}=\\{0,1\\}\\tag{2}$$\n",
+    "\n",
+    "$$(\\forall \\alpha \\in \\{1,2,\\dots,N\\})$$\n",
+    "\n",
+    "この$M_1$を最小化することがこの問題の目的となります。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## QUBO行列への変換方法\n",
+    "まず、$M_1 = \\max M_\\alpha$として一般性を失わないことに注意します。\n",
+    "[8-Solving Knapsack Problem with PyQUBO](https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html)でも解説されているようにQUBO行列を表現するにあたって式(1)で定義したバイナリ変数$x_{i,\\alpha}$に加えてコンピュータが仕事にかかる時間を表現するためのスラック変数yを導入します。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "\n",
+    "### One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義\n",
+    "[Ising formulations of many NP problems](https://arxiv.org/pdf/1302.5843v3.pdf) ではOne-hot encodingを用いて仕事の実行時間を表しています。\n",
+    "バイナリ変数$y_{n,\\alpha}$をノード1とノード$\\alpha$の仕事の長さの差を表すバイナリ変数とします。\n",
+    "\n",
+    "$$y_{n,\\alpha} = \\begin{cases}\n",
+    "    1 & (M_1-M_\\alpha = n,\\alpha\\neq 1,n\\geq 0) \\\\\n",
+    "    0 & (otherwise)\n",
+    "  \\end{cases}\\tag{6}$$\n",
+    "\n",
+    "よってコンピュータ$\\alpha$の実行時間がコンピュータ1の実行時間より短い点に関して以下の式が成り立たなければなりません。\n",
+    "\n",
+    "$$\\sum_{n=0}^{\\mathcal{M}}ny_{n,\\alpha} = \\sum_{i=1}^N L_i(x_{i,1}-x_{i,\\alpha})\\tag{7}$$\n",
+    "\n",
+    "$$H_{A1} = A\\sum_{\\alpha=2}^m\\left(\\sum_{n=0}^{\\mathcal{M}}ny_{n,\\alpha} - \\sum_{i=1}^N L_i(x_{i,1}-x_{i,\\alpha})\\right)^2\\tag{8}$$\n",
+    "\n",
+    "このようにハミルトニアンを定めることでエネルギーが最小となった際にこの制約を満たすようなスピン状態を得ることができます。\n",
+    "\n",
+    "そして$\\alpha$を固定したときにただ一つだけの$y_{n,\\alpha}$だけが1となり、他は0となる必要もあります。\n",
+    "\n",
+    "$$H_{A0} = A\\left(1-\\sum_{n=0}^{\\mathcal{M}}y_{n,\\alpha}\\right)^2\\tag{9}$$\n",
+    "\n",
+    "更に、ある仕事iはいずれか一つのコンピュータで行われるという制約も加える必要があります。\n",
+    "\n",
+    "$$H_{A2} = A\\left(1-\\sum_{i=1}^{N}x_{i,\\alpha}\\right)^2\\tag{10}$$\n",
+    "\n",
+    "\n",
+    "これらを踏まえるとハミルトニアンの制約項全体は正の定数$A$を用いて次のように定義されます。\n",
+    "\n",
+    "$$H_A = A(H_{A0}+H_{A1})+AH_{A2}\\tag{11}$$\n",
+    "\n",
+    "$\\mathcal{M}$はユーザーによって選ばれる値であり、コンピュータ$\\alpha$\n",
+    "とコンピュータ1の差がどの程度存在するか表しています。最悪の場合$\\mathcal{M}$は$N\\max L_i$となります。\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Log encoding によるスラック変数を用いた制約項(2)の定義\n",
+    "#### Log encoding によるスラック変数を用いる\n",
+    "[8-Solving Knapsack Problem with PyQUBO](https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html)のようにLog encodingを用いて制約項を設定してみましょう。\n",
+    "$\\mathcal{M}$はコンピュータ1とコンピュータ$\\alpha$の仕事の実行時間の差の上限であるため以下の不等式が成り立ちます。\n",
+    "$$\\mathcal{M}\\geq \\sum_{i=1}^N L_i(x_{i,1}-x_{i,\\alpha}) = M_1-M_\\alpha\\tag{13}$$\n",
+    "\n",
+    "ここでコンピュータで行われる仕事が一つ以上割り振られ、仕事量が1以上であるとします。するとスラック変数Yを$0\\leq Y \\leq \\mathcal{M}-1$を満たすとして定義することができます。\n",
+    "\n",
+    "上記不等式(13)は等式制約に変換できると分かります。\n",
+    "$$\\mathcal{M} = Y + M_1-M_\\alpha\\tag{14}$$\n",
+    "スラック変数Yを具体的に記述すると以下のようになります。\n",
+    "$$Y = \\sum_{n=1}^{\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor} 2^n y_n\\tag{15}$$\n",
+    "\n",
+    "式(12)の第一項、第二項は以下の項に置き換えることができます。\n",
+    "$$\\sum_{\\alpha=2}^m \\left(\\mathcal{M}-\\sum_{i=1}^N L_i(x_{i,1}-x_{i,\\alpha}) - \\sum_{n=1}^{\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor} 2^n y_n\\right)^2\\tag{16}$$\n",
+    "\n",
+    "#### この方法を用いた際の利点\n",
+    "この方法を用いると、One-hot encodingに比べて少ないバイナリ変数$(\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor+1)$個で整数を表現できる上に追加の制約項が不要になります。変数Yの最大値は$2^{\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor}$となっているからです。また、スラック変数を用いているため、仕事量の差が$\\mathcal{M}$を上回ることもありません。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 目的項(1)の定義\n",
+    "目的項はコンピュータで仕事を終えるまでの最大実行時間を最小化するためのものです。\n",
+    "よってハミルトニアンは以下のように定義するとエネルギーが最小になったときに最大実行時間を最小化した解が得られます。\n",
+    "$$H_B = B\\sum_{i=1}^N L_ix_{i,1}\\tag{17}$$\n",
+    "ただし定数A,Bは目的項$H_B$によって制約項$H_A$を違反してはいけないため、$0<B \\max(L_i)<A$を満たす必要があります。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### PyQUBOへの実装\n",
+    "#### PyQUBOのIntegerクラス\n",
+    "PyQUBOの[Documentation](https://pyqubo.readthedocs.io/en/latest/reference/integer.html)では、バイナリ変数を整数に変換するための4つのクラスについて説明されています。その中のLogEncIntegerを用いてスラック変数を定義します。\n",
+    "[8-Solving Knapsack Problem with PyQUBO](https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html)であるようにLogEncIntegerの使い方は以下のようになっていて、整数のように扱うことができます。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "```python\n",
+    "y = LogEncInteger(\"ラベルの名前\",最小値,最大値)\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "この時、yがとりうる値の最大値は上で指定した数ではなく,$2^{\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor+1}$となることに注意してください。\n",
+    "#### QUBO行列の生成\n",
+    "では、具体例で示した問題を実際にQUBO行列にしてPyQUBOで解いてみましょう。\n",
+    "まず、仕事の個数Nとコンピュータの数m,仕事の長さのリストLを定義します。"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "#コンピュータの数\n",
+    "m=3\n",
+    "#仕事の長さ\n",
+    "L= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n",
+    "#仕事の数\n",
+    "N=len(L)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "$\\mathcal{M}$を選び、Mに代入します。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "M = 3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "次にバイナリ変数を定義します。スラック変数yに対しては先ほどのLogEncInteger()を使います。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#PYQUBOをimportします\n",
+    "from pyqubo import Array,LogEncInteger\n",
+    "\n",
+    "x = Array.create('x', shape=(N,m), vartype='BINARY')\n",
+    "y =  LogEncInteger('y',0,M)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### ハミルトニアンの修正\n",
+    "\n",
+    "上の変数を用いて式(10),(16),(17)に従ってハミルトニアンを定義します。\n",
+    "\n",
+    "$$H_{A1} = A\\sum_{\\alpha=2}^m \\left(\\mathcal{M}-\\sum_{i=1}^N L_i(x_{i,1}-x_{i,\\alpha}) - \\sum_{n=1}^{\\lfloor\\log_2(\\mathcal{M}-1)\\rfloor} 2^n y_n\\right)^2$$\n",
+    "\n",
+    "$$H_{A2} = A\\left(1-\\sum_{i=1}^{N}x_{i,\\alpha}\\right)^2$$\n",
+    "\n",
+    "$$H_A = AH_{A1} + AH_{A2}\\tag{18}$$\n",
+    "\n",
+    "\n",
+    "しかし,式(18)のハミルトニアンでは良い解が得られません。\n",
+    "そこで$H_A$の項をそれぞれ異なる係数に分解し、それぞれ設定することにしましょう。\n",
+    "\n",
+    "$$H_A = A_1H_{A1} + A_2H_{A2}$$\n",
+    "\n",
+    "$$H_B = B\\sum_{i=1}^N L_ix_{i,1}$$\n",
+    "\n",
+    "$A_1,A_2,B$は$0<B \\max(L_i)<A_1,A_2$を満たすように選びます。それぞれの大小のバランスは係数がかかっている項のスケールが均等になるように調節します。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pyqubo import Constraint\n",
+    "A2=36\n",
+    "\n",
+    "A1=(A2/max(L) **2)/0.12\n",
+    "\n",
+    "B = (A2/max(L))/3.6\n",
+    "\n",
+    "# ハミルトニアンの第一項\n",
+    "const = 0\n",
+    "for a in range(1,m):\n",
+    "    const += (M - sum([L[i]*(x[i,0]-x[i,a]) for i in range(N)])-y)**2\n",
+    "HA1 = Constraint(const, label='HA1')\n",
+    "\n",
+    "# ハミルトニアンの第二項 \n",
+    "HA2 = Constraint(sum((1-sum(x[i,a] for a in range(m)))**2 for i in range(N)), label='HA2')\n",
+    "\n",
+    "# ハミルトニアンの第三項\n",
+    "HB = sum(L[i] * x[i,0] for i in range(N))\n",
+    "\n",
+    "# ハミルトニアン全体を定義します\n",
+    "Q = A1*HA1+A2*HA2+B*HB\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 実行結果\n",
+    "上記の式をPyQUBOで解かせた結果を見てみましょう。\n",
+    "brokenはペナルティ項が破れているとき(0でないとき)、どのように破れたかを記録してくれます。brokenが{}であると、制約が破られていないと分かります。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[Inputs]\n",
+      "\n",
+      "N (仕事の数) : 10個\n",
+      "m (コンピュータの数): 3\n",
+      "\n",
+      "仕事の長さのリスト\n",
+      "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n",
+      "\n",
+      "A1 : 3.0\n",
+      "A2 : 36\n",
+      "B : 1.0\n",
+      "\n",
+      "[Results]\n",
+      "\n",
+      "コンピュータ1で行われる仕事\n",
+      "9番目の仕事 長さ:9\n",
+      "10番目の仕事 長さ:10\n",
+      "仕事の総実行時間:19\n",
+      "\n",
+      "コンピュータ2で行われる仕事\n",
+      "2番目の仕事 長さ:2\n",
+      "3番目の仕事 長さ:3\n",
+      "5番目の仕事 長さ:5\n",
+      "8番目の仕事 長さ:8\n",
+      "仕事の総実行時間:18\n",
+      "\n",
+      "コンピュータ3で行われる仕事\n",
+      "1番目の仕事 長さ:1\n",
+      "4番目の仕事 長さ:4\n",
+      "6番目の仕事 長さ:6\n",
+      "7番目の仕事 長さ:7\n",
+      "仕事の総実行時間:18\n",
+      "\n",
+      "broken\n",
+      "{}\n"
+     ]
+    }
+   ],
+   "source": [
+    "from pyqubo import solve_qubo\n",
+    "\n",
+    "model = Q.compile()\n",
+    "qubo, offset = model.to_qubo()\n",
+    "\n",
+    "# PyQUBOに備わっているSAを使います\n",
+    "raw_solution = solve_qubo(qubo,num_reads=500)\n",
+    "decoded_solution, broken, energy = model.decode_solution(raw_solution, vartype=\"BINARY\")\n",
+    "#結果の表示\n",
+    "print(\"[Inputs]\")\n",
+    "print()\n",
+    "print(\"N (仕事の数) : \"+str(N)+\"個\")\n",
+    "print(\"m (コンピュータの数): \"+str(m))\n",
+    "print()\n",
+    "print(\"仕事の長さのリスト\")\n",
+    "print(L)\n",
+    "print()\n",
+    "print(\"A1 : \"+str(A1))\n",
+    "print(\"A2 : \"+str(A2))\n",
+    "print(\"B : \"+str(B))\n",
+    "print()\n",
+    "print(\"[Results]\")\n",
+    "print()\n",
+    "job_length = [0] * m\n",
+    "for i in range(0,m):\n",
+    "    print(\"コンピュータ\"+str(i+1)+\"で行われる仕事\")\n",
+    "    for j in range(0,N):\n",
+    "        if decoded_solution['x'][j][i]==1:\n",
+    "            print(str(j+1)+\"番目の仕事 長さ:\"+str(L[j]))\n",
+    "            job_length[i] += L[j]\n",
+    "    print(\"仕事の総実行時間:\"+str(job_length[i]))\n",
+    "    print()\n",
+    "\n",
+    "print(\"broken\")\n",
+    "print(broken)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### OpenJijに投げる\n",
+    "次にOpenJijのSQAを用いて解いてみます。"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[Results]\n",
+      "\n",
+      "コンピュータ1で行われる仕事\n",
+      "4番目の仕事 長さ:4\n",
+      "6番目の仕事 長さ:6\n",
+      "9番目の仕事 長さ:9\n",
+      "仕事の総実行時間:19\n",
+      "\n",
+      "コンピュータ2で行われる仕事\n",
+      "3番目の仕事 長さ:3\n",
+      "5番目の仕事 長さ:5\n",
+      "10番目の仕事 長さ:10\n",
+      "仕事の総実行時間:18\n",
+      "\n",
+      "コンピュータ3で行われる仕事\n",
+      "1番目の仕事 長さ:1\n",
+      "2番目の仕事 長さ:2\n",
+      "7番目の仕事 長さ:7\n",
+      "8番目の仕事 長さ:8\n",
+      "仕事の総実行時間:18\n",
+      "\n",
+      "broken\n",
+      "{}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# OpenJijのインポートをします\n",
+    "import openjij as oj\n",
+    "# SQAを使います。\n",
+    "sampler = oj.SQASampler(num_reads=300)\n",
+    "# PYQUBOで使ったquboを使います。\n",
+    "response = sampler.sample_qubo(Q=qubo)\n",
+    "# エネルギーが一番低い状態を取り出します。\n",
+    "dict_solution = response.first.sample\n",
+    "# デコードします。\n",
+    "decoded_solution, broken, energy = model.decode_solution(dict_solution, vartype=\"BINARY\")\n",
+    "#結果の表示\n",
+    "print(\"[Results]\")\n",
+    "print()\n",
+    "job_length = [0] * m\n",
+    "for i in range(0,m):\n",
+    "    print(\"コンピュータ\"+str(i+1)+\"で行われる仕事\")\n",
+    "    for j in range(0,N):\n",
+    "        if decoded_solution['x'][j][i]==1:\n",
+    "            print(str(j+1)+\"番目の仕事 長さ:\"+str(L[j]))\n",
+    "            job_length[i] += L[j]\n",
+    "    print(\"仕事の総実行時間:\"+str(job_length[i]))\n",
+    "    print()\n",
+    "\n",
+    "print(\"broken\")\n",
+    "print(broken)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### まとめ\n",
+    "Job Eequencing with Integer LengthsをPyQUBO,OpenJijを使って解く方法について解説しました。\n",
+    "\n",
+    "係数を調整する前では良い解が得られませんが係数を調整すると安定しました。\n",
+    "\n",
+    "また、整数をバイナリ変数で表現する方法は複数ありますが、今回はLog encodingを扱いました。\n",
+    "[8-Solving Knapsack Problem with PyQUBO](https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html)と合わせて確認してみてください。"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
