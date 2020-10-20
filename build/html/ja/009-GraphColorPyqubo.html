@@ -1,0 +1,593 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>9-Solving Graph Coloring Problem with PyQUBO &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10-Solving Job Sequencing Problem with PyQUBO" href="010-JobSequencingPyqubo.html" />
+    <link rel="prev" title="8-Solving Knapsack Problem with PyQUBO" href="008-KnapsackPyqubo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="008-KnapsackPyqubo.html" title="8-Solving Knapsack Problem with PyQUBO"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">9-Solving Graph Coloring Problem with PyQUBO</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="9-Solving-Graph-Coloring-Problem-with-PyQUBO">
+<h1>9-Solving Graph Coloring Problem with PyQUBO<a class="headerlink" href="#9-Solving-Graph-Coloring-Problem-with-PyQUBO" title="Permalink to this headline">¶</a></h1>
+<p>この節では、<a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> から6.1. Graph ColoringをPyQUBOを用いて解きます。</p>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/009-GraphColorPyqubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="section" id="グラフ彩色問題">
+<h2>グラフ彩色問題<a class="headerlink" href="#グラフ彩色問題" title="Permalink to this headline">¶</a></h2>
+<p>グラフ彩色問題は以下のような状況の最適解を求める問題であり、NP完全問題の一つです。まずは具体的な問から考えてみましょう。</p>
+</div>
+<div class="section" id="具体例">
+<h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
+<p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個のノードと20本の枝を持つ無効グラフが与えられたとします。枝で繋がれたノード同士は異なる色となるようにノードを色分けする時、3色で全てのノードを塗ることは可能であるか考えます。 &gt; グラフは下のようになっているとします。</p>
+<div><p><img alt="7328470930854eb085ace7e10a97064d" src="../_images/graph_color.png" /></p>
+</div><blockquote>
+<div><p>塗り分けた後のグラフは下のようになります。 このグラフから全てのノードは3色で塗り分けることができると分かります。</p>
+</div></blockquote>
+<div><p><img alt="96923c786bdd4c96915188c17c2bde63" src="../_images/graph_color_res.png" /></p>
+</div></div>
+<div class="section" id="問題の一般化">
+<h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
+<p>無効グラフ<span class="math notranslate nohighlight">\(G=(V,E)\)</span>が与えられるとします。辺で結ばれたノードの色が重複しないように全てのノードを<span class="math notranslate nohighlight">\(n\)</span>色で塗り分けることができるか考えます。</p>
+<p>全てのノードが<span class="math notranslate nohighlight">\(v\)</span>をindexとして持つとします。</p>
+<p>ノードの色分けはバイナリ変数<span class="math notranslate nohighlight">\(x\)</span>で表すことにしましょう。<span class="math notranslate nohighlight">\(x_{v,i}\)</span>はノード<span class="math notranslate nohighlight">\(v\)</span>が色<span class="math notranslate nohighlight">\(i\)</span>で塗られている時に1,その他の状態では0をとります。</p>
+<div class="section" id="QUBO行列への変換">
+<h3>QUBO行列への変換<a class="headerlink" href="#QUBO行列への変換" title="Permalink to this headline">¶</a></h3>
+<p>ハミルトニアンは以下のように定めることができます。</p>
+<div class="math notranslate nohighlight">
+\[H = A\sum_{v=1}^V\left(1-\sum_{i=1}^n x_{v,i}\right)^2
++ A\sum_{(uv)\in E}\sum_{i=1}^nx_{u,i}x_{v,i}\]</div>
+<p>第一項はそれぞれのノードは必ず一色に塗られるという制約です。第二項は辺で繋がれたノードの色は異なるという制約です。これらが破られる度に<span class="math notranslate nohighlight">\(H\)</span>は増加します。</p>
+<p><span class="math notranslate nohighlight">\(H=0\)</span>となる状態が見つかった時、グラフ<span class="math notranslate nohighlight">\(G\)</span>は<span class="math notranslate nohighlight">\(n\)</span>色で塗ることが可能だと分かります。</p>
+<p>また、<span class="math notranslate nohighlight">\(x_{v,i}\)</span>でどのiの時<span class="math notranslate nohighlight">\(x_{v,i}=1\)</span>となるか調べることでノード<span class="math notranslate nohighlight">\(v\)</span>の色を調べることができます。</p>
+</div>
+<div class="section" id="PyQUBOへの実装">
+<h3>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="QUBO行列の生成">
+<h2>QUBO行列の生成<a class="headerlink" href="#QUBO行列の生成" title="Permalink to this headline">¶</a></h2>
+<p>上記の例で示したグラフの彩色問題を実際にQUBO行列にしてPyQUBOを用いて解いてみます。 まず、グラフの頂点数、塗り分けるのに使う色の数、辺を定義します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#頂点数</span>
+<span class="n">N_VER</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1">#色の数</span>
+<span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="c1">#辺の数</span>
+<span class="n">N_EDGE</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c1">#辺のリスト</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<p>次にバイナリ変数xを定義します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#PYQUBOをimportします</span>
+<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span>
+<span class="c1">#QUBOを表現する変数(頂点数×色の数)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>この変数を用いてハミルトニアンを定義します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[92]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
+<span class="c1"># ハミルトニアンの第一項 (各頂点に1色だけ塗る)</span>
+<span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
+<span class="c1"># ハミルトニアンの第二項 (辺で結ばれた頂点が同じ色で塗られていないか)</span>
+<span class="n">H_B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">))</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">)</span>
+<span class="c1"># ハミルトニアン全体を定義します</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">H_A</span><span class="o">+</span><span class="n">H_B</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="実行結果">
+<h2>実行結果<a class="headerlink" href="#実行結果" title="Permalink to this headline">¶</a></h2>
+<p>ハミルトニアンをコンパイルしてto_qubo()でQUBOに変換します。 quboにはPythonの辞書型で格納されたQUBOが、そしてoffsetにはQUBO化した際に現れる定数(無視してよい)が代入されます。</p>
+<p>では、これをSimulated Annealingのソルバーで解いて結果を見てみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
+
+<span class="c1"># PyQUBOに備わっているSAを使います</span>
+<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+
+<span class="c1">#結果の表示</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Result]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1">#制約を守れているか見ます</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1">#グラフを表示します</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)])</span>
+<span class="n">graph2</span> <span class="o">=</span><span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">]</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">graph2</span><span class="p">)</span>
+<span class="n">cl</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;plum&quot;</span><span class="p">,</span><span class="s2">&quot;skyblue&quot;</span><span class="p">,</span><span class="s2">&quot;yellowgreen&quot;</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N_VER</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="n">node_color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[Result]
+
+{0: {1: 1, 2: 0, 3: 0}, 1: {1: 0, 2: 0, 3: 1}, 2: {1: 0, 2: 1, 3: 0}, 3: {1: 0, 2: 0, 3: 1}, 4: {1: 1, 2: 0, 3: 0}, 5: {1: 1, 2: 0, 3: 0}, 6: {1: 0, 2: 1, 3: 0}, 7: {1: 0, 2: 1, 3: 0}, 8: {1: 1, 2: 0, 3: 0}, 9: {1: 0, 2: 1, 3: 0}}
+
+broken
+{}
+
+[&#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;skyblue&#39;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_009-GraphColorPyqubo_16_1.png" src="../_images/ja_009-GraphColorPyqubo_16_1.png" />
+</div>
+</div>
+<div class="section" id="OpenJijに投げる">
+<h3>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h3>
+<p>次にOpenJijのSAで解いてみましょう</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># OpenJijのインポートをします</span>
+<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<span class="c1"># SQAを使います。</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
+<span class="c1"># PYQUBOで使ったquboを使います。</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">)</span>
+<span class="c1"># エネルギーが一番低い状態を取り出します。</span>
+<span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
+<span class="c1"># デコードします。</span>
+<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1"># 辞書型をsortして見やすくする処理を追加します。</span>
+<span class="n">x_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+<span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">x_solution</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: {1: 0, 2: 1, 3: 0},
+ 1: {1: 0, 2: 0, 3: 1},
+ 2: {1: 1, 2: 0, 3: 0},
+ 3: {1: 0, 2: 0, 3: 1},
+ 4: {1: 0, 2: 1, 3: 0},
+ 5: {1: 0, 2: 1, 3: 0},
+ 6: {1: 1, 2: 0, 3: 0},
+ 7: {1: 1, 2: 0, 3: 0},
+ 8: {1: 0, 2: 1, 3: 0},
+ 9: {1: 1, 2: 0, 3: 0}}
+</pre></div></div>
+</div>
+<p>グラフがどのように色が塗られるか見てみましょう。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[95]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="n">cl</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;plum&quot;</span><span class="p">,</span><span class="s2">&quot;skyblue&quot;</span><span class="p">,</span><span class="s2">&quot;yellowgreen&quot;</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N_VER</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="n">node_color</span> <span class="o">=</span> <span class="n">colors</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+broken
+{}
+
+[&#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;plum&#39;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_009-GraphColorPyqubo_20_1.png" src="../_images/ja_009-GraphColorPyqubo_20_1.png" />
+</div>
+</div>
+<p>結果を見ると制約を満たしつつ全てのノードを3色で塗り分けられていると分かります。</p>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">9-Solving Graph Coloring Problem with PyQUBO</a><ul>
+<li><a class="reference internal" href="#グラフ彩色問題">グラフ彩色問題</a></li>
+<li><a class="reference internal" href="#具体例">具体例</a></li>
+<li><a class="reference internal" href="#問題の一般化">問題の一般化</a><ul>
+<li><a class="reference internal" href="#QUBO行列への変換">QUBO行列への変換</a></li>
+<li><a class="reference internal" href="#PyQUBOへの実装">PyQUBOへの実装</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#QUBO行列の生成">QUBO行列の生成</a></li>
+<li><a class="reference internal" href="#実行結果">実行結果</a><ul>
+<li><a class="reference internal" href="#OpenJijに投げる">OpenJijに投げる</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="008-KnapsackPyqubo.html"
+                        title="previous chapter">8-Solving Knapsack Problem with PyQUBO</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="010-JobSequencingPyqubo.html"
+                        title="next chapter">10-Solving Job Sequencing Problem with PyQUBO</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/009-GraphColorPyqubo.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="008-KnapsackPyqubo.html" title="8-Solving Knapsack Problem with PyQUBO"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">9-Solving Graph Coloring Problem with PyQUBO</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

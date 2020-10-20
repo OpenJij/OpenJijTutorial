@@ -1,0 +1,338 @@
+{
+    "cells": [
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "tcLyUtUqhkTr"
+            },
+            "source": [
+                "# 5-OpenJij GPU"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "view-in-github"
+            },
+            "source": [
+                "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/005-OpenJijGPU.ipynb)"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "Vrd0CwLJhvVQ"
+            },
+            "source": [
+                "\u3053\u306e\u30bb\u30af\u30b7\u30e7\u30f3\u3067\u306fGPU\u3092\u7528\u3044\u3066Simulated Quantum Annealing(SQA)\u3092\u884c\u3046\u65b9\u6cd5\u3092\u3054\u7d39\u4ecb\u3057\u307e\u3059\u3002\n",
+                "\n",
+                "## Google Colab\u3067\u306e\u8a2d\u5b9a\u3068\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\n",
+                "\n",
+                "\u4e00\u822c\u306ePC\u306b\u306fCUDA\u74b0\u5883\u304c\u6574\u3063\u3066\u3044\u306a\u3044\u3001\u3082\u3057\u304f\u306fCUDA\u306b\u5bfe\u5fdc\u3059\u308bNVIDIA\u306eGPU\u304c\u642d\u8f09\u3055\u308c\u3066\u3044\u306a\u3044\u3053\u3068\u3082\u3042\u308a\u307e\u3059\u3002\u3057\u304b\u3057**Google colaboratory**\u3092\u4f7f\u3048\u3070\u8ab0\u3067\u3082GPGPU\u3092\u4f7f\u3046\u3053\u3068\u304c\u3067\u304d\u307e\u3059\u3002\n",
+                "\n",
+                "### GPU\u8a2d\u5b9a\n",
+                "\n",
+                "GPU\u5b9f\u884c\u3057\u305f\u3044Jupyter Notebook\u3092Google Colab\u3067\u958b\u304d\u307e\u3059\u3002  \n",
+                "\n",
+                "```\n",
+                "\u30e9\u30f3\u30bf\u30a4\u30e0 > \u30e9\u30f3\u30bf\u30a4\u30e0\u306e\u30bf\u30a4\u30d7\u3092\u5909\u66f4 > \u30cf\u30fc\u30c9\u30a6\u30a7\u30a2\u30a2\u30af\u30bb\u30e9\u30ec\u30fc\u30bf\u3092GPU\u306b\u9078\u629e\n",
+                "```\n",
+                "\n",
+                "\u3053\u306e\u8a2d\u5b9a\u3092\u884c\u3046\u3053\u3068\u3067GPU\u3092\u7528\u3044\u305fJupyter Notebook\u306e\u5b9f\u884c\u304c\u53ef\u80fd\u3068\u306a\u308a\u307e\u3059\u3002\n",
+                "\n",
+                "### OpenJij\u306e\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\n",
+                "\n",
+                "OpenJij\u304b\u3089GPU\u3092\u7528\u3044\u305f\u30e2\u30b8\u30e5\u30fc\u30eb\u3092\u547c\u3073\u51fa\u3059\u305f\u3081\u306b\u306f\u3001\u307e\u305apip\u304b\u3089\u306e\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u306e\u969b\u306bOpenJij\u3092\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9\u304b\u3089\u30d3\u30eb\u30c9\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002\n",
+                "\u3053\u306e\u64cd\u4f5c\u306e\u305f\u3081\u306bCMake\u3068\u547c\u3070\u308c\u308b\u30c4\u30fc\u30eb\u304c\u5fc5\u8981\u3067\u3059\u304c\u3001Google Colab\u306b\u30d7\u30ea\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3055\u308c\u3066\u3044\u308bCMake\u306f\u53e4\u3044\u30d0\u30fc\u30b8\u30e7\u30f3\u3067\u3059\u3002\u307e\u305a\u306f\u305d\u308c\u3092\u30d0\u30fc\u30b8\u30e7\u30f3\u30a2\u30c3\u30d7\u3057\u307e\u3057\u3087\u3046\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 173
+                },
+                "colab_type": "code",
+                "id": "o8UaiBs1hkwh",
+                "outputId": "3a0075b7-00ea-4cad-9ff1-47b0965e833f"
+            },
+            "outputs": [],
+            "source": [
+                "!pip install -U cmake"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "-DuFQsPK90LI"
+            },
+            "source": [
+                "\u305d\u306e\u5f8c\u3001OpenJij\u3092\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3057\u76f4\u3057\u307e\u3059\u3002\u4e00\u5ea6\u30a2\u30f3\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3057\u3066\u304b\u3089\u3001\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9\u304b\u3089\u30d3\u30eb\u30c9\u3059\u308b\u30aa\u30d7\u30b7\u30e7\u30f3\u3067\u3042\u308b `--no-binary :all:`\u3092pip\u306b\u4ed8\u3051\u52a0\u3048\u3066\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3057\u307e\u3059\u3002\n",
+                "\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u306b\u306f\u3057\u3070\u3089\u304f\u6642\u9593\u304c\u304b\u304b\u308a\u307e\u3059\u3002\n",
+                "> \u901a\u5e38pip\u306f\u4e00\u5ea6\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3057\u305f\u3053\u3068\u306e\u3042\u308b\u30a2\u30d7\u30ea\u30b1\u30fc\u30b7\u30e7\u30f3\u3067\u3042\u308c\u3070\u30ad\u30e3\u30c3\u30b7\u30e5\u304b\u3089\u30c7\u30fc\u30bf\u3092\u53d6\u3063\u3066\u304d\u3066\u3057\u307e\u3046\u306e\u3067\u3001\u305d\u308c\u3082\u7121\u52b9\u5316\u3059\u308b `--no--cache-dir`\u3082\u3064\u3051\u307e\u3059\u3002\u521d\u3081\u3066OpenJij\u3092\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3059\u308b\u969b\u306b\u306f\u3053\u306e\u30aa\u30d7\u30b7\u30e7\u30f3\u306f\u4e0d\u8981\u3067\u3059\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 377
+                },
+                "colab_type": "code",
+                "id": "s1pjFhAa95Zs",
+                "outputId": "e398ccc6-abca-420b-8e9b-0626ab3283bc"
+            },
+            "outputs": [],
+            "source": [
+                "!pip uninstall openjij -y\n",
+                "!pip install openjij --no-binary :all: --no-cache-dir"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "JMgqfmZ-h8X3"
+            },
+            "source": [
+                "## GPUSQA\u8a08\u7b97\n",
+                "\n",
+                "OpenJij\u306eGPU\u3067\u30b5\u30dd\u30fc\u30c8\u3057\u3066\u3044\u308b\u306e\u306f\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u4e0a\u3067\u306e\u30e2\u30f3\u30c6\u30ab\u30eb\u30ed\u8a08\u7b97\u3067\u3059\u3002  \n",
+                "\u307e\u305a\u306f GPUSQASampler \u306e\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u3092\u4f5c\u308a\u307e\u3059\u3002\n",
+                "\u3082\u3057\u3001GPU\u95a2\u9023\u306e\u30e2\u30b8\u30e5\u30fc\u30eb\u304c\u898b\u3064\u304b\u3089\u306a\u3044\u3068\u30a8\u30e9\u30fc\u304c\u51fa\u305f\u969b\u306b\u306f\u3001\u4ee5\u524d\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u304c\u8aad\u307f\u8fbc\u307e\u308c\u3066\u3044\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b\u306e\u3067\u3001\u4e00\u5ea6\u518d\u8d77\u52d5\u3059\u308b\u3068\u3044\u3044\u304b\u3082\u3057\u308c\u307e\u305b\u3093\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 8,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "TYhWp0eqh3Yb"
+            },
+            "outputs": [],
+            "source": [
+                "import openjij as oj\n",
+                "\n",
+                "sampler = oj.GPUChimeraSQASampler(num_reads=100, unit_num_L=2)"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "oOmEWWBxh_3O"
+            },
+            "source": [
+                "\u3053\u3053\u3067 `unit_num_L` \u306f\u30ad\u30e1\u30e9\u30e6\u30cb\u30c3\u30c8\u30bb\u30eb\u304c\u4e26\u30762\u6b21\u5143\u683c\u5b50\u306e1\u8fba\u306e\u9577\u3055\u3092\u6307\u5b9a\u3057\u307e\u3059\u3002  \n",
+                "\u4e0a\u306e\u4f8b\u3067\u306f 2\u00d72=4\u3064\u306e\u30ad\u30e1\u30e9\u30e6\u30cb\u30c3\u30c8\u30bb\u30eb\u304c\u4e26\u3093\u3067\u3044\u308b\u7cfb\u3092\u4f5c\u6210\u3057\u3066\u3044\u307e\u3059\u3002\u30ad\u30e1\u30e9\u30e6\u30cb\u30c3\u30c8\u30bb\u30eb\u306f8bit\u30671\u3064\u3092\u69cb\u6210\u3057\u3066\u3044\u308b\u305f\u3081\u3001\u7dcf\u30d3\u30c3\u30c8\u6570\u306f\n",
+                "  \n",
+                "${\\rm total\\_num} = {\\rm unit\\_num\\_L}^2 \\times 8$\n",
+                "\n",
+                "\u306e\u3088\u3046\u306b\u8a08\u7b97\u3055\u308c\u307e\u3059\u3002\n",
+                "\n",
+                "GPUSQASampler\u3067\u306f\u3001\u306e\u3061\u306b sample_qubo \u306a\u3069\u3067\u5c11\u306a\u3044\u5909\u6570\u3092\u6307\u5b9a\u3057\u3066\u3082\u3001\u3053\u3053\u3067\u4f5c\u3063\u305f\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u306e\u7cfb\u306e\u30b5\u30a4\u30ba\u3060\u3051SQA\u8a08\u7b97\u3092\u884c\u3044\u307e\u3059\u3002  \n",
+                "`unit_num_L`\u306f\u7121\u99c4\u306b\u5927\u304d\u3059\u304e\u306a\u3044\u3088\u3046\u306b\u6ce8\u610f\u3057\u307e\u3057\u3087\u3046\u3002\u307e\u305f`unit_num_L`\u306f\u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf\u3067\u6307\u5b9a\u3057\u306a\u304f\u3066\u3082\u3001`sample_qubo`\u3092\u5b9f\u884c\u3059\u308b\u3068\u304d\u306e\u5f15\u6570\u3068\u3057\u3066\u3082\u6307\u5b9a\u3067\u304d\u307e\u3059\u3002\n",
+                "\n",
+                "## \u5b9f\u884c\n",
+                "\n",
+                "\u3067\u306fSQA\u3092\u5b9f\u884c\u3057\u3066\u307f\u307e\u3057\u3087\u3046\u3002\u3053\u308c\u307e\u3067\u7d39\u4ecb\u3057\u3066\u304d\u305fSampler\u3068\u540c\u69d8\u306b\u3001sample_qubo (or sample_ising) \u3067\u8a08\u7b97\u3092\u884c\u3046\u3053\u3068\u304c\u3067\u304d\u307e\u3059\u3002\n",
+                "\u305f\u3060\u3057\u3001\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u3092\u6e80\u305f\u3055\u306a\u3044\u6dfb\u5b57\u306e\u76f8\u4e92\u4f5c\u7528\u3092\u6307\u5b9a\u3059\u308b\u3068\u30a8\u30e9\u30fc\u306b\u306a\u308a\u307e\u3059\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 6,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 1000
+                },
+                "colab_type": "code",
+                "id": "_XIsZ9z2h_Rv",
+                "outputId": "be24e99d-b0b9-4766-c686-815ca027694c"
+            },
+            "outputs": [
+                {
+                    "data": {
+                        "text/plain": [
+                            "Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],\n",
+                            "          dtype=[('sample', 'i1', (4,)), ('energy', '<f8'), ('num_occurrences', '<i8')]), [0, 4, 5, 12], {'system': [], 'sampling_time': 613007.2049982118, 'execution_time': 5268.688350133743, 'list_exec_times': array([8103.3180013 , 7873.31900028, 7825.17199877, 7872.30599963,\n",
+                            "       7792.76800131, 7593.87200014, 7625.91199964, 7482.52899939,\n",
+                            "       7432.99399983, 7417.46600033, 7432.96099972, 7366.36799957,\n",
+                            "       7428.62700099, 7236.23700105, 7419.23100031, 7350.26099937,\n",
+                            "       7386.48200058, 7441.84500036, 7407.03500014, 7415.7250001 ,\n",
+                            "       7299.38800032, 7371.710999  , 7383.22500001, 7377.78900111,\n",
+                            "       7321.36400075, 7398.68399978, 7432.24699909, 7335.25199939,\n",
+                            "       7368.8299999 , 7459.09500074, 5375.03600026, 4531.83100035,\n",
+                            "       4532.1180005 , 4332.65600077, 4344.09799891, 4393.281999  ,\n",
+                            "       4354.3289994 , 4416.1750011 , 4325.57100066, 4285.58099884,\n",
+                            "       4299.46800068, 4286.38800076, 4321.26099986, 4284.26200051,\n",
+                            "       4340.93200056, 4283.38299935, 4287.86399971, 4356.57200069,\n",
+                            "       4270.55      , 4314.58400089, 4254.48100032, 4355.33199925,\n",
+                            "       4280.94700146, 4316.0009991 , 4231.83699968, 4333.81899893,\n",
+                            "       4294.46700036, 4251.12299854, 4235.29399995, 4322.45799857,\n",
+                            "       4257.19499981, 4338.70699999, 4242.10899837, 4298.02899998,\n",
+                            "       4315.735001  , 4312.46000153, 4248.94000025, 4315.61000005,\n",
+                            "       4289.10499977, 4330.03900071, 4282.44599971, 4318.12500028,\n",
+                            "       4310.84400043, 4292.43100007, 4273.68900091, 4292.38300057,\n",
+                            "       4273.35200038, 4315.81399971, 4285.78700121, 4246.03699867,\n",
+                            "       4299.35600005, 4259.02400093, 4238.95799941, 4316.84500109,\n",
+                            "       4248.75200042, 4265.76499922, 4277.85600004, 4279.65800009,\n",
+                            "       4273.97199928, 4290.23499964, 4312.98200056, 4356.32300105,\n",
+                            "       4278.21400081, 4294.05099931, 4196.49500145, 4260.50799979,\n",
+                            "       4256.06900171, 4298.48100066, 4280.20500112, 4282.53600148]), 'schedule': {'beta': 10.0, 'gamma': 1, 'num_sweeps': 100}}, 'BINARY')"
+                        ]
+                    },
+                    "execution_count": 6,
+                    "metadata": {},
+                    "output_type": "execute_result"
+                }
+            ],
+            "source": [
+                "Q = {(0, 4): -1, (0, 5): -1, (4, 12): 1}\n",
+                "response = sampler.sample_qubo(Q)\n",
+                "response"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "BIXHyB7--qB8"
+            },
+            "source": [
+                "## \u5168\u7d50\u5408\u6a21\u578b\u306e\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u3078\u306e\u57cb\u3081\u8fbc\u307f\n",
+                "\n",
+                "\u3053\u308c\u307e\u3067\u8aac\u660e\u3057\u305f\u3082\u306e\u306f\u3001\u76f8\u4e92\u4f5c\u7528\u304c\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u4e0a\u306b\u5b58\u5728\u3059\u308b\u3082\u306e\u306e\u307f\u306e\u8a08\u7b97\u3067\u3057\u305f\u3002\u4ee5\u4e0b\u3067\u306f\u5168\u7d50\u5408\u306e\u554f\u984c\u306e\u3088\u3046\u306b\u3001\u76f8\u4e92\u4f5c\u7528\u304c\u8907\u96d1\u306a\u3082\u306e\u3092\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u306b\u57cb\u3081\u8fbc\u3080\u5834\u5408\u306e\u30b9\u30af\u30ea\u30d7\u30c8\u3092\u3054\u7d39\u4ecb\u3057\u307e\u3059\u3002  \n",
+                "\u30ad\u30e1\u30e9\u30b0\u30e9\u30d5\u3078\u306e\u57cb\u3081\u8fbc\u307f\u3092\u884c\u3046\u305f\u3081\u306b\u3001`dwave`\u306e`EmbeddingComposite`\u3092\u4f75\u7528\u3057\u307e\u3057\u3087\u3046\u3002`pip`\u3092\u7528\u3044\u3066`dwave-system`\u3092\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u3057\u307e\u3059\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": null,
+            "metadata": {
+                "colab": {
+                    "base_uri": "https://localhost:8080/",
+                    "height": 803
+                },
+                "colab_type": "code",
+                "id": "WcP7nmD2--si",
+                "outputId": "a769f387-5ed8-4a91-9115-aa5b82bc6bb7"
+            },
+            "outputs": [],
+            "source": [
+                "!pip install dwave-system"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "metadata": {
+                "colab_type": "text",
+                "id": "u9Xzb7BHBG1n"
+            },
+            "source": [
+                "\u305d\u3057\u3066sampler\u90e8\u5206\u306e\u30b9\u30af\u30ea\u30d7\u30c8\u3092\u4ee5\u4e0b\u306e\u3088\u3046\u306b\u66f8\u304d\u63db\u3048\u307e\u3059\u3002"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 15,
+            "metadata": {
+                "colab": {},
+                "colab_type": "code",
+                "id": "Ry1nTJGU-vnI"
+            },
+            "outputs": [],
+            "source": [
+                "from dwave.system.composites import EmbeddingComposite\n",
+                "\n",
+                "gpusqa = oj.GPUSQASampler(num_reads=100, unit_num_L=2)\n",
+                "sampler = EmbeddingComposite(gpusqa)"
+            ]
+        }
+    ],
+    "metadata": {
+        "accelerator": "GPU",
+        "colab": {
+            "name": "5-OpenJijGPU.ipynb",
+            "provenance": []
+        },
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.8.5"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 1
+}

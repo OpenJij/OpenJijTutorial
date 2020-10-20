@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A1 - Introduction to OpenJij core interface (core Python interface) &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="A2 - Introduction to OpenJij core interface (C++ interface)" href="A002-CppIntroduction.html" />
+    <link rel="prev" title="7-MonteCarlo Sampling" href="007-MonteCarloSampling.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="A002-CppIntroduction.html" title="A2 - Introduction to OpenJij core interface (C++ interface)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="007-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A1 - Introduction to OpenJij core interface (core Python interface)</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)">
+<h1>A1 - Introduction to OpenJij core interface (core Python interface)<a class="headerlink" href="#A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/A001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>In this chapeter, let us show you how to use OpenJij core interface (core Python insterface) and demonstrate easy case of calculation.</p>
+<p>Core insterface is lower-layer APIs than in the previous tutorials. The target readers are expected to have completed the previous OpenJij tutorials and be familiar with terms such as ising models and MonteCarlo methods.</p>
+<p>Specifically, we use OpenJij for the following purpose.</p>
+<ul class="simple">
+<li><p>We would like to use OpenJij not only for optimization problems, but also for more specialized applications such as sampling and research purpose.</p></li>
+<li><p>We would like to set annealing schedules and directly develop algorithms we use.</p></li>
+</ul>
+<div class="section" id="OpenJij-core-interface-について">
+<h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
+<p>In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call <strong>cxxjij</strong>, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.</p>
+<p><a class="reference internal" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a></p>
+<p>Using core interface, we can use all funtinon of OpenJij. Therefore, We can choose OpenJij not only for optimization problem but also for reserch purpose as numerical tools of statistical physics. Also, we can compute faster computation because of using C++ interface.</p>
+<p>In this tutorial, let us introduce you Python interface <code class="docutils literal notranslate"><span class="pre">cxxjij</span></code> and C++ interface. We use pip for installation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install openjij
+<span class="o">!</span>pip show openjij
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: openjij in /home/jiko/.local/lib/python3.8/site-packages (0.0.11)
+Requirement already satisfied: requests in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (2.23.0)
+Requirement already satisfied: dimod==0.8.21 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (0.8.21)
+Requirement already satisfied: numpy&gt;=1.16.0 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (1.18.1)
+Requirement already satisfied: idna&lt;3,&gt;=2.5 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (2.9)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (2019.11.28)
+Requirement already satisfied: chardet&lt;4,&gt;=3.0.2 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (3.0.4)
+Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (1.25.8)
+Requirement already satisfied: six&lt;2.0.0,&gt;=1.10.0 in /home/jiko/.local/lib/python3.8/site-packages (from dimod==0.8.21-&gt;openjij) (1.14.0)
+Name: openjij
+Version: 0.0.11
+Summary: Framework for the Ising model and QUBO
+Home-page: https://openjij.github.io/OpenJij/
+Author: Jij Inc.
+Author-email: openjij@j-ij.com
+License: Apache License 2.0
+Location: /home/jiko/.local/lib/python3.8/site-packages
+Requires: numpy, dimod, requests
+Required-by:
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Run-problem">
+<h2>Run problem<a class="headerlink" href="#Run-problem" title="Permalink to this headline">¶</a></h2>
+<p>As a tutorial, we solve classical spin-ising problem (<span class="math notranslate nohighlight">\(\sigma = \pm 1\)</span>) with <span class="math notranslate nohighlight">\(N=5\)</span> variable size with annealing. The Hamiltonian of this problem is as follows.</p>
+<p><span class="math">\begin{align}
+H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
+\sigma_i &= \pm 1 (i=1 \cdots N)
+\end{align}</span></p>
+<p>When the longitudinal magnetic fields and interaction coefficient are as follows</p>
+<p><span class="math">\begin{align}
+h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\ j
+\end{align}</span></p>
+<p>all spin is lower in energy if it takes a value of 1. Therefore, the optimal solution is <span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1,1,1,1,1\}\)</span>. Let’s solve this problem.</p>
+<p>The whole process with the Python script is as follows.</p>
+<blockquote>
+<div><p>core interface is a solver that specializes in ising problem. For this reason, conversion with QUBO is not implemented. To convert to QUBO, please refer to the previous tutorials and convert from QUBO to Ising problem before calling the core interface.</p>
+</div></blockquote>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># core interface imports cssjij instead of OpenJij</span>
+<span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
+<span class="c1"># import Graph module for interaction matrix</span>
+<span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
+
+<span class="c1"># set Dense Graph of problem size N=5</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="c1"># set interaction matrix</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
+<span class="c1"># set longitudinal matnetic fields</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="c1"># we can get same result J[i,i] = -1</span>
+    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="c1"># import system to perform the computation from Graph</span>
+<span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+
+<span class="c1"># In this time, we use normal classical MonteCarlo calculation system</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">J</span><span class="p">)</span>
+<span class="c1"># use Utility to set annealing schedule</span>
+<span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># use Altorigthm to run annealing</span>
+<span class="c1"># use simple SingleSpinFlip for updating the MonteCarlo step</span>
+<span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
+<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+
+<span class="c1"># use get_soultion in Result module to get result</span>
+<span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solution is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The solution is [1, 1, 1, 1, 1].
+</pre></div></div>
+</div>
+<p>We can see this solution is <span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>. Because it is a low layer API, there are many settings to be made, but the more detailed settings are possible.</p>
+</div>
+<div class="section" id="List-of-Modules">
+<h2>List of Modules<a class="headerlink" href="#List-of-Modules" title="Permalink to this headline">¶</a></h2>
+<p>As a script example, OpenJij core interface consists of <code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorigthm</span></code> and other modules. Each module can be combined to compute ising models of various types and algorithms. It is also easy to extend when implementing new algorithms. The following chapters will explain details.</p>
+<div class="section" id="Graph">
+<h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
+<p>A module for holding the ising Hamiltonian’s coefficient <span class="math notranslate nohighlight">\(J_{ij}\)</span>. There are <code class="docutils literal notranslate"><span class="pre">Dense</span></code> and <code class="docutils literal notranslate"><span class="pre">Sparse</span></code>, which deal with tight coupling (suitable for models in which all Jij have non-zero values) and others (suitable for models in whick many Jij values are zero).</p>
+</div>
+<div class="section" id="System">
+<h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">system</span></code> defines a data structure for keeping the current status of the system in MonteCarlo simulation and others.</p>
+<p>Specifically, the following are defined.</p>
+<ul class="simple">
+<li><p>Classical ising model (sequence of spins)</p></li>
+<li><p>Ising model including transverse magnetic fields (sequence of spins including Trotter decomposition)</p></li>
+<li><p>GPU implemented classical and quantum ising model</p></li>
+</ul>
+<p>There are many different MonteCarlo methods and other computation schemes (or new methods will be developed in the feature). Therefore, by separating the data structures, algorithms and result fetching interfaces for each methods, OpenJij has been designed to make it easy to add different algorithms.</p>
+</div>
+<div class="section" id="Updater">
+<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">updater</span></code> difines how to update the <code class="docutils literal notranslate"><span class="pre">system</span></code>. Specifically, the following methods are implemented.</p>
+<ul class="simple">
+<li><p>SingleSpinFlip Update</p></li>
+<li><p>SwendsenWang Update</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">system</span></code> type determines which <code class="docutils literal notranslate"><span class="pre">updater</span></code> can be used.</p>
+<blockquote>
+<div><p>In core python interface, <code class="docutils literal notranslate"><span class="pre">updater</span></code> is integrated into the <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>.</p>
+</div></blockquote>
+</div>
+<div class="section" id="Algorithm">
+<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Algorithm</span></code> has a role of executing altorighms, including what schedule to run the annealing algorithm. <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater_type]_run</span></code> allows you to run the program using the corresponding Updater.</p>
+</div>
+<div class="section" id="Result">
+<h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
+<p>This module is used to get information from the <code class="docutils literal notranslate"><span class="pre">system</span></code> such as spin assignment.</p>
+</div>
+<div class="section" id="Coding-Flow">
+<h3>Coding Flow<a class="headerlink" href="#Coding-Flow" title="Permalink to this headline">¶</a></h3>
+<p>The coding process is basically as fllows. This trend will not change as the scale of the problem is largeer.</p>
+<ul class="simple">
+<li><p>set <span class="math notranslate nohighlight">\(J_{ij}, h_{i}\)</span> with <code class="docutils literal notranslate"><span class="pre">graph</span></code></p></li>
+<li><p>create <code class="docutils literal notranslate"><span class="pre">system</span></code> based on <code class="docutils literal notranslate"><span class="pre">graph</span></code></p></li>
+<li><p>select <code class="docutils literal notranslate"><span class="pre">updater</span></code> for the <code class="docutils literal notranslate"><span class="pre">system</span></code> and run the algorithm using <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater</span> <span class="pre">type]_run</span></code></p></li>
+<li><p>get system spin assignment with <code class="docutils literal notranslate"><span class="pre">result.get_solution(system)</span></code> or get from <code class="docutils literal notranslate"><span class="pre">system</span></code> directly.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A1 - Introduction to OpenJij core interface (core Python interface)</a><ul>
+<li><a class="reference internal" href="#OpenJij-core-interface-について">OpenJij core interface について</a></li>
+<li><a class="reference internal" href="#Run-problem">Run problem</a></li>
+<li><a class="reference internal" href="#List-of-Modules">List of Modules</a><ul>
+<li><a class="reference internal" href="#Graph">Graph</a></li>
+<li><a class="reference internal" href="#System">System</a></li>
+<li><a class="reference internal" href="#Updater">Updater</a></li>
+<li><a class="reference internal" href="#Algorithm">Algorithm</a></li>
+<li><a class="reference internal" href="#Result">Result</a></li>
+<li><a class="reference internal" href="#Coding-Flow">Coding Flow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="007-MonteCarloSampling.html"
+                        title="previous chapter">7-MonteCarlo Sampling</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="A002-CppIntroduction.html"
+                        title="next chapter">A2 - Introduction to OpenJij core interface (C++ interface)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/en/A001-Introduction.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="A002-CppIntroduction.html" title="A2 - Introduction to OpenJij core interface (C++ interface)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="007-MonteCarloSampling.html" title="7-MonteCarlo Sampling"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">A1 - Introduction to OpenJij core interface (core Python interface)</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
