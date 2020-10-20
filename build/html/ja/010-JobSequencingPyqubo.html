@@ -288,7 +288,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="513b020fecb74194901d4279fd883171" src="../_images/job_sequence.png" /></p>
+<div><p><img alt="abf0a2da46ee4b19b367b3aa1d29ee95" src="../_images/job_sequence.png" /></p>
 </div></div>
 <div class="section" id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
@@ -365,7 +365,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>この時、yがとりうる値の最大値は上で指定した数ではなく,<span class="math notranslate nohighlight">\(2^{\lfloor\log_2(\mathcal{M}-1)\rfloor+1}\)</span>となることに注意してください。 #### QUBO行列の生成 では、具体例で示した問題を実際にQUBO行列にしてPyQUBOで解いてみましょう。 まず、仕事の個数Nとコンピュータの数m,仕事の長さのリストLを定義します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[205]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -381,7 +381,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p><span class="math notranslate nohighlight">\(\mathcal{M}\)</span>を選び、Mに代入します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[206]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -391,7 +391,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>次にバイナリ変数を定義します。スラック変数yに対しては先ほどのLogEncInteger()を使います。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[207]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -417,7 +417,7 @@ div.rendered_html tbody tr:hover {
 \[H_B = B\sum_{i=1}^N L_ix_{i,1}\]</div>
 <p><span class="math notranslate nohighlight">\(A_1,A_2,B\)</span>は<span class="math notranslate nohighlight">\(0&lt;B \max(L_i)&lt;A_1,A_2\)</span>を満たすように選びます。それぞれの大小のバランスは係数がかかっている項のスケールが均等になるように調節します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[402]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -448,7 +448,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>上記の式をPyQUBOで解かせた結果を見てみましょう。 brokenはペナルティ項が破れているとき(0でないとき)、どのように破れたかを記録してくれます。brokenが{}であると、制約が破られていないと分かります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[403]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -515,17 +515,17 @@ B : 1.0
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
-1番目の仕事 長さ:1
-4番目の仕事 長さ:4
-6番目の仕事 長さ:6
-7番目の仕事 長さ:7
-仕事の総実行時間:18
-
-コンピュータ3で行われる仕事
 2番目の仕事 長さ:2
 3番目の仕事 長さ:3
 5番目の仕事 長さ:5
 8番目の仕事 長さ:8
+仕事の総実行時間:18
+
+コンピュータ3で行われる仕事
+1番目の仕事 長さ:1
+4番目の仕事 長さ:4
+6番目の仕事 長さ:6
+7番目の仕事 長さ:7
 仕事の総実行時間:18
 
 broken
@@ -537,7 +537,7 @@ broken
 <h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h2>
 <p>次にOpenJijのSQAを用いて解いてみます。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[397]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -577,22 +577,22 @@ broken
 [Results]
 
 コンピュータ1で行われる仕事
-3番目の仕事 長さ:3
+4番目の仕事 長さ:4
 6番目の仕事 長さ:6
-10番目の仕事 長さ:10
+9番目の仕事 長さ:9
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
-2番目の仕事 長さ:2
-4番目の仕事 長さ:4
+3番目の仕事 長さ:3
 5番目の仕事 長さ:5
-7番目の仕事 長さ:7
+10番目の仕事 長さ:10
 仕事の総実行時間:18
 
 コンピュータ3で行われる仕事
 1番目の仕事 長さ:1
+2番目の仕事 長さ:2
+7番目の仕事 長さ:7
 8番目の仕事 長さ:8
-9番目の仕事 長さ:9
 仕事の総実行時間:18
 
 broken

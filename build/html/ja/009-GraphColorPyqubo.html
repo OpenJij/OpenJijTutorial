@@ -288,11 +288,11 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個のノードと20本の枝を持つ無効グラフが与えられたとします。枝で繋がれたノード同士は異なる色となるようにノードを色分けする時、3色で全てのノードを塗ることは可能であるか考えます。 &gt; グラフは下のようになっているとします。</p>
-<div><p><img alt="7328470930854eb085ace7e10a97064d" src="../_images/graph_color.png" /></p>
+<div><p><img alt="076b2194e49c40e9a4943041cb55c592" src="../_images/graph_color.png" /></p>
 </div><blockquote>
 <div><p>塗り分けた後のグラフは下のようになります。 このグラフから全てのノードは3色で塗り分けることができると分かります。</p>
 </div></blockquote>
-<div><p><img alt="96923c786bdd4c96915188c17c2bde63" src="../_images/graph_color_res.png" /></p>
+<div><p><img alt="77100bc4544b46d8a29114e1abe7facc" src="../_images/graph_color_res.png" /></p>
 </div></div>
 <div class="section" id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
@@ -317,7 +317,7 @@ div.rendered_html tbody tr:hover {
 <h2>QUBO行列の生成<a class="headerlink" href="#QUBO行列の生成" title="Permalink to this headline">¶</a></h2>
 <p>上記の例で示したグラフの彩色問題を実際にQUBO行列にしてPyQUBOを用いて解いてみます。 まず、グラフの頂点数、塗り分けるのに使う色の数、辺を定義します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -334,7 +334,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>次にバイナリ変数xを定義します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -347,7 +347,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>この変数を用いてハミルトニアンを定義します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[92]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -367,7 +367,26 @@ div.rendered_html tbody tr:hover {
 <p>ハミルトニアンをコンパイルしてto_qubo()でQUBOに変換します。 quboにはPythonの辞書型で格納されたQUBOが、そしてoffsetにはQUBO化した際に現れる定数(無視してよい)が代入されます。</p>
 <p>では、これをSimulated Annealingのソルバーで解いて結果を見てみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install --upgrade networkx
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already up-to-date: networkx in /home/jiko/.local/lib/python3.8/site-packages (2.5)
+Requirement already satisfied, skipping upgrade: decorator&gt;=4.3.0 in /home/jiko/.local/lib/python3.8/site-packages (from networkx) (4.4.2)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -415,26 +434,26 @@ div.rendered_html tbody tr:hover {
 <div class="highlight"><pre>
 [Result]
 
-{0: {1: 1, 2: 0, 3: 0}, 1: {1: 0, 2: 0, 3: 1}, 2: {1: 0, 2: 1, 3: 0}, 3: {1: 0, 2: 0, 3: 1}, 4: {1: 1, 2: 0, 3: 0}, 5: {1: 1, 2: 0, 3: 0}, 6: {1: 0, 2: 1, 3: 0}, 7: {1: 0, 2: 1, 3: 0}, 8: {1: 1, 2: 0, 3: 0}, 9: {1: 0, 2: 1, 3: 0}}
+{0: {1: 0, 2: 0, 3: 1}, 1: {1: 1, 2: 0, 3: 0}, 2: {1: 0, 2: 1, 3: 0}, 3: {1: 0, 2: 1, 3: 0}, 4: {1: 1, 2: 0, 3: 0}, 5: {1: 0, 2: 0, 3: 1}, 6: {1: 0, 2: 1, 3: 0}, 7: {1: 0, 2: 1, 3: 0}, 8: {1: 0, 2: 0, 3: 1}, 9: {1: 1, 2: 0, 3: 0}}
 
 broken
 {}
 
-[&#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;skyblue&#39;]
+[&#39;yellowgreen&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_009-GraphColorPyqubo_16_1.png" src="../_images/ja_009-GraphColorPyqubo_16_1.png" />
+<img alt="../_images/ja_009-GraphColorPyqubo_17_1.png" src="../_images/ja_009-GraphColorPyqubo_17_1.png" />
 </div>
 </div>
 <div class="section" id="OpenJijに投げる">
 <h3>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h3>
 <p>次にOpenJijのSAで解いてみましょう</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -455,26 +474,26 @@ broken
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{0: {1: 0, 2: 1, 3: 0},
+{0: {1: 1, 2: 0, 3: 0},
  1: {1: 0, 2: 0, 3: 1},
- 2: {1: 1, 2: 0, 3: 0},
- 3: {1: 0, 2: 0, 3: 1},
- 4: {1: 0, 2: 1, 3: 0},
- 5: {1: 0, 2: 1, 3: 0},
- 6: {1: 1, 2: 0, 3: 0},
- 7: {1: 1, 2: 0, 3: 0},
- 8: {1: 0, 2: 1, 3: 0},
- 9: {1: 1, 2: 0, 3: 0}}
+ 2: {1: 0, 2: 1, 3: 0},
+ 3: {1: 1, 2: 0, 3: 0},
+ 4: {1: 0, 2: 0, 3: 1},
+ 5: {1: 1, 2: 0, 3: 0},
+ 6: {1: 0, 2: 1, 3: 0},
+ 7: {1: 0, 2: 1, 3: 0},
+ 8: {1: 0, 2: 0, 3: 1},
+ 9: {1: 0, 2: 1, 3: 0}}
 </pre></div></div>
 </div>
 <p>グラフがどのように色が塗られるか見てみましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[95]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -500,14 +519,14 @@ broken
 broken
 {}
 
-[&#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;plum&#39;]
+[&#39;plum&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;, &#39;plum&#39;, &#39;yellowgreen&#39;, &#39;plum&#39;, &#39;skyblue&#39;, &#39;skyblue&#39;, &#39;yellowgreen&#39;, &#39;skyblue&#39;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_009-GraphColorPyqubo_20_1.png" src="../_images/ja_009-GraphColorPyqubo_20_1.png" />
+<img alt="../_images/ja_009-GraphColorPyqubo_21_1.png" src="../_images/ja_009-GraphColorPyqubo_21_1.png" />
 </div>
 </div>
 <p>結果を見ると制約を満たしつつ全てのノードを3色で塗り分けられていると分かります。</p>
