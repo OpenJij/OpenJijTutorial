@@ -49,21 +49,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -164,7 +178,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -230,6 +244,7 @@ div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
     padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -288,7 +303,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="abf0a2da46ee4b19b367b3aa1d29ee95" src="../_images/job_sequence.png" /></p>
+<div><p><img alt="45da8b6072314223bf879ea24d89d314" src="../_images/job_sequence.png" /></p>
 </div></div>
 <div class="section" id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>

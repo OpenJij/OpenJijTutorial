@@ -49,21 +49,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -164,7 +178,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -230,6 +244,7 @@ div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
     padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -282,14 +297,31 @@ div.rendered_html tbody tr:hover {
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/003-PyQUBO_2_OpenJij.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>ここでは，PyQUBOによるコスト関数のQUBOへの変換方法とSimulated Annealing、そしてOpenJijへの変数受け渡しなどについてクリーク被覆問題を例にご紹介いたします。</p>
 <p>pipを用いて<code class="docutils literal notranslate"><span class="pre">pyqubo</span></code>をインストールしましょう。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[120]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="o">!</span>pip install pyqubo
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pyqubo in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (1.0.7)
+Requirement already satisfied: dimod&gt;=0.9.2 in /usr/local/lib/python3.7/site-packages/dimod-0.9.3-py3.7-macosx-10.14-x86_64.egg (from pyqubo) (0.9.3)
+Requirement already satisfied: dwave-neal&gt;=0.5.4 in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (from pyqubo) (0.5.6)
+Requirement already satisfied: six&gt;=1.11.0 in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (from pyqubo) (1.14.0)
+Requirement already satisfied: numpy&lt;2.0.0,&gt;=1.16.0 in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (from pyqubo) (1.19.0)
+Requirement already satisfied: Deprecated&gt;=1.2.10 in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (from pyqubo) (1.2.10)
+Requirement already satisfied: wrapt&lt;2,&gt;=1.10 in /Users/s.nakamura/Library/Python/3.7/lib/python/site-packages (from Deprecated&gt;=1.2.10-&gt;pyqubo) (1.12.1)
+<span class="ansi-yellow-fg">WARNING: You are using pip version 20.1; however, version 20.2.4 is available.
+You should consider upgrading via the &#39;/usr/local/opt/python/bin/python3.7 -m pip install --upgrade pip&#39; command.</span>
+</pre></div></div>
 </div>
 <div class="section" id="PyQUBO-を使った-QUBOの定式化">
 <h2>PyQUBO を使った QUBOの定式化<a class="headerlink" href="#PyQUBO-を使った-QUBOの定式化" title="Permalink to this headline">¶</a></h2>
@@ -311,14 +343,14 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>今回はグラフとクリークの数<span class="math notranslate nohighlight">\(n\)</span>を以下のように与えます。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[121]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># 頂点の数を定義します。</span>
 <span class="n">N_VER</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="c1"># 色の数を定義します。</span>
-<span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="c1"># グラフを定義します。0~7の頂点があったときにどの頂点同士が線で結ばれているかを定義しています。</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
 </pre></div>
@@ -328,7 +360,7 @@ div.rendered_html tbody tr:hover {
 <h3>PyQUBOによる定式化<a class="headerlink" href="#PyQUBOによる定式化" title="Permalink to this headline">¶</a></h3>
 <p>PyQUBOから必要となるクラスをimport しておきます。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[122]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -338,7 +370,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>最初にQUBOを表現する変数を用意しましょう。Arrayを使って変数列を作ります。 今回は(頂点の数)×(色の数)だけ変数が必要です。その分を<code class="docutils literal notranslate"><span class="pre">shape</span></code>を用いて準備します。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[123]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -351,16 +383,16 @@ div.rendered_html tbody tr:hover {
 <div class="line">次にQUBOを作ります。比較的数式通りに記述することができます。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># 第一項 (制約項)を定義します。</span>
-<span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
+<span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
 <span class="c1"># 第二項 (コスト、目的関数)を定義します。</span>
 <span class="n">H_B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">))</span>
 <span class="c1"># ハミルトニアン全体を定義します。</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="n">H_A</span><span class="o">+</span><span class="n">H_B</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">H_A</span> <span class="o">+</span> <span class="n">H_B</span>
 </pre></div>
 </div>
 </div>
@@ -370,7 +402,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">OpenJijやD-Wave Oceanでは、QUBOはPythonの辞書型で表現されることが前提になっています。<code class="docutils literal notranslate"><span class="pre">.compile</span></code>すればあとはそのまま各ソルバーに投げることが可能です。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -381,14 +413,16 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">qubo</span></code>にはPythonの辞書型で格納されたQUBOが、そして<code class="docutils literal notranslate"><span class="pre">offset</span></code>にはQUBO化した際に現れる定数(無視してよい)が代入されます。</p>
-<p>PyQUBOにもSimulated Annealingのソルバーがあります。これはD-Wave Ocean SDKの中のnealというライブラリを中で実行しています。これを利用するには<code class="docutils literal notranslate"><span class="pre">solve_qubo(qubo)</span></code>を用います。</p>
+<p>PyQUBOに備わっていたSimulated Annealingソルバーの<code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>は使用が非推奨となりました。ここではD-Wave Ocean SDKのnealというライブラリを直接呼び出して実行しましょう。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># PyQUBOに備わっているSAを用いて解きます。</span>
-<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+<span></span><span class="c1"># nealのSAを用いて解きます。</span>
+<span class="kn">import</span> <span class="nn">neal</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">neal</span><span class="o">.</span><span class="n">SimulatedAnnealingSampler</span><span class="p">()</span>
+<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -398,53 +432,96 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{&#39;x[0][1]&#39;: 0, &#39;x[0][2]&#39;: 0, &#39;x[0][3]&#39;: 1, &#39;x[1][1]&#39;: 0, &#39;x[1][2]&#39;: 0, &#39;x[1][3]&#39;: 1, &#39;x[2][1]&#39;: 0, &#39;x[2][2]&#39;: 0, &#39;x[2][3]&#39;: 1, &#39;x[3][1]&#39;: 0, &#39;x[3][2]&#39;: 1, &#39;x[3][3]&#39;: 0, &#39;x[4][1]&#39;: 0, &#39;x[4][2]&#39;: 1, &#39;x[4][3]&#39;: 0, &#39;x[5][1]&#39;: 1, &#39;x[5][2]&#39;: 0, &#39;x[5][3]&#39;: 0, &#39;x[6][1]&#39;: 1, &#39;x[6][2]&#39;: 0, &#39;x[6][3]&#39;: 0, &#39;x[7][1]&#39;: 1, &#39;x[7][2]&#39;: 0, &#39;x[7][3]&#39;: 0}
+  x[0][0] x[0][1] x[0][2] x[1][0] x[1][1] x[1][2] ... x[7][2] energy num_oc.
+0       1       0       0       0       1       0 ...       0   -8.0       1
+[&#39;BINARY&#39;, 1 rows, 1 samples, 24 variables]
 </pre></div></div>
 </div>
-<p>得られた解を見てみると、‘x[0][0]’: 1のように文字列をキーにした辞書型で格納されていることがわかります。このままだと、今後の解析がしづらいです。PyQUBOにはそれを扱いやすい形に直すデコード機能<code class="docutils literal notranslate"><span class="pre">.decode_solution()</span></code>があります。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># 得られた結果をデコードします。</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+<p>得られた解の中で一番低いエネルギーの状態を抽出します。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+<span></span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{0: {1: 1, 2: 0, 3: 0},
- 1: {1: 1, 2: 0, 3: 0},
- 2: {1: 1, 2: 0, 3: 0},
- 3: {1: 0, 2: 0, 3: 1},
- 4: {1: 0, 2: 0, 3: 1},
- 5: {1: 0, 2: 1, 3: 0},
- 6: {1: 0, 2: 1, 3: 0},
- 7: {1: 0, 2: 1, 3: 0}}
+{&#39;x[0][0]&#39;: 1,
+ &#39;x[0][1]&#39;: 0,
+ &#39;x[0][2]&#39;: 0,
+ &#39;x[1][0]&#39;: 0,
+ &#39;x[1][1]&#39;: 1,
+ &#39;x[1][2]&#39;: 0,
+ &#39;x[2][0]&#39;: 1,
+ &#39;x[2][1]&#39;: 0,
+ &#39;x[2][2]&#39;: 0,
+ &#39;x[3][0]&#39;: 1,
+ &#39;x[3][1]&#39;: 0,
+ &#39;x[3][2]&#39;: 0,
+ &#39;x[4][0]&#39;: 0,
+ &#39;x[4][1]&#39;: 0,
+ &#39;x[4][2]&#39;: 1,
+ &#39;x[5][0]&#39;: 1,
+ &#39;x[5][1]&#39;: 0,
+ &#39;x[5][2]&#39;: 0,
+ &#39;x[6][0]&#39;: 1,
+ &#39;x[6][1]&#39;: 0,
+ &#39;x[6][2]&#39;: 0,
+ &#39;x[7][0]&#39;: 1,
+ &#39;x[7][1]&#39;: 0,
+ &#39;x[7][2]&#39;: 0}
 </pre></div></div>
 </div>
-<p>(0,1,2), (3, 4), (5,6,7)のグループに分けられたようです。これは今回与えたグラフ上でそれぞれクリークになっています。</p>
-<p><code class="docutils literal notranslate"><span class="pre">broken</span></code>はペナルティ項(今回は第一項)が破れているとき(0でないとき)、どのように破れたかを記録してくれます。</p>
+<p>得られた解を見てみると、‘x[0][0]’: 1のように文字列をキーにした辞書型で格納されていることがわかります。このままだと、今後の解析がしづらいです。PyQUBOにはそれを扱いやすい形に直すデコード機能<code class="docutils literal notranslate"><span class="pre">.decode_sample()</span></code>があります。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span></span><span class="c1"># 得られた結果をデコードします。</span>
+<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1"># さらに解を見やすくする処理を追加します。</span>
+<span class="c1"># .array(変数名, 要素番号)で希望する要素の値を抽出することができます。</span>
+<span class="n">x_solution</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">):</span>
+    <span class="n">x_solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_COLOR</span><span class="p">):</span>
+        <span class="n">x_solution</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+<span class="n">x_solution</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0: {0: 1, 1: 0, 2: 0},
+ 1: {0: 0, 1: 1, 2: 0},
+ 2: {0: 1, 1: 0, 2: 0},
+ 3: {0: 1, 1: 0, 2: 0},
+ 4: {0: 0, 1: 0, 2: 1},
+ 5: {0: 1, 1: 0, 2: 0},
+ 6: {0: 1, 1: 0, 2: 0},
+ 7: {0: 1, 1: 0, 2: 0}}
+</pre></div></div>
+</div>
+<p>(0,2,3,5,6,7), (1), (4)のグループに分けられたようです。これは今回与えたグラフ上でそれぞれクリークになっています。</p>
+<p>得られた解が制約を満たしているか確認する方法をご紹介します。それには<code class="docutils literal notranslate"><span class="pre">.constraints(onlu_broken=True)</span></code>で結果を表示しましょう。これは制約項(今回は第一項)が破れているとき(0でないとき)、どのように破れたかを記録してくれます。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[129]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -469,7 +546,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">OpenJijでもSAを実行できますが、せっかくなのでPyQUBOには実装されていないSQA(Simulated quantum annealing)を用いたいと思います。</div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[130]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -486,34 +563,39 @@ div.rendered_html tbody tr:hover {
 <p><code class="docutils literal notranslate"><span class="pre">sampler</span></code>の部分を取り替えるだけで、他のアルゴリズムやマシンに投げることができます。興味のある方は試してみると良いでしょう。</p>
 <p>ではOpenJijで返ってきた結果を、PyQUBOのデコーダーを使ってデコードしてみましょう。 具体的には以下のようにします。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[131]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1"># エネルギーが一番低い状態を取り出します。</span>
 <span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
-<span class="c1"># デコードします。</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-<span class="c1"># 辞書型をsortして見やすくする処理を追加します。</span>
-<span class="n">x_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-<span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">x_solution</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="c1"># 得られた結果をデコードします。</span>
+<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1"># さらに解を見やすくする処理を追加します。</span>
+<span class="c1"># .array(変数名, 要素番号)で希望する要素の値を抽出することができます。</span>
+<span class="n">x_solution</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">):</span>
+    <span class="n">x_solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_COLOR</span><span class="p">):</span>
+        <span class="n">x_solution</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+<span class="n">x_solution</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[131]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{0: {1: 0, 2: 1, 3: 0},
- 1: {1: 0, 2: 1, 3: 0},
- 2: {1: 0, 2: 1, 3: 0},
- 3: {1: 1, 2: 0, 3: 0},
- 4: {1: 1, 2: 0, 3: 0},
- 5: {1: 0, 2: 0, 3: 1},
- 6: {1: 0, 2: 0, 3: 1},
- 7: {1: 0, 2: 0, 3: 1}}
+{0: {0: 1, 1: 0, 2: 0},
+ 1: {0: 0, 1: 1, 2: 0},
+ 2: {0: 1, 1: 0, 2: 0},
+ 3: {0: 1, 1: 0, 2: 0},
+ 4: {0: 0, 1: 0, 2: 1},
+ 5: {0: 1, 1: 0, 2: 0},
+ 6: {0: 1, 1: 0, 2: 0},
+ 7: {0: 1, 1: 0, 2: 0}}
 </pre></div></div>
 </div>
 </div>
@@ -534,15 +616,6 @@ div.rendered_html tbody tr:hover {
 <div class="line">様々なソルバーを提供するOpenJijとうまく組み合わせて使うことで、より快適な開発を行うことができます。</div>
 </div>
 <p>参考：PyQUBO公式ドキュメント <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create">https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create</a></p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 

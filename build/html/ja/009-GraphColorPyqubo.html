@@ -49,21 +49,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -164,7 +178,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -230,6 +244,7 @@ div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
     padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -288,11 +303,11 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個のノードと20本の枝を持つ無効グラフが与えられたとします。枝で繋がれたノード同士は異なる色となるようにノードを色分けする時、3色で全てのノードを塗ることは可能であるか考えます。 &gt; グラフは下のようになっているとします。</p>
-<div><p><img alt="076b2194e49c40e9a4943041cb55c592" src="../_images/graph_color.png" /></p>
+<div><p><img alt="e226933463db4297895bdfa59edc7322" src="../_images/graph_color.png" /></p>
 </div><blockquote>
 <div><p>塗り分けた後のグラフは下のようになります。 このグラフから全てのノードは3色で塗り分けることができると分かります。</p>
 </div></blockquote>
-<div><p><img alt="77100bc4544b46d8a29114e1abe7facc" src="../_images/graph_color_res.png" /></p>
+<div><p><img alt="0f646c891c5a4a6a83ee7ba587229abe" src="../_images/graph_color_res.png" /></p>
 </div></div>
 <div class="section" id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
