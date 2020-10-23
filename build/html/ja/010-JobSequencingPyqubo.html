@@ -303,7 +303,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="45da8b6072314223bf879ea24d89d314" src="../_images/job_sequence.png" /></p>
+<div><p><img alt="ee5a46cecc9a45318ee6e4db890ed673" src="../_images/job_sequence.png" /></p>
 </div></div>
 <div class="section" id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
@@ -414,7 +414,7 @@ div.rendered_html tbody tr:hover {
 <span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span><span class="n">LogEncInteger</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">m</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span>  <span class="n">LogEncInteger</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">M</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span>  <span class="n">LogEncInteger</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="n">M</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -472,9 +472,11 @@ div.rendered_html tbody tr:hover {
 <span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
 
-<span class="c1"># PyQUBOに備わっているSAを使います</span>
-<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="c1"># nealを用いて使います</span>
+<span class="kn">import</span> <span class="nn">neal</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">neal</span><span class="o">.</span><span class="n">SimulatedAnnealingSampler</span><span class="p">()</span>
+<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
 <span class="c1">#結果の表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Inputs]&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
@@ -494,14 +496,14 @@ div.rendered_html tbody tr:hover {
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
             <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -525,22 +527,22 @@ B : 1.0
 [Results]
 
 コンピュータ1で行われる仕事
+1番目の仕事 長さ:1
+2番目の仕事 長さ:2
+7番目の仕事 長さ:7
 9番目の仕事 長さ:9
-10番目の仕事 長さ:10
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
-2番目の仕事 長さ:2
-3番目の仕事 長さ:3
-5番目の仕事 長さ:5
+4番目の仕事 長さ:4
+6番目の仕事 長さ:6
 8番目の仕事 長さ:8
 仕事の総実行時間:18
 
 コンピュータ3で行われる仕事
-1番目の仕事 長さ:1
-4番目の仕事 長さ:4
-6番目の仕事 長さ:6
-7番目の仕事 長さ:7
+3番目の仕事 長さ:3
+5番目の仕事 長さ:5
+10番目の仕事 長さ:10
 仕事の総実行時間:18
 
 broken
@@ -550,7 +552,7 @@ broken
 </div>
 <div class="section" id="OpenJijに投げる">
 <h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h2>
-<p>次にOpenJijのSQAを用いて解いてみます。</p>
+<p>次にOpenJijのSQAを用いて解いてみます。量子力学的振る舞いを再現するため、計算に必要な時間は前と比べて多少伸びます。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
@@ -559,13 +561,13 @@ broken
 <span></span><span class="c1"># OpenJijのインポートをします</span>
 <span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 <span class="c1"># SQAを使います。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">()</span>
 <span class="c1"># PYQUBOで使ったquboを使います。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 <span class="c1"># エネルギーが一番低い状態を取り出します。</span>
 <span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
 <span class="c1"># デコードします。</span>
-<span class="n">decoded_solution</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_solution</span><span class="p">(</span><span class="n">dict_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
+<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
 <span class="c1">#結果の表示</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Results]&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
@@ -573,14 +575,14 @@ broken
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
             <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -592,22 +594,22 @@ broken
 [Results]
 
 コンピュータ1で行われる仕事
-4番目の仕事 長さ:4
-6番目の仕事 長さ:6
+1番目の仕事 長さ:1
+2番目の仕事 長さ:2
+7番目の仕事 長さ:7
 9番目の仕事 長さ:9
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
-3番目の仕事 長さ:3
-5番目の仕事 長さ:5
-10番目の仕事 長さ:10
+4番目の仕事 長さ:4
+6番目の仕事 長さ:6
+8番目の仕事 長さ:8
 仕事の総実行時間:18
 
 コンピュータ3で行われる仕事
-1番目の仕事 長さ:1
-2番目の仕事 長さ:2
-7番目の仕事 長さ:7
-8番目の仕事 長さ:8
+3番目の仕事 長さ:3
+5番目の仕事 長さ:5
+10番目の仕事 長さ:10
 仕事の総実行時間:18
 
 broken
