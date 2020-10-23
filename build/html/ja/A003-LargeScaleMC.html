@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A3 - 古典イジング模型 &#8212; OpenJij Tutorial 0.1.0 documentation</title>
+    <title>A3 - 古典イジング模型 &#8212; OpenJij Tutorial 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A3 - 古典イジング模型</a></li> 
       </ul>
@@ -49,21 +49,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -164,7 +178,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -230,6 +244,7 @@ div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
     padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -386,12 +401,12 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[ 1. -1.  1. -1. -1. -1.  1.  1. -1.  1. -1.  1.  1.  1.  1. -1.  1. -1.
- -1. -1. -1. -1. -1.  1.  1. -1. -1.  1. -1. -1. -1.  1.  1.  1. -1.  1.
-  1. -1.  1. -1.  1.  1. -1. -1.  1. -1.  1. -1. -1. -1. -1. -1.  1.  1.
- -1.  1. -1. -1. -1.  1.  1.  1. -1. -1.  1.  1. -1.  1. -1. -1.  1.  1.
-  1.  1.  1. -1. -1. -1. -1. -1. -1.  1. -1. -1. -1. -1. -1. -1.  1. -1.
- -1.  1. -1. -1. -1.  1. -1.  1.  1.  1.  1.]
+[ 1. -1.  1. -1. -1. -1.  1. -1.  1.  1. -1.  1. -1.  1.  1. -1.  1. -1.
+  1.  1.  1.  1. -1.  1. -1. -1.  1.  1.  1.  1. -1.  1. -1.  1. -1.  1.
+ -1. -1.  1. -1. -1.  1. -1.  1.  1. -1. -1.  1. -1.  1.  1.  1. -1. -1.
+  1.  1.  1. -1. -1. -1.  1.  1.  1.  1. -1. -1. -1. -1.  1. -1.  1. -1.
+  1. -1.  1. -1.  1. -1. -1.  1.  1. -1.  1. -1.  1.  1. -1.  1. -1.  1.
+ -1. -1.  1. -1.  1.  1. -1.  1. -1. -1.  1.]
 </pre></div></div>
 </div>
 <p>古典イジング模型以外にも様々なシステムが用意されており、これを用途別に使うことが出来ます。用いるSystemによって初期化の方法は多少異なります。これは後ほど少しずつ紹介していきます。</p>
@@ -501,7 +516,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -529,7 +544,7 @@ div.rendered_html tbody tr:hover {
 <h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照することで、スピン列を取得も可能です。しかし、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できる便利なメソッドです。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -543,7 +558,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, 1, -1, 1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, 1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1]
+[-1, 1, 1, -1, -1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, 1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1, 1, 1, 1]
 </pre></div></div>
 </div>
 <p>このスピン列がアニーリングによって得られた答えです。ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
@@ -699,7 +714,7 @@ div.rendered_html tbody tr:hover {
         <li class="right" >
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A3 - 古典イジング模型</a></li> 
       </ul>
