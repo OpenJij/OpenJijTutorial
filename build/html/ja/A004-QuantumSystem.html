@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A4 - 量子イジング模型 &#8212; OpenJij Tutorial 0.1.1 documentation</title>
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
@@ -330,24 +330,361 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="横磁場イジング模型">
-<h2>横磁場イジング模型<a class="headerlink" href="#横磁場イジング模型" title="Permalink to this headline">¶</a></h2>
+<p>グラフの設定方法は前章と同じです。</p>
+<div class="section" id="システムの設定-横磁場イジング模型">
+<h2>システムの設定 横磁場イジング模型<a class="headerlink" href="#システムの設定-横磁場イジング模型" title="Permalink to this headline">¶</a></h2>
 <p>今回はシステムに横磁場イジング模型</p>
 <p><span class="math">\begin{align}
 H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^z \right) - \sum_{i=1}\Gamma (1-s) \sigma_i^x \\
 \end{align}</span></p>
 <p>を用います。</p>
+<p><span class="math notranslate nohighlight">\(\Gamma\)</span>は固定されたまま、<span class="math notranslate nohighlight">\(\beta\)</span>、<span class="math notranslate nohighlight">\(s\)</span>を変化させて量子モンテカルロ法を行います。 デフォルトでは鈴木・トロッター分解による量子モンテカルロ法が実装されています。</p>
+<blockquote>
+<div><p>連続虚時間量子モンテカルロ法も用意してはいますが、現在試験的実装となっています。</p>
+</div></blockquote>
+<p>まずはシステムを生成してみます。<code class="docutils literal notranslate"><span class="pre">system.make_transverse_ising</span></code>で生成できます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
 </div>
-<div class="section" id="連続虚時間量子モンテカルロ">
-<h2>連続虚時間量子モンテカルロ<a class="headerlink" href="#連続虚時間量子モンテカルロ" title="Permalink to this headline">¶</a></h2>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+
+<span class="n">mysystem</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_transverse_ising</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">graph</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>ここで、1つ目の引数にはスピン列を、2つ目にはグラフ、3つ目には<span class="math notranslate nohighlight">\(\Gamma\)</span>の値、4つ目にはtrotterスライスの数を入力します。 これで、全てのtrotterスライスが <code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>で初期化されたシステムができます。</p>
+<p><code class="docutils literal notranslate"><span class="pre">mysystem.trotter_spins</span></code>で全てのtrotterスピンを表示します。縦方向が空間方向、横方向がtrotter方向です。 全てのtrotterスライスが同じスピンで初期化されていることがわかります。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">mysystem</span><span class="o">.</span><span class="n">trotter_spins</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [-1. -1. -1. -1.]
+ [ 1.  1.  1.  1.]
+ [ 1.  1.  1.  1.]]
+</pre></div></div>
+</div>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">graph.gen_spin()</span></code>の代わりに上の二重Listを入れて直接trotterスピンを初期化することができます。</p>
+</div></blockquote>
+</div>
+<div class="section" id="アルゴリズムの実行--Updater,-Algorithm-">
+<h2>アルゴリズムの実行 -Updater, Algorithm-<a class="headerlink" href="#アルゴリズムの実行--Updater,-Algorithm-" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Updater">
+<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
+<p>量子モンテカルロ法に対しては、現状</p>
+<ul class="simple">
+<li><p>SingleSpinFlip (メトロポリス・ヘイスティング法によるスピン1つずつのアップデート)</p></li>
+</ul>
+<p>が使用可能です。</p>
+</div>
+<div class="section" id="Algorithm">
+<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="スケジュールリスト">
+<h4>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h4>
+<p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられ、横磁場イジングモデルに対しては((<span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(s\)</span>), モンテカルロステップ数)で与えます。例として以下のように設定してみましょう。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">schedule_list</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mi">10</span><span class="p">),((</span><span class="mi">12</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="mi">80</span><span class="p">),((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="mi">30</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">この場合、逆温度<span class="math notranslate nohighlight">\(\beta=10, s=0.1\)</span>で10モンテカルロステップ、<span class="math notranslate nohighlight">\(\beta=12, s=0.3\)</span>で80ステップ、<span class="math notranslate nohighlight">\(\beta=0.1, s=0.8\)</span>で30ステップの計120モンテカルロステップを実行することを意味します。</div>
+<div class="line">アニーリングを実行するにあたっては、以下のように<code class="docutils literal notranslate"><span class="pre">utility</span></code>にある<code class="docutils literal notranslate"><span class="pre">make_transeverse_field_schedule_list</span></code>を使うとより便利です。</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
+<span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">schedule_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[((beta: 10.000000, s: 0.000000) mcs: 20), ((beta: 10.000000, s: 0.111111) mcs: 20), ((beta: 10.000000, s: 0.222222) mcs: 20), ((beta: 10.000000, s: 0.333333) mcs: 20), ((beta: 10.000000, s: 0.444444) mcs: 20), ((beta: 10.000000, s: 0.555556) mcs: 20), ((beta: 10.000000, s: 0.666667) mcs: 20), ((beta: 10.000000, s: 0.777778) mcs: 20), ((beta: 10.000000, s: 0.888889) mcs: 20), ((beta: 10.000000, s: 1.000000) mcs: 20)]
+</pre></div></div>
+</div>
+<p>上の例では<span class="math notranslate nohighlight">\(\beta=10\)</span>で固定しながら<span class="math notranslate nohighlight">\(s=0\)</span>から<span class="math notranslate nohighlight">\(s=1\)</span>まで、各パラメータで20モンテカルロステップ計算しながら10段階で<span class="math notranslate nohighlight">\(s\)</span>を変えていく設定例です。計200モンテカルロステップの計算を行います。 <span class="math notranslate nohighlight">\(s\)</span>の変化については<a class="reference external" href="https://aip.scitation.org/doi/10.1063/1.2995837">Morita, Nishimori (2008)</a>の手法を適用しています。</p>
+</div>
+<div class="section" id="Algorithmの実行">
+<h4>Algorithmの実行<a class="headerlink" href="#Algorithmの実行" title="Permalink to this headline">¶</a></h4>
+<p>続いて、Algorithmを実行します。前章と全く同じように書けます。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
+<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="line-block">
+<div class="line">前章と同じようにcallbackを使ってみましょう。横磁場イジング模型の場合は、システムとパラメータ (逆温度<span class="math notranslate nohighlight">\(\beta\)</span>、<span class="math notranslate nohighlight">\(s\)</span>)を引数を持つ関数を作成すれば良いです。</div>
+<div class="line">例として、以下ではシステムのエネルギーの値を記録するcallbackを作っています。</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">callback_log_energy</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="c1">#graphは以前にGraphモジュールにて定義したオブジェクトです</span>
+    <span class="c1">#各trotterスライスの平均値から、古典スピンの0、1を決めます。</span>
+    <span class="n">classical_spin</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">trotter_spins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="c1">#最後のスピンは補助スピンのため、除く</span>
+    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">calc_energy</span><span class="p">(</span><span class="n">classical_spin</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>このcallbackを用いて同じAlgorithmを実行します。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#スケジュールをもっと長く取ります (計20000モンテカルロステップ)</span>
+<span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">,</span> <span class="n">callback_log_energy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>記録したシステムのエネルギーを、横軸をモンテカルロステップ、縦軸をエネルギーでプロットすると次のようになります。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<span></span><span class="o">!</span>pip install matplotlib
 </pre></div>
 </div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)),</span> <span class="n">energies</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Monte Carlo step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_A004-QuantumSystem_22_0.png" src="../_images/ja_A004-QuantumSystem_22_0.png" />
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="結果の取得--Result-">
+<h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">result.get_solutions</span></code>で計算結果である古典スピンを取得します。この関数は最適化問題を解く観点にフォーカスを当てているため、trotterスライスの中でもっともエネルギーが低いスピン列を返します。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">mysystem</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[1, 1, -1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, 1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, 1, 1, -1, 1, -1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, 1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1, -1, 1]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="C++-core-interface">
+<h2>C++ core interface<a class="headerlink" href="#C++-core-interface" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;result/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;utility/schedule_list.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;utility/random.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">openjij</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+
+    <span class="c1">//generate dense graph with size N=100</span>
+    <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">dense</span> <span class="o">=</span> <span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+
+    <span class="c1">//generate random engine</span>
+    <span class="k">auto</span> <span class="n">rand_engine</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span>
+    <span class="c1">//of course you can specify another random generator that is compatible with C++ random generator, say utility::Xorshift,</span>
+    <span class="c1">//auto rand_engine = utility::Xorshift(0x1234);</span>
+
+    <span class="c1">//Gaussian distribution</span>
+    <span class="k">auto</span> <span class="n">gauss</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+    <span class="c1">//set interactions</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//set local fields</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//create transverse Ising system</span>
+    <span class="k">auto</span> <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">::</span><span class="n">make_transverse_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span> <span class="n">dense</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+
+    <span class="c1">//generate schedule list</span>
+    <span class="k">auto</span> <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">utility</span><span class="o">::</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+
+    <span class="c1">//do annealing (updater: SingleSpinFlip)</span>
+    <span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">rand_engine</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">);</span>
+
+    <span class="c1">//show spins</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="nl">elem</span> <span class="p">:</span> <span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elem</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>
@@ -362,8 +699,18 @@ H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">A4 - 量子イジング模型</a><ul>
-<li><a class="reference internal" href="#横磁場イジング模型">横磁場イジング模型</a></li>
-<li><a class="reference internal" href="#連続虚時間量子モンテカルロ">連続虚時間量子モンテカルロ</a></li>
+<li><a class="reference internal" href="#システムの設定-横磁場イジング模型">システムの設定 横磁場イジング模型</a></li>
+<li><a class="reference internal" href="#アルゴリズムの実行--Updater,-Algorithm-">アルゴリズムの実行 -Updater, Algorithm-</a><ul>
+<li><a class="reference internal" href="#Updater">Updater</a></li>
+<li><a class="reference internal" href="#Algorithm">Algorithm</a><ul>
+<li><a class="reference internal" href="#スケジュールリスト">スケジュールリスト</a></li>
+<li><a class="reference internal" href="#Algorithmの実行">Algorithmの実行</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#結果の取得--Result-">結果の取得 -Result-</a></li>
+<li><a class="reference internal" href="#C++-core-interface">C++ core interface</a></li>
 </ul>
 </li>
 </ul>
@@ -414,7 +761,7 @@ H &= s \left(\sum_{i<j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \sigma_i^
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0.
     </div>
   </body>
 </html>
