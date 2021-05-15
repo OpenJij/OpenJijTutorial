@@ -12,7 +12,6 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
@@ -302,14 +301,14 @@ div.rendered_html tbody tr:hover {
 <li><p>We would like to use OpenJij not only for optimization problems, but also for more specialized applications such as sampling and research purpose.</p></li>
 <li><p>We would like to set annealing schedules and directly develop algorithms we use.</p></li>
 </ul>
-<div class="section" id="OpenJij-core-interface-について">
-<h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="About-OpenJij-core-interface">
+<h2>About OpenJij core interface<a class="headerlink" href="#About-OpenJij-core-interface" title="Permalink to this headline">¶</a></h2>
 <p>In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call <strong>cxxjij</strong>, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.</p>
-<p><a class="reference internal" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a></p>
+<a class="reference internal image-reference" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a>
 <p>Using core interface, we can use all funtinon of OpenJij. Therefore, We can choose OpenJij not only for optimization problem but also for reserch purpose as numerical tools of statistical physics. Also, we can compute faster computation because of using C++ interface.</p>
 <p>In this tutorial, let us introduce you Python interface <code class="docutils literal notranslate"><span class="pre">cxxjij</span></code> and C++ interface. We use pip for installation.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -317,33 +316,6 @@ div.rendered_html tbody tr:hover {
 <span class="o">!</span>pip show openjij
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Defaulting to user installation because normal site-packages is not writeable
-Requirement already satisfied: openjij in /home/jiko/.local/lib/python3.8/site-packages (0.0.11)
-Requirement already satisfied: requests in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (2.23.0)
-Requirement already satisfied: dimod==0.8.21 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (0.8.21)
-Requirement already satisfied: numpy&gt;=1.16.0 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (1.18.1)
-Requirement already satisfied: idna&lt;3,&gt;=2.5 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (2.9)
-Requirement already satisfied: certifi&gt;=2017.4.17 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (2019.11.28)
-Requirement already satisfied: chardet&lt;4,&gt;=3.0.2 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (3.0.4)
-Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /home/jiko/.local/lib/python3.8/site-packages (from requests-&gt;openjij) (1.25.8)
-Requirement already satisfied: six&lt;2.0.0,&gt;=1.10.0 in /home/jiko/.local/lib/python3.8/site-packages (from dimod==0.8.21-&gt;openjij) (1.14.0)
-Name: openjij
-Version: 0.0.11
-Summary: Framework for the Ising model and QUBO
-Home-page: https://openjij.github.io/OpenJij/
-Author: Jij Inc.
-Author-email: openjij@j-ij.com
-License: Apache License 2.0
-Location: /home/jiko/.local/lib/python3.8/site-packages
-Requires: numpy, dimod, requests
-Required-by:
-</pre></div></div>
 </div>
 </div>
 <div class="section" id="Run-problem">
@@ -461,15 +433,6 @@ The solution is [1, 1, 1, 1, 1].
 <li><p>select <code class="docutils literal notranslate"><span class="pre">updater</span></code> for the <code class="docutils literal notranslate"><span class="pre">system</span></code> and run the algorithm using <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater</span> <span class="pre">type]_run</span></code></p></li>
 <li><p>get system spin assignment with <code class="docutils literal notranslate"><span class="pre">result.get_solution(system)</span></code> or get from <code class="docutils literal notranslate"><span class="pre">system</span></code> directly.</p></li>
 </ul>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -484,7 +447,7 @@ The solution is [1, 1, 1, 1, 1].
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">A1 - Introduction to OpenJij core interface (core Python interface)</a><ul>
-<li><a class="reference internal" href="#OpenJij-core-interface-について">OpenJij core interface について</a></li>
+<li><a class="reference internal" href="#About-OpenJij-core-interface">About OpenJij core interface</a></li>
 <li><a class="reference internal" href="#Run-problem">Run problem</a></li>
 <li><a class="reference internal" href="#List-of-Modules">List of Modules</a><ul>
 <li><a class="reference internal" href="#Graph">Graph</a></li>
@@ -545,7 +508,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>

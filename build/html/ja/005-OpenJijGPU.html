@@ -12,7 +12,6 @@
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
@@ -295,6 +294,9 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="5-OpenJij-GPU">
 <h1>5-OpenJij GPU<a class="headerlink" href="#5-OpenJij-GPU" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/005-OpenJijGPU.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<blockquote>
+<div><p>(追記: 2021/05)このセクションは2021/05 現在、サポートされていません。次の章へ進むことをおすすめします。</p>
+</div></blockquote>
 <p>このセクションではGPUを用いてSimulated Quantum Annealing(SQA)を行う方法をご紹介します。</p>
 <div class="section" id="Google-Colabでの設定とインストール">
 <h2>Google Colabでの設定とインストール<a class="headerlink" href="#Google-Colabでの設定とインストール" title="Permalink to this headline">¶</a></h2>
@@ -302,7 +304,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="GPU設定">
 <h3>GPU設定<a class="headerlink" href="#GPU設定" title="Permalink to this headline">¶</a></h3>
 <p>GPU実行したいJupyter NotebookをGoogle Colabで開きます。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ランタイム</span> <span class="o">&gt;</span> <span class="n">ランタイムのタイプを変更</span> <span class="o">&gt;</span> <span class="n">ハードウェアアクセラレータをGPUに選択</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ランタイム &gt; ランタイムのタイプを変更 &gt; ハードウェアアクセラレータをGPUに選択
 </pre></div>
 </div>
 <p>この設定を行うことでGPUを用いたJupyter Notebookの実行が可能となります。</p>
@@ -557,7 +559,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>
