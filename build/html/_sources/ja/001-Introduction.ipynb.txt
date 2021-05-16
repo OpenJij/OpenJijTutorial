@@ -108,7 +108,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
@@ -134,7 +134,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -158,6 +158,63 @@
     "\n",
     "# もしくは添字付きでみるには samples関数 を用います。\n",
     "print([s for s in response.samples()])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "また、巨大な問題を扱う際にはnumpyを用いた入力が便利となります。以下の数式の形式で入力が可能です。\n",
+    "\n",
+    "$$ \\begin{pmatrix}\n",
+    "h_{0} & J_{0,1} & \\cdots & J_{0,N-1}\\\\\n",
+    "J_{1,0} & h_{1} & \\cdots & J_{1,N-1}\\\\\n",
+    "\\vdots & \\vdots & \\vdots & \\vdots\\\\\n",
+    "J_{N-1,0} & J_{N-1,1} & \\cdots & h_{N-1}\\\\\n",
+    "\\end{pmatrix} $$"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#!pip install numpy -U"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[-1.  -0.5 -0.5 -0.5]\n",
+      " [-0.5 -1.  -0.5 -0.5]\n",
+      " [-0.5 -0.5 -1.  -0.5]\n",
+      " [-0.5 -0.5 -0.5 -1. ]]\n",
+      "BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3): -1.0, (1, 3): -1.0, (0, 3): -1.0, (0, 2): -1.0, (0, 1): -1.0}, 0.0, Vartype.SPIN, sparse=False)\n",
+      "[[1 1 1 1]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "mat = np.array([[-1,-0.5,-0.5,-0.5],[-0.5,-1,-0.5,-0.5],[-0.5,-0.5,-1,-0.5],[-0.5,-0.5,-0.5,-1]])\n",
+    "print(mat)\n",
+    "\n",
+    "# oj.BinaryQuadraticModelを作成し、変数タイプ (vartype)を'SPIN'にします。\n",
+    "bqm = oj.BinaryQuadraticModel.from_numpy_matrix(mat, vartype='SPIN')\n",
+    "# 各要素をprintで確認できます。J_{ij}とJ_{ji}は内部でまとめられます。\n",
+    "print(bqm)\n",
+    "\n",
+    "sampler = oj.SASampler(num_reads=1)\n",
+    "response = sampler.sample(bqm)\n",
+    "\n",
+    "print(response.states)"
    ]
   },
   {
@@ -222,7 +279,7 @@
     "    - 最小エネルギーの値\n",
     "\n",
     "> ResponseクラスはD-WaveのdimodのSampleSetクラスを継承しています。より詳細な情報は以下のリンクに記述されています。  \n",
-    "> [dimodドキュメント、SampleSet](https://docs.ocean.dwavesys.com/projects/dimod/en/latest/reference/sampleset.html)\n",
+    "> [dimodドキュメント、SampleSet](https://docs.ocean.dwavesys.com/en/stable/docs_dimod/reference/sampleset.html#dimod.SampleSet)\n",
     "\n",
     "というパラメータが参照できます。実際にコードを見てみましょう。"
    ]
