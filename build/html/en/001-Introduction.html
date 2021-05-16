@@ -5,14 +5,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>1-An Introduction to OpenJij &#8212; OpenJij Tutorial 0.1.1 documentation</title>
+    <title>1-An Introduction to OpenJij &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
@@ -33,7 +32,7 @@
         <li class="right" >
           <a href="README.html" title="OpenJij Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij Tutorial</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">1-An Introduction to OpenJij</a></li> 
       </ul>
@@ -338,7 +337,7 @@ div.rendered_html tbody tr:hover {
 <p>In this case, since all interaction coefficients are negative, the energy is lower when each spin variable takes the same value. Also, since all longitudinal magnetic fields are negative, the energy is lower when each spin takes 1. Therefore, we can predict the answer of this problem is <span class="math notranslate nohighlight">\(\{\sigma_i\} = \{1, 1, 1, 1, 1\}\)</span>.</p>
 <p>Now let’s solve the Ising model using OpenJij.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -366,7 +365,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -390,6 +389,55 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <div class="highlight"><pre>
 [[1 1 1 1 1]]
 [{0: 1, 1: 1, 2: 1, 3: 1, 4: 1}]
+</pre></div></div>
+</div>
+<p>When dealing with large problem, you can also use numpy-based interface. The following form of matrix is assumed:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split} \begin{pmatrix}
+h_{0} &amp; J_{0,1} &amp; \cdots &amp; J_{0,N-1}\\
+J_{1,0} &amp; h_{1} &amp; \cdots &amp; J_{1,N-1}\\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots\\
+J_{N-1,0} &amp; J_{N-1,1} &amp; \cdots &amp; h_{N-1}\\
+\end{pmatrix}\end{split}\]</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="ch">#!pip install numpy -U</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">],[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+
+<span class="n">bqm</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="o">.</span><span class="n">from_numpy_matrix</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[[-1.  -0.5 -0.5 -0.5]
+ [-0.5 -1.  -0.5 -0.5]
+ [-0.5 -0.5 -1.  -0.5]
+ [-0.5 -0.5 -0.5 -1. ]]
+BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3): -1.0, (1, 3): -1.0, (0, 3): -1.0, (0, 2): -1.0, (0, 1): -1.0}, 0.0, Vartype.SPIN, sparse=False)
+[[1 1 1 1]]
 </pre></div></div>
 </div>
 </div>
@@ -494,14 +542,14 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 <p>You can see that the response.states contains 10 solutions when you open it. Since this problem is easy, returned the same answer is <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">-1,</span> <span class="pre">1]</span></code> every iterations.</p>
 <blockquote>
 <div><p>The parameters passed in the constructor such as <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> can be overwritten by the method that executes sampling such as <code class="docutils literal notranslate"><span class="pre">.sample_ising</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">response</span><span class="o">.</span><span class="n">states</span>
-<span class="o">&gt;</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>response = sampler.sample_ising(h, J, num_reads=2)
+response.states
+&gt; [[1, 1, -1],[1, 1, -1]]
 </pre></div>
 </div>
 </div></blockquote>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -511,7 +559,7 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -519,28 +567,28 @@ Jij:  {(0, 1): -1, (0, 2): -1, (0, 3): -1, (0, 4): -1, (1, 2): -1, (1, 3): -1, (
 array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
 </pre></div></div>
 </div>
-<p>Of course, the energies also take the same value every iterations. The solutions in response.states are list type, so you confuse the corresponding to the strings <code class="docutils literal notranslate"><span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;</span></code> when you set the problem. That is in response.indices.</p>
+<p>Of course, the energies also take the same value every iterations. The solutions in response.states are list type, so you confuse the corresponding to the strings <code class="docutils literal notranslate"><span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;</span></code> when you set the problem.” That is in response.variables.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">response</span><span class="o">.</span><span class="n">indices</span>
+<span></span><span class="n">response</span><span class="o">.</span><span class="n">variables</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]
+Variables([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])
 </pre></div></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">.first</span></code> is useful if you only want to know the state with the lowest energy value.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -549,7 +597,7 @@ array([-4., -4., -4., -4., -4., -4., -4., -4., -4., -4.])
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -580,7 +628,7 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 <p>Namely, the diagonal components of <span class="math notranslate nohighlight">\(Q_{ij}\)</span> is corresponds to the coefficients of the first-order term of <span class="math notranslate nohighlight">\(q_i\)</span>.</p>
 <p>Let’s solve QUBO with OpenJij</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -607,7 +655,7 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 <h3>Let’s solve a little difficult problem<a class="headerlink" href="#Let’s-solve-a-little-difficult-problem" title="Permalink to this headline">¶</a></h3>
 <p>You want to solve a problem of QUBO which has <span class="math notranslate nohighlight">\(Q_{ij}\)</span> given by 50 random variables.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -623,7 +671,7 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -633,18 +681,18 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,
-       -192.6801102])
+array([-192.88732848, -192.88732848, -192.88732848, -192.88732848,
+       -192.88732848])
 </pre></div></div>
 </div>
 <p>You will realize that the energies takes a different values than before. If you make <span class="math notranslate nohighlight">\(Q_{ij}\)</span> randomly, the problem becomes difficult generally. Therefore, SASampler does not necessarily give the same solution every time. Now let’s look at the histogram of energies.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -660,7 +708,8 @@ array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/en_001-Introduction_27_0.svg" src="../_images/en_001-Introduction_27_0.svg" /></div>
+<img alt="../_images/en_001-Introduction_30_0.png" src="../_images/en_001-Introduction_30_0.png" />
+</div>
 </div>
 <p>The lower the energy, the better, but you can find that the high energy solutions appear sometimes. However, almost half of them seem to have the lowest energy.</p>
 <p>Openjij solved the problem 100 times. Since the optimal solution is the lowest energy, the lowest energy solution among the solved (sampled) solutions should be close to the optimal solution. Therefore, we search for the solution from <code class="docutils literal notranslate"><span class="pre">.states</span></code>.</p>
@@ -668,7 +717,7 @@ array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,
 <div><p>Caution: SA can not always give an optimal solution. Therefore, there is no guarantee that the solution with the lowest energy in this time is an optimal solution. It is an approximate solution.</p>
 </div></blockquote>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -680,26 +729,17 @@ array([-192.6801102, -192.6801102, -192.6801102, -192.6801102,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Sample(sample={0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 0, 22: 1, 23: 1, 24: 0, 25: 1, 26: 0, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 0, 33: 0, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 0, 40: 0, 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 0, 52: 1, 53: 1, 54: 1, 55: 1, 56: 0, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 0, 63: 0, 64: 1, 65: 1, 66: 1, 67: 0, 68: 0, 69: 1, 70: 0, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 0, 77: 0, 78: 0, 79: 1, 80: 0, 81: 1, 82: 1, 83: 1, 84: 0, 85: 0, 86: 0, 87: 0, 88: 0, 89: 0, 90: 1, 91: 1, 92: 1, 93: 0, 94: 1, 95: 1, 96: 1, 97: 0, 98: 1, 99: 1}, energy=-192.6801102019457, num_occurrences=1)
+Sample(sample={0: 1, 1: 0, 2: 1, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, 11: 0, 12: 0, 13: 1, 14: 0, 15: 0, 16: 0, 17: 1, 18: 1, 19: 0, 20: 1, 21: 1, 22: 1, 23: 1, 24: 0, 25: 1, 26: 1, 27: 0, 28: 1, 29: 1, 30: 1, 31: 1, 32: 0, 33: 1, 34: 0, 35: 1, 36: 0, 37: 0, 38: 1, 39: 1, 40: 0, 41: 1, 42: 0, 43: 1, 44: 0, 45: 0, 46: 0, 47: 1, 48: 0, 49: 1, 50: 0, 51: 0, 52: 0, 53: 1, 54: 1, 55: 0, 56: 1, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 1, 63: 1, 64: 0, 65: 1, 66: 1, 67: 1, 68: 1, 69: 1, 70: 1, 71: 1, 72: 0, 73: 1, 74: 1, 75: 1, 76: 0, 77: 1, 78: 1, 79: 1, 80: 1, 81: 1, 82: 1, 83: 0, 84: 1, 85: 0, 86: 1, 87: 1, 88: 1, 89: 0, 90: 0, 91: 1, 92: 1, 93: 0, 94: 0, 95: 0, 96: 1, 97: 1, 98: 0, 99: 1}, energy=-192.88732847679702, num_occurrences=1)
 </pre></div></div>
 </div>
 <p>Now you get the lowest energy solution. The solution which is contained in this min_states is the approximate solution in this time. Contained solutions have the same energy, but the arrangement of spins may differ in some cases (In the case of “degenerated state”).</p>
 <p>So, after choosing the lowest energy state as above, choose the spin orientation from min_state as you like. Then, we solved the problem approximately.</p>
 <p>Next section, “2-Evaluation”, we will explain the index(“time to solution” and “the residual energy” etc.) for evaluate the solution.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -769,14 +809,14 @@ Sample(sample={0: 1, 1: 1, 2: 1, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 1, 10: 1
         <li class="right" >
           <a href="README.html" title="OpenJij Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij Tutorial</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">1-An Introduction to OpenJij</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0.
+        &#169; Copyright 2021, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>

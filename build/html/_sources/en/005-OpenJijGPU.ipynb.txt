@@ -1,339 +1,346 @@
 {
-    "cells": [
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "tcLyUtUqhkTr"
-            },
-            "source": [
-                "# 5-OpenJij GPU"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "view-in-github"
-            },
-            "source": [
-                "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/005-OpenJijGPU.ipynb)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "Vrd0CwLJhvVQ"
-            },
-            "source": [
-                "In this section, we introduce a method of Simulated Quantum Annealing (SQA) with GPU.\n",
-                "\n",
-                "## Setup and installation in Google Colab\n",
-                "\n",
-                "The average PC may not have a CUDA environment, or may not have an NVIDIA GPU. However, with **Google colaboratory**, anyone can use GPGPUs.\n",
-                "\n",
-                "### GPU Settings\n",
-                "\n",
-                "We open Jupyter Notebook file we want to run on GPU with Google Colab.\n",
-                "\n",
-                "```\n",
-                "Runtime > Change runtime type > choose Hardware accelerator GPU\n",
-                "```\n",
-                "\n",
-                "This setting allows you to run Jupyter Notebook on GPU.\n",
-                "\n",
-                "### Installation of OpenJij \n",
-                "\n",
-                "To use GPU modules from OpenJij, one has to build from source codes when installing OpenJij.\n",
-                "We first update CMake, which is needed for the installation, to the latest version."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
-            "metadata": {
-                "colab": {
-                    "base_uri": "https://localhost:8080/",
-                    "height": 173
-                },
-                "colab_type": "code",
-                "id": "o8UaiBs1hkwh",
-                "outputId": "3a0075b7-00ea-4cad-9ff1-47b0965e833f"
-            },
-            "outputs": [],
-            "source": [
-                "!pip install -U cmake"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "-DuFQsPK90LI"
-            },
-            "source": [
-                "After that, we uninstall & reinstall OpenJij with option `--no-binary :all:`, which forces to build from source codes during installation."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
-            "metadata": {
-                "colab": {
-                    "base_uri": "https://localhost:8080/",
-                    "height": 377
-                },
-                "colab_type": "code",
-                "id": "s1pjFhAa95Zs",
-                "outputId": "e398ccc6-abca-420b-8e9b-0626ab3283bc"
-            },
-            "outputs": [],
-            "source": [
-                "!pip uninstall openjij -y\n",
-                "!pip install openjij --no-binary :all: --no-cache-dir"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "JMgqfmZ-h8X3"
-            },
-            "source": [
-                "## Calculation with GPUSQA\n",
-                "\n",
-                "OpenJij GPUs support Monte Carlo calculations on Chimeragraphs.  \n",
-                "We make GPUSQASampler instance at first.\n",
-                "If the notebook gives an error \"No modules found. ...\", please try to restart the session so that the reinstalled version of OpenJij is loaded correctly."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 3,
-            "metadata": {
-                "colab": {},
-                "colab_type": "code",
-                "id": "TYhWp0eqh3Yb"
-            },
-            "outputs": [],
-            "source": [
-                "import openjij as oj\n",
-                "\n",
-                "sampler = oj.GPUSQASampler(num_reads=100, unit_num_L=2)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "oOmEWWBxh_3O"
-            },
-            "source": [
-                "`unit_num_L` specifies the length of one side of the two-dimensional lattice of chimera-unit cells.  \n",
-                "In the example above, we have created a system with 2x2=4 chimera-unit cells.\n",
-                "\n",
-                "Since a chimera-unit cell consists of one 8-bit, the total number of bits is calculated as follows.\n",
-                "  \n",
-                "${\\rm total\\_num} = {\\rm unit\\_num\\_L}^2 \\times 8$\n",
-                "\n",
-                "The GPUSQASampler perform SQA calculations for the size of the system of chimeragraphs created here, even if you specify fewer variables, such as sampler_qubo, later. We note that `unit_num_L` is not too large.\n",
-                "Also, `unit_num_L` is not specified in the constructor but is used as an argument to run `sample_qubo`.\n",
-                "\n",
-                "## Execution\n",
-                "\n",
-                "Next we execute SQA. As with Sampler before we introduce, we can use `sample_qubo` (or `sample_ising`).\n",
-                "However, if you specify an interaction for a subscript that does not satisfy the chimeragraph, error occurs."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 4,
-            "metadata": {
-                "colab": {
-                    "base_uri": "https://localhost:8080/",
-                    "height": 1000
-                },
-                "colab_type": "code",
-                "id": "_XIsZ9z2h_Rv",
-                "outputId": "be24e99d-b0b9-4766-c686-815ca027694c"
-            },
-            "outputs": [
-                {
-                    "data": {
-                        "text/plain": [
-                            "Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
-                            "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],\n",
-                            "          dtype=[('sample', 'i1', (4,)), ('energy', '<f8'), ('num_occurrences', '<i8')]), [0, 4, 5, 12], {'system': [], 'sampling_time': 1006372.1469999792, 'execution_time': 8902.872740002294, 'list_exec_times': array([230796.36600005,   8290.07499999,   8871.43699998,   8162.024     ,\n",
-                            "         8042.78700002,   8098.51899999,   8169.03100002,   8717.89000001,\n",
-                            "         8071.55399997,   8079.75599997,   8075.238     ,   6575.44399996,\n",
-                            "         6622.51900002,   6544.86100001,   6475.21600001,   6579.81400002,\n",
-                            "         6559.83600001,   6517.41999997,   6585.95900001,   6518.605     ,\n",
-                            "         6509.76200001,   6516.95900001,   6503.829     ,   6554.55100002,\n",
-                            "         6598.15200004,   6559.86600003,   6580.816     ,   6562.29000003,\n",
-                            "         6500.42199999,   6466.57100003,   6406.80800001,   6390.24500003,\n",
-                            "         6659.54599998,   6464.876     ,   6436.83500004,   6504.48300001,\n",
-                            "         6446.07499999,   6446.44600004,   6454.87499997,   6475.223     ,\n",
-                            "         6496.00200001,   6466.11100001,   6495.32799997,   6542.35499997,\n",
-                            "         6453.81700002,   6432.13699999,   6491.07499999,   6461.52799999,\n",
-                            "         6558.50099997,   6534.26299999,   6422.665     ,   6566.92900003,\n",
-                            "         6421.17799998,   6433.25700003,   6465.06299995,   6422.80899996,\n",
-                            "         6564.92299998,   6492.88800003,   6604.65999999,   6561.19299998,\n",
-                            "         6598.88999996,   6510.924     ,   6470.13299999,   6447.51300001,\n",
-                            "         6428.63399997,   6432.77900002,   6463.92600004,   6585.03200003,\n",
-                            "         6444.74300003,   6514.35600003,   6400.51799996,   6425.93499998,\n",
-                            "         6458.08000002,   6452.91300003,   6434.88699995,   6418.80799998,\n",
-                            "         6496.19200004,   6432.80900005,   6431.72100001,   6411.84699998,\n",
-                            "         6447.61000001,   6426.49400004,   6448.77500002,   6412.73499997,\n",
-                            "         6453.15699995,   6386.89399995,   6430.19299997,   6480.221     ,\n",
-                            "         6432.088     ,   6409.78600001,   6450.62400002,   6441.75000002,\n",
-                            "         6413.32800001,   6472.07700001,   6458.86699999,   6480.93900003,\n",
-                            "         6443.80400001,   6411.399     ,   6422.54800005,   6423.68199999]), 'schedule': {'beta': 10.0, 'gamma': 1.0, 'num_sweeps': 100}}, 'BINARY')"
-                        ]
-                    },
-                    "execution_count": 4,
-                    "metadata": {
-                        "tags": []
-                    },
-                    "output_type": "execute_result"
-                }
-            ],
-            "source": [
-                "Q = {(0, 4): -1, (0, 5): -1, (4, 12): 1}\n",
-                "response = sampler.sample_qubo(Q)\n",
-                "response"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "BIXHyB7--qB8"
-            },
-            "source": [
-                "## Embedding the All-Coupled Model in Chimeragraph \n",
-                "\n",
-                "We introduced the calculation of only those interactions that exist on the chimeragraph. Below is script for embedding comples interactions into chimeragraph, such as problems of all-coupled.\n",
-                "\n",
-                "In order to embed in chimeragraph, we use `EmbeddingComposite` of `dwave`. We install `dwave-system` with `pip`."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
-            "metadata": {
-                "colab": {
-                    "base_uri": "https://localhost:8080/",
-                    "height": 803
-                },
-                "colab_type": "code",
-                "id": "WcP7nmD2--si",
-                "outputId": "a769f387-5ed8-4a91-9115-aa5b82bc6bb7"
-            },
-            "outputs": [],
-            "source": [
-                "!pip install dwave-system"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "u9Xzb7BHBG1n"
-            },
-            "source": [
-                "Then we rewrite the sampler part of the script as follows."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 15,
-            "metadata": {
-                "colab": {},
-                "colab_type": "code",
-                "id": "Ry1nTJGU-vnI"
-            },
-            "outputs": [],
-            "source": [
-                "from dwave.system.composites import EmbeddingComposite\n",
-                "\n",
-                "gpusqa = oj.GPUSQASampler(num_reads=100, unit_num_L=2)\n",
-                "sampler = EmbeddingComposite(gpusqa)"
-            ]
-        }
-    ],
-    "metadata": {
-        "accelerator": "GPU",
-        "colab": {
-            "name": "5-OpenJijGPU.ipynb",
-            "provenance": []
-        },
-        "kernelspec": {
-            "display_name": "Python 3",
-            "language": "python",
-            "name": "python3"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython3",
-            "version": "3.8.5"
-        }
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "tcLyUtUqhkTr"
+   },
+   "source": [
+    "# 5-OpenJij GPU"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "view-in-github"
+   },
+   "source": [
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/005-OpenJijGPU.ipynb)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> This document is deprecated. Please go to the next chapter."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "Vrd0CwLJhvVQ"
+   },
+   "source": [
+    "In this section, we introduce a method of Simulated Quantum Annealing (SQA) with GPU.\n",
+    "\n",
+    "## Setup and installation in Google Colab\n",
+    "\n",
+    "The average PC may not have a CUDA environment, or may not have an NVIDIA GPU. However, with **Google colaboratory**, anyone can use GPGPUs.\n",
+    "\n",
+    "### GPU Settings\n",
+    "\n",
+    "We open Jupyter Notebook file we want to run on GPU with Google Colab.\n",
+    "\n",
+    "```\n",
+    "Runtime > Change runtime type > choose Hardware accelerator GPU\n",
+    "```\n",
+    "\n",
+    "This setting allows you to run Jupyter Notebook on GPU.\n",
+    "\n",
+    "### Installation of OpenJij \n",
+    "\n",
+    "To use GPU modules from OpenJij, one has to build from source codes when installing OpenJij.\n",
+    "We first update CMake, which is needed for the installation, to the latest version."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 173
     },
-    "nbformat": 4,
-    "nbformat_minor": 1
+    "colab_type": "code",
+    "id": "o8UaiBs1hkwh",
+    "outputId": "3a0075b7-00ea-4cad-9ff1-47b0965e833f"
+   },
+   "outputs": [],
+   "source": [
+    "!pip install -U cmake"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "-DuFQsPK90LI"
+   },
+   "source": [
+    "After that, we uninstall & reinstall OpenJij with option `--no-binary :all:`, which forces to build from source codes during installation."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 377
+    },
+    "colab_type": "code",
+    "id": "s1pjFhAa95Zs",
+    "outputId": "e398ccc6-abca-420b-8e9b-0626ab3283bc"
+   },
+   "outputs": [],
+   "source": [
+    "!pip uninstall openjij -y\n",
+    "!pip install openjij --no-binary :all: --no-cache-dir"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "JMgqfmZ-h8X3"
+   },
+   "source": [
+    "## Calculation with GPUSQA\n",
+    "\n",
+    "OpenJij GPUs support Monte Carlo calculations on Chimeragraphs.  \n",
+    "We make GPUSQASampler instance at first.\n",
+    "If the notebook gives an error \"No modules found. ...\", please try to restart the session so that the reinstalled version of OpenJij is loaded correctly."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "colab": {},
+    "colab_type": "code",
+    "id": "TYhWp0eqh3Yb"
+   },
+   "outputs": [],
+   "source": [
+    "import openjij as oj\n",
+    "\n",
+    "sampler = oj.GPUSQASampler(num_reads=100, unit_num_L=2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "oOmEWWBxh_3O"
+   },
+   "source": [
+    "`unit_num_L` specifies the length of one side of the two-dimensional lattice of chimera-unit cells.  \n",
+    "In the example above, we have created a system with 2x2=4 chimera-unit cells.\n",
+    "\n",
+    "Since a chimera-unit cell consists of one 8-bit, the total number of bits is calculated as follows.\n",
+    "  \n",
+    "${\\rm total\\_num} = {\\rm unit\\_num\\_L}^2 \\times 8$\n",
+    "\n",
+    "The GPUSQASampler perform SQA calculations for the size of the system of chimeragraphs created here, even if you specify fewer variables, such as sampler_qubo, later. We note that `unit_num_L` is not too large.\n",
+    "Also, `unit_num_L` is not specified in the constructor but is used as an argument to run `sample_qubo`.\n",
+    "\n",
+    "## Execution\n",
+    "\n",
+    "Next we execute SQA. As with Sampler before we introduce, we can use `sample_qubo` (or `sample_ising`).\n",
+    "However, if you specify an interaction for a subscript that does not satisfy the chimeragraph, error occurs."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 1000
+    },
+    "colab_type": "code",
+    "id": "_XIsZ9z2h_Rv",
+    "outputId": "be24e99d-b0b9-4766-c686-815ca027694c"
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),\n",
+       "           ([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1)],\n",
+       "          dtype=[('sample', 'i1', (4,)), ('energy', '<f8'), ('num_occurrences', '<i8')]), [0, 4, 5, 12], {'system': [], 'sampling_time': 1006372.1469999792, 'execution_time': 8902.872740002294, 'list_exec_times': array([230796.36600005,   8290.07499999,   8871.43699998,   8162.024     ,\n",
+       "         8042.78700002,   8098.51899999,   8169.03100002,   8717.89000001,\n",
+       "         8071.55399997,   8079.75599997,   8075.238     ,   6575.44399996,\n",
+       "         6622.51900002,   6544.86100001,   6475.21600001,   6579.81400002,\n",
+       "         6559.83600001,   6517.41999997,   6585.95900001,   6518.605     ,\n",
+       "         6509.76200001,   6516.95900001,   6503.829     ,   6554.55100002,\n",
+       "         6598.15200004,   6559.86600003,   6580.816     ,   6562.29000003,\n",
+       "         6500.42199999,   6466.57100003,   6406.80800001,   6390.24500003,\n",
+       "         6659.54599998,   6464.876     ,   6436.83500004,   6504.48300001,\n",
+       "         6446.07499999,   6446.44600004,   6454.87499997,   6475.223     ,\n",
+       "         6496.00200001,   6466.11100001,   6495.32799997,   6542.35499997,\n",
+       "         6453.81700002,   6432.13699999,   6491.07499999,   6461.52799999,\n",
+       "         6558.50099997,   6534.26299999,   6422.665     ,   6566.92900003,\n",
+       "         6421.17799998,   6433.25700003,   6465.06299995,   6422.80899996,\n",
+       "         6564.92299998,   6492.88800003,   6604.65999999,   6561.19299998,\n",
+       "         6598.88999996,   6510.924     ,   6470.13299999,   6447.51300001,\n",
+       "         6428.63399997,   6432.77900002,   6463.92600004,   6585.03200003,\n",
+       "         6444.74300003,   6514.35600003,   6400.51799996,   6425.93499998,\n",
+       "         6458.08000002,   6452.91300003,   6434.88699995,   6418.80799998,\n",
+       "         6496.19200004,   6432.80900005,   6431.72100001,   6411.84699998,\n",
+       "         6447.61000001,   6426.49400004,   6448.77500002,   6412.73499997,\n",
+       "         6453.15699995,   6386.89399995,   6430.19299997,   6480.221     ,\n",
+       "         6432.088     ,   6409.78600001,   6450.62400002,   6441.75000002,\n",
+       "         6413.32800001,   6472.07700001,   6458.86699999,   6480.93900003,\n",
+       "         6443.80400001,   6411.399     ,   6422.54800005,   6423.68199999]), 'schedule': {'beta': 10.0, 'gamma': 1.0, 'num_sweeps': 100}}, 'BINARY')"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {
+      "tags": []
+     },
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Q = {(0, 4): -1, (0, 5): -1, (4, 12): 1}\n",
+    "response = sampler.sample_qubo(Q)\n",
+    "response"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "BIXHyB7--qB8"
+   },
+   "source": [
+    "## Embedding the All-Coupled Model in Chimeragraph \n",
+    "\n",
+    "We introduced the calculation of only those interactions that exist on the chimeragraph. Below is script for embedding comples interactions into chimeragraph, such as problems of all-coupled.\n",
+    "\n",
+    "In order to embed in chimeragraph, we use `EmbeddingComposite` of `dwave`. We install `dwave-system` with `pip`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 803
+    },
+    "colab_type": "code",
+    "id": "WcP7nmD2--si",
+    "outputId": "a769f387-5ed8-4a91-9115-aa5b82bc6bb7"
+   },
+   "outputs": [],
+   "source": [
+    "!pip install dwave-system"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "u9Xzb7BHBG1n"
+   },
+   "source": [
+    "Then we rewrite the sampler part of the script as follows."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {
+    "colab": {},
+    "colab_type": "code",
+    "id": "Ry1nTJGU-vnI"
+   },
+   "outputs": [],
+   "source": [
+    "from dwave.system.composites import EmbeddingComposite\n",
+    "\n",
+    "gpusqa = oj.GPUSQASampler(num_reads=100, unit_num_L=2)\n",
+    "sampler = EmbeddingComposite(gpusqa)"
+   ]
+  }
+ ],
+ "metadata": {
+  "accelerator": "GPU",
+  "colab": {
+   "name": "5-OpenJijGPU.ipynb",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
 }

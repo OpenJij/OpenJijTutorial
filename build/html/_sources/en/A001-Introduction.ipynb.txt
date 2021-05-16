@@ -1,250 +1,216 @@
 {
-    "cells": [
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "# A1 - Introduction to OpenJij core interface (core Python interface)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {
-                "colab_type": "text",
-                "id": "view-in-github"
-            },
-            "source": [
-                "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/A001-Introduction.ipynb)"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "In this chapeter, let us show you how to use OpenJij core interface (core Python insterface) and demonstrate easy case of calculation.\n",
-                "\n",
-                "Core insterface is lower-layer APIs than in the previous tutorials. The target readers are expected to have completed the previous OpenJij tutorials and be familiar with terms such as ising models and MonteCarlo methods.\n",
-                "\n",
-                "Specifically, we use OpenJij for the following purpose.\n",
-                "\n",
-                "* We would like to use OpenJij not only for optimization problems, but also for more specialized applications such as sampling and research purpose.\n",
-                "\n",
-                "* We would like to set annealing schedules and directly develop algorithms we use."
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "## OpenJij core interface \u306b\u3064\u3044\u3066\n",
-                "\n",
-                "In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call **cxxjij**, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.\n",
-                "\n",
-                "![OpenJij hierarchy](images/hierarchy.png){width=80%}\n",
-                "\n",
-                "Using core interface, we can use all funtinon of OpenJij. Therefore, We can choose OpenJij not only for optimization problem but also for reserch purpose as numerical tools of statistical physics. Also, we can compute faster computation because of using C++ interface.\n",
-                "\n",
-                "In this tutorial, let us introduce you Python interface `cxxjij` and C++ interface.\n",
-                "We use pip for installation."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 1,
-            "metadata": {},
-            "outputs": [
-                {
-                    "name": "stdout",
-                    "output_type": "stream",
-                    "text": [
-                        "Defaulting to user installation because normal site-packages is not writeable\n",
-                        "Requirement already satisfied: openjij in /home/jiko/.local/lib/python3.8/site-packages (0.0.11)\n",
-                        "Requirement already satisfied: requests in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (2.23.0)\n",
-                        "Requirement already satisfied: dimod==0.8.21 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (0.8.21)\n",
-                        "Requirement already satisfied: numpy>=1.16.0 in /home/jiko/.local/lib/python3.8/site-packages (from openjij) (1.18.1)\n",
-                        "Requirement already satisfied: idna<3,>=2.5 in /home/jiko/.local/lib/python3.8/site-packages (from requests->openjij) (2.9)\n",
-                        "Requirement already satisfied: certifi>=2017.4.17 in /home/jiko/.local/lib/python3.8/site-packages (from requests->openjij) (2019.11.28)\n",
-                        "Requirement already satisfied: chardet<4,>=3.0.2 in /home/jiko/.local/lib/python3.8/site-packages (from requests->openjij) (3.0.4)\n",
-                        "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /home/jiko/.local/lib/python3.8/site-packages (from requests->openjij) (1.25.8)\n",
-                        "Requirement already satisfied: six<2.0.0,>=1.10.0 in /home/jiko/.local/lib/python3.8/site-packages (from dimod==0.8.21->openjij) (1.14.0)\n",
-                        "Name: openjij\n",
-                        "Version: 0.0.11\n",
-                        "Summary: Framework for the Ising model and QUBO\n",
-                        "Home-page: https://openjij.github.io/OpenJij/\n",
-                        "Author: Jij Inc.\n",
-                        "Author-email: openjij@j-ij.com\n",
-                        "License: Apache License 2.0\n",
-                        "Location: /home/jiko/.local/lib/python3.8/site-packages\n",
-                        "Requires: numpy, dimod, requests\n",
-                        "Required-by: \n"
-                    ]
-                }
-            ],
-            "source": [
-                "!pip install openjij\n",
-                "!pip show openjij"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "## Run problem\n",
-                "\n",
-                "As a tutorial, we solve classical spin-ising problem ($\\sigma = \\pm 1$) with $N=5$ variable size with annealing.\n",
-                "The Hamiltonian of this problem is as follows.\n",
-                "\n",
-                "\\begin{align}\n",
-                "H &= \\sum_{i<j}J_{ij}\\sigma_i \\sigma_j + \\sum_{i=1}^{N}h_i \\sigma_i \\\\\n",
-                "\\sigma_i &= \\pm 1 (i=1 \\cdots N)\n",
-                "\\end{align}\n",
-                "\n",
-                "When the longitudinal magnetic fields and interaction coefficient are as follows\n",
-                "\n",
-                "\\begin{align}\n",
-                "h_i = -1 \\ \\mathrm{for\\ } \\forall i,\\ J_{ij} = -1\u3000\\ \\mathrm{for\\ } \\forall i,\\ j\n",
-                "\\end{align}\n",
-                "\n",
-                "all spin is lower in energy if it takes a value of 1. Therefore, the optimal solution is $\\{\\sigma_i\\} = \\{1,1,1,1,1\\}$. Let's solve this problem.\n",
-                "\n",
-                "The whole process with the Python script is as follows.\n",
-                "\n",
-                "> core interface is a solver that specializes in ising problem. For this reason, conversion with QUBO is not implemented. To convert to QUBO, please refer to the previous tutorials and convert from QUBO to Ising problem before calling the core interface."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": 2,
-            "metadata": {},
-            "outputs": [
-                {
-                    "name": "stdout",
-                    "output_type": "stream",
-                    "text": [
-                        "The solution is [1, 1, 1, 1, 1].\n"
-                    ]
-                }
-            ],
-            "source": [
-                "# core interface imports cssjij instead of OpenJij\n",
-                "import cxxjij as cj\n",
-                "# import Graph module for interaction matrix\n",
-                "import cxxjij.graph as G\n",
-                "\n",
-                "# set Dense Graph of problem size N=5\n",
-                "N = 5\n",
-                "J = G.Dense(N)\n",
-                "# set interaction matrix\n",
-                "for i in range(N):\n",
-                "    for j in range(N):\n",
-                "        J[i,j] = 0 if i == j else -1.0\n",
-                "# set longitudinal matnetic fields\n",
-                "for i in range(N):\n",
-                "    # we can get same result J[i,i] = -1\n",
-                "    J[i] = -1\n",
-                "\n",
-                "# import system to perform the computation from Graph\n",
-                "import cxxjij.system as S\n",
-                "\n",
-                "# In this time, we use normal classical MonteCarlo calculation system\n",
-                "system = S.make_classical_ising(J.gen_spin(), J)\n",
-                "# use Utility to set annealing schedule\n",
-                "import cxxjij.utility as U\n",
-                "schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)\n",
-                "\n",
-                "# use Altorigthm to run annealing\n",
-                "# use simple SingleSpinFlip for updating the MonteCarlo step\n",
-                "import cxxjij.algorithm as A\n",
-                "A.Algorithm_SingleSpinFlip_run(system, schedule)\n",
-                "\n",
-                "# use get_soultion in Result module to get result\n",
-                "import cxxjij.result as R\n",
-                "print(\"The solution is {}.\".format(R.get_solution(system)))"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "We can see this solution is $[1,1,1,1,1]$. Because it is a low layer API, there are many settings to be made, but the more detailed settings are possible.\n",
-                "\n",
-                "## List of Modules\n",
-                "\n",
-                "As a script example, OpenJij core interface consists of `graph`, `system`, `algorigthm` and other modules. Each module can be combined to compute ising models of various types and algorithms. It is also easy to extend when implementing new algorithms. The following chapters will explain details.\n",
-                "\n",
-                "### Graph\n",
-                "\n",
-                "A module for holding the ising Hamiltonian's coefficient $J_{ij}$. There are `Dense` and `Sparse`, which deal with tight coupling (suitable for models in which all Jij have non-zero values) and others (suitable for models in whick many Jij values are zero).\n",
-                "\n",
-                "### System\n",
-                "\n",
-                "`system` defines a data structure for keeping the current status of the system in MonteCarlo simulation and others.\n",
-                "\n",
-                "Specifically, the following are defined.\n",
-                "\n",
-                "- Classical ising model (sequence of spins)\n",
-                "- Ising model including transverse magnetic fields (sequence of spins including Trotter decomposition)\n",
-                "- GPU implemented classical and quantum ising model\n",
-                "\n",
-                "There are many different MonteCarlo methods and other computation schemes (or new methods will be developed in the feature). Therefore, by separating the data structures, algorithms and result fetching interfaces for each methods, OpenJij has been designed to make it easy to add different algorithms.\n",
-                "\n",
-                "### Updater\n",
-                "\n",
-                "`updater` difines how to update the `system`. Specifically, the following methods are implemented.\n",
-                "\n",
-                "- SingleSpinFlip Update\n",
-                "- SwendsenWang Update\n",
-                "\n",
-                "`system` type determines which `updater` can be used.\n",
-                "\n",
-                "> In core python interface, `updater` is integrated into the `algorithm`.\n",
-                "\n",
-                "### Algorithm\n",
-                "\n",
-                "`Algorithm` has a role of executing altorighms, including what schedule to run the annealing algorithm.\n",
-                "`Algorithm_[Updater_type]_run` allows you to run the program using the corresponding Updater.\n",
-                "\n",
-                "### Result\n",
-                "\n",
-                "This module is used to get information from the `system` such as spin assignment.\n",
-                "\n",
-                "### Coding Flow\n",
-                "\n",
-                "The coding process is basically as fllows. This trend will not change as the scale of the problem is largeer.\n",
-                "\n",
-                "- set $J_{ij}, h_{i}$ with `graph`\n",
-                "- create `system` based on `graph`\n",
-                "- select `updater` for the `system` and run the algorithm using `Algorithm_[Updater type]_run`\n",
-                "- get system spin assignment with `result.get_solution(system)` or get from `system` directly."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": null,
-            "metadata": {},
-            "outputs": [],
-            "source": []
-        }
-    ],
-    "metadata": {
-        "kernelspec": {
-            "display_name": "Python 3",
-            "language": "python",
-            "name": "python3"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbconvert_exporter": "python",
-            "pygments_lexer": "ipython3",
-            "version": "3.8.5"
-        }
-    },
-    "nbformat": 4,
-    "nbformat_minor": 4
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# A1 - Introduction to OpenJij core interface (core Python interface)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "colab_type": "text",
+    "id": "view-in-github"
+   },
+   "source": [
+    "[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/A001-Introduction.ipynb)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this chapeter, let us show you how to use OpenJij core interface (core Python insterface) and demonstrate easy case of calculation.\n",
+    "\n",
+    "Core insterface is lower-layer APIs than in the previous tutorials. The target readers are expected to have completed the previous OpenJij tutorials and be familiar with terms such as ising models and MonteCarlo methods.\n",
+    "\n",
+    "Specifically, we use OpenJij for the following purpose.\n",
+    "\n",
+    "* We would like to use OpenJij not only for optimization problems, but also for more specialized applications such as sampling and research purpose.\n",
+    "\n",
+    "* We would like to set annealing schedules and directly develop algorithms we use."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## About OpenJij core interface\n",
+    "\n",
+    "In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call **cxxjij**, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.\n",
+    "\n",
+    "![OpenJij hierarchy](images/hierarchy.png){width=80%}\n",
+    "\n",
+    "Using core interface, we can use all funtinon of OpenJij. Therefore, We can choose OpenJij not only for optimization problem but also for reserch purpose as numerical tools of statistical physics. Also, we can compute faster computation because of using C++ interface.\n",
+    "\n",
+    "In this tutorial, let us introduce you Python interface `cxxjij` and C++ interface.\n",
+    "We use pip for installation."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!pip install openjij\n",
+    "!pip show openjij"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Run problem\n",
+    "\n",
+    "As a tutorial, we solve classical spin-ising problem ($\\sigma = \\pm 1$) with $N=5$ variable size with annealing.\n",
+    "The Hamiltonian of this problem is as follows.\n",
+    "\n",
+    "\\begin{align}\n",
+    "H &= \\sum_{i<j}J_{ij}\\sigma_i \\sigma_j + \\sum_{i=1}^{N}h_i \\sigma_i \\\\\n",
+    "\\sigma_i &= \\pm 1 (i=1 \\cdots N)\n",
+    "\\end{align}\n",
+    "\n",
+    "When the longitudinal magnetic fields and interaction coefficient are as follows\n",
+    "\n",
+    "\\begin{align}\n",
+    "h_i = -1 \\ \\mathrm{for\\ } \\forall i,\\ J_{ij} = -1　\\ \\mathrm{for\\ } \\forall i,\\ j\n",
+    "\\end{align}\n",
+    "\n",
+    "all spin is lower in energy if it takes a value of 1. Therefore, the optimal solution is $\\{\\sigma_i\\} = \\{1,1,1,1,1\\}$. Let's solve this problem.\n",
+    "\n",
+    "The whole process with the Python script is as follows.\n",
+    "\n",
+    "> core interface is a solver that specializes in ising problem. For this reason, conversion with QUBO is not implemented. To convert to QUBO, please refer to the previous tutorials and convert from QUBO to Ising problem before calling the core interface."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The solution is [1, 1, 1, 1, 1].\n"
+     ]
+    }
+   ],
+   "source": [
+    "# core interface imports cssjij instead of OpenJij\n",
+    "import cxxjij as cj\n",
+    "# import Graph module for interaction matrix\n",
+    "import cxxjij.graph as G\n",
+    "\n",
+    "# set Dense Graph of problem size N=5\n",
+    "N = 5\n",
+    "J = G.Dense(N)\n",
+    "# set interaction matrix\n",
+    "for i in range(N):\n",
+    "    for j in range(N):\n",
+    "        J[i,j] = 0 if i == j else -1.0\n",
+    "# set longitudinal matnetic fields\n",
+    "for i in range(N):\n",
+    "    # we can get same result J[i,i] = -1\n",
+    "    J[i] = -1\n",
+    "\n",
+    "# import system to perform the computation from Graph\n",
+    "import cxxjij.system as S\n",
+    "\n",
+    "# In this time, we use normal classical MonteCarlo calculation system\n",
+    "system = S.make_classical_ising(J.gen_spin(), J)\n",
+    "# use Utility to set annealing schedule\n",
+    "import cxxjij.utility as U\n",
+    "schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)\n",
+    "\n",
+    "# use Altorigthm to run annealing\n",
+    "# use simple SingleSpinFlip for updating the MonteCarlo step\n",
+    "import cxxjij.algorithm as A\n",
+    "A.Algorithm_SingleSpinFlip_run(system, schedule)\n",
+    "\n",
+    "# use get_soultion in Result module to get result\n",
+    "import cxxjij.result as R\n",
+    "print(\"The solution is {}.\".format(R.get_solution(system)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can see this solution is $[1,1,1,1,1]$. Because it is a low layer API, there are many settings to be made, but the more detailed settings are possible.\n",
+    "\n",
+    "## List of Modules\n",
+    "\n",
+    "As a script example, OpenJij core interface consists of `graph`, `system`, `algorigthm` and other modules. Each module can be combined to compute ising models of various types and algorithms. It is also easy to extend when implementing new algorithms. The following chapters will explain details.\n",
+    "\n",
+    "### Graph\n",
+    "\n",
+    "A module for holding the ising Hamiltonian's coefficient $J_{ij}$. There are `Dense` and `Sparse`, which deal with tight coupling (suitable for models in which all Jij have non-zero values) and others (suitable for models in whick many Jij values are zero).\n",
+    "\n",
+    "### System\n",
+    "\n",
+    "`system` defines a data structure for keeping the current status of the system in MonteCarlo simulation and others.\n",
+    "\n",
+    "Specifically, the following are defined.\n",
+    "\n",
+    "- Classical ising model (sequence of spins)\n",
+    "- Ising model including transverse magnetic fields (sequence of spins including Trotter decomposition)\n",
+    "- GPU implemented classical and quantum ising model\n",
+    "\n",
+    "There are many different MonteCarlo methods and other computation schemes (or new methods will be developed in the feature). Therefore, by separating the data structures, algorithms and result fetching interfaces for each methods, OpenJij has been designed to make it easy to add different algorithms.\n",
+    "\n",
+    "### Updater\n",
+    "\n",
+    "`updater` difines how to update the `system`. Specifically, the following methods are implemented.\n",
+    "\n",
+    "- SingleSpinFlip Update\n",
+    "- SwendsenWang Update\n",
+    "\n",
+    "`system` type determines which `updater` can be used.\n",
+    "\n",
+    "> In core python interface, `updater` is integrated into the `algorithm`.\n",
+    "\n",
+    "### Algorithm\n",
+    "\n",
+    "`Algorithm` has a role of executing altorighms, including what schedule to run the annealing algorithm.\n",
+    "`Algorithm_[Updater_type]_run` allows you to run the program using the corresponding Updater.\n",
+    "\n",
+    "### Result\n",
+    "\n",
+    "This module is used to get information from the `system` such as spin assignment.\n",
+    "\n",
+    "### Coding Flow\n",
+    "\n",
+    "The coding process is basically as fllows. This trend will not change as the scale of the problem is largeer.\n",
+    "\n",
+    "- set $J_{ij}, h_{i}$ with `graph`\n",
+    "- create `system` based on `graph`\n",
+    "- select `updater` for the `system` and run the algorithm using `Algorithm_[Updater type]_run`\n",
+    "- get system spin assignment with `result.get_solution(system)` or get from `system` directly."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
 }

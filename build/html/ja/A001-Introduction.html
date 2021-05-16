@@ -5,14 +5,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial 0.1.1 documentation</title>
+    <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
@@ -33,7 +32,7 @@
         <li class="right" >
           <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A1 - OpenJij core interface入門 (core python interface)</a></li> 
       </ul>
@@ -305,7 +304,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="OpenJij-core-interface-について">
 <h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
 <p>前回までのチュートリアルでは、OpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきました。OpenJijは最下層の部分は統計物理学の数値計算手法である、マルコフ連鎖モンテカルロ法(MCMC)をベースにC++を用いて実装されています。今まで触れてきたPythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形となっています。図にすると次のような包含関係があります。</p>
-<p><a class="reference internal" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a></p>
+<a class="reference internal image-reference" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a>
 <p>core interfaceを用いることでOpenJij上の全ての機能を使用することができます。よって最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。また、C++インターフェースを用いることで、より高速な演算を行うことができます。</p>
 <p>本チュートリアルではPythonインターフェースのcxxjijと、C++インターフェースの両方をご紹介します。 インストールにはpipを使用します。</p>
 <div class="nbinput docutils container">
@@ -538,14 +537,14 @@ The solution is [1, 1, 1, 1, 1].
         <li class="right" >
           <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">A1 - OpenJij core interface入門 (core python interface)</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.0.
+        &#169; Copyright 2021, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>
