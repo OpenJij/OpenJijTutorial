@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>A3 - 古典イジング模型 &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A4 - 量子イジング模型" href="A004-QuantumSystem.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A3---古典イジング模型">
+<section id="A3---古典イジング模型">
 <h1>A3 - 古典イジング模型<a class="headerlink" href="#A3---古典イジング模型" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A003-LargeScaleMC.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
@@ -369,7 +370,7 @@ div.rendered_html tbody tr:hover {
 -0.6
 </pre></div></div>
 </div>
-<div class="section" id="システムの設定---System--">
+<section id="システムの設定---System--">
 <h2>システムの設定 - System -<a class="headerlink" href="#システムの設定---System--" title="Permalink to this headline">¶</a></h2>
 <p>続いて計算を行うためのシステムを定義します。ここでは古典イジング模型か横磁場イジング模型か、また別の模型にするか等を選べます。</p>
 <p>まずは古典イジング模型のシステムを作成してみます。<code class="docutils literal notranslate"><span class="pre">system.make_classical_ising</span></code>で作成できます。</p>
@@ -409,11 +410,11 @@ div.rendered_html tbody tr:hover {
 </pre></div></div>
 </div>
 <p>古典イジング模型以外にも様々なシステムが用意されており、これを用途別に使うことが出来ます。用いるSystemによって初期化の方法は多少異なります。これは後ほど少しずつ紹介していきます。</p>
-</div>
-<div class="section" id="アルゴリズムの実行--Updater,-Algorithm-">
+</section>
+<section id="アルゴリズムの実行--Updater,-Algorithm-">
 <h2>アルゴリズムの実行 -Updater, Algorithm-<a class="headerlink" href="#アルゴリズムの実行--Updater,-Algorithm-" title="Permalink to this headline">¶</a></h2>
 <p>Systemを定義した後はUpdaterを選択し、Algorithmを実行していきます。</p>
-<div class="section" id="Updater">
+<section id="Updater">
 <h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
 <p>Systemに対して使用できるUpdaterは決められており、古典イジング模型に対するUpdaterは主に</p>
 <ul class="simple">
@@ -421,10 +422,10 @@ div.rendered_html tbody tr:hover {
 <li><p><a class="reference external" href="https://github.com/OpenJij/OpenJij/blob/ec41aecfbac7e4c895e1e7a1718f06eb7ffae0ba/src/updater/swendsen_wang.hpp#L45">SwendsenWang</a> (SwendsenWang法によるクラスターアップデート)</p></li>
 </ul>
 <p>の2つが用意されています。 Algorithmを実行するには、<strong>スケジュールリスト</strong>が必要になります。まずスケジュールリストを作成するところから始めましょう。</p>
-</div>
-<div class="section" id="Algorithm">
+</section>
+<section id="Algorithm">
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="スケジュールリスト">
+<section id="スケジュールリスト">
 <h4>スケジュールリスト<a class="headerlink" href="#スケジュールリスト" title="Permalink to this headline">¶</a></h4>
 <p>スケジュールリストは<code class="docutils literal notranslate"><span class="pre">(パラメータ,</span> <span class="pre">モンテカルロステップ数)</span></code>のリストで与えられるものです。パラメータ部分に入力する値はSystemによって異なります。例えば、古典イジング模型ならばパラメータとして温度の逆数である逆温度<span class="math notranslate nohighlight">\(\beta\)</span>を設定します。例として以下のように設定してみましょう。</p>
 <div class="nbinput nblast docutils container">
@@ -460,8 +461,8 @@ div.rendered_html tbody tr:hover {
 </pre></div></div>
 </div>
 <p>上の例では<span class="math notranslate nohighlight">\(\beta=0.1\)</span>から<span class="math notranslate nohighlight">\(\beta=50\)</span>まで、各温度で20モンテカルロステップ計算しながら10段階で温度を変えていく設定例です。計200モンテカルロステップの計算を行います。</p>
-</div>
-<div class="section" id="Algorithmの実行">
+</section>
+<section id="Algorithmの実行">
 <h4>Algorithmの実行<a class="headerlink" href="#Algorithmの実行" title="Permalink to this headline">¶</a></h4>
 <p>続いて、Algorithmを実行します。<code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater]_run</span></code>のように書くことで、指定したUpdaterで計算を行います。次の例ではSingleSpinFlipを実行しています。</p>
 <div class="nbinput nblast docutils container">
@@ -536,10 +537,10 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>アニーリングが進むに連れ徐々にエネルギーが低くなっているのが分かります。Algorithmの動作中にシステムの様子を知りたい時に有用です。</p>
-</div>
-</div>
-</div>
-<div class="section" id="結果の取得--Result-">
+</section>
+</section>
+</section>
+<section id="結果の取得--Result-">
 <h2>結果の取得 -Result-<a class="headerlink" href="#結果の取得--Result-" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>で計算結果であるスピン列を取得できます。古典イジング模型の場合は直接<code class="docutils literal notranslate"><span class="pre">mysystem.spin</span></code>を参照することで、スピン列を取得も可能です。しかし、<code class="docutils literal notranslate"><span class="pre">result.get_solution</span></code>はそれ以外のシステムについてもスピン列を取得できる便利なメソッドです。</p>
 <div class="nbinput docutils container">
@@ -561,8 +562,8 @@ div.rendered_html tbody tr:hover {
 </pre></div></div>
 </div>
 <p>このスピン列がアニーリングによって得られた答えです。ハミルトニアンの基底状態 (に近い状態)であることが期待されます。</p>
-</div>
-<div class="section" id="C++-core-interface">
+</section>
+<section id="C++-core-interface">
 <h2>C++ core interface<a class="headerlink" href="#C++-core-interface" title="Permalink to this headline">¶</a></h2>
 <p>多少の違いはありますが、C++ core interfaceでも上記とほぼ同じことが可能です。以下の点に留意しましょう。</p>
 <ul class="simple">
@@ -570,83 +571,83 @@ div.rendered_html tbody tr:hover {
 <li><p>Graphクラスで、<span class="math notranslate nohighlight">\(J_{ij}, h_i\)</span>へのアクセス方法が多少異なります。</p></li>
 </ul>
 <p>今までの内容をC++ core interfaceで記述すると次のようになります。</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;algorithm/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;result/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;utility/schedule_list.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;utility/random.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;result/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;utility/schedule_list.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;utility/random.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">openjij</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">openjij</span><span class="p">;</span><span class="w"></span>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span><span class="w"></span>
 
-    <span class="c1">//generate dense graph with size N=100</span>
-    <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="k">auto</span> <span class="n">dense</span> <span class="o">=</span> <span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//generate dense graph with size N=100</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">dense</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span><span class="w"></span>
 
-    <span class="c1">//generate random engine</span>
-    <span class="k">auto</span> <span class="n">rand_engine</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span>
-    <span class="c1">//of course you can specify another random generator that is compatible with C++ random generator, say utility::Xorshift,</span>
-    <span class="c1">//auto rand_engine = utility::Xorshift(0x1234);</span>
+<span class="w">    </span><span class="c1">//generate random engine</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">rand_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="c1">//of course you can specify another random generator that is compatible with C++ random generator, say utility::Xorshift,</span>
+<span class="w">    </span><span class="c1">//auto rand_engine = utility::Xorshift(0x1234);</span>
 
-    <span class="c1">//Gaussian distribution</span>
-    <span class="k">auto</span> <span class="n">gauss</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+<span class="w">    </span><span class="c1">//Gaussian distribution</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">gauss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span><span class="w"></span>
 
-    <span class="c1">//set interactions</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">){</span>
-            <span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="c1">//set interactions</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="w">            </span><span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="c1">//set local fields</span>
-    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
-        <span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="c1">//set local fields</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="w">        </span><span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="c1">//create classical Ising system</span>
-    <span class="k">auto</span> <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">::</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span> <span class="n">dense</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//create classical Ising system</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span><span class="w"> </span><span class="n">dense</span><span class="p">);</span><span class="w"></span>
 
-    <span class="c1">//generate schedule list</span>
-    <span class="c1">//from beta=0.1 to beta=50, 20 Monte Carlo step for each tempearature, 10 samples</span>
-    <span class="k">auto</span> <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">utility</span><span class="o">::</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//generate schedule list</span>
+<span class="w">    </span><span class="c1">//from beta=0.1 to beta=50, 20 Monte Carlo step for each tempearature, 10 samples</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">schedule_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utility</span><span class="o">::</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"></span>
 
-    <span class="c1">//or in the case of classical system, you can specify arbitrary schedules by using a std::vector of utility::Schedule&lt;system::classical_system&gt;</span>
-    <span class="c1">//std::vector&lt;utility::Schedule&lt;system::classical_system&gt;&gt; schedule_list;</span>
-    <span class="c1">//utility::Schedule&lt;system::classical_system&gt; schedule;</span>
-    <span class="c1">//schedule.updater_parameter = {0.01};</span>
-    <span class="c1">//schedule.one_mc_step = 10; //number of Monte Carlo step per temperature</span>
-    <span class="c1">//schedule_list.push_back(schedule);</span>
-    <span class="c1">//</span>
-    <span class="c1">//schedule.updater_parameter = {10};</span>
-    <span class="c1">//schedule.one_mc_step = 80; //number of Monte Carlo step per temperature</span>
-    <span class="c1">//schedule_list.push_back(schedule);</span>
-    <span class="c1">//</span>
-    <span class="c1">//schedule.updater_parameter = {0.1};</span>
-    <span class="c1">//schedule.one_mc_step = 30; //number of Monte Carlo step per temperature</span>
-    <span class="c1">//schedule_list.push_back(schedule); //schedule_list -&gt; [(0.01, 10), (10, 80), (0.1, 30)]</span>
+<span class="w">    </span><span class="c1">//or in the case of classical system, you can specify arbitrary schedules by using a std::vector of utility::Schedule&lt;system::classical_system&gt;</span>
+<span class="w">    </span><span class="c1">//std::vector&lt;utility::Schedule&lt;system::classical_system&gt;&gt; schedule_list;</span>
+<span class="w">    </span><span class="c1">//utility::Schedule&lt;system::classical_system&gt; schedule;</span>
+<span class="w">    </span><span class="c1">//schedule.updater_parameter = {0.01};</span>
+<span class="w">    </span><span class="c1">//schedule.one_mc_step = 10; //number of Monte Carlo step per temperature</span>
+<span class="w">    </span><span class="c1">//schedule_list.push_back(schedule);</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">//schedule.updater_parameter = {10};</span>
+<span class="w">    </span><span class="c1">//schedule.one_mc_step = 80; //number of Monte Carlo step per temperature</span>
+<span class="w">    </span><span class="c1">//schedule_list.push_back(schedule);</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">//schedule.updater_parameter = {0.1};</span>
+<span class="w">    </span><span class="c1">//schedule.one_mc_step = 30; //number of Monte Carlo step per temperature</span>
+<span class="w">    </span><span class="c1">//schedule_list.push_back(schedule); //schedule_list -&gt; [(0.01, 10), (10, 80), (0.1, 30)]</span>
 
 
-    <span class="c1">//do annealing (updater: SingleSpinFlip)</span>
-    <span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">rand_engine</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//do annealing (updater: SingleSpinFlip)</span>
+<span class="w">    </span><span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span><span class="w"> </span><span class="n">rand_engine</span><span class="p">,</span><span class="w"> </span><span class="n">schedule_list</span><span class="p">);</span><span class="w"></span>
 
-    <span class="c1">//show spins</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span>
-    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="nl">elem</span> <span class="p">:</span> <span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elem</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="c1">//show spins</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nl">elem</span> <span class="p">:</span><span class="w"> </span><span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span><span class="w"></span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
 
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -691,7 +692,7 @@ div.rendered_html tbody tr:hover {
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -720,7 +721,7 @@ div.rendered_html tbody tr:hover {
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

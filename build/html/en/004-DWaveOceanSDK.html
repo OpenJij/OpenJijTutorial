@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>4-Introduction to D-Wave Ocean SDK &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5-OpenJij GPU" href="005-OpenJijGPU.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="4-Introduction-to-D-Wave-Ocean-SDK">
+<section id="4-Introduction-to-D-Wave-Ocean-SDK">
 <h1>4-Introduction to D-Wave Ocean SDK<a class="headerlink" href="#4-Introduction-to-D-Wave-Ocean-SDK" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/004-DWaveOceanSDK.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>D-Wave Ocean SDK (Ocean) is a collection of software that uses D-Wave Machines. It is easy to use various features from Python.</p>
@@ -326,31 +327,31 @@ div.rendered_html tbody tr:hover {
 <li><p>How to use Ocean</p></li>
 <li><p>Optimization for different annealing parameters</p></li>
 </ul>
-<div class="section" id="Formulation">
+<section id="Formulation">
 <h2>Formulation<a class="headerlink" href="#Formulation" title="Permalink to this headline">¶</a></h2>
 <p>There are two formats tha can be run on D-Wave machine: Ising model and QUBO. We won’t got into the details here, will describe the minimum requirements for using Ocean.</p>
-<div class="section" id="QUBO-and-Ising-model">
+<section id="QUBO-and-Ising-model">
 <h3>QUBO and Ising model<a class="headerlink" href="#QUBO-and-Ising-model" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="QUBO">
+<section id="QUBO">
 <h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
 <p>In the case of QUBO, we consider the following Hamiltonian for binary variable <span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
 <p>In solving QUBO, the classical computer calculates <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and <span class="math notranslate nohighlight">\(Q_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
-</div>
-<div class="section" id="Ising-model">
+</section>
+<section id="Ising-model">
 <h4>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this headline">¶</a></h4>
 <p>In the case of Ising model, we consider the following Hamiltonian for spin variable <span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
 <p>In solving Ising model, the classical computer calculates <span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
-</div>
-<div class="section" id="Reciprocal-conversion">
+</section>
+<section id="Reciprocal-conversion">
 <h4>Reciprocal conversion<a class="headerlink" href="#Reciprocal-conversion" title="Permalink to this headline">¶</a></h4>
 <p>QUBO and Ising model canbe converted to each other by the conversion formula <span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>. It doesn’t matter which way you formulate the Hamiltonian, so we can choose the one that is easier to consider from the subject matter. However, it should be noted that the D-Wave machine may behave differently for two different forms of the same problem.</p>
-</div>
-</div>
-<div class="section" id="Number-division-problem">
+</section>
+</section>
+<section id="Number-division-problem">
 <h3>Number division problem<a class="headerlink" href="#Number-division-problem" title="Permalink to this headline">¶</a></h3>
 <p>We consider dividing a fiven set of integers into two groups. The problem of dividing each group so that the sum of each group is the same is called a number division problem.</p>
 <p>For example, we divide the following set of intergers <span class="math notranslate nohighlight">\(C\)</span> into two groups.</p>
@@ -366,7 +367,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>In this case, There are 23 optimal solutions where the difference between the sum of the two is zero. There are multiple states in which the energy, called the difference in sums, is the same value, but the solutions are different. These states are called “degenerate” in physical terms. For example, a optimal solution is <span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span> (both of the sum of two is 27).</p>
-<div class="section" id="id1">
+<section id="id1">
 <h4>QUBO<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <p>We will make the formulation with the goal of making the difference between the sum of the two groups equal to zero.</p>
 <p>(Sum of the numbers belonging to group A) - (Sum of the numbers belonging to group B) = 0</p>
@@ -457,8 +458,8 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>The diagonal component represents <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and the non-diagonal component represents <span class="math notranslate nohighlight">\(Q_{ij}\)</span>. It turns out that the number division problem is and all-coupling problem, where there is an interaction between all the qubits.</p>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h4>Ising model<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <p>From the formula for Ising model and teh QUBO interconversion, the number division problem can be expressed in the ising model in the following concise formula.</p>
 <div class="math notranslate nohighlight">
@@ -541,13 +542,13 @@ div.rendered_html tbody tr:hover {
 <li><p>OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></p></li>
 <li><p>Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></p></li>
 </ul>
-</div>
-</div>
-</div>
-<div class="section" id="Optimization-on-D-Wave-machine">
+</section>
+</section>
+</section>
+<section id="Optimization-on-D-Wave-machine">
 <h2>Optimization on D-Wave machine<a class="headerlink" href="#Optimization-on-D-Wave-machine" title="Permalink to this headline">¶</a></h2>
 <p>Let us consider optimizing this problem using D-Wave machine. In this tutorial, we show (1). solving simply, (2). solving by varying the number of readings, (3). solving by changing annealing time.</p>
-<div class="section" id="Solve-Ising-model">
+<section id="Solve-Ising-model">
 <h3>Solve Ising model<a class="headerlink" href="#Solve-Ising-model" title="Permalink to this headline">¶</a></h3>
 <p>We use D-Wave machin sampler <code class="docutils literal notranslate"><span class="pre">DWaveSampler</span></code>, and use <code class="docutils literal notranslate"><span class="pre">EmbeddingComposite</span></code> for Embedding the problem in the chimeragraph of D-Wave machine.</p>
 <div class="nbinput nblast docutils container">
@@ -848,8 +849,8 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
  &#39;problem_id&#39;: &#39;7a565c51-5378-430b-a5d3-c957cf832d02&#39;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Change-the-number-of-reading">
+</section>
+<section id="Change-the-number-of-reading">
 <h3>Change the number of reading<a class="headerlink" href="#Change-the-number-of-reading" title="Permalink to this headline">¶</a></h3>
 <p>In this part, let’s see how the solution we get changes when we change the number of readings. We can set the value of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> to speciry the number of readings Default number of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> is 1. Before we set 100, now we try to set 1000.</p>
 <div class="nbinput nblast docutils container">
@@ -936,8 +937,8 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
  &#39;problem_id&#39;: &#39;ac673401-ba8e-4a86-a7ef-b9037f882250&#39;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Change-annealing-time">
+</section>
+<section id="Change-annealing-time">
 <h3>Change annealing time<a class="headerlink" href="#Change-annealing-time" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">Finally, we look at how the solution we get changes when we change the annealing time. We can specify the annealing time by setting the value of ‘annealing_time’ in sample_ising() or sample_qubo() (unit: µs).</div>
@@ -1022,9 +1023,9 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 </div>
 <p>From the histogram above, we can see that the number of optimal solutions obtained decreased as the annealing time was increased, but we found more low energy solutions. However, it’s not as simple as just increasing the annealing time. Sometimes the optimization works better when the annealing time is small. This dependency depends on each problem. In addition, quantum annealing and other annealing methods are meta-heuristic altorigthms. It is also important to note that each time you execute,
 the results you get will be different.</p>
-</div>
-</div>
-<div class="section" id="Conclusion">
+</section>
+</section>
+<section id="Conclusion">
 <h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
 <p>Through the optimization of number division problem, we introduced D-Wave Ocean. We can do a lot of things just by holding on to what we’ve discussed in this tutorial. For example, we can investigate as follows.</p>
 <ul class="simple">
@@ -1044,8 +1045,8 @@ the results you get will be different.</p>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -1099,7 +1100,7 @@ the results you get will be different.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1128,7 +1129,7 @@ the results you get will be different.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>3-PyQUBO with OpenJij &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="4-Introduction to D-Wave Ocean SDK" href="004-DWaveOceanSDK.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="3-PyQUBO-with-OpenJij">
+<section id="3-PyQUBO-with-OpenJij">
 <h1>3-PyQUBO with OpenJij<a class="headerlink" href="#3-PyQUBO-with-OpenJij" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/003-PyQUBO_2_OpenJij.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>In this chapter, we explain how to convert the cost function to QUBO with PyQUBO, Simulated Annealing, and pass variables to OpenJij. Let us show you “Creek Coverage Problem” as an example.</p>
@@ -305,7 +306,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="Formulation-of-QUBO-with-PyQUBO">
+<section id="Formulation-of-QUBO-with-PyQUBO">
 <h2>Formulation of QUBO with PyQUBO<a class="headerlink" href="#Formulation-of-QUBO-with-PyQUBO" title="Permalink to this headline">¶</a></h2>
 <p>PyQUBO is a intuitive library for fomulating QUBO &amp; Ising models. In the previous chapters, we have shown the case withou PyQUBO. In the previous chapters, we had to formulate QUBO, then expand the expressions ourselves and put them into the Python script. However, we can eliminate that hassles with PyQUBO.</p>
 <p>PyQUBO is a handy library that can help us reduce the computational and implementation errors in our QUBO and Ising model transformations.</p>
@@ -336,7 +337,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="Formulation-with-PyQUBO">
+<section id="Formulation-with-PyQUBO">
 <h3>Formulation with PyQUBO<a class="headerlink" href="#Formulation-with-PyQUBO" title="Permalink to this headline">¶</a></h3>
 <p>We import the required classes from PyQUBO.</p>
 <div class="nbinput nblast docutils container">
@@ -516,9 +517,9 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>In this time, We can see empty dictionary because constraint is satisfied.</p>
 <p><code class="docutils literal notranslate"><span class="pre">decode</span></code> function is very useful that can automatically check the constraints is satisfied or not.</p>
-</div>
-</div>
-<div class="section" id="Run-with-OpenJij">
+</section>
+</section>
+<section id="Run-with-OpenJij">
 <h2>Run with OpenJij<a class="headerlink" href="#Run-with-OpenJij" title="Permalink to this headline">¶</a></h2>
 <p>We just solved creek coverage problem in PyQUBO SA. Next, let’s use OpenJij.</p>
 <p>Similarly, OpenJij can perform SA, but we use SQA, which is not implemented in PyQUBO.</p>
@@ -575,8 +576,8 @@ div.rendered_html tbody tr:hover {
  7: {1: 0, 2: 1, 3: 0}}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Conclusion">
+</section>
+<section id="Conclusion">
 <h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
 <p>We learned how to formulate it using PyQUBO and how it works with OpenJij.</p>
 <p>Procedures are as follows.</p>
@@ -589,8 +590,8 @@ div.rendered_html tbody tr:hover {
 </ol>
 <p>PyQUBO is useful and powerful tool for formulationg and evaluating constraints. When we use in conjunction with OpenJij, which provides a variety of solvers, it provides comfortable development experience.</p>
 <p>Reference：PyQUBO official document <a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create">https://pyqubo.readthedocs.io/en/latest/reference/array.html?highlight=arry%20create</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -629,7 +630,7 @@ div.rendered_html tbody tr:hover {
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -658,7 +659,7 @@ div.rendered_html tbody tr:hover {
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

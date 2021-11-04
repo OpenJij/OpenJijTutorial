@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>1-OpenJij 入門 &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="2-アニーリングアルゴリズムの評価" href="002-Evaluation.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="1-OpenJij-入門">
+<section id="1-OpenJij-入門">
 <h1>1-OpenJij 入門<a class="headerlink" href="#1-OpenJij-入門" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
@@ -318,7 +319,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="Ising-model">
+<section id="Ising-model">
 <h2>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this headline">¶</a></h2>
 <p>Ising model は統計物理学で扱われるモデルで、以下のように書かれます。</p>
 <div class="math notranslate nohighlight">
@@ -341,7 +342,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>OpenJijは<span class="math notranslate nohighlight">\(J_{ij} と h_i\)</span>が与えられたときに<span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span>を最小化するスピン変数の組み<span class="math notranslate nohighlight">\(\{\sigma_i\}\)</span>を探してくれる数値計算ライブラリです。</p>
 <p>具体的な例を一つ見ましょう。</p>
-<div class="section" id="OpenJijに問題を投げてみる">
+<section id="OpenJijに問題を投げてみる">
 <h3>OpenJijに問題を投げてみる<a class="headerlink" href="#OpenJijに問題を投げてみる" title="Permalink to this headline">¶</a></h3>
 <p>変数の数が<span class="math notranslate nohighlight">\(N=5\)</span>で縦磁場と相互作用が</p>
 <div class="math notranslate nohighlight">
@@ -456,8 +457,8 @@ BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3)
 [[1 1 1 1]]
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="OpenJijの解説">
+</section>
+<section id="OpenJijの解説">
 <h3>OpenJijの解説<a class="headerlink" href="#OpenJijの解説" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">上述のコードの解説をします。</div>
@@ -466,9 +467,9 @@ BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3)
 <blockquote>
 <div><p>もう一つのインターフェースについてはここでは解説しませんが、OpenJijの仕組み<code class="docutils literal notranslate"><span class="pre">graph,</span> <span class="pre">method,</span> <span class="pre">algorithm</span></code>を直接使うことで拡張のしやすさを備えています。ここでは上のセルで扱ったインターフェースを使えるようになれば十分でしょう。</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="Sampler">
+</section>
+</section>
+<section id="Sampler">
 <h2>Sampler<a class="headerlink" href="#Sampler" title="Permalink to this headline">¶</a></h2>
 <p>先ほどは問題を辞書型で作ったあとに、Samplerのインスタンスを作りました。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -490,13 +491,13 @@ BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3)
 <li><p>GPUSQASampler : SQAをGPUで実行するSamplerです。Chimeraグラフという特殊な構造のみが現状扱える</p></li>
 </ul>
 <p>のSamplerが用意されています。</p>
-</div>
-<div class="section" id="sample_ising(h,-J)">
+</section>
+<section id="sample_ising(h,-J)">
 <h2>sample_ising(h, J)<a class="headerlink" href="#sample_ising(h,-J)" title="Permalink to this headline">¶</a></h2>
 <p>上述のとおり、問題を解く際は<code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code>のように縦磁場と相互作用を変数として代入して投入します。</p>
 <p>後述しますた、Isingモデルと等価なQUBOの最適化を行う時は<code class="docutils literal notranslate"><span class="pre">.sample_qubo(Q)</span></code>を用います。</p>
-</div>
-<div class="section" id="Response">
+</section>
+<section id="Response">
 <h2>Response<a class="headerlink" href="#Response" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code>はResponseクラスを返します。ResponseクラスにはSamplerが解いて出てきた解と各解のエネルギーが入っています。</p>
 <ul class="simple">
@@ -659,7 +660,7 @@ Variables([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])
 Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, num_occurrences=1)
 </pre></div></div>
 </div>
-<div class="section" id="QUBOを解いてみる">
+<section id="QUBOを解いてみる">
 <h3>QUBOを解いてみる<a class="headerlink" href="#QUBOを解いてみる" title="Permalink to this headline">¶</a></h3>
 <p>社会の実問題を解きたい場合には、Ising modelよりも QUBO(Quadratic unconstraited binary optimization)として定式化した方が素直な場合が多いです。基本的には上述のIsing modelを使って解いた場合と同じです。</p>
 <p>QUBOは以下のように書かれます。</p>
@@ -703,8 +704,8 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 <div class="line">QUBOでは変数が 0, 1のため、解も 0, 1で出力されていることがわかります。</div>
 <div class="line">このようにOpenJij を用いて Ising modelとQUBOの最適化問題を解くことができます。</div>
 </div>
-</div>
-<div class="section" id="少し難しい問題を解いてみる">
+</section>
+<section id="少し難しい問題を解いてみる">
 <h3>少し難しい問題を解いてみる<a class="headerlink" href="#少し難しい問題を解いてみる" title="Permalink to this headline">¶</a></h3>
 <p>これまで解いてきた問題は簡単すぎたので、少し難しい問題を解いてみましょう。</p>
 <p>今度は変数の数が50個でランダムに<span class="math notranslate nohighlight">\(Q_{ij}\)</span>が振られたQUBOを解いてみたいと思います。</p>
@@ -794,9 +795,9 @@ Sample(sample={0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 0, 8: 1, 9: 0, 10: 1
 <p>これでエネルギーが最も低い解を得ることができました。この<code class="docutils literal notranslate"><span class="pre">.first</span></code>に入っている状態が、今回得られた近似解です。これで「問題を近似的に解いた」ということになります。</p>
 <p><code class="docutils literal notranslate"><span class="pre">num_occurrences</span></code>は計算の結果その状態が何回出力されたかを表しています。</p>
 <p>次回は “2-Evaluation” で Time to Solution や残留エネルギーなど、解をはかる指標について説明します。</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -841,7 +842,7 @@ Sample(sample={0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 0, 8: 1, 9: 0, 10: 1
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -870,7 +871,7 @@ Sample(sample={0: 0, 1: 0, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 0, 8: 1, 9: 0, 10: 1
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

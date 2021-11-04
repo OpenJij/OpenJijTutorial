@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>9-Solving Graph Coloring Problem with PyQUBO &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="10-Solving Job Sequencing Problem with PyQUBO" href="010-JobSequencingPyqubo.html" />
@@ -291,29 +292,29 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="9-Solving-Graph-Coloring-Problem-with-PyQUBO">
+<section id="9-Solving-Graph-Coloring-Problem-with-PyQUBO">
 <h1>9-Solving Graph Coloring Problem with PyQUBO<a class="headerlink" href="#9-Solving-Graph-Coloring-Problem-with-PyQUBO" title="Permalink to this headline">¶</a></h1>
 <p>この節では、<a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> から6.1. Graph ColoringをPyQUBOを用いて解きます。</p>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/009-GraphColorPyqubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<div class="section" id="グラフ彩色問題">
+<section id="グラフ彩色問題">
 <h2>グラフ彩色問題<a class="headerlink" href="#グラフ彩色問題" title="Permalink to this headline">¶</a></h2>
 <p>グラフ彩色問題は以下のような状況の最適解を求める問題であり、NP完全問題の一つです。まずは具体的な問から考えてみましょう。</p>
-</div>
-<div class="section" id="具体例">
+</section>
+<section id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個のノードと20本の枝を持つ無効グラフが与えられたとします。枝で繋がれたノード同士は異なる色となるようにノードを色分けする時、3色で全てのノードを塗ることは可能であるか考えます。 &gt; グラフは下のようになっているとします。</p>
-<div><p><img alt="2b3e5419f6c04bb7b1c207d62b2cddc4" src="../_images/graph_color.png" /></p>
+<div><p><img alt="091e2e8b6c4b49d2a4ef36f2e222bf77" src="../_images/graph_color.png" /></p>
 </div><blockquote>
 <div><p>塗り分けた後のグラフは下のようになります。 このグラフから全てのノードは3色で塗り分けることができると分かります。</p>
 </div></blockquote>
-<div><p><img alt="b3bfcf8d6ec2490dadde877af859a0b0" src="../_images/graph_color_res.png" /></p>
-</div></div>
-<div class="section" id="問題の一般化">
+<div><p><img alt="5453d161ab0746e58e774af2ffb3bb98" src="../_images/graph_color_res.png" /></p>
+</div></section>
+<section id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
 <p>無効グラフ<span class="math notranslate nohighlight">\(G=(V,E)\)</span>が与えられるとします。辺で結ばれたノードの色が重複しないように全てのノードを<span class="math notranslate nohighlight">\(n\)</span>色で塗り分けることができるか考えます。</p>
 <p>全てのノードが<span class="math notranslate nohighlight">\(v\)</span>をindexとして持つとします。</p>
 <p>ノードの色分けはバイナリ変数<span class="math notranslate nohighlight">\(x\)</span>で表すことにしましょう。<span class="math notranslate nohighlight">\(x_{v,i}\)</span>はノード<span class="math notranslate nohighlight">\(v\)</span>が色<span class="math notranslate nohighlight">\(i\)</span>で塗られている時に1,その他の状態では0をとります。</p>
-<div class="section" id="QUBO行列への変換">
+<section id="QUBO行列への変換">
 <h3>QUBO行列への変換<a class="headerlink" href="#QUBO行列への変換" title="Permalink to this headline">¶</a></h3>
 <p>ハミルトニアンは以下のように定めることができます。</p>
 <div class="math notranslate nohighlight">
@@ -322,12 +323,12 @@ div.rendered_html tbody tr:hover {
 <p>第一項はそれぞれのノードは必ず一色に塗られるという制約です。第二項は辺で繋がれたノードの色は異なるという制約です。これらが破られる度に<span class="math notranslate nohighlight">\(H\)</span>は増加します。</p>
 <p><span class="math notranslate nohighlight">\(H=0\)</span>となる状態が見つかった時、グラフ<span class="math notranslate nohighlight">\(G\)</span>は<span class="math notranslate nohighlight">\(n\)</span>色で塗ることが可能だと分かります。</p>
 <p>また、<span class="math notranslate nohighlight">\(x_{v,i}\)</span>でどのiの時<span class="math notranslate nohighlight">\(x_{v,i}=1\)</span>となるか調べることでノード<span class="math notranslate nohighlight">\(v\)</span>の色を調べることができます。</p>
-</div>
-<div class="section" id="PyQUBOへの実装">
+</section>
+<section id="PyQUBOへの実装">
 <h3>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
-<div class="section" id="QUBO行列の生成">
+</section>
+</section>
+<section id="QUBO行列の生成">
 <h2>QUBO行列の生成<a class="headerlink" href="#QUBO行列の生成" title="Permalink to this headline">¶</a></h2>
 <p>上記の例で示したグラフの彩色問題を実際にQUBO行列にしてPyQUBOを用いて解いてみます。 まず、グラフの頂点数、塗り分けるのに使う色の数、辺を定義します。</p>
 <div class="nbinput nblast docutils container">
@@ -375,8 +376,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="実行結果">
+</section>
+<section id="実行結果">
 <h2>実行結果<a class="headerlink" href="#実行結果" title="Permalink to this headline">¶</a></h2>
 <p>ハミルトニアンをコンパイルしてto_qubo()でQUBOに変換します。 quboにはPythonの辞書型で格納されたQUBOが、そしてoffsetにはQUBO化した際に現れる定数(無視してよい)が代入されます。</p>
 <p>では、これをSimulated Annealingのソルバーで解いて結果を見てみましょう。</p>
@@ -465,7 +466,7 @@ broken
 <img alt="../_images/ja_009-GraphColorPyqubo_17_1.png" src="../_images/ja_009-GraphColorPyqubo_17_1.png" />
 </div>
 </div>
-<div class="section" id="OpenJijに投げる">
+<section id="OpenJijに投げる">
 <h3>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h3>
 <p>次にOpenJijのSAで解いてみましょう</p>
 <div class="nbinput docutils container">
@@ -550,9 +551,9 @@ broken
 </div>
 </div>
 <p>結果を見ると制約を満たしつつ全てのノードを3色で塗り分けられていると分かります。</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -597,7 +598,7 @@ broken
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -626,7 +627,7 @@ broken
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

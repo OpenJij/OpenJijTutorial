@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>ベンチマーク関数 標準誤差機能 の使い方 &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="3-PyQUBO with OpenJij" href="003-PyQUBO_2_OpenJij.html" />
@@ -291,11 +292,11 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="ベンチマーク関数-標準誤差機能-の使い方">
+<section id="ベンチマーク関数-標準誤差機能-の使い方">
 <h1>ベンチマーク関数 標準誤差機能 の使い方<a class="headerlink" href="#ベンチマーク関数-標準誤差機能-の使い方" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/002-Evaluation_errorbar.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>ベンチマーク関数に追加した標準誤差機能の使い方を解説します。</p>
-<div class="section" id="ライブラリのインストール、モデルの準備">
+<section id="ライブラリのインストール、モデルの準備">
 <h2>ライブラリのインストール、モデルの準備<a class="headerlink" href="#ライブラリのインストール、モデルの準備" title="Permalink to this headline">¶</a></h2>
 <p>OpenJij のリポジトリから Fork した自分のリポジトリ内に、さらに feature/error_bar リポジトリを branch しました。 標準誤差関数が実装されるまでは、自分のGitHubから、 OpenJij をインストールして、実行ができます。</p>
 <p>反強磁性1次元イジングモデルの準備</p>
@@ -316,8 +317,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="ベンチマーク関数">
+</section>
+<section id="ベンチマーク関数">
 <h2>ベンチマーク関数<a class="headerlink" href="#ベンチマーク関数" title="Permalink to this headline">¶</a></h2>
 <p>呼び出し方は、今まで通りです。</p>
 <div class="line-block">
@@ -373,7 +374,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="TTS-残留エネルギー-成功確率">
+<section id="TTS-残留エネルギー-成功確率">
 <h3>TTS 残留エネルギー 成功確率<a class="headerlink" href="#TTS-残留エネルギー-成功確率" title="Permalink to this headline">¶</a></h3>
 <p>TTS 残留エネルギー 成功確率 の可視化は今まで通りできます。</p>
 <div class="nbinput docutils container">
@@ -415,8 +416,8 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <img alt="../_images/ja_002-Evaluation_errorbar_9_1.png" src="../_images/ja_002-Evaluation_errorbar_9_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="標準誤差">
+</section>
+<section id="標準誤差">
 <h3>標準誤差<a class="headerlink" href="#標準誤差" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">標準誤差は、se_success_probとse_residual_energyに格納されています。</div>
@@ -489,9 +490,9 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </div>
 </div>
 <p>1回のアニーリング時間が延びると、成功確率と残留エネルギーについて標準誤差のエラーバーが短くなっていくことが確認できました。</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -530,7 +531,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -559,7 +560,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

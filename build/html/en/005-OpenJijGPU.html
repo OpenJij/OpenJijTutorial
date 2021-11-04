@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>5-OpenJij GPU &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="6-Machine Learning (QBoost) with Quantum Annealing" href="006-Machine_Learning_by_QA.html" />
@@ -291,25 +292,25 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="5-OpenJij-GPU">
+<section id="5-OpenJij-GPU">
 <h1>5-OpenJij GPU<a class="headerlink" href="#5-OpenJij-GPU" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/005-OpenJijGPU.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <blockquote>
 <div><p>This document is deprecated. Please go to the next chapter.</p>
 </div></blockquote>
 <p>In this section, we introduce a method of Simulated Quantum Annealing (SQA) with GPU.</p>
-<div class="section" id="Setup-and-installation-in-Google-Colab">
+<section id="Setup-and-installation-in-Google-Colab">
 <h2>Setup and installation in Google Colab<a class="headerlink" href="#Setup-and-installation-in-Google-Colab" title="Permalink to this headline">¶</a></h2>
 <p>The average PC may not have a CUDA environment, or may not have an NVIDIA GPU. However, with <strong>Google colaboratory</strong>, anyone can use GPGPUs.</p>
-<div class="section" id="GPU-Settings">
+<section id="GPU-Settings">
 <h3>GPU Settings<a class="headerlink" href="#GPU-Settings" title="Permalink to this headline">¶</a></h3>
 <p>We open Jupyter Notebook file we want to run on GPU with Google Colab.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Runtime &gt; Change runtime type &gt; choose Hardware accelerator GPU
 </pre></div>
 </div>
 <p>This setting allows you to run Jupyter Notebook on GPU.</p>
-</div>
-<div class="section" id="Installation-of-OpenJij">
+</section>
+<section id="Installation-of-OpenJij">
 <h3>Installation of OpenJij<a class="headerlink" href="#Installation-of-OpenJij" title="Permalink to this headline">¶</a></h3>
 <p>To use GPU modules from OpenJij, one has to build from source codes when installing OpenJij. We first update CMake, which is needed for the installation, to the latest version.</p>
 <div class="nbinput nblast docutils container">
@@ -332,9 +333,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="Calculation-with-GPUSQA">
+</section>
+</section>
+<section id="Calculation-with-GPUSQA">
 <h2>Calculation with GPUSQA<a class="headerlink" href="#Calculation-with-GPUSQA" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">OpenJij GPUs support Monte Carlo calculations on Chimeragraphs.</div>
@@ -358,8 +359,8 @@ div.rendered_html tbody tr:hover {
 <p>Since a chimera-unit cell consists of one 8-bit, the total number of bits is calculated as follows.</p>
 <p><span class="math notranslate nohighlight">\({\rm total\_num} = {\rm unit\_num\_L}^2 \times 8\)</span></p>
 <p>The GPUSQASampler perform SQA calculations for the size of the system of chimeragraphs created here, even if you specify fewer variables, such as sampler_qubo, later. We note that <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> is not too large. Also, <code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code> is not specified in the constructor but is used as an argument to run <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>.</p>
-</div>
-<div class="section" id="Execution">
+</section>
+<section id="Execution">
 <h2>Execution<a class="headerlink" href="#Execution" title="Permalink to this headline">¶</a></h2>
 <p>Next we execute SQA. As with Sampler before we introduce, we can use <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code> (or <code class="docutils literal notranslate"><span class="pre">sample_ising</span></code>). However, if you specify an interaction for a subscript that does not satisfy the chimeragraph, error occurs.</p>
 <div class="nbinput docutils container">
@@ -456,8 +457,8 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
          6443.80400001,   6411.399     ,   6422.54800005,   6423.68199999]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1.0, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Embedding-the-All-Coupled-Model-in-Chimeragraph">
+</section>
+<section id="Embedding-the-All-Coupled-Model-in-Chimeragraph">
 <h2>Embedding the All-Coupled Model in Chimeragraph<a class="headerlink" href="#Embedding-the-All-Coupled-Model-in-Chimeragraph" title="Permalink to this headline">¶</a></h2>
 <p>We introduced the calculation of only those interactions that exist on the chimeragraph. Below is script for embedding comples interactions into chimeragraph, such as problems of all-coupled.</p>
 <p>In order to embed in chimeragraph, we use <code class="docutils literal notranslate"><span class="pre">EmbeddingComposite</span></code> of <code class="docutils literal notranslate"><span class="pre">dwave</span></code>. We install <code class="docutils literal notranslate"><span class="pre">dwave-system</span></code> with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
@@ -483,8 +484,8 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -525,7 +526,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -554,7 +555,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>
