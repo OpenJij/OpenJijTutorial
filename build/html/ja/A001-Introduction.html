@@ -4,21 +4,22 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A2 - OpenJij core interface入門 (C++ interface)" href="A002-CppIntroduction.html" />
-    <link rel="prev" title="10-Solving Job Sequencing Problem with PyQUBO" href="010-JobSequencingPyqubo.html" /> 
+    <link rel="prev" title="12-Solving Protein Folding Problem by HUBO Solver" href="012-ProteinFoldingHubo.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,7 +31,7 @@
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
+          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A1---OpenJij-core-interface入門-(core-python-interface)">
+<section id="A1---OpenJij-core-interface入門-(core-python-interface)">
 <h1>A1 - OpenJij core interface入門 (core python interface)<a class="headerlink" href="#A1---OpenJij-core-interface入門-(core-python-interface)" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
@@ -301,7 +302,7 @@ div.rendered_html tbody tr:hover {
 <li><p>アニーリングスケジュールの設定や、使用するアルゴリズム等を直接触りたい</p></li>
 </ul>
 <p>といった目的に利用できます。</p>
-<div class="section" id="OpenJij-core-interface-について">
+<section id="OpenJij-core-interface-について">
 <h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
 <p>前回までのチュートリアルでは、OpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきました。OpenJijは最下層の部分は統計物理学の数値計算手法である、マルコフ連鎖モンテカルロ法(MCMC)をベースにC++を用いて実装されています。今まで触れてきたPythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形となっています。図にすると次のような包含関係があります。</p>
 <a class="reference internal image-reference" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a>
@@ -344,8 +345,8 @@ Requires: numpy, dimod, requests
 Required-by:
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="問題を投げてみる">
+</section>
+<section id="問題を投げてみる">
 <h2>問題を投げてみる<a class="headerlink" href="#問題を投げてみる" title="Permalink to this headline">¶</a></h2>
 <p>チュートリアルとしてまずは変数のサイズが<span class="math notranslate nohighlight">\(N=5\)</span>の古典スピン (<span class="math notranslate nohighlight">\(\sigma = \pm 1\)</span>)イジング問題をアニーリングで解いてみましょう。 ハミルトニアンは以下のようになります。 <span class="math">\begin{align}
 H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
@@ -413,15 +414,15 @@ The solution is [1, 1, 1, 1, 1].
 </pre></div></div>
 </div>
 <p>出てきた答えが<span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>であることが確認できます。低レイヤーのAPIのため設定する項目は多いですが、その分詳細な設定が可能となります。</p>
-</div>
-<div class="section" id="モジュール一覧">
+</section>
+<section id="モジュール一覧">
 <h2>モジュール一覧<a class="headerlink" href="#モジュール一覧" title="Permalink to this headline">¶</a></h2>
 <p>コード例に出てきたように、OpenJij core interfaceでは主に<code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>などのモジュールから構成されています。それぞれのモジュールを組み合わせることで様々な種類、アルゴリズムでイジングモデルを計算することが可能となります。また新たにアルゴリズムを実装する際に拡張が容易であるという特徴を備えています。次章以降で詳細な説明を行います。</p>
-<div class="section" id="Graph">
+<section id="Graph">
 <h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
 <p>イジングハミルトニアンの係数<span class="math notranslate nohighlight">\(J_{ij}\)</span>を保持するためのモジュールです。基本的に密結合 (全てのJijが0以外の値を持つモデルに適している)を扱う<code class="docutils literal notranslate"><span class="pre">Dense</span></code>と疎結合 (Jijの多くの値が0であるモデルに適している)<code class="docutils literal notranslate"><span class="pre">Sparse</span></code>などがあります。</p>
-</div>
-<div class="section" id="System">
+</section>
+<section id="System">
 <h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code>では、モンテカルロ等の計算における現在のシステムの状態を保持するためのデータ構造が定義されています。具体的には</p>
 <ul class="simple">
@@ -430,8 +431,8 @@ The solution is [1, 1, 1, 1, 1].
 <li><p>GPU実装古典、量子イジングモデル</p></li>
 </ul>
 <p>等が定義されています。モンテカルロ法を始めとする計算手法には様々な手法があります(もしくは今後新しい手法が開発されていくことでしょう)。そのため、OpenJijでは各々の計算手法に対応するデータ構造とアルゴリズム、そして計算結果の取得インターフェースを分離することにより、様々なアルゴリズムを追加することが容易に行えるように設計されています。</p>
-</div>
-<div class="section" id="Updater">
+</section>
+<section id="Updater">
 <h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
 <p>どのような手法で<code class="docutils literal notranslate"><span class="pre">system</span></code>を更新していくかを定義します。具体的には</p>
 <ul class="simple">
@@ -442,16 +443,16 @@ The solution is [1, 1, 1, 1, 1].
 <blockquote>
 <div><p>core python interfaceでは<code class="docutils literal notranslate"><span class="pre">algorithm</span></code>に統合されています。</p>
 </div></blockquote>
-</div>
-<div class="section" id="Algorithm">
+</section>
+<section id="Algorithm">
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">updater</span></code>を用いてどのようなスケジュールでアニーリングアルゴリズムを実行するかなど、アルゴリズムを実行する役割を担います。 <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updaterの種類]_run</span></code>で、対応したUpdaterを用いて実行することができます。</p>
-</div>
-<div class="section" id="Result">
+</section>
+<section id="Result">
 <h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code>からスピン配位などの情報を得るために使用されます。</p>
-</div>
-<div class="section" id="コーディングフロー">
+</section>
+<section id="コーディングフロー">
 <h3>コーディングフロー<a class="headerlink" href="#コーディングフロー" title="Permalink to this headline">¶</a></h3>
 <p>コーディングの流れは基本的には以下に示すようなものとなります。問題の規模が大きくなってもこの流れは変わりません。</p>
 <ul class="simple">
@@ -469,9 +470,9 @@ The solution is [1, 1, 1, 1, 1].
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -499,8 +500,8 @@ The solution is [1, 1, 1, 1, 1].
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="010-JobSequencingPyqubo.html"
-                        title="previous chapter">10-Solving Job Sequencing Problem with PyQUBO</a></p>
+  <p class="topless"><a href="012-ProteinFoldingHubo.html"
+                        title="previous chapter">12-Solving Protein Folding Problem by HUBO Solver</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="A002-CppIntroduction.html"
                         title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
@@ -515,7 +516,7 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -535,7 +536,7 @@ The solution is [1, 1, 1, 1, 1].
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              >next</a> |</li>
         <li class="right" >
-          <a href="010-JobSequencingPyqubo.html" title="10-Solving Job Sequencing Problem with PyQUBO"
+          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
@@ -544,7 +545,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

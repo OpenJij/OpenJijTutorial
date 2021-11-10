@@ -4,20 +4,21 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>10-Solving Job Sequencing Problem with PyQUBO &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="A1 - OpenJij core interface入門 (core python interface)" href="A001-Introduction.html" />
+    <link rel="next" title="11-HUBO: Higher Order Unconstraint Binary Optimization" href="011-HuboSolver.html" />
     <link rel="prev" title="9-Solving Graph Coloring Problem with PyQUBO" href="009-GraphColorPyqubo.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +28,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+          <a href="011-HuboSolver.html" title="11-HUBO: Higher Order Unconstraint Binary Optimization"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="009-GraphColorPyqubo.html" title="9-Solving Graph Coloring Problem with PyQUBO"
@@ -291,20 +292,20 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="10-Solving-Job-Sequencing-Problem-with-PyQUBO">
+<section id="10-Solving-Job-Sequencing-Problem-with-PyQUBO">
 <h1>10-Solving Job Sequencing Problem with PyQUBO<a class="headerlink" href="#10-Solving-Job-Sequencing-Problem-with-PyQUBO" title="Permalink to this headline">¶</a></h1>
 <p>この節では、<a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> から6.3. Job Eequencing with Integer LengthsをPyQUBOを用いて解きます。</p>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/010-JobSequencingPyqubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<div class="section" id="整数長ジョブスケジューリング問題">
+<section id="整数長ジョブスケジューリング問題">
 <h2>整数長ジョブスケジューリング問題<a class="headerlink" href="#整数長ジョブスケジューリング問題" title="Permalink to this headline">¶</a></h2>
 <p>整数長ジョブスケジューリング問題は以下のような状況の最適解を求める問題であり、NP困難な問題の一つです。まずは具体的な問から考えてみましょう。</p>
-</div>
-<div class="section" id="具体例">
+</section>
+<section id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="f3a85e08802d4a22b14e531a542e124b" src="../_images/job_sequence.png" /></p>
-</div></div>
-<div class="section" id="問題の一般化">
+<div><p><img alt="91af25f96ba24d629a257c4caef0dad5" src="../_images/job_sequence.png" /></p>
+</div></section>
+<section id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
 <p>まず、N個の仕事<span class="math notranslate nohighlight">\(\{1,2,\dots ,N \}\)</span>とm個のコンピュータがあるとします。各仕事が<span class="math notranslate nohighlight">\(\alpha\)</span>をindexとして持っているものと考えます。 仕事にかかる時間のリスト<span class="math notranslate nohighlight">\(L\)</span>を作ります。</p>
 <div class="math notranslate nohighlight">
@@ -317,12 +318,12 @@ div.rendered_html tbody tr:hover {
 <div class="math notranslate nohighlight">
 \[(\forall \alpha \in \{1,2,\dots,N\})\]</div>
 <p>この<span class="math notranslate nohighlight">\(M_1\)</span>を最小化することがこの問題の目的となります。</p>
-<div class="section" id="QUBO行列への変換方法">
+<section id="QUBO行列への変換方法">
 <h3>QUBO行列への変換方法<a class="headerlink" href="#QUBO行列への変換方法" title="Permalink to this headline">¶</a></h3>
 <p>まず、<span class="math notranslate nohighlight">\(M_1 = \max M_\alpha\)</span>として一般性を失わないことに注意します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>でも解説されているようにQUBO行列を表現するにあたって式(1)で定義したバイナリ変数<span class="math notranslate nohighlight">\(x_{i,\alpha}\)</span>に加えてコンピュータが仕事にかかる時間を表現するためのスラック変数yを導入します。</p>
-</div>
-</div>
-<div class="section" id="One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義">
+</section>
+</section>
+<section id="One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義">
 <h2>One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義<a class="headerlink" href="#One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> ではOne-hot encodingを用いて仕事の実行時間を表しています。 バイナリ変数<span class="math notranslate nohighlight">\(y_{n,\alpha}\)</span>をノード1とノード<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の長さの差を表すバイナリ変数とします。</p>
 <div class="math notranslate nohighlight">
@@ -346,8 +347,8 @@ div.rendered_html tbody tr:hover {
 <div class="math notranslate nohighlight">
 \[H_A = A(H_{A0}+H_{A1})+AH_{A2}\tag{11}\]</div>
 <p><span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はユーザーによって選ばれる値であり、コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span> とコンピュータ1の差がどの程度存在するか表しています。最悪の場合<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>は<span class="math notranslate nohighlight">\(N\max L_i\)</span>となります。</p>
-</div>
-<div class="section" id="Log-encoding-によるスラック変数を用いた制約項(2)の定義">
+</section>
+<section id="Log-encoding-によるスラック変数を用いた制約項(2)の定義">
 <h2>Log encoding によるスラック変数を用いた制約項(2)の定義<a class="headerlink" href="#Log-encoding-によるスラック変数を用いた制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>のようにLog encodingを用いて制約項を設定してみましょう。 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はコンピュータ1とコンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の実行時間の差の上限であるため以下の不等式が成り立ちます。</p>
 <div class="math notranslate nohighlight">
@@ -363,17 +364,17 @@ div.rendered_html tbody tr:hover {
 <div class="math notranslate nohighlight">
 \[\sum_{\alpha=2}^m \left(\mathcal{M}-\sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha}) - \sum_{n=1}^{\lfloor\log_2(\mathcal{M}-1)\rfloor} 2^n y_n\right)^2\tag{16}\]</div>
 <p>この方法を用いると、One-hot encodingに比べて少ないバイナリ変数<span class="math notranslate nohighlight">\((\lfloor\log_2(\mathcal{M}-1)\rfloor+1)\)</span>個で整数を表現できる上に追加の制約項が不要になります。変数Yの最大値は<span class="math notranslate nohighlight">\(2^{\lfloor\log_2(\mathcal{M}-1)\rfloor}\)</span>となっているからです。また、スラック変数を用いているため、仕事量の差が<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>を上回ることもありません。</p>
-</div>
-<div class="section" id="目的項(1)の定義">
+</section>
+<section id="目的項(1)の定義">
 <h2>目的項(1)の定義<a class="headerlink" href="#目的項(1)の定義" title="Permalink to this headline">¶</a></h2>
 <p>目的項はコンピュータで仕事を終えるまでの最大実行時間を最小化するためのものです。 よってハミルトニアンは以下のように定義するとエネルギーが最小になったときに最大実行時間を最小化した解が得られます。</p>
 <div class="math notranslate nohighlight">
 \[H_B = B\sum_{i=1}^N L_ix_{i,1}\tag{17}\]</div>
 <p>ただし定数A,Bは目的項<span class="math notranslate nohighlight">\(H_B\)</span>によって制約項<span class="math notranslate nohighlight">\(H_A\)</span>を違反してはいけないため、<span class="math notranslate nohighlight">\(0&lt;B \max(L_i)&lt;A\)</span>を満たす必要があります。</p>
-</div>
-<div class="section" id="PyQUBOへの実装">
+</section>
+<section id="PyQUBOへの実装">
 <h2>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this headline">¶</a></h2>
-<p>PyQUBOの<a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/integer.html">Documentation</a>では、バイナリ変数を整数に変換するための4つのクラスについて説明されています。その中のLogEncIntegerを用いてスラック変数を定義します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>であるようにLogEncIntegerの使い方は以下のようになっていて、整数のように扱うことができます。</p>
+<p>PyQUBOの<a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/integer.html">Documentation</a>では、バイナリ変数を整数に変換するための4つのクラスについて説明されています。その中のLogEncIntegerを用いてスラック変数を定義します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/008-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>であるようにLogEncIntegerの使い方は以下のようになっていて、整数のように扱うことができます。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">LogEncInteger</span><span class="p">(</span><span class="s2">&quot;ラベルの名前&quot;</span><span class="p">,</span><span class="n">最小値</span><span class="p">,</span><span class="n">最大値</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -526,30 +527,30 @@ B : 1.0
 [Results]
 
 コンピュータ1で行われる仕事
+2番目の仕事 長さ:2
 3番目の仕事 長さ:3
-7番目の仕事 長さ:7
-9番目の仕事 長さ:9
+6番目の仕事 長さ:6
+8番目の仕事 長さ:8
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
 1番目の仕事 長さ:1
-2番目の仕事 長さ:2
-5番目の仕事 長さ:5
+7番目の仕事 長さ:7
 10番目の仕事 長さ:10
 仕事の総実行時間:18
 
 コンピュータ3で行われる仕事
 4番目の仕事 長さ:4
-6番目の仕事 長さ:6
-8番目の仕事 長さ:8
+5番目の仕事 長さ:5
+9番目の仕事 長さ:9
 仕事の総実行時間:18
 
 broken
 {}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="OpenJijに投げる">
+</section>
+<section id="OpenJijに投げる">
 <h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h2>
 <p>次にOpenJijのSQAを用いて解いてみます。量子力学的振る舞いを再現するため、計算に必要な時間は前と比べて多少伸びます。</p>
 <div class="nbinput docutils container">
@@ -593,36 +594,36 @@ broken
 [Results]
 
 コンピュータ1で行われる仕事
+2番目の仕事 長さ:2
 3番目の仕事 長さ:3
-7番目の仕事 長さ:7
-9番目の仕事 長さ:9
+6番目の仕事 長さ:6
+8番目の仕事 長さ:8
 仕事の総実行時間:19
 
 コンピュータ2で行われる仕事
 1番目の仕事 長さ:1
-2番目の仕事 長さ:2
-5番目の仕事 長さ:5
+7番目の仕事 長さ:7
 10番目の仕事 長さ:10
 仕事の総実行時間:18
 
 コンピュータ3で行われる仕事
 4番目の仕事 長さ:4
-6番目の仕事 長さ:6
-8番目の仕事 長さ:8
+5番目の仕事 長さ:5
+9番目の仕事 長さ:9
 仕事の総実行時間:18
 
 broken
 {}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="まとめ">
+</section>
+<section id="まとめ">
 <h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
 <p>Job Eequencing with Integer LengthsをPyQUBO,OpenJijを使って解く方法について解説しました。</p>
 <p>係数を調整する前では良い解が得られませんが係数を調整すると安定しました。</p>
 <p>また、整数をバイナリ変数で表現する方法は複数ありますが、今回はLog encodingを扱いました。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>と合わせて確認してみてください。</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -654,8 +655,8 @@ broken
   <p class="topless"><a href="009-GraphColorPyqubo.html"
                         title="previous chapter">9-Solving Graph Coloring Problem with PyQUBO</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="A001-Introduction.html"
-                        title="next chapter">A1 - OpenJij core interface入門 (core python interface)</a></p>
+  <p class="topless"><a href="011-HuboSolver.html"
+                        title="next chapter">11-HUBO: Higher Order Unconstraint Binary Optimization</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -667,7 +668,7 @@ broken
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -684,7 +685,7 @@ broken
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+          <a href="011-HuboSolver.html" title="11-HUBO: Higher Order Unconstraint Binary Optimization"
              >next</a> |</li>
         <li class="right" >
           <a href="009-GraphColorPyqubo.html" title="9-Solving Graph Coloring Problem with PyQUBO"
@@ -696,7 +697,7 @@ broken
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

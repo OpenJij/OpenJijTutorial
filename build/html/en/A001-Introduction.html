@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>A1 - Introduction to OpenJij core interface (core Python interface) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A2 - Introduction to OpenJij core interface (C++ interface)" href="A002-CppIntroduction.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)">
+<section id="A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)">
 <h1>A1 - Introduction to OpenJij core interface (core Python interface)<a class="headerlink" href="#A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/A001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>In this chapeter, let us show you how to use OpenJij core interface (core Python insterface) and demonstrate easy case of calculation.</p>
@@ -301,7 +302,7 @@ div.rendered_html tbody tr:hover {
 <li><p>We would like to use OpenJij not only for optimization problems, but also for more specialized applications such as sampling and research purpose.</p></li>
 <li><p>We would like to set annealing schedules and directly develop algorithms we use.</p></li>
 </ul>
-<div class="section" id="About-OpenJij-core-interface">
+<section id="About-OpenJij-core-interface">
 <h2>About OpenJij core interface<a class="headerlink" href="#About-OpenJij-core-interface" title="Permalink to this headline">¶</a></h2>
 <p>In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call <strong>cxxjij</strong>, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.</p>
 <a class="reference internal image-reference" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a>
@@ -317,8 +318,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Run-problem">
+</section>
+<section id="Run-problem">
 <h2>Run problem<a class="headerlink" href="#Run-problem" title="Permalink to this headline">¶</a></h2>
 <p>As a tutorial, we solve classical spin-ising problem (<span class="math notranslate nohighlight">\(\sigma = \pm 1\)</span>) with <span class="math notranslate nohighlight">\(N=5\)</span> variable size with annealing. The Hamiltonian of this problem is as follows.</p>
 <p><span class="math">\begin{align}
@@ -385,15 +386,15 @@ The solution is [1, 1, 1, 1, 1].
 </pre></div></div>
 </div>
 <p>We can see this solution is <span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>. Because it is a low layer API, there are many settings to be made, but the more detailed settings are possible.</p>
-</div>
-<div class="section" id="List-of-Modules">
+</section>
+<section id="List-of-Modules">
 <h2>List of Modules<a class="headerlink" href="#List-of-Modules" title="Permalink to this headline">¶</a></h2>
 <p>As a script example, OpenJij core interface consists of <code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorigthm</span></code> and other modules. Each module can be combined to compute ising models of various types and algorithms. It is also easy to extend when implementing new algorithms. The following chapters will explain details.</p>
-<div class="section" id="Graph">
+<section id="Graph">
 <h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
 <p>A module for holding the ising Hamiltonian’s coefficient <span class="math notranslate nohighlight">\(J_{ij}\)</span>. There are <code class="docutils literal notranslate"><span class="pre">Dense</span></code> and <code class="docutils literal notranslate"><span class="pre">Sparse</span></code>, which deal with tight coupling (suitable for models in which all Jij have non-zero values) and others (suitable for models in whick many Jij values are zero).</p>
-</div>
-<div class="section" id="System">
+</section>
+<section id="System">
 <h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code> defines a data structure for keeping the current status of the system in MonteCarlo simulation and others.</p>
 <p>Specifically, the following are defined.</p>
@@ -403,8 +404,8 @@ The solution is [1, 1, 1, 1, 1].
 <li><p>GPU implemented classical and quantum ising model</p></li>
 </ul>
 <p>There are many different MonteCarlo methods and other computation schemes (or new methods will be developed in the feature). Therefore, by separating the data structures, algorithms and result fetching interfaces for each methods, OpenJij has been designed to make it easy to add different algorithms.</p>
-</div>
-<div class="section" id="Updater">
+</section>
+<section id="Updater">
 <h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">updater</span></code> difines how to update the <code class="docutils literal notranslate"><span class="pre">system</span></code>. Specifically, the following methods are implemented.</p>
 <ul class="simple">
@@ -415,16 +416,16 @@ The solution is [1, 1, 1, 1, 1].
 <blockquote>
 <div><p>In core python interface, <code class="docutils literal notranslate"><span class="pre">updater</span></code> is integrated into the <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>.</p>
 </div></blockquote>
-</div>
-<div class="section" id="Algorithm">
+</section>
+<section id="Algorithm">
 <h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Algorithm</span></code> has a role of executing altorighms, including what schedule to run the annealing algorithm. <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater_type]_run</span></code> allows you to run the program using the corresponding Updater.</p>
-</div>
-<div class="section" id="Result">
+</section>
+<section id="Result">
 <h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
 <p>This module is used to get information from the <code class="docutils literal notranslate"><span class="pre">system</span></code> such as spin assignment.</p>
-</div>
-<div class="section" id="Coding-Flow">
+</section>
+<section id="Coding-Flow">
 <h3>Coding Flow<a class="headerlink" href="#Coding-Flow" title="Permalink to this headline">¶</a></h3>
 <p>The coding process is basically as fllows. This trend will not change as the scale of the problem is largeer.</p>
 <ul class="simple">
@@ -433,9 +434,9 @@ The solution is [1, 1, 1, 1, 1].
 <li><p>select <code class="docutils literal notranslate"><span class="pre">updater</span></code> for the <code class="docutils literal notranslate"><span class="pre">system</span></code> and run the algorithm using <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater</span> <span class="pre">type]_run</span></code></p></li>
 <li><p>get system spin assignment with <code class="docutils literal notranslate"><span class="pre">result.get_solution(system)</span></code> or get from <code class="docutils literal notranslate"><span class="pre">system</span></code> directly.</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -479,7 +480,7 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -508,7 +509,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

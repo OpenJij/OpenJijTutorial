@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>6-Machine Learning (QBoost) with Quantum Annealing &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7-MonteCarlo Sampling" href="007-MonteCarloSampling.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="6-Machine-Learning-(QBoost)-with-Quantum-Annealing">
+<section id="6-Machine-Learning-(QBoost)-with-Quantum-Annealing">
 <h1>6-Machine Learning (QBoost) with Quantum Annealing<a class="headerlink" href="#6-Machine-Learning-(QBoost)-with-Quantum-Annealing" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/006-Machine_Learning_by_QA.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>In this section, we describe machine lerning (ML) as an example of an application of quantum annealing (QA) optimization.</p>
@@ -299,10 +300,10 @@ div.rendered_html tbody tr:hover {
 <div class="line">In the first, we show clustering using PyQUBO and OpenJij.</div>
 <div class="line">In the seconde, we execute an ensamble study called QBoost with PyQUBO and D-Wave sampler.</div>
 </div>
-<div class="section" id="Clustering">
+<section id="Clustering">
 <h2>Clustering<a class="headerlink" href="#Clustering" title="Permalink to this headline">¶</a></h2>
 <p>Clustering is the task of deviding given set of data into <span class="math notranslate nohighlight">\(n\)</span> clusters (<span class="math notranslate nohighlight">\(n\)</span> is our input). For the sake of simplicity, let us consider the number of cluster is 2 in this time.</p>
-<div class="section" id="Importing-the-required-libraries">
+<section id="Importing-the-required-libraries">
 <h3>Importing the required libraries<a class="headerlink" href="#Importing-the-required-libraries" title="Permalink to this headline">¶</a></h3>
 <p>We import scikit-learn library for ML.</p>
 <div class="nbinput nblast docutils container">
@@ -322,8 +323,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Make-artificial-data">
+</section>
+<section id="Make-artificial-data">
 <h3>Make artificial data<a class="headerlink" href="#Make-artificial-data" title="Permalink to this headline">¶</a></h3>
 <p>In this case, let us generate linearly separable data in a two-dimensional plane artificially.</p>
 <div class="nbinput nblast docutils container">
@@ -375,8 +376,8 @@ div.rendered_html tbody tr:hover {
 <li><p><span class="math notranslate nohighlight">\(d_{i,j}\)</span> for $:nbsphinx-math:<cite>sigma</cite>_i <span class="math">\neq `:nbsphinx-math:</span>sigma`_j $</p></li>
 </ul>
 <p>Note that minus of R.H.S., Hamiltonian means the problem is “Choosing pairs of <span class="math notranslate nohighlight">\(\{\sigma _1, \sigma _2 \ldots \}\)</span> that maximizes the distance between the samples of different classes”.</p>
-</div>
-<div class="section" id="Clustering-with-PyQUBO">
+</section>
+<section id="Clustering-with-PyQUBO">
 <h3>Clustering with PyQUBO<a class="headerlink" href="#Clustering-with-PyQUBO" title="Permalink to this headline">¶</a></h3>
 <p>At first, we formulate the Hamiltonian in PyQUBO. Second, we execute simulated annealing (SA) with <code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>.</p>
 <div class="nbinput nblast docutils container">
@@ -456,8 +457,8 @@ label [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0
 <img alt="../_images/en_006-Machine_Learning_by_QA_15_0.png" src="../_images/en_006-Machine_Learning_by_QA_15_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Clustering-with-OpenJij-solver">
+</section>
+<section id="Clustering-with-OpenJij-solver">
 <h3>Clustering with OpenJij solver<a class="headerlink" href="#Clustering-with-OpenJij-solver" title="Permalink to this headline">¶</a></h3>
 <p>Next, we introduce clustering with OpenJij solver and use PyQUBO to formulate QUBO.</p>
 <div class="nbinput nblast docutils container">
@@ -535,9 +536,9 @@ energy -139358.74510750096
 </div>
 </div>
 <p>We can get a same figure as using PyQUBO SA.</p>
-</div>
-</div>
-<div class="section" id="QBoost">
+</section>
+</section>
+<section id="QBoost">
 <h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this headline">¶</a></h2>
 <p>QBoost is a one of the ensamble learning using QA. Ensamble learning involves preparing a number of weak predictors and combining the results of each of these predictors to obtain the final prediction result.</p>
 <p>QBoost uses QA to optimize the best combination of learners for a given training data. We handle classification problem in this time.</p>
@@ -551,7 +552,7 @@ energy -139358.74510750096
 \[H(\vec w) = \sum_{d=1}^{D} \left( \frac{1}{N}\sum_{i=1}^{N} w_i C_i(\vec x^{(d)})-y^{(d)} \right)^2 + \lambda \sum _i^N w_i\]</div>
 <p>The first term represents the difference between weak classifier and the correct label. The second term represents a degree of the number of weak classifier to be employed in the final classifier. <span class="math notranslate nohighlight">\(\lambda\)</span> is the regularization parameter that adjust how much the number of weak classifiers affects the total Hamiltonian.</p>
 <p>We optimize this Hamiltonian by recognizing the first term as a cost (objective function) and the second term as a constraint.Minimizing with QA allows us to obtain a combination of weak classifiers that best fits the training data.</p>
-<div class="section" id="Scripts">
+<section id="Scripts">
 <h3>Scripts<a class="headerlink" href="#Scripts" title="Permalink to this headline">¶</a></h3>
 <p>Let us try QBoost. We use the cancer identification dataset from scikit-learn for training data. For simplicity, we will only use two character types for training: “0” and “1”.</p>
 <div class="nbinput nblast docutils container">
@@ -632,8 +633,8 @@ energy -139358.74510750096
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Set-of-Weak-Learner">
+</section>
+<section id="Set-of-Weak-Learner">
 <h3>Set of Weak Learner<a class="headerlink" href="#Set-of-Weak-Learner" title="Permalink to this headline">¶</a></h3>
 <p>We make weak learner with scikit-learn. In this time, we choose decision stump. Desision stump is a single-layer decision tree. As it will be used as a weak classifier, the features to be used for segmentation are selected randomly (it’s a good understanding that we execute single-layer of random forest).</p>
 <div class="nbinput nblast docutils container">
@@ -732,8 +733,8 @@ energy -139358.74510750096
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Execute-QBoost-with-D-Wave-Sampler">
+</section>
+<section id="Execute-QBoost-with-D-Wave-Sampler">
 <h3>Execute QBoost with D-Wave Sampler<a class="headerlink" href="#Execute-QBoost-with-D-Wave-Sampler" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
@@ -971,9 +972,9 @@ average accuracy　of QBoost is 0.9398183515830576
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -1019,7 +1020,7 @@ average accuracy　of QBoost is 0.9398183515830576
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1048,7 +1049,7 @@ average accuracy　of QBoost is 0.9398183515830576
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

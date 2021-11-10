@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>4-D-Wave Ocean SDK 入門 &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5-OpenJij GPU" href="005-OpenJijGPU.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="4-D-Wave-Ocean-SDK-入門">
+<section id="4-D-Wave-Ocean-SDK-入門">
 <h1>4-D-Wave Ocean SDK 入門<a class="headerlink" href="#4-D-Wave-Ocean-SDK-入門" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/004-DWaveOceanSDK.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>D-Wave Ocean SDK(以下、Ocean) は、D-Waveマシンを使用するソフトウェアがまとまっている開発キットです。Pythonから各種機能を簡単に利用することができます。</p>
@@ -326,35 +327,35 @@ div.rendered_html tbody tr:hover {
 <li><p>Oceanの使い方</p></li>
 <li><p>アニーリングパラメータを変えた場合の最適化</p></li>
 </ul>
-<div class="section" id="定式化">
+<section id="定式化">
 <h2>定式化<a class="headerlink" href="#定式化" title="Permalink to this headline">¶</a></h2>
 <p>D-Waveマシンに投げることができる形式にはイジングモデルとQUBOがあります。ここでは詳細には触れず、Oceanを使用する上で最低限必要なことを説明します。</p>
-<div class="section" id="QUBOとイジングモデル">
+<section id="QUBOとイジングモデル">
 <h3>QUBOとイジングモデル<a class="headerlink" href="#QUBOとイジングモデル" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="QUBO">
+<section id="QUBO">
 <h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
 <p>QUBOの場合、2値変数(バイナリ変数)<span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
 <p>QUBOを解く際には、上の式の<span class="math notranslate nohighlight">\(Q_{i i}\)</span>と<span class="math notranslate nohighlight">\(Q_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</p>
-</div>
-<div class="section" id="イジングモデル">
+</section>
+<section id="イジングモデル">
 <h4>イジングモデル<a class="headerlink" href="#イジングモデル" title="Permalink to this headline">¶</a></h4>
 <p>イジングモデルの場合、2値変数<span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>に対して、以下のハミルトニアンを考えます。</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
 <p>イジングモデルを解く際には、上の式の<span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span>を古典コンピュータで計算し、D-Waveマシンに与えることになります。</p>
-</div>
-<div class="section" id="相互変換">
+</section>
+<section id="相互変換">
 <h4>相互変換<a class="headerlink" href="#相互変換" title="Permalink to this headline">¶</a></h4>
 <div class="line-block">
 <div class="line">QUBOとイジングモデルは、<span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>という変換式によって相互変換が可能です。</div>
 <div class="line">この点において、どちらでハミルトニアンを定式化しても問題はないので、対象の問題から考えやすい方を選びましょう。</div>
 <div class="line">ただし同じ問題の2種類の形式に対して、D-Waveマシンの振る舞いが異なる場合があるので注意が必要です。</div>
 </div>
-</div>
-</div>
-<div class="section" id="数分割問題">
+</section>
+</section>
+<section id="数分割問題">
 <h3>数分割問題<a class="headerlink" href="#数分割問題" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">与えられた整数の集合を、2つのグループに分けることを考えます。このとき、各グループの総和が同じになるように分ける問題を数分割問題といいます。</div>
@@ -375,7 +376,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">この場合、それぞれの総和の差がゼロになる最適解は23通り存在します(総和の差という名のエネルギーが同じ値ですが、解が違う状態が複数あります。このような状態を物理用語で「縮退している」と呼びます)。</div>
 <div class="line">例えば、<span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span>(総和はどちらも27)があります。</div>
 </div>
-<div class="section" id="id6">
+<section id="id6">
 <h4>QUBO<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
 <p>2つのグループの総和の差を0にすることを目指して、定式化を行いましょう。</p>
 <p style="text-align: center"><p>グループAに属する数字の総和 - グループBに属する数字の総和 = 0</p>
@@ -472,8 +473,8 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>対角成分が<span class="math notranslate nohighlight">\(Q_{i i}\)</span>、非対角成分が<span class="math notranslate nohighlight">\(Q_{i j}\)</span>です。定式化の時点から明らかですが、数分割問題は全ての量子ビット間に相互作用が存在する、全結合の問題であることが分かります。</p>
-</div>
-<div class="section" id="id7">
+</section>
+<section id="id7">
 <h4>イジングモデル<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
 <p>イジングモデルとQUBOの相互変換の式から、数分割問題をイジングモデルで表すと以下のような簡潔な式で表されます。</p>
 <div class="math notranslate nohighlight">
@@ -562,13 +563,13 @@ div.rendered_html tbody tr:hover {
 <li><p>OpenJijTutorial: <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb">https://github.com/OpenJij/OpenJijTutorial/blob/master/3-PyQUBO_2_OpenJij.ipynb</a></p></li>
 <li><p>Qiita: <a class="reference external" href="https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53">https://qiita.com/ynntech/items/fcfe7caf49f6a8eb3c53</a></p></li>
 </ul>
-</div>
-</div>
-</div>
-<div class="section" id="D-Waveマシンによる最適化">
+</section>
+</section>
+</section>
+<section id="D-Waveマシンによる最適化">
 <h2>D-Waveマシンによる最適化<a class="headerlink" href="#D-Waveマシンによる最適化" title="Permalink to this headline">¶</a></h2>
 <p>それでは上記の数分割問題を、D-Waveマシンを用いて最適化することを考えましょう。このチュートリアルでは、(1)単純に解く場合 (2)読み取り回数を変えた場合、 (3)アニーリング時間を変えた場合を見てみます。</p>
-<div class="section" id="イジングモデルを解く">
+<section id="イジングモデルを解く">
 <h3>イジングモデルを解く<a class="headerlink" href="#イジングモデルを解く" title="Permalink to this headline">¶</a></h3>
 <p>D-WaveマシンのサンプラーはDWaveSampler()、さらに問題をD-Waveマシンのキメラグラフに埋め込むためにEmbeddingComposite()を使用します。</p>
 <div class="nbinput nblast docutils container">
@@ -872,8 +873,8 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
  &#39;problem_id&#39;: &#39;7a565c51-5378-430b-a5d3-c957cf832d02&#39;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="読み取り回数を変えてみる">
+</section>
+<section id="読み取り回数を変えてみる">
 <h3>読み取り回数を変えてみる<a class="headerlink" href="#読み取り回数を変えてみる" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">次に、読み取り回数を変えた場合に得られる解がどのように変わるかを見てみましょう。</div>
@@ -964,8 +965,8 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
  &#39;problem_id&#39;: &#39;ac673401-ba8e-4a86-a7ef-b9037f882250&#39;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="アニーリング時間を変えてみる">
+</section>
+<section id="アニーリング時間を変えてみる">
 <h3>アニーリング時間を変えてみる<a class="headerlink" href="#アニーリング時間を変えてみる" title="Permalink to this headline">¶</a></h3>
 <p>最後に、アニーリング時間を変えた場合に得られる解がどのように変わるかを見てみましょう。 sample_ising()またはsample_qubo()の<code class="docutils literal notranslate"><span class="pre">annealing_time</span></code>に値を設定することで、アニーリング時間を指定できます(単位は<span class="math notranslate nohighlight">\(\mu s\)</span>)。先ほどはデフォルト値の20<span class="math notranslate nohighlight">\(\mu s\)</span>で実行しました。今度は50<span class="math notranslate nohighlight">\(\mu s\)</span>でアニーリングを行なってみましょう。</p>
 <div class="nbinput nblast docutils container">
@@ -1049,9 +1050,9 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="line">上のヒストグラムから、アニーリング時間を増加させたことで得られた最適解の個数は減少しましたが、低いエネルギーの解を多く見つけていることが分かります。ただし、アニーリング時間を大きくすればいいという単純な話ではありません。アニーリング時間が小さい場合の方が最適化がうまくいくこともあり、その依存関係はそれぞれの問題に依ります。</div>
 <div class="line">また、量子アニーリングをはじめとするアニーリング法はメタヒューリスティックスなアルゴリズムであるため、実行するたびに得られる結果は異なる点にも注意しましょう。</div>
 </div>
-</div>
-</div>
-<div class="section" id="結言">
+</section>
+</section>
+<section id="結言">
 <h2>結言<a class="headerlink" href="#結言" title="Permalink to this headline">¶</a></h2>
 <p>数分割問題の最適化を通して、D-Wave Oceanの使い方を紹介しました。このチュートリアルで説明したことを押さえるだけでも、様々なことができるようになります。例えば、以下のことを調べられるでしょう。</p>
 <ul class="simple">
@@ -1071,8 +1072,8 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -1126,7 +1127,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1155,7 +1156,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

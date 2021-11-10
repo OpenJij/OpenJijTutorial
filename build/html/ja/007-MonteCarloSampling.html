@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>7-MonteCarlo Sampling &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8-Solving Knapsack Problem with PyQUBO" href="008-KnapsackPyqubo.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="7-MonteCarlo-Sampling">
+<section id="7-MonteCarlo-Sampling">
 <h1>7-MonteCarlo Sampling<a class="headerlink" href="#7-MonteCarlo-Sampling" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/007-MonteCarloSampling.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>OpenJijはSimulated annealing (SA)を実行します。温度を一定に保てば、その温度でのカノニカル分布</p>
@@ -380,7 +381,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">ある温度を境に値が大きく変わる、このような現象を<strong>相転移</strong>と呼びます。今回の模型では(システムサイズを無限大に近づけると)温度が1.0の時に相転移が起こることが、理論的に証明されています。</div>
 <div class="line">ただし、実際のモデルではどの程度の温度で相転移が起きるかを理論的に計算できない場合が多々あります。そのため、モンテカルロシミュレーションを用いて相転移に関する性質を数値的に研究する手法が多く取られています。</div>
 </div>
-<div class="section" id="Binder-cumulant">
+<section id="Binder-cumulant">
 <h2>Binder cumulant<a class="headerlink" href="#Binder-cumulant" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">それでは、仮に相転移する温度を事前に知らなかったとして、数値計算からできるだけ正確に相転移する温度を求めてみましょう。上図を見ると、確かに磁化は温度が上がるにつれて0に近づいています。しかしどの温度が相転移点なのかまでははっきりしていません。これは、相転移現象は理論的にはサイズが無限大のシステムで起こる現象ですが、シミュレーションでは有限のサイズしか扱えないことにより理論との誤差が出てくることに起因します。これを<strong>有限サイズ効果</strong>と呼びます。</div>
@@ -462,8 +463,8 @@ div.rendered_html tbody tr:hover {
 <blockquote>
 <div><p>当然ですが、学術的な研究では十分な統計を取ることはもちろん、誤差評価(エラーバーの計算)なども真面目に行う必要があるでしょう。今回の計算は概要の説明だけに留めてあるため、正確な誤差評価等は省略しています。</p>
 </div></blockquote>
-</div>
-<div class="section" id="結言">
+</section>
+<section id="結言">
 <h2>結言<a class="headerlink" href="#結言" title="Permalink to this headline">¶</a></h2>
 <p>アニーリングを用いてMonteCarlo samplingを行う方法をご紹介しました。それを応用して統計物理学における相転移の計算例を示しました。ここからもわかるように、OpenJijはアイデア次第で様々な応用が可能です。</p>
 <div class="nbinput nblast docutils container">
@@ -475,8 +476,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -511,7 +512,7 @@ div.rendered_html tbody tr:hover {
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -540,7 +541,7 @@ div.rendered_html tbody tr:hover {
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

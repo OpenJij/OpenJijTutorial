@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>6-量子アニーリングによる機械学習 (QBoost) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7-MonteCarlo Sampling" href="007-MonteCarloSampling.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="6-量子アニーリングによる機械学習-(QBoost)">
+<section id="6-量子アニーリングによる機械学習-(QBoost)">
 <h1>6-量子アニーリングによる機械学習 (QBoost)<a class="headerlink" href="#6-量子アニーリングによる機械学習-(QBoost)" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/006-Machine_Learning_by_QA.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
@@ -299,10 +300,10 @@ div.rendered_html tbody tr:hover {
 <div class="line">前半では、PyQUBOとOpenjijを利用したクラスタリングを行います。</div>
 <div class="line">後半では、PyQUBOとD-Waveのサンプラーを用いたQboostというアンサンブル学習を行います。</div>
 </div>
-<div class="section" id="クラスタリング">
+<section id="クラスタリング">
 <h2>クラスタリング<a class="headerlink" href="#クラスタリング" title="Permalink to this headline">¶</a></h2>
 <p>クラスタリングとは与えられたデータを<span class="math notranslate nohighlight">\(n\)</span>個のクラスターに分けるというタスクです(<span class="math notranslate nohighlight">\(n\)</span>は外部から与えられているとします)。簡単のため、今回はクラスター数が2を考えましょう。</p>
-<div class="section" id="必要なライブラリのインポート">
+<section id="必要なライブラリのインポート">
 <h3>必要なライブラリのインポート<a class="headerlink" href="#必要なライブラリのインポート" title="Permalink to this headline">¶</a></h3>
 <p>機械学習のライブラリであるscikit-learnなどをインポートします。</p>
 <div class="nbinput nblast docutils container">
@@ -322,8 +323,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="人工データの生成">
+</section>
+<section id="人工データの生成">
 <h3>人工データの生成<a class="headerlink" href="#人工データの生成" title="Permalink to this headline">¶</a></h3>
 <p>今回は人工的に二次元平面上の明らかに線形分離可能なデータを生成しましょう。</p>
 <div class="nbinput nblast docutils container">
@@ -377,8 +378,8 @@ div.rendered_html tbody tr:hover {
 <li><p>$:nbsphinx-math:<cite>sigma</cite>_i <span class="math">\neq `:nbsphinx-math:</span>sigma`<em>j :math:`のとき、`d</em>{i,j}$</p></li>
 </ul>
 <p>となります。右辺のマイナスに注意すると、ハミルトニアン全体では「異なるクラスに属しているサンプル同士の距離を最大にする<span class="math notranslate nohighlight">\(\{\sigma _1, \sigma _2 \ldots \}\)</span>の組を選びなさい」という問題に帰着することがわかります。</p>
-</div>
-<div class="section" id="PyQUBOによるクラスタリング">
+</section>
+<section id="PyQUBOによるクラスタリング">
 <h3>PyQUBOによるクラスタリング<a class="headerlink" href="#PyQUBOによるクラスタリング" title="Permalink to this headline">¶</a></h3>
 <p>まずは、PyQUBOで上のハミルトニアンを定式化します。そして<code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>を用いてシミュレーテッドアニーリング(SA)を行います。</p>
 <div class="nbinput nblast docutils container">
@@ -458,8 +459,8 @@ label [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1
 <img alt="../_images/ja_006-Machine_Learning_by_QA_15_0.png" src="../_images/ja_006-Machine_Learning_by_QA_15_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Openjijのソルバーを用いたクラスタリング">
+</section>
+<section id="Openjijのソルバーを用いたクラスタリング">
 <h3>Openjijのソルバーを用いたクラスタリング<a class="headerlink" href="#Openjijのソルバーを用いたクラスタリング" title="Permalink to this headline">¶</a></h3>
 <p>次はQUBOの定式化にPyQUBOを用いて、ソルバー部分をOpenJijにしてクラスタリングを行います。</p>
 <div class="nbinput nblast docutils container">
@@ -537,9 +538,9 @@ energy -147945.96434710253
 </div>
 </div>
 <p>PyQUBOのSAのときと同様の結果を得ることができました。</p>
-</div>
-</div>
-<div class="section" id="QBoost">
+</section>
+</section>
+<section id="QBoost">
 <h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">QBoostは量子アニーリングを用いたアンサンブル学習の一つです。アンサンブル学習は弱い予測器を多数用意して、その予測器の各予測結果の組み合わせて最終的な予測結果を得ます。</div>
@@ -558,9 +559,9 @@ energy -147945.96434710253
 <div class="line">このハミルトニアンの第一項目は、弱分類器と正解ラベルの差を表しています。第二項目は最終的な分類器に採用する弱分類器の個数の程度を表しています。<span class="math notranslate nohighlight">\(\lambda\)</span>は第二項の弱分類器の個数がハミルトニアンにどのくらい影響するかを調節する正則化パラメータにです。</div>
 <div class="line">第一項をコスト(目的関数)、第二項を制約として、このハミルトニアンの最適化を行います。量子アニーリングで最小化することにより、学習データに最も適合するような弱分類器の組み合わせを得ることができます。</div>
 </div>
-<div class="section" id="スクリプト">
+<section id="スクリプト">
 <h3>スクリプト<a class="headerlink" href="#スクリプト" title="Permalink to this headline">¶</a></h3>
-<p>それでは実際にQBoostを試してみましょう。学習データにはscikit-learnの癌識別のデータセットを使用します。簡単のために、学習に用いるのは“0”と“1”の２つの文字種のみとします。</p>
+<p>それでは実際にQBoostを試してみましょう。学習データにはscikit-learnの癌識別のデータセットを使用します。簡単のために、学習に用いるのは”0”と”1”の２つの文字種のみとします。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
@@ -639,8 +640,8 @@ energy -147945.96434710253
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="弱学習器の作成">
+</section>
+<section id="弱学習器の作成">
 <h3>弱学習器の作成<a class="headerlink" href="#弱学習器の作成" title="Permalink to this headline">¶</a></h3>
 <p>scikit-learnで弱分類器を作成します。今回は弱分類器としてdecision stumpを用いましょう。decision stumpとは、一層の決定木のことです。今回は弱分類器として用いるので、分割に用いる特徴量はランダムに選ぶこととします(一層のランダムフォレストを行うという理解で良いでしょう)。</p>
 <div class="nbinput nblast docutils container">
@@ -739,8 +740,8 @@ energy -147945.96434710253
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="D-Waveサンプラーを用いてQBoostを実行">
+</section>
+<section id="D-Waveサンプラーを用いてQBoostを実行">
 <h3>D-Waveサンプラーを用いてQBoostを実行<a class="headerlink" href="#D-Waveサンプラーを用いてQBoostを実行" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -855,9 +856,9 @@ energy -147945.96434710253
 </div>
 </div>
 <p>D-Waveによるサンプリングは短時間で数百サンプリング以上が実行できます。精度が最大になる結果を使えば、baselineよりも高精度の分類器を作成することが可能です。</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -903,7 +904,7 @@ energy -147945.96434710253
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -932,7 +933,7 @@ energy -147945.96434710253
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

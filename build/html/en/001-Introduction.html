@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>1-An Introduction to OpenJij &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="2-An Evaluation of Annealing Algorithms" href="002-Evaluation.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="1-An-Introduction-to-OpenJij">
+<section id="1-An-Introduction-to-OpenJij">
 <h1>1-An Introduction to OpenJij<a class="headerlink" href="#1-An-Introduction-to-OpenJij" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>OpenJij is a heuristic optimization library of the Ising model and QUBO. It has a Python interface, therefore it can be easily written in Python, although the core part of the optimization is implemented with C++.</p>
@@ -308,7 +309,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="The-Ising-model">
+<section id="The-Ising-model">
 <h2>The Ising model<a class="headerlink" href="#The-Ising-model" title="Permalink to this headline">¶</a></h2>
 <p>The Ising model is a model treated in physics and is written as follows.</p>
 <div class="math notranslate nohighlight">
@@ -328,7 +329,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>OpenJij is a library which searches a combination of spin variables <span class="math notranslate nohighlight">\(\{\sigma_i\}\)</span> that minimizes <span class="math notranslate nohighlight">\(H(\{\sigma_i\})\)</span> when given <span class="math notranslate nohighlight">\(J_{ij}\)</span> and <span class="math notranslate nohighlight">\(h_i\)</span>.</p>
 <p>Let me show you a example.</p>
-<div class="section" id="Solve-a-problem-with-OpenJij">
+<section id="Solve-a-problem-with-OpenJij">
 <h3>Solve a problem with OpenJij<a class="headerlink" href="#Solve-a-problem-with-OpenJij" title="Permalink to this headline">¶</a></h3>
 <p>We assume that the number of variables is <span class="math notranslate nohighlight">\(N=5\)</span>, and the longitudinal field and interaction are</p>
 <div class="math notranslate nohighlight">
@@ -440,16 +441,16 @@ BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3)
 [[1 1 1 1]]
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Explanation-of-OpenJij">
+</section>
+<section id="Explanation-of-OpenJij">
 <h3>Explanation of OpenJij<a class="headerlink" href="#Explanation-of-OpenJij" title="Permalink to this headline">¶</a></h3>
 <p>Then, I will explain the code showed above. OpenJij has two interfaces currently. One of them used above is the same interface as D-Wave Ocean. Therefore, if you get used to using OpenJij, easy changing to Ocean.</p>
 <blockquote>
 <div><p>Another interface will not be explained here, but it can be easily extended by using the structure of OpenJij (graph, updater, and algorithm) directly. In the present situation, however, it would be sufficient to be able to use the interface which treated in the cell above.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="Sampler">
+</section>
+</section>
+<section id="Sampler">
 <h2>Sampler<a class="headerlink" href="#Sampler" title="Permalink to this headline">¶</a></h2>
 <p>In the above, we created an instance of Sampler after creating the problem in the dictionary type.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -464,12 +465,12 @@ BinaryQuadraticModel({3: -1.0, 2: -1.0, 1: -1.0, 0: -1.0}, {(1, 2): -1.0, (2, 3)
 <li><p>SQASampler: An algorithm for simulating quantum annealing called Simulated Quantum Annealing (SQA) with a classical computer.</p></li>
 <li><p>GPUSQASampler: It runs SQA on GPU. It can treat only a special structure called Chimera graph.</p></li>
 </ul>
-</div>
-<div class="section" id="sample_ising(h,-J)">
+</section>
+<section id="sample_ising(h,-J)">
 <h2>sample_ising(h, J)<a class="headerlink" href="#sample_ising(h,-J)" title="Permalink to this headline">¶</a></h2>
 <p>When you want to solve the Ising model, you can use <code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code>. As I will explain later, when you treat QUBO which equivalent to the Ising model optimization, use <code class="docutils literal notranslate"><span class="pre">.sample_qubo(Q)</span></code>.</p>
-</div>
-<div class="section" id="Response">
+</section>
+<section id="Response">
 <h2>Response<a class="headerlink" href="#Response" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">.sample_ising(h,</span> <span class="pre">J)</span></code> returns the Response class. This class contains results of solutions and energies that Sampler solved.</p>
 <ul class="simple">
@@ -605,7 +606,7 @@ Variables([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;])
 Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, num_occurrences=1)
 </pre></div></div>
 </div>
-<div class="section" id="Let’s-try-to-solve-QUBO">
+<section id="Let’s-try-to-solve-QUBO">
 <h3>Let’s try to solve QUBO<a class="headerlink" href="#Let’s-try-to-solve-QUBO" title="Permalink to this headline">¶</a></h3>
 <p>When you want to solve social problems, it is often easier to formulate as QUBO(Quadratic Unconstraited Binary Optimization, ) than the Ising model. Basically, it returns the same solution when using the Ising model.</p>
 <blockquote>
@@ -650,8 +651,8 @@ Sample(sample={&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: -1}, energy=-4.0, nu
 </pre></div></div>
 </div>
 <p>In QUBO, the solutions are made by 0 or 1 because the variables take 0 or 1.</p>
-</div>
-<div class="section" id="Let’s-solve-a-little-difficult-problem">
+</section>
+<section id="Let’s-solve-a-little-difficult-problem">
 <h3>Let’s solve a little difficult problem<a class="headerlink" href="#Let’s-solve-a-little-difficult-problem" title="Permalink to this headline">¶</a></h3>
 <p>You want to solve a problem of QUBO which has <span class="math notranslate nohighlight">\(Q_{ij}\)</span> given by 50 random variables.</p>
 <div class="nbinput nblast docutils container">
@@ -740,9 +741,9 @@ Sample(sample={0: 1, 1: 0, 2: 1, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1
 <p>Now you get the lowest energy solution. The solution which is contained in this min_states is the approximate solution in this time. Contained solutions have the same energy, but the arrangement of spins may differ in some cases (In the case of “degenerated state”).</p>
 <p>So, after choosing the lowest energy state as above, choose the spin orientation from min_state as you like. Then, we solved the problem approximately.</p>
 <p>Next section, “2-Evaluation”, we will explain the index(“time to solution” and “the residual energy” etc.) for evaluate the solution.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -787,7 +788,7 @@ Sample(sample={0: 1, 1: 0, 2: 1, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -816,7 +817,7 @@ Sample(sample={0: 1, 1: 0, 2: 1, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

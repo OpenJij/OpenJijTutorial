@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>2-アニーリングアルゴリズムの評価 &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ベンチマーク関数 標準誤差機能 の使い方" href="002-Evaluation_errorbar.html" />
@@ -291,7 +292,7 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="2-アニーリングアルゴリズムの評価">
+<section id="2-アニーリングアルゴリズムの評価">
 <h1>2-アニーリングアルゴリズムの評価<a class="headerlink" href="#2-アニーリングアルゴリズムの評価" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/002-Evaluation.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>アニーリングアルゴリズムはヒューリスティクスの一つなので毎回最適解を出せるとは限りません。これは近似解を求めるアルゴリズムです。 また確率的アルゴリズムなので毎回解が異なります。そのため、アルゴリズムの評価をするときは様々な平均値を用いてその解を評価します。よく用いられる指標に</p>
@@ -302,7 +303,7 @@ div.rendered_html tbody tr:hover {
 </ul>
 <p>の3つがあります。特に<strong>TTS</strong>は計算時間を表すもので様々な評価によく用いられます。残留エネルギーは最適解にどれくらい近づけたのかを平均的に示す値です。</p>
 <p>この章では上記の3の評価指標の解説と測定方法について解説します。</p>
-<div class="section" id="Time-to-solution">
+<section id="Time-to-solution">
 <h2>Time to solution<a class="headerlink" href="#Time-to-solution" title="Permalink to this headline">¶</a></h2>
 <p>アニーリングアルゴリズムはどの計算時間でも何かしらの近似解を出すことができます。しかしいくら計算が速くても、誤った解が求まるようでは意味がありません。そこで(例えば90%の確率で最適解が得られるのにかかる時間、のように)自分が必要な確率で最適解が算出されるまでにかかる計算時間を指標とします。</p>
 <p>“1-Introduction”でも行なったようにアニーリングアルゴリズムは複数回行った中から最適解を探すため、計算時間を評価するには複数回行うことも考慮に入れる必要があります。</p>
@@ -327,7 +328,7 @@ div.rendered_html tbody tr:hover {
 \[{\rm TTS}(\tau, p_R) = \tau R = \tau \frac{\ln(1-p_R)}{\ln\{1-p_s(\tau)\}}\]</div>
 <p><span class="math notranslate nohighlight">\({\rm TTS}(\tau, p_R)\)</span>は一回のアニーリングに<span class="math notranslate nohighlight">\(\tau\)</span>の計算時間、確率<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>のアルゴリズムを用いて最適解が得られるとき、確率<span class="math notranslate nohighlight">\(p_R\)</span>で最適解が得られるまでの繰り返し回数も考慮した総計算時間になります。</p>
 <p>実際の計算の評価では<span class="math notranslate nohighlight">\(p_R\)</span>を定数で与えます。研究などによく用いられる値としては、<span class="math notranslate nohighlight">\(p_R=0.99\)</span>が多いです。そして様々なアニーリング時間<span class="math notranslate nohighlight">\(\tau\)</span>で<span class="math notranslate nohighlight">\(p_s(\tau)\)</span>を計算し、それらを用いて<span class="math notranslate nohighlight">\({\rm TTS}(\tau, p_R)\)</span>を計算します。</p>
-<div class="section" id="OpenJij-で実験を行ってTTSを測る">
+<section id="OpenJij-で実験を行ってTTSを測る">
 <h3>OpenJij で実験を行ってTTSを測る<a class="headerlink" href="#OpenJij-で実験を行ってTTSを測る" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">実際にOpenJijを使ってTTSを図ってみましょう。</div>
@@ -366,9 +367,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="TTSを計算してみる">
+</section>
+</section>
+<section id="TTSを計算してみる">
 <h2>TTSを計算してみる<a class="headerlink" href="#TTSを計算してみる" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">openjijの<code class="docutils literal notranslate"><span class="pre">sample_ising</span></code>または<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>から返ってくる Response クラスは<code class="docutils literal notranslate"><span class="pre">info</span></code>というメンバ変数を持っています。<code class="docutils literal notranslate"><span class="pre">info</span></code>にはsamplerごとに異なる情報が辞書型で格納されています。ほとんどのSamplerには<code class="docutils literal notranslate"><span class="pre">'execution_time'</span></code>というkeyで、各アルゴリズムの1回の実行時間(単位は<span class="math notranslate nohighlight">\(\mu\)</span> s)が格納されています。</div>
@@ -505,8 +506,8 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <p>しっかりアニーリング時間が伸びるごとに平均残留エネルギーが下がっていることがわかります。先ほどは成功確率からTTSなどを計算しましたが、なかなか問題が難しく、最適解が得られない場合にちゃんとアニーリングがうまくいっているかを図る指標としても残留エネルギーは有効です。 また残留エネルギーは得られたエネルギー値を最適値でシフトしているだけなので、最適値を知らない場合でも、エネルギー vs
 アニーリング時間というプロットは有効です。ちゃんとアニーリングが動いているのか？最適値がわからない場合でのアルゴリズムの比較などを行う際に使うことができます。</p>
 <p>ここまでは原理を確認するためにスクリプトを作成しましたが、OpenJijにはデフォルトでTTS, 残留エネルギー, 成功確率を評価してくれるベンチマーク関数<code class="docutils literal notranslate"><span class="pre">openjij.solver_benchmark</span></code>が存在します。</p>
-</div>
-<div class="section" id="solver_benchmark関数">
+</section>
+<section id="solver_benchmark関数">
 <h2>solver_benchmark関数<a class="headerlink" href="#solver_benchmark関数" title="Permalink to this headline">¶</a></h2>
 <p>上述の通り、solver_benchmark関数はTTS, 残留エネルギー, 成功確率を計算し、その値を返します。</p>
 <p>以下に引数を列挙します。</p>
@@ -726,8 +727,8 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </div>
 <p>このようにうまくsolver関数を作っておけば、OpenJijのソルバーに限らずTTS, 残留エネルギー, 成功確率を計算することが可能です。</p>
 <p>次のページでは、この章で紹介した指標の標準誤差を計算する機能をご紹介します。</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -766,7 +767,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -795,7 +796,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

@@ -4,17 +4,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>5-OpenJij GPU &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="6-量子アニーリングによる機械学習 (QBoost)" href="006-Machine_Learning_by_QA.html" />
@@ -291,25 +292,25 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="5-OpenJij-GPU">
+<section id="5-OpenJij-GPU">
 <h1>5-OpenJij GPU<a class="headerlink" href="#5-OpenJij-GPU" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/005-OpenJijGPU.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <blockquote>
 <div><p>(追記: 2021/05)このセクションは2021/05 現在、サポートされていません。次の章へ進むことをおすすめします。</p>
 </div></blockquote>
 <p>このセクションではGPUを用いてSimulated Quantum Annealing(SQA)を行う方法をご紹介します。</p>
-<div class="section" id="Google-Colabでの設定とインストール">
+<section id="Google-Colabでの設定とインストール">
 <h2>Google Colabでの設定とインストール<a class="headerlink" href="#Google-Colabでの設定とインストール" title="Permalink to this headline">¶</a></h2>
 <p>一般のPCにはCUDA環境が整っていない、もしくはCUDAに対応するNVIDIAのGPUが搭載されていないこともあります。しかし<strong>Google colaboratory</strong>を使えば誰でもGPGPUを使うことができます。</p>
-<div class="section" id="GPU設定">
+<section id="GPU設定">
 <h3>GPU設定<a class="headerlink" href="#GPU設定" title="Permalink to this headline">¶</a></h3>
 <p>GPU実行したいJupyter NotebookをGoogle Colabで開きます。</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ランタイム &gt; ランタイムのタイプを変更 &gt; ハードウェアアクセラレータをGPUに選択
 </pre></div>
 </div>
 <p>この設定を行うことでGPUを用いたJupyter Notebookの実行が可能となります。</p>
-</div>
-<div class="section" id="OpenJijのインストール">
+</section>
+<section id="OpenJijのインストール">
 <h3>OpenJijのインストール<a class="headerlink" href="#OpenJijのインストール" title="Permalink to this headline">¶</a></h3>
 <p>OpenJijからGPUを用いたモジュールを呼び出すためには、まずpipからのインストールの際にOpenJijをソースコードからビルドする必要があります。 この操作のためにCMakeと呼ばれるツールが必要ですが、Google ColabにプリインストールされているCMakeは古いバージョンです。まずはそれをバージョンアップしましょう。</p>
 <div class="nbinput nblast docutils container">
@@ -332,9 +333,9 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="GPUSQA計算">
+</section>
+</section>
+<section id="GPUSQA計算">
 <h2>GPUSQA計算<a class="headerlink" href="#GPUSQA計算" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">OpenJijのGPUでサポートしているのはキメラグラフ上でのモンテカルロ計算です。</div>
@@ -361,8 +362,8 @@ div.rendered_html tbody tr:hover {
 <div class="line">GPUSQASamplerでは、のちに sample_qubo などで少ない変数を指定しても、ここで作ったキメラグラフの系のサイズだけSQA計算を行います。</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>は無駄に大きすぎないように注意しましょう。また<code class="docutils literal notranslate"><span class="pre">unit_num_L</span></code>はコンストラクタで指定しなくても、<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>を実行するときの引数としても指定できます。</div>
 </div>
-</div>
-<div class="section" id="実行">
+</section>
+<section id="実行">
 <h2>実行<a class="headerlink" href="#実行" title="Permalink to this headline">¶</a></h2>
 <p>ではSQAを実行してみましょう。これまで紹介してきたSamplerと同様に、sample_qubo (or sample_ising) で計算を行うことができます。 ただし、キメラグラフを満たさない添字の相互作用を指定するとエラーになります。</p>
 <div class="nbinput docutils container">
@@ -459,8 +460,8 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
         4173.36499959,  4242.68899951,  4194.9890001 ,  4218.5889979 ]), &#39;schedule&#39;: {&#39;beta&#39;: 10.0, &#39;gamma&#39;: 1, &#39;num_sweeps&#39;: 100}}, &#39;BINARY&#39;)
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="全結合模型のキメラグラフへの埋め込み">
+</section>
+<section id="全結合模型のキメラグラフへの埋め込み">
 <h2>全結合模型のキメラグラフへの埋め込み<a class="headerlink" href="#全結合模型のキメラグラフへの埋め込み" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">これまで説明したものは、相互作用がキメラグラフ上に存在するもののみの計算でした。以下では全結合の問題のように、相互作用が複雑なものをキメラグラフに埋め込む場合のスクリプトをご紹介します。</div>
@@ -488,8 +489,8 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -530,7 +531,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -559,7 +560,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>

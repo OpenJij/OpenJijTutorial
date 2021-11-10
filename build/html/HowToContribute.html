@@ -4,11 +4,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>How to contribute &#8212; OpenJij Tutorial 0.3.0 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -36,12 +37,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="how-to-contribute">
+  <section id="how-to-contribute">
 <h1>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
 <p>The OpenJij Tutorial is constantly changing and can grow with your help.</p>
 <p>You can participate in this project from a simple issue submission or typo correction.</p>
 <p>We are also looking forward to more documentation on the latest research results in quantum optimization and quantum annealing, so requests are welcome.</p>
-<div class="section" id="submit-requests-and-issues">
+<section id="submit-requests-and-issues">
 <h2>Submit requests and issues.<a class="headerlink" href="#submit-requests-and-issues" title="Permalink to this headline">¶</a></h2>
 <p>The easiest way to contribute is to report an issue
 or submit a request for documentation
@@ -50,10 +51,10 @@ on <a class="reference external" href="https://github.com/OpenJij/OpenJijTutoria
 Don’t worry about the language barrier.</p>
 <p>GitHub Issues of the OpenJij Tutorial allows you to not only report a problem, but also to request a tutorial that you need.</p>
 <p>Requests can also be made for documents on quantum annealing, adiabatic quantum computations, and theories in quantum optimization.</p>
-</div>
-<div class="section" id="how-to-edit-and-contribute-by-yourself">
+</section>
+<section id="how-to-edit-and-contribute-by-yourself">
 <h2>How to edit and contribute by yourself<a class="headerlink" href="#how-to-edit-and-contribute-by-yourself" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="setup-enviroment-by-pipenv">
+<section id="setup-enviroment-by-pipenv">
 <h3>1. Setup enviroment by pipenv<a class="headerlink" href="#setup-enviroment-by-pipenv" title="Permalink to this headline">¶</a></h3>
 <p>First, clone from <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial">GitHub repository</a>.</p>
 <p>Environment reproduction by pipenv</p>
@@ -66,14 +67,14 @@ In that case, please refer to the installation method from <a class="reference e
 <div><p>The <code class="docutils literal notranslate"><span class="pre">pipenv</span></code> environment includes <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> and other Python environments required for document generation.
 Note, however, that it does not contain the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> or <code class="docutils literal notranslate"><span class="pre">openjij</span></code> required to run the Notebook.</p>
 </div></blockquote>
-</div>
-<div class="section" id="edit-project">
+</section>
+<section id="edit-project">
 <h3>2. Edit project<a class="headerlink" href="#edit-project" title="Permalink to this headline">¶</a></h3>
 <p>Once your environment is in place, edit or add your notebook and make the changes you want to make to this document.</p>
 <p>The source code of the document is located under the <code class="docutils literal notranslate"><span class="pre">source</span></code> directory.</p>
 <p>When you edit or add a Jupyter notebook, please follow <a class="reference external" href="#rules">the rules of Jupyter notebook</a>, even if it’s a small thing.</p>
-</div>
-<div class="section" id="compile-documents">
+</section>
+<section id="compile-documents">
 <h3>3. Compile documents<a class="headerlink" href="#compile-documents" title="Permalink to this headline">¶</a></h3>
 <p>You can compile documents to HTML files by make command.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make html
@@ -88,15 +89,15 @@ Note, however, that it does not contain the <code class="docutils literal notran
 <p>As you can see, the Google Colab link is inserted with the script so you don’t have to insert it into the Notebook yourself.</p>
 <p>If the compilation is successful, the generated HTML will be in the <code class="docutils literal notranslate"><span class="pre">build/html/</span></code> directory.
 Please check it by referring to it.</p>
-</div>
-</div>
-<div class="section" id="pull-requests">
+</section>
+</section>
+<section id="pull-requests">
 <h2>4. Pull requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">¶</a></h2>
 <p>When you’re done editing, make pull requests to your master branch.</p>
 <p>With pull requests, you don’t need to publish the compiled products under <code class="docutils literal notranslate"><span class="pre">build/</span></code>.</p>
 <p>Also, if you make changes to Jupyter Notebooks, please state in the pull requests comment where in the Notebook you made the changes, what you made the changes to, and why you made the changes, as it’s hard to see the differences in the git diff.</p>
-<div id="rules"></div></div>
-<div class="section" id="the-rules-of-jupyter-notebook">
+<div id="rules"></div></section>
+<section id="the-rules-of-jupyter-notebook">
 <h2>The rules of Jupyter notebook<a class="headerlink" href="#the-rules-of-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
 <ol>
 <li><p>You need to put an <code class="docutils literal notranslate"><span class="pre">h1</span></code> level heading in the first cell.</p>
@@ -106,8 +107,8 @@ Please check it by referring to it.</p>
 </li>
 <li><p>Do not write anything other than the <code class="docutils literal notranslate"><span class="pre">h1</span></code> level title in the first cell.</p></li>
 </ol>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -146,7 +147,7 @@ Please check it by referring to it.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -171,7 +172,7 @@ Please check it by referring to it.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
     </div>
   </body>
 </html>
