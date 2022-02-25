@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -303,11 +303,11 @@ div.rendered_html tbody tr:hover {
 <section id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個のノードと20本の枝を持つ無効グラフが与えられたとします。枝で繋がれたノード同士は異なる色となるようにノードを色分けする時、3色で全てのノードを塗ることは可能であるか考えます。 &gt; グラフは下のようになっているとします。</p>
-<div><p><img alt="4da4ab2dd9f1444894bf65b215e8fcee" src="../_images/graph_color.png" /></p>
+<div><p><img alt="427a8d5cf19043d5a9187da94b2566f1" src="../_images/graph_color.png" /></p>
 </div><blockquote>
 <div><p>塗り分けた後のグラフは下のようになります。 このグラフから全てのノードは3色で塗り分けることができると分かります。</p>
 </div></blockquote>
-<div><p><img alt="a3fe18c40ca043939d70297d6ce18aed" src="../_images/graph_color_res.png" /></p>
+<div><p><img alt="7946907008774360abb4cb9faa9c5a1f" src="../_images/graph_color_res.png" /></p>
 </div></section>
 <section id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
@@ -335,8 +335,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#頂点数</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#頂点数</span>
 <span class="n">N_VER</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="c1">#色の数</span>
 <span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
@@ -352,8 +351,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#PYQUBOをimportします</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#PYQUBOをimportします</span>
 <span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span>
 <span class="c1">#QUBOを表現する変数(頂点数×色の数)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
@@ -365,8 +363,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
 <span class="c1"># ハミルトニアンの第一項 (各頂点に1色だけ塗る)</span>
 <span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
 <span class="c1"># ハミルトニアンの第二項 (辺で結ばれた頂点が同じ色で塗られていないか)</span>
@@ -385,8 +382,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install --upgrade networkx
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install --upgrade networkx
 </pre></div>
 </div>
 </div>
@@ -404,8 +400,7 @@ Requirement already satisfied, skipping upgrade: decorator&gt;=4.3.0 in /home/ji
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
 <span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
 
@@ -473,8 +468,7 @@ broken
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># OpenJijのインポートをします</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OpenJijのインポートをします</span>
 <span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 <span class="c1"># SQAを使います。</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
@@ -517,8 +511,7 @@ broken
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">()</span>
 <span class="n">cl</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;plum&quot;</span><span class="p">,</span><span class="s2">&quot;skyblue&quot;</span><span class="p">,</span><span class="s2">&quot;yellowgreen&quot;</span><span class="p">]</span>
@@ -598,7 +591,7 @@ broken
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -627,7 +620,7 @@ broken
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

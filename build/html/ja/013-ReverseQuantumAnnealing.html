@@ -1,0 +1,1593 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example &#8212; OpenJij Tutorial 0.3.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="A1 - OpenJij core interface入門 (core python interface)" href="A001-Introduction.html" />
+    <link rel="prev" title="12-Solving Protein Folding Problem by HUBO Solver" href="012-ProteinFoldingHubo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="13-Reverse-Quantum-Annealing-with-Portfolio-Optimization-Problem-as-an-example">
+<h1>13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example<a class="headerlink" href="#13-Reverse-Quantum-Annealing-with-Portfolio-Optimization-Problem-as-an-example" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/013-ReverseQuantumAnnealing.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<section id="ポートフォリオ最適化問題">
+<h2>ポートフォリオ最適化問題<a class="headerlink" href="#ポートフォリオ最適化問題" title="Permalink to this headline">¶</a></h2>
+<p>資産運用して投資活動を行うとき、できるだけリスクを回避しながら大きな収益を実現させたい。なので、収益が限定的であるが、リスクが小さい（ないし全くない）資産と見込める収益が大きい分リスクも大きい資産を組み合わせてポートフォリオを作って分散投資を行うのが一般的な戦略になる。</p>
+<p>この時、与えられた一定のリスクでは最大利益を実現したい、または同じ利益を実現する場合できるだけ小さいリスクを取るには、最適なポートフォリオを選ぶ必要がある。現在、よく利用される手法はMarkowitzによる現代ポートフォリオ理論(Modern Portfolio Theory)であり、ポートフォリオを構成する銘柄の間の相関を考慮して、その共分散を最小にさせるような手法になる[1]。</p>
+<div class="math notranslate nohighlight">
+\[\min \sum_{i=1}^{N}\sum_{j=1}^{N}w_{i}w_{j}\sigma_{ij}; \quad \sum_{i=1}^{N}W_{i}=1; \quad \sum_{i=1}^{N}W_{i}\mu_{i}=R\]</div>
+<p>ただし、<span class="math notranslate nohighlight">\(w_{i}\)</span>は各銘柄がポートフォリオ内を占める重みで、<span class="math notranslate nohighlight">\(\sigma_{ij}\)</span>は銘柄間の共分散である。<span class="math notranslate nohighlight">\(\mu_{i}\)</span>は各銘柄の期待収益で、<span class="math notranslate nohighlight">\(R\)</span>はこのポートフォリオの総収益になる。</p>
+<p>この時、ポートフォリオのパフォーマンスの評価によく使われる指標としてSharpe Ratioというのがある。</p>
+<p>### Sharpe Ratio Sharpe Ratioは投資の効率性を評価する指標で、銘柄単体とポートフォリオにたいして計算できる。1966念にウィリアム・シャープによって提案された[3]。その基本的な定義は次のような形になる。</p>
+<div class="math notranslate nohighlight">
+\[S = \frac{\bar{r}-r_0}{\sigma}\]</div>
+<p>ここの<span class="math notranslate nohighlight">\(\bar{r}\)</span>は一定時間内の平均的なリターン率であり、月間や年間リターンを利用することも多い。<span class="math notranslate nohighlight">\(r_0\)</span>はリスクなしの場合のリターン率で、安定した国債の利子率などを用いることが多い。そして<span class="math notranslate nohighlight">\(\sigma\)</span>はボラティリティを表していて、資産価値の変動の激しさを意味している。</p>
+<p>また、これらの値は実際使う場面によって異なる計算方法で算出される。例えばリターンは単純リターンとして<span class="math notranslate nohighlight">\(r=P(t+1)/P(t) - 1\)</span>で価格<span class="math notranslate nohighlight">\(P\)</span>で計算される場合と<span class="math notranslate nohighlight">\(r=log[P(t+1)/P(t)]\)</span>のように対数リターン率として計算される場合がある。そしてボラティリティも価格の変動からとリターンからのやり方が存在する。具体的に興味がある方は金融工学や市場分析などに関連する本とサイトに参照してください。</p>
+<p>### ポートフォリオの評価と最適化 Sharpe Ratioの定義から、その値が大きいということは収益が大きいまたはリスク（ボラティリティ）が小さいことを意味しているのが分かる。ある与えられた銘柄の集合で作られたポートフォリオのうち、最大のSharpe Ratioを実現できるような組み合わせは、同じリスクに対して最大のリターンを得る組み合わせになる。なので、ポートフォリオの最適化問題は一定の考え方の元でShape Ratioを最大にする問題に置き換えられる。</p>
+<p>現実において、この最適化は銘柄を選別した上でそれぞれの銘柄に投入する資金の量を決定しなければならない。つまり、選ぶ銘柄と各銘柄のウェイトを決定する問題になる。このチュートリアルは、参考した論文[2]に従い、簡単のために各銘柄のウェイトが等しくする戦略について考える。この時、問題は<span class="math notranslate nohighlight">\(M\)</span>個ある銘柄のうち<span class="math notranslate nohighlight">\(N\)</span>個銘柄を選び出して、実現Sharpe Ratioを最大にするものになる。すると、次のようなQUBO形式に問題を翻訳できる。</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{O}(\bm{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
+<p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する洗濯で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金度合を表す。</p>
+<p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
+<div><p><img alt="4977b9a35c624db49173f020bd49c5b6" src="../_images/013_RQA_QUBO.png" /></p>
+</div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループはポートフォリオを構成する人の基準によって決められた基準によって、銘柄を魅力的であるから魅力ではない順で並べてそれを順位付けした後に、均等に分けた場合形成されたグループになる。この魅力的な基準はリターン率の高さや損失の少なさなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
+<p>このQUBOを使って量子アニーリングを行えば最適のポートフォリオを得ることができるはず。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのが分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的にであるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
+</section>
+<section id="Reverse-Quantum-Annealingによるポートフォリオ最適化">
+<h2>Reverse Quantum Annealingによるポートフォリオ最適化<a class="headerlink" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化" title="Permalink to this headline">¶</a></h2>
+<p>現実のポートフォリオ最適化の問題は基本、大きな市場から銘柄を選択することになる。候補銘柄数の増加によって最適のポートフォリオを作るための計算量が非常に大きくなる。なので、一定の条件の下に選別を行ってから最適化アルゴリズを適応するのが普通である。そして、銘柄の組合せの自由度から、最終的の実現Sharpe Ratioが最大Sharpe
+Ratioと極めて近い値を持つ非最適解が多く存在することもあり得る。伝統的なアルゴリズムがそのような解にハマった場合抜け出すにも時間とリソースが必要となる。そのため、以上の既存な問題点を回避しながらポートフォリオ最適化問題を解くには、量子アニーリングのような大きい数の相関を取り扱えてローカルミニマムから脱却できる技術が有利である。</p>
+<p>ただし、参考論文[2]に示されたように、単純なForward Annealingのみを行う場合、銘柄数の増加によって、最適解までにたどり着く時間も大きく増加して、伝統的の遺伝アルゴリズムと違いパフォーマンスになるのが分かる。その理由としてはやはり最適解と近い値のSharpe
+Ratioを持つ解と最適解はエネルギーの違いも同じように小さいと考えられる。すると、最適解への変化はほとんどエネルギー差がほぼない準位の間で高いポテンシャルの障壁がある場合の遷移になるため、遷移が起こるまでにより長い時間が必要となる。また、量子アニーリングマシンの実機では通常のアニーリングを行う途中で熱ノイズなどによる影響で系が励起されて時間発展する場合もあって、それによって最終の結果が最適解とならない可能性もある。</p>
+<section id="Reverse-Quantum-Annealing">
+<h3>Reverse Quantum Annealing<a class="headerlink" href="#Reverse-Quantum-Annealing" title="Permalink to this headline">¶</a></h3>
+<p>これらの量子アニーリングを用いた時の問題点を解決するために提案された手法の一つは、Reverse Quantum Annealingである。名前通り、通常のForward Annealingと逆方向のステップを導入するような量子アニーリングを指す。通常のForwardAnnealingの時間依存のハミルトニアンは次のように書ける。</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
+<p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
+<div><p><img alt="4365328144954444a1f3a4ce4c2b77de" src="../_images/013_QAandRQA.png" /></p>
+</div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
+Phaseになる。この時もまた高いエネルギーの状態にあり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
+</section>
+<section id="Reverse-Quantum-Annealingによるポートフォリオ最適化の手順">
+<h3>Reverse Quantum Annealingによるポートフォリオ最適化の手順<a class="headerlink" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化の手順" title="Permalink to this headline">¶</a></h3>
+<p>このReverse Quantum Annealingの手法を実行するには実際もう一つの条件がある。それがReverse Phaseの初期状態である。この状態はランダムに生成された初期状態を用いても可能ではあるが、手法が提案された背景からも、最適解探索の効率の観点からもある種類のローカルミニマム状態を用意したほうが良いと分かる。その初期状態になるローカルミニマムを得るには参考論文[2]では伝統的なアルゴリズムで得られた出力を利用した。このチュートリアルもそれに従う。</p>
+<p>なので、これから行う実装は基本論文[2]の流れを参考にして以下のようになる。 - 最適化を行う銘柄データの生成 - 古典なアルゴリズムの実装とその結果の確認 - 通常のForward Annealingによる最適解探索 - Reverse Quantum Annealingによる最適解探索 - Reverse Quantum Annealingのパラメータ探索</p>
+</section>
+</section>
+<section id="Open-Jijを用いた実装">
+<h2>Open Jijを用いた実装<a class="headerlink" href="#Open-Jijを用いた実装" title="Permalink to this headline">¶</a></h2>
+<section id="最適化を行う銘柄データの生成">
+<h3>最適化を行う銘柄データの生成<a class="headerlink" href="#最適化を行う銘柄データの生成" title="Permalink to this headline">¶</a></h3>
+<p>参考論文[2]にある方法に従って、与えられた初期値を用いて、ブラウン運動による銘柄チャートを生成する。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1">#Magic numbers to generate assets</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># input uniform correlation</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mf">0.075</span> <span class="c1"># expected value</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="c1"># volatility/standard error</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="mf">0.015</span> <span class="c1"># no risk return</span>
+</pre></div>
+</div>
+</div>
+<p>参考論文[2]の付録Aによって、各時刻においてチャートの運動は前の時刻の運動によって</p>
+<div class="math notranslate nohighlight">
+\[S(t_{n+1})=S(t_n)\exp(\mu-\frac{1}{2}\sigma^2)\Delta t + \sigma Z_n\sqrt{\Delta t}\]</div>
+<p>のように与えられる。ここの<span class="math notranslate nohighlight">\(Z_n\)</span>はcholesky分解で作られた一様相関行列<span class="math notranslate nohighlight">\(\rho\)</span>を従う多変量正規分布になる。</p>
+<p>それを実行して適当にチャートをプロットして様子を確認する。最初同じところから始めても一年間経つと、全体が広がっていく様子が分かる。また一部銘柄が大きく上昇または降下するのも確認できる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#相関正規確率変数Znの生成</span>
+<span class="k">def</span> <span class="nf">createZvariables</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+  <span class="n">rho_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">),</span> <span class="n">rho</span><span class="p">)</span>
+  <span class="n">rho_mat</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span>
+  <span class="n">rho_chole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">rho_mat</span><span class="p">)</span>
+  <span class="n">zNs_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+  <span class="n">zNs</span> <span class="o">=</span> <span class="n">zNs_temp</span> <span class="o">@</span> <span class="n">rho_chole</span>
+  <span class="k">return</span> <span class="n">zNs</span>
+
+<span class="c1">#チャートのブラウン運動の生成</span>
+<span class="k">def</span> <span class="nf">GetNextSt</span><span class="p">(</span><span class="n">St</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">zN</span><span class="p">):</span>
+  <span class="n">Deltat</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">mu</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">*</span><span class="n">sigma</span><span class="p">)</span><span class="o">*</span><span class="n">Deltat</span> <span class="o">+</span> <span class="n">sigma</span><span class="o">*</span><span class="n">zN</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Deltat</span><span class="p">))</span>
+  <span class="n">NextSt</span> <span class="o">=</span> <span class="n">St</span> <span class="o">*</span> <span class="n">scale</span>
+  <span class="k">return</span> <span class="n">NextSt</span>
+
+<span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span> <span class="c1">#生成する銘柄の数</span>
+<span class="n">chart</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">ZList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">Zvariables</span> <span class="o">=</span> <span class="n">createZvariables</span><span class="p">(</span><span class="n">Nassets</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">Zlabels</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)],</span> <span class="mi">12</span><span class="p">)</span> <span class="c1">#Z variable shuffle</span>
+
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">Zlabels</span><span class="p">:</span>
+  <span class="n">ZList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Zvariables</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">iasset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+  <span class="n">chart_asset</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="c1">#初値 相対価格で1.0</span>
+
+  <span class="c1">#12ステップ（か月）シミュレーションを行う</span>
+  <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">chart_asset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GetNextSt</span><span class="p">(</span><span class="n">chart_asset</span><span class="p">[</span><span class="n">month</span><span class="p">],</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">ZList</span><span class="p">[</span><span class="n">month</span><span class="p">][</span><span class="n">iasset</span><span class="p">]))</span>
+
+  <span class="n">chart</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chart_asset</span><span class="p">)</span>
+  <span class="c1">#print(chart_asset) #各銘柄の具体的な数値をプリント</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">chart_asset</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_13_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_13_0.png" />
+</div>
+</div>
+<p>銘柄のデータを生成できたので、各銘柄のSharpe Ratioを計算する。ここの結果を評価するに使うのは実現Sharpe Ratioで、その定義に従って無リスク利回り率を超過した超過収益率の平均<span class="math notranslate nohighlight">\(\bar{r}\)</span>と超過リターン率の標準偏差<span class="math notranslate nohighlight">\(\sigma\)</span>で求める。チャートを確認するとき分かったように、銘柄数が少ない場合は偶然による偏りが大きい、かつ生成条件に銘柄間に相関があるので、。銘柄を100回生成してその平均Shape Ratioの確認することでそれらの影響を減らす。結果として、銘柄の平均Sharpe
+Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>になるのを確認できる。また、Sharpe Ratioの計算定義を変更した場合、Sharpeの値が変化するのも確認できるが、おおむね<span class="math notranslate nohighlight">\(0.40\pm0.05\)</span>の範囲内には収まる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#銘柄生成関数</span>
+<span class="k">def</span> <span class="nf">CreateAssets</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+  <span class="n">chart</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+  <span class="n">ZList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+  <span class="n">Zvariables</span> <span class="o">=</span> <span class="n">createZvariables</span><span class="p">(</span><span class="n">Nassets</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+  <span class="n">Zlabels</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">)],</span> <span class="mi">12</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">Zlabels</span><span class="p">:</span>
+    <span class="n">ZList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Zvariables</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+  <span class="k">for</span> <span class="n">iasset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="n">chart_asset</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+      <span class="n">chart_asset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GetNextSt</span><span class="p">(</span><span class="n">chart_asset</span><span class="p">[</span><span class="n">month</span><span class="p">],</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">ZList</span><span class="p">[</span><span class="n">month</span><span class="p">][</span><span class="n">iasset</span><span class="p">]))</span>
+    <span class="n">chart</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chart_asset</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">chart</span>
+
+<span class="c1">#オーソドックスなSharpe Ratio</span>
+<span class="k">def</span> <span class="nf">CalculateSharpeRatio</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
+    <span class="n">monthly_return</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+      <span class="n">valueChange</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">r0</span>
+      <span class="n">monthly_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valueChange</span><span class="p">)</span>
+
+    <span class="n">annualized_excess_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">monthly_return</span><span class="p">)</span>
+    <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">monthly_return</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">annualized_excess_return</span><span class="o">/</span><span class="n">volatility</span><span class="p">)</span>
+
+<span class="c1">#log-returnに基づいたSharpe Ratio</span>
+<span class="k">def</span> <span class="nf">CalculateSharpeRatio_log</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
+  <span class="n">monthly_log_return</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">valueChange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="p">])</span>
+    <span class="n">monthly_log_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valueChange</span><span class="p">)</span>
+  <span class="n">mean_log_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">monthly_log_return</span><span class="p">)</span>
+  <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">monthly_log_return</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="p">(</span><span class="n">mean_log_return</span><span class="o">-</span><span class="n">r0</span><span class="p">)</span><span class="o">/</span><span class="n">volatility</span>
+
+<span class="c1">#少し変わった定義のSharpe Ratio</span>
+<span class="k">def</span> <span class="nf">CalculateSharpeRatio_2</span><span class="p">(</span><span class="n">asset</span><span class="p">):</span>
+  <span class="n">monthly_log_return</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+  <span class="n">monthly_return</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>
+    <span class="n">log_valueChange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="p">])</span>
+    <span class="n">monthly_log_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_valueChange</span><span class="p">)</span>
+    <span class="n">valueChange</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">asset</span><span class="p">[</span><span class="n">month</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.0</span>
+    <span class="n">monthly_return</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valueChange</span><span class="p">)</span>
+  <span class="n">annualized_excess_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">monthly_return</span><span class="p">)</span> <span class="o">-</span> <span class="n">r0</span>
+  <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">monthly_log_return</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="p">(</span><span class="n">annualized_excess_return</span><span class="o">/</span><span class="n">volatility</span><span class="p">)</span>
+
+<span class="n">allmean</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">ntry</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span> <span class="c1">#複数回試行で同じセットないの相関による影響を消す</span>
+  <span class="n">Chart</span> <span class="o">=</span> <span class="n">CreateAssets</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span> <span class="c1">#指定した数の銘柄を作る</span>
+  <span class="n">mean_SR</span> <span class="o">=</span> <span class="mf">0.0</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="mf">0.</span>
+  <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">Chart</span><span class="p">:</span>
+    <span class="n">assetSR</span> <span class="o">=</span> <span class="n">CalculateSharpeRatio</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span> <span class="c1">#ここを変更すればShape Ratioの計算方法を変えられる</span>
+    <span class="c1">#assetSR = CalculateSharpeRatio_log(asset)</span>
+    <span class="c1">#assetSR = CalculateSharpeRatio_2(asset)</span>
+    <span class="n">mean_SR</span> <span class="o">=</span> <span class="p">((</span><span class="n">mean_SR</span><span class="o">*</span><span class="n">n</span><span class="p">)</span><span class="o">+</span><span class="n">assetSR</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#平均Shape Ratio</span>
+    <span class="n">n</span><span class="o">+=</span><span class="mi">1</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SubSet &quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntry</span><span class="p">)</span><span class="o">+</span> <span class="s2">&quot; average Sharpe Ratio: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_SR</span><span class="p">))</span>
+  <span class="n">allmean</span> <span class="o">=</span> <span class="p">((</span><span class="n">allmean</span><span class="o">*</span><span class="n">ntry</span><span class="p">)</span><span class="o">+</span><span class="n">mean_SR</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">ntry</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average Sharpe Ratio of all generated: &quot;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">allmean</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SubSet 0 average Sharpe Ratio: 0.39771321862223386
+Average Sharpe Ratio of all generated: 0.39771321862223386
+SubSet 1 average Sharpe Ratio: 0.31224299181259213
+Average Sharpe Ratio of all generated: 0.354978105217413
+SubSet 2 average Sharpe Ratio: 0.4733691467344419
+Average Sharpe Ratio of all generated: 0.3944417857230893
+SubSet 3 average Sharpe Ratio: 0.4747953226344756
+Average Sharpe Ratio of all generated: 0.4145301699509359
+SubSet 4 average Sharpe Ratio: 0.46746707067595134
+Average Sharpe Ratio of all generated: 0.42511755009593893
+SubSet 5 average Sharpe Ratio: 0.2263411924320541
+Average Sharpe Ratio of all generated: 0.3919881571519581
+SubSet 6 average Sharpe Ratio: 0.38327486854117115
+Average Sharpe Ratio of all generated: 0.3907434016361314
+SubSet 7 average Sharpe Ratio: 0.4393312457853536
+Average Sharpe Ratio of all generated: 0.39681688215478417
+SubSet 8 average Sharpe Ratio: 0.4558302540563192
+Average Sharpe Ratio of all generated: 0.40337392347717693
+SubSet 9 average Sharpe Ratio: 0.4172327183910663
+Average Sharpe Ratio of all generated: 0.40475980296856584
+SubSet 10 average Sharpe Ratio: 0.29434518329195725
+Average Sharpe Ratio of all generated: 0.3947221102706923
+SubSet 11 average Sharpe Ratio: 0.5004277374888711
+Average Sharpe Ratio of all generated: 0.4035309125388739
+SubSet 12 average Sharpe Ratio: 0.38286711261881656
+Average Sharpe Ratio of all generated: 0.40194138946810026
+SubSet 13 average Sharpe Ratio: 0.5476167774248429
+Average Sharpe Ratio of all generated: 0.41234677432215333
+SubSet 14 average Sharpe Ratio: 0.34202062100273967
+Average Sharpe Ratio of all generated: 0.4076583641008591
+SubSet 15 average Sharpe Ratio: 0.3915842381837107
+Average Sharpe Ratio of all generated: 0.4066537312310373
+SubSet 16 average Sharpe Ratio: 0.4459820454174548
+Average Sharpe Ratio of all generated: 0.40896716147729717
+SubSet 17 average Sharpe Ratio: 0.3883467711165325
+Average Sharpe Ratio of all generated: 0.40782158423503245
+SubSet 18 average Sharpe Ratio: 0.4003542329831629
+Average Sharpe Ratio of all generated: 0.40742856574809194
+SubSet 19 average Sharpe Ratio: 0.3639854606024752
+Average Sharpe Ratio of all generated: 0.40525641049081107
+SubSet 20 average Sharpe Ratio: 0.3421587210802155
+Average Sharpe Ratio of all generated: 0.40225175861411605
+SubSet 21 average Sharpe Ratio: 0.5587319757036145
+Average Sharpe Ratio of all generated: 0.40936449575454775
+SubSet 22 average Sharpe Ratio: 0.3006411145569233
+Average Sharpe Ratio of all generated: 0.40463739222421624
+SubSet 23 average Sharpe Ratio: 0.3039549870429209
+Average Sharpe Ratio of all generated: 0.400442292008329
+SubSet 24 average Sharpe Ratio: 0.28285134938832296
+Average Sharpe Ratio of all generated: 0.3957386543035287
+SubSet 25 average Sharpe Ratio: 0.30092016089899815
+Average Sharpe Ratio of all generated: 0.3920917891725853
+SubSet 26 average Sharpe Ratio: 0.40018701950050334
+Average Sharpe Ratio of all generated: 0.3923916125180637
+SubSet 27 average Sharpe Ratio: 0.37447104953301774
+Average Sharpe Ratio of all generated: 0.3917515924114549
+SubSet 28 average Sharpe Ratio: 0.32685727294718503
+Average Sharpe Ratio of all generated: 0.3895138572575146
+SubSet 29 average Sharpe Ratio: 0.3698972348886877
+Average Sharpe Ratio of all generated: 0.38885996984522037
+SubSet 30 average Sharpe Ratio: 0.3403643225809469
+Average Sharpe Ratio of all generated: 0.387295594127018
+SubSet 31 average Sharpe Ratio: 0.45043214002755794
+Average Sharpe Ratio of all generated: 0.3892686111864099
+SubSet 32 average Sharpe Ratio: 0.5031807649412071
+Average Sharpe Ratio of all generated: 0.392720494633525
+SubSet 33 average Sharpe Ratio: 0.3533158836369709
+Average Sharpe Ratio of all generated: 0.3915615354865675
+SubSet 34 average Sharpe Ratio: 0.1715283726158958
+Average Sharpe Ratio of all generated: 0.3852748736902626
+SubSet 35 average Sharpe Ratio: 0.39843406190030467
+Average Sharpe Ratio of all generated: 0.3856404066960971
+SubSet 36 average Sharpe Ratio: 0.4188886916424097
+Average Sharpe Ratio of all generated: 0.38653900899194343
+SubSet 37 average Sharpe Ratio: 0.31772011182757004
+Average Sharpe Ratio of all generated: 0.38472798538235464
+SubSet 38 average Sharpe Ratio: 0.36184538855503073
+Average Sharpe Ratio of all generated: 0.3841412521303719
+SubSet 39 average Sharpe Ratio: 0.37753194828892944
+Average Sharpe Ratio of all generated: 0.38397601953433586
+SubSet 40 average Sharpe Ratio: 0.28515667200514994
+Average Sharpe Ratio of all generated: 0.38156579154581916
+SubSet 41 average Sharpe Ratio: 0.5081912366460136
+Average Sharpe Ratio of all generated: 0.38458068309582377
+SubSet 42 average Sharpe Ratio: 0.4208550753291976
+Average Sharpe Ratio of all generated: 0.38542427361287895
+SubSet 43 average Sharpe Ratio: 0.6014327134967187
+Average Sharpe Ratio of all generated: 0.3903335563375117
+SubSet 44 average Sharpe Ratio: 0.4564217617875184
+Average Sharpe Ratio of all generated: 0.3918021831252896
+SubSet 45 average Sharpe Ratio: 0.5116313896246586
+Average Sharpe Ratio of all generated: 0.39440716587527586
+SubSet 46 average Sharpe Ratio: 0.4179090321788077
+Average Sharpe Ratio of all generated: 0.39490720558386166
+SubSet 47 average Sharpe Ratio: 0.4838005655236632
+Average Sharpe Ratio of all generated: 0.3967591505826075
+SubSet 48 average Sharpe Ratio: 0.45081518855246966
+Average Sharpe Ratio of all generated: 0.397862335030972
+SubSet 49 average Sharpe Ratio: 0.5119989250750935
+Average Sharpe Ratio of all generated: 0.40014506683185447
+SubSet 50 average Sharpe Ratio: 0.3614888789182474
+Average Sharpe Ratio of all generated: 0.3993871023629602
+SubSet 51 average Sharpe Ratio: 0.3406470322989305
+Average Sharpe Ratio of all generated: 0.39825748563095964
+SubSet 52 average Sharpe Ratio: 0.4889578200732346
+Average Sharpe Ratio of all generated: 0.3999688126959083
+SubSet 53 average Sharpe Ratio: 0.4248179614099146
+Average Sharpe Ratio of all generated: 0.400428982116538
+SubSet 54 average Sharpe Ratio: 0.5758767238506953
+Average Sharpe Ratio of all generated: 0.403618941057159
+SubSet 55 average Sharpe Ratio: 0.35258744835809414
+Average Sharpe Ratio of all generated: 0.40270766440181854
+SubSet 56 average Sharpe Ratio: 0.46389573390762034
+Average Sharpe Ratio of all generated: 0.40378113930542914
+SubSet 57 average Sharpe Ratio: 0.33330147565184864
+Average Sharpe Ratio of all generated: 0.4025659726907122
+SubSet 58 average Sharpe Ratio: 0.359936537414074
+Average Sharpe Ratio of all generated: 0.40184343988941323
+SubSet 59 average Sharpe Ratio: 0.18548671422049226
+Average Sharpe Ratio of all generated: 0.3982374944615979
+SubSet 60 average Sharpe Ratio: 0.31825225458046913
+Average Sharpe Ratio of all generated: 0.39692626102092365
+SubSet 61 average Sharpe Ratio: 0.39740585380787086
+Average Sharpe Ratio of all generated: 0.39693399638845506
+SubSet 62 average Sharpe Ratio: 0.3123460704488924
+Average Sharpe Ratio of all generated: 0.3955913308973509
+SubSet 63 average Sharpe Ratio: 0.17066034236469133
+Average Sharpe Ratio of all generated: 0.3920767842015281
+SubSet 64 average Sharpe Ratio: 0.49054960125909913
+Average Sharpe Ratio of all generated: 0.39359175061779844
+SubSet 65 average Sharpe Ratio: 0.4683992999766275
+Average Sharpe Ratio of all generated: 0.39472519833535646
+SubSet 66 average Sharpe Ratio: 0.4276890536750029
+Average Sharpe Ratio of all generated: 0.39521719617624673
+SubSet 67 average Sharpe Ratio: 0.34835579920922205
+Average Sharpe Ratio of all generated: 0.3945280579855552
+SubSet 68 average Sharpe Ratio: 0.5656831737640938
+Average Sharpe Ratio of all generated: 0.39700856690988184
+SubSet 69 average Sharpe Ratio: 0.3500498562509316
+Average Sharpe Ratio of all generated: 0.39633772818618257
+SubSet 70 average Sharpe Ratio: 0.3285772820613489
+Average Sharpe Ratio of all generated: 0.3953833557055511
+SubSet 71 average Sharpe Ratio: 0.28709444026569597
+Average Sharpe Ratio of all generated: 0.3938793429911087
+SubSet 72 average Sharpe Ratio: 0.5297696243260012
+Average Sharpe Ratio of all generated: 0.3957408536943264
+SubSet 73 average Sharpe Ratio: 0.38421598301432724
+Average Sharpe Ratio of all generated: 0.3955851121986507
+SubSet 74 average Sharpe Ratio: 0.4389708443016837
+Average Sharpe Ratio of all generated: 0.39616358862669115
+SubSet 75 average Sharpe Ratio: 0.4151518634562364
+Average Sharpe Ratio of all generated: 0.3964134343481326
+SubSet 76 average Sharpe Ratio: 0.4390185270358841
+Average Sharpe Ratio of all generated: 0.3969667472401813
+SubSet 77 average Sharpe Ratio: 0.34017169303980044
+Average Sharpe Ratio of all generated: 0.39623860551966356
+SubSet 78 average Sharpe Ratio: 0.49931083026300915
+Average Sharpe Ratio of all generated: 0.3975433172252755
+SubSet 79 average Sharpe Ratio: 0.5249102224536594
+Average Sharpe Ratio of all generated: 0.3991354035406303
+SubSet 80 average Sharpe Ratio: 0.4826400222929295
+Average Sharpe Ratio of all generated: 0.40016632475979447
+SubSet 81 average Sharpe Ratio: 0.3473369366871739
+Average Sharpe Ratio of all generated: 0.3995220639296405
+SubSet 82 average Sharpe Ratio: 0.4866880694243147
+Average Sharpe Ratio of all generated: 0.40057225676692576
+SubSet 83 average Sharpe Ratio: 0.2573724712803485
+Average Sharpe Ratio of all generated: 0.3988674974158951
+SubSet 84 average Sharpe Ratio: 0.524029528014986
+Average Sharpe Ratio of all generated: 0.4003399918935314
+SubSet 85 average Sharpe Ratio: 0.2719989232855522
+Average Sharpe Ratio of all generated: 0.39884765388646193
+SubSet 86 average Sharpe Ratio: 0.4232959157978112
+Average Sharpe Ratio of all generated: 0.39912866839119004
+SubSet 87 average Sharpe Ratio: 0.2100435243641696
+Average Sharpe Ratio of all generated: 0.39697997357270115
+SubSet 88 average Sharpe Ratio: 0.19532873260069436
+Average Sharpe Ratio of all generated: 0.39471422929211675
+SubSet 89 average Sharpe Ratio: 0.34212415697757487
+Average Sharpe Ratio of all generated: 0.39412989515528857
+SubSet 90 average Sharpe Ratio: 0.42626960893703086
+Average Sharpe Ratio of all generated: 0.3944830788232198
+SubSet 91 average Sharpe Ratio: 0.21291092928991706
+Average Sharpe Ratio of all generated: 0.39250946850220564
+SubSet 92 average Sharpe Ratio: 0.4020803408152224
+Average Sharpe Ratio of all generated: 0.392612381107722
+SubSet 93 average Sharpe Ratio: 0.39672437477779815
+Average Sharpe Ratio of all generated: 0.39265612572123343
+SubSet 94 average Sharpe Ratio: 0.3320935258938145
+Average Sharpe Ratio of all generated: 0.39201862467041854
+SubSet 95 average Sharpe Ratio: 0.3949367512207725
+Average Sharpe Ratio of all generated: 0.39204902182198476
+SubSet 96 average Sharpe Ratio: 0.40002339328307523
+Average Sharpe Ratio of all generated: 0.39213123183704757
+SubSet 97 average Sharpe Ratio: 0.5257529178707928
+Average Sharpe Ratio of all generated: 0.3934947184292286
+SubSet 98 average Sharpe Ratio: 0.304621937063518
+Average Sharpe Ratio of all generated: 0.3925970135669487
+SubSet 99 average Sharpe Ratio: 0.2627227494576991
+Average Sharpe Ratio of all generated: 0.39129827092585623
+</pre></div></div>
+</div>
+</section>
+<section id="古典アルゴリズムによる探索">
+<h3>古典アルゴリズムによる探索<a class="headerlink" href="#古典アルゴリズムによる探索" title="Permalink to this headline">¶</a></h3>
+<p>続いてはQUBO行列の準備及び古典なアルゴリズムに必要な関数を実装する。ここで、ペアワイズ相関行列は論文に従い対数リターンで計算した。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="c1">#Attractiveness Coversion</span>
+<span class="k">def</span> <span class="nf">SRBucket</span><span class="p">(</span><span class="n">SR_list</span><span class="p">):</span>
+    <span class="n">Buckets</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">SR_list</span><span class="p">)</span>
+    <span class="n">Buckets</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">GroupedList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">Buckets</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">SR_list</span><span class="p">)):</span>
+        <span class="k">if</span>   <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">15</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">12</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">6</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=-</span><span class="mi">3</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=-</span><span class="mi">6</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=-</span><span class="mi">9</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=-</span><span class="mi">12</span>
+        <span class="k">elif</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">GroupedList</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=-</span><span class="mi">15</span>
+
+<span class="c1">#Penalty/Reward Conversion</span>
+<span class="k">def</span> <span class="nf">CorrelationBucket</span><span class="p">(</span><span class="n">Corr</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Corr</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Corr</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1.00</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.25</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.15</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.05</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.05</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.15</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.15</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="k">elif</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.25</span> <span class="ow">and</span>  <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.00</span><span class="p">:</span> <span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1">#Ising component for classical algorithms</span>
+<span class="k">def</span> <span class="nf">hi</span><span class="p">(</span><span class="n">SR_list</span><span class="p">,</span> <span class="n">Corr</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">h</span>
+
+<span class="k">def</span> <span class="nf">jij</span><span class="p">(</span><span class="n">Corr</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1.</span><span class="o">/</span><span class="mf">4.</span><span class="o">*</span><span class="n">Corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+
+<span class="c1">#Create Pairwise Correlation Matrix</span>
+<span class="k">def</span> <span class="nf">CreateCorrMat</span><span class="p">(</span><span class="n">Chart</span><span class="p">):</span>
+    <span class="n">assets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">iasset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Chart</span><span class="p">)):</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">):</span>
+            <span class="n">log_return</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">iasset</span><span class="p">][</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">Chart</span><span class="p">[</span><span class="n">iasset</span><span class="p">][</span><span class="n">month</span><span class="p">])</span>
+            <span class="n">returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_return</span><span class="p">)</span>
+        <span class="n">assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    <span class="n">Chart_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">assets</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">pairwise_corr</span> <span class="o">=</span> <span class="n">Chart_pd</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;pearson&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pairwise_corr</span>
+
+<span class="c1">#Initial state for Greedy Search and Genetic Algorithm</span>
+<span class="k">def</span> <span class="nf">GenerateRandomSolution</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="n">Solution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nassets</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">Solution</span>
+
+<span class="c1">#得られた解のポートフォリオのSharpe Ratioを計算する</span>
+<span class="k">def</span> <span class="nf">EvaluateSolution</span><span class="p">(</span><span class="n">Solution</span><span class="p">,</span><span class="n">Chart</span><span class="p">):</span>
+    <span class="n">selected_assets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Solution</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">selected_assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_assets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">portfolioSR</span> <span class="o">=</span> <span class="n">CalculateSharpeRatio</span><span class="p">(</span><span class="n">portfolioChart</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">portfolioSR</span>
+
+<span class="c1">#遺伝アルゴリズム、突然変異を導入して子孫を作る</span>
+<span class="k">def</span> <span class="nf">CreateDescendant</span><span class="p">(</span><span class="n">Ancestor</span><span class="p">,</span> <span class="n">Ndescendants</span><span class="p">,</span> <span class="n">MaxMutation</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">index_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Ancestor</span><span class="p">))</span>
+    <span class="n">Descendants</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">Ndescendants</span><span class="p">:</span>
+        <span class="n">Nmutaion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MaxMutation</span><span class="p">)</span>
+        <span class="n">Place_to_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">index_list</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">Nmutaion</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">Descendant</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">place</span> <span class="ow">in</span> <span class="n">Place_to_change</span><span class="p">:</span>
+            <span class="n">Descendant</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">Ancestor</span><span class="p">)</span>
+            <span class="n">Descendant</span><span class="p">[</span><span class="n">place</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ancestor</span><span class="p">[</span><span class="n">place</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">Descendants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Descendant</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">Descendants</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#銘柄セットを再生成する</span>
+<span class="c1">#ここからさっきのステップはこの銘柄セットをずっと使う</span>
+<span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span>
+
+<span class="n">Chart</span> <span class="o">=</span> <span class="n">CreateAssets</span><span class="p">(</span><span class="n">Nassets</span><span class="p">)</span>
+<span class="n">PairwiseCorrMat</span> <span class="o">=</span> <span class="n">CreateCorrMat</span><span class="p">(</span><span class="n">Chart</span><span class="p">)</span>
+<span class="n">SR_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">Chart</span><span class="p">:</span>
+    <span class="n">SR_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CalculateSharpeRatio</span><span class="p">(</span><span class="n">asset</span><span class="p">))</span>
+
+<span class="c1">#Bucketの翻訳</span>
+<span class="n">SRBucket</span><span class="p">(</span><span class="n">SR_list</span><span class="p">)</span>
+<span class="n">CorrelationBucket</span><span class="p">(</span><span class="n">PairwiseCorrMat</span><span class="p">)</span>
+
+<span class="c1">#print(PairwiseCorrMat)　#ペアワイズ相関行列の確認</span>
+<br/></pre></div>
+</div>
+</div>
+<section id="貪欲サーチ">
+<h4>貪欲サーチ<a class="headerlink" href="#貪欲サーチ" title="Permalink to this headline">¶</a></h4>
+<p>まずは貪欲サーチのアルゴリズムで探索を行う。ランダムに生成した初期状態から出発して、全体のパフォーマンスに対する影響を見ながら、ポートフォリオのSharpe Ratioを高くできそうな銘柄を選んでいくアルゴリズムである。イタレーションを行うことで、ランダムな初期状態からある一定の状態に落ち着くことを観測できる。</p>
+<p>実行後、アルゴリズムの初期状態と得られた状態の比較を行う。このとき比較の基準がポートフォリオのSharpe Ratioになる。このチュートリアルでは全銘柄のウエイトが同じというシナリオなので、選ばれた銘柄の平均的なチャートを得てSharpe Ratioの計算を行った。</p>
+<p>また、一個前のコードブロック複数回実行して銘柄セットをリセットすると、貪欲サーチの結果は初期状態よりも悪くなったり、ほぼ変わらなかったりする場合もあるのが分かる。そして最終的なリターンが初期状態に負けたが、Sharpe Ratioが大きい最終状態もある。それらを比較すると、Sharpe Ratioが大きい場合ポートフォリオのチャートが滑らかで、変動が小さくリスクが非常に小さいのが分かる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Greedy Search</span>
+
+<span class="c1">#初期状態生成</span>
+<span class="n">Solution</span> <span class="o">=</span> <span class="n">GenerateRandomSolution</span><span class="p">(</span><span class="n">Nassets</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial random selection:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Solution</span><span class="p">,</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">Solution</span><span class="p">,</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">#初期状態に基づいてエネルギーの初期化を行う</span>
+<span class="n">Energies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">iasset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hi</span><span class="p">(</span><span class="n">SR_list</span><span class="p">,</span> <span class="n">PairwiseCorrMat</span><span class="p">,</span> <span class="n">iasset</span><span class="p">)</span>
+    <span class="n">energyTuple</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">h</span> <span class="p">,</span> <span class="n">iasset</span><span class="p">]</span>
+    <span class="n">Energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energyTuple</span><span class="p">)</span>
+
+<span class="c1">#貪欲サーチの実行</span>
+<span class="n">NGreedyLoop</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NGreedyLoop</span><span class="p">):</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">Energies</span><span class="p">)</span>
+
+    <span class="n">ntry</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#print(Energies) #エネルギー変化を確認</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">ntry</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">Energies</span><span class="p">)):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">Energies</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">for</span> <span class="n">ie</span> <span class="ow">in</span> <span class="n">Energies</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">ie</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">ie</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ie</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">jij</span><span class="p">(</span><span class="n">PairwiseCorrMat</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">jij</span><span class="p">(</span><span class="n">PairwiseCorrMat</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+            <span class="n">ie</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ie</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ntry</span><span class="o">+=</span><span class="mi">1</span>
+
+
+<span class="c1">#貪欲サーチの出力</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selection After Greedy Search:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Solution</span><span class="p">,</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">Solution</span><span class="p">,</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">selected_charts2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">Solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">selected_charts2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Initial random selection:
+[-1  1 -1  1 -1  1  1  1  1  1 -1 -1 -1 -1 -1 -1  1  1  1 -1  1 -1  1  1
+  1 -1 -1  1  1  1 -1 -1 -1  1  1 -1 -1  1  1  1  1  1 -1  1  1  1 -1  1] 1.3183465113714299
+
+Selection After Greedy Search:
+[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1
+  1  1 -1 -1 -1  1 -1  1  1  1 -1 -1  1 -1 -1 -1  1 -1 -1  1 -1 -1  1 -1] 1.7791741480346233
+
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" />
+</div>
+</div>
+</section>
+<section id="遺伝的アルゴリズム">
+<h4>遺伝的アルゴリズム<a class="headerlink" href="#遺伝的アルゴリズム" title="Permalink to this headline">¶</a></h4>
+<p>貪欲サーチのほかに使われた古典アルゴリズムは遺伝的アルゴリズムである。ランダムに生成した複数のポートフォリオからパフォーマンスが良いものを選択して、その良いポートフォリオをもとで次の世代のポートフォリオを生成する。次の世代のポートフォリオは前の世代のポートフォリオにランダムな変更を加える突然変異と、ポートフォリオ間の遺伝子を交換させるなどで生成できる。ここでは銘柄数が比較的に小さいため、突然変異のみを考えていて、遺伝子間の交換や交配を行わなかった。</p>
+<p>結果を比較することで、ラスト世代が第一世代よりもパフォーマンスが良くなっていることを観測できる。ただし、ここで試行した世代数が限られているため、パフォーマンスが改善されないまたは改善が小さい場合もある。そして総じて貪欲サーチよりも安定な出力が得られるのも観察できる。</p>
+<p>注意：遺伝子の組数や子孫数、そして変異の数を増やした場合計算量の増加により計算が終わらない場合もあるので、実行環境に合わせて設定を変えてください。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Genetic Algorithm</span>
+<span class="n">Ngenes</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">#遺伝子の組数</span>
+<span class="n">NGenerations</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">#世代数</span>
+<span class="c1">#ランダム初期化</span>
+<span class="n">Genes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Ngenes</span><span class="p">):</span>
+    <span class="n">gene</span> <span class="o">=</span> <span class="n">GenerateRandomSolution</span><span class="p">(</span><span class="n">Nassets</span><span class="p">)</span>
+    <span class="n">geneSR</span> <span class="o">=</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span> <span class="n">Chart</span><span class="p">)</span>
+    <span class="n">Genes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">geneSR</span><span class="p">,</span> <span class="n">gene</span><span class="p">])</span>
+<span class="n">Genes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Genes</span><span class="p">,</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#第一世代最優良ポートフォリオ</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Gene 1st generation:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">selected_charts3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">selected_charts3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1">#遺伝的アルゴリズム実行</span>
+<span class="n">K_best</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">#上位抽出遺伝子組数</span>
+<span class="n">Ndescendants</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#子孫数</span>
+<span class="n">MaxMutation</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#最大変異数</span>
+<span class="k">for</span> <span class="n">iIter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NGenerations</span><span class="p">):</span>
+    <span class="n">selected_Genes</span> <span class="o">=</span> <span class="n">Genes</span><span class="p">[:</span><span class="n">K_best</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">selected_Genes</span><span class="p">:</span>
+        <span class="n">Descendants</span> <span class="o">=</span> <span class="n">CreateDescendant</span><span class="p">(</span><span class="n">gene</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Ndescendants</span><span class="p">,</span> <span class="n">MaxMutation</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">Descendant</span> <span class="ow">in</span> <span class="n">Descendants</span><span class="p">:</span>
+            <span class="n">DescendantSR</span> <span class="o">=</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">Descendant</span><span class="p">,</span> <span class="n">Chart</span><span class="p">)</span>
+            <span class="n">selected_Genes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">DescendantSR</span><span class="p">,</span> <span class="n">Descendant</span><span class="p">])</span>
+    <span class="n">selected_Genes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">selected_Genes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">selected_Genes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">selected_Genes</span><span class="p">[:</span><span class="n">K_best</span><span class="p">])</span>
+
+<span class="c1">#ラスト世代最優良ポートフォリオ</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Gene last generation:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">selected_Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">selected_Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">selected_charts4</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">selected_Genes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">selected_charts4</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts4</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">#比較プロットを作る</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;1st Gen Genetic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Last Gen Genetic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best Gene 1st generation:
+[ 1 -1 -1 -1 -1  1  1  1  1 -1 -1  1  1  1  1 -1 -1  1 -1 -1 -1  1  1 -1
+ -1  1  1  1  1 -1  1 -1  1  1 -1 -1  1  1  1  1  1 -1  1  1 -1  1  1 -1] 1.7666160535701652
+
+Best Gene last generation:
+[-1 -1 -1 -1 -1  1 -1  1  1  1  1 -1 -1  1  1  1 -1  1 -1  1  1 -1 -1 -1
+  1  1  1  1 -1  1 -1  1  1  1 -1  1  1  1  1 -1  1  1 -1 -1  1 -1 -1 -1] 2.0983164418363796
+
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Quantum-Annealingによる解法">
+<h3>Quantum Annealingによる解法<a class="headerlink" href="#Quantum-Annealingによる解法" title="Permalink to this headline">¶</a></h3>
+<p>Reverse Quantum Annealingでこの最適問題解くために、古典なアルゴリズムで得られたスピン形式の結果をアニーリングが使う形式に変換する。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ConvertSolutionToQuboState</span><span class="p">(</span><span class="n">solution</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">solution</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="n">QA_init_state</span> <span class="o">=</span> <span class="n">ConvertSolutionToQuboState</span><span class="p">(</span><span class="n">Solution</span><span class="p">)</span> <span class="c1">#貪欲サーチの結果を初期状態として使う</span>
+<span class="c1">#QA_init_state = ConvertSolutionToQuboState(selected_Genes[0][1]) #遺伝的アルゴリズムラスト世代の最優良ポートフォリオを初期状態として使う</span>
+<span class="c1">#QA_init_state = GenerateRandomSolution(Nassets) #ランダムな初期状態を使う</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">QA_init_state</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0]
+</pre></div></div>
+</div>
+<section id="Forward-Annealingの場合">
+<h4>Forward Annealingの場合<a class="headerlink" href="#Forward-Annealingの場合" title="Permalink to this headline">¶</a></h4>
+<p>銘柄の魅力度とペアワイズ相関による罰金と賞金の度合を使ってQUBO行列を作り、まずForward Annealingを実行する。最終リターン率の改善はケースバイケースになるが、結果として貪欲サーチの結果よりも安定したチャートを得ている。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openjij</span> <span class="kn">import</span> <span class="n">SQASampler</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">SQASampler</span><span class="p">()</span>
+
+<span class="n">QUBO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">Nassets</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nassets</span><span class="p">,</span> <span class="n">Nassets</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">PairwiseCorrMat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">QUBO</span><span class="p">))</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">QUBO</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">sampleset_FQA</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart_FQA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_FQA</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Forward Annealing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;class &#39;numpy.ndarray&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
+[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
+ 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" />
+</div>
+</div>
+</section>
+<section id="Reverse-Quantum-Annealing(RQA)の場合">
+<h4>Reverse Quantum Annealing(RQA)の場合<a class="headerlink" href="#Reverse-Quantum-Annealing(RQA)の場合" title="Permalink to this headline">¶</a></h4>
+<p>Reverse Annealingの場合、まずは古典的アルゴリズムから得られた状態を初期状態として入力してからアニーリングを行う。この時はまずアニーリングのスケジュールを設定する必要がある。SQAのハミルトニアンは次のようになる。</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{H}_{\mathrm{SQA}}(s) = s\mathcal{H}_{p}-(1-s)\sum_{i}\sigma_{i}^{x}, 0\leq x\leq 1\]</div>
+<p>ここの<span class="math notranslate nohighlight">\(\mathcal{H}_{p}\)</span>は問題のハミルトニアンで￥、<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(1-s\)</span>はそれぞれ参考論文[2]の<span class="math notranslate nohighlight">\(B[t]\)</span>と<span class="math notranslate nohighlight">\(A[t]\)</span>に対応する。この<span class="math notranslate nohighlight">\(s\)</span>の設定は</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>に追加の引数を指定することによってできる。初期状態の設定や更新を含めて</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span> <span class="o">=</span> <span class="n">user_schedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">user_initial_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>のように変更すればよい。ここのscheduleはアニーリングスケジュールを指していて、</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user_schedule</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="c1">#s=0, beta=0.1, 4 steps</span>
+    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>  <span class="c1">#s=0, beta=1, 4 steps</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1">#s=1, beta=10, 3 steps</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>のような構造を持つ、格納されたリストの<code class="docutils literal notranslate"><span class="pre">[0]</span></code>成分は<span class="math notranslate nohighlight">\(s\)</span>の値で、アニーリングするときの横磁場の強さを反映する。<code class="docutils literal notranslate"><span class="pre">[1]</span></code>成分は逆温度<span class="math notranslate nohighlight">\(\beta\)</span>で、大きければ低い温度を意味し、より強く基底状態に戻る。デフォルトでは<span class="math notranslate nohighlight">\(\beta = 5\)</span>で設定されている。そして最後の<code class="docutils literal notranslate"><span class="pre">[2]</span></code>成分は量子モンテカルロ法のシミュレーションステップ数を表していて、各スケジュールの長さを調整できる。</p>
+<p>そして<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>が代入する初期状態である。<code class="docutils literal notranslate"><span class="pre">reinitialize_state</span></code>のオプションが<code class="docutils literal notranslate"><span class="pre">False</span></code>にすることで、毎回実行した出力がまた初期状態として代入されて次のアニーリングを行う意味で、上の関数はある初期状態から出発してRQAを10回イタレーションする意味になる。このオプション引数がデフォルトでは<code class="docutils literal notranslate"><span class="pre">True</span></code>で、実行するたびに初期状態の再設定を行っている。RQAを一回実行させ、複数回の結果を比較したい場合は<code class="docutils literal notranslate"><span class="pre">True</span></code>で問題ない。</p>
+<p>ではReverse Annealingのスケジュールを作成する。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
+<span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">NPauseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">NForwardStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">NMCStep</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.38</span>
+<span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+<span class="n">ForwardStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NForwardStep</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">5.</span>
+<span class="c1">#Reverse Step</span>
+<span class="c1">#for i in range(NReverseStep):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">NMCStep</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="c1">#Pause Step</span>
+<span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">TargetS</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">NPauseStep</span><span class="o">*</span><span class="n">NMCStep</span><span class="p">])</span>
+
+<span class="c1">#Forward Step</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">NMCStep</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>作られたスケジュールを使って、初期状態を指定した<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>関数を使って、RQAを実行する。そして同様に、貪欲サーチの結果やForward Annealingの結果ちお比較を行う。結果を見ると、このチュートリアルが行う設定では銘柄セットのサイズ制限によってForward Annealingと同じ最適解にたどり着く場合が多いのが分かる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#初期状態を準備</span>
+<span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+<span class="c1">#Reverse Annealing</span>
+<span class="n">sampleset_RQA</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+
+<span class="c1">#チャートの比較</span>
+<span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart_RQA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_FQA</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Forward Annealing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_RQA</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reverse Annealing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#結果の比較</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
+ 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
+[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
+ 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
+</pre></div></div>
+</div>
+</section>
+<section id="Reverse-Quantum-Annealingの確認">
+<h4>Reverse Quantum Annealingの確認<a class="headerlink" href="#Reverse-Quantum-Annealingの確認" title="Permalink to this headline">¶</a></h4>
+<p>同じ状態になると、実際にRQAの様子が分からないので、段階を分解してRQAを実行してみる。まずはReverse Phaseの確認である。同じようにアニーリングスケジュールを設定して、スケジュールと初期状態を指定したアニーリングを行う。ここでは例が分かりやすくなるようにReverse
+Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値や逆温度の設定を変えた。また、アニーリングもイタレーションではなく、毎回同じ初期状態から始まるように設定した。結果を見ると、逆転したアニーリング過程によって、既に得られた解から、よりエネルギーの高い状態に登っていったことが分かる。また、ほぼ毎回異なる状態でとまるので、高いエネルギー准位で解が定まっていないのもわかる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[198]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
+<span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="c1">#よりランダムな状態に戻す</span>
+<span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c1">#Reverse Step</span>
+<span class="c1">#for i in range(NReverseStep):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+<span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -248., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -246., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -250., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -251., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -239., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -248., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0], -252., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -253., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -251., 1)]
+</pre></div></div>
+</div>
+<p>Reverse状態の確認ができたので、このままPause Phaseの追加を行う。追加後は同様にアニーリングを実行して、その結果を確認した。このPhaseの追加は実装上において上のReverse Phaseの一番最後のステップのMCステップ数を伸ばしたものに等しいので、上のReverseのみのケースと同じようにバラバラの結果になる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[203]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Pause Step</span>
+<span class="n">NPauseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="c1">#よりランダムな状態に戻す</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1">#より高い温度で熱的動きがしやすくようにする</span>
+<span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="o">*</span><span class="n">NPauseStep</span><span class="p">]</span>
+<span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="c1">#print(RQAschedule)</span>
+
+<span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+<span class="n">sampleset_RQA_Reverse_Pause</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse_Pause</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse_Pause</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0], -194., 1)
+ ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -235., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0], -223., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0], -221., 1)
+ ([0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0], -216., 1)
+ ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0], -170., 1)
+ ([0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -210., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -196., 1)
+ ([0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0], -169., 1)
+ ([0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0], -220., 1)]
+</pre></div></div>
+</div>
+<p>最後にForward Phaseをまた追加してアニーリングを行う。ここの設定はこのチュートリアルの前のサンプルよりも少し緩い温度や磁場の条件で行った。結果として、この銘柄セットで既知の量子アニーリングによる最適解が得られたのが分かる。これでRQAの節の最初の例でもちゃんとRQAによって最適解を出しているのが分かる。</p>
+<p>また、条件が少し緩いため、解が収束せずに、エネルギーが近い複数のsub-optimalの解の存在を確認することができる。そのなかは場合によって、量子アニーリングの最適解よりも最終的なリターンが良くて、形も比較的に滑らかなポートフォリオの存在も確認できる。そのポートフォリオの詳細を見ると、その大きなリターンは上昇率が大きい特定の銘柄によるもので、逆相関を持つ変動率が比較的に小さい銘柄と組み合わせて実現されたものだと分かる。実際の投資においてはそのようなポートフォリオが好ましいかもしれないが、このチュートリアルが設定した「Shape
+Ratioが特に書く最大になる」条件では、相対的に大きいポートフォリSharpe Ratioが実現されることから、量子アニーリングによって最適ではない解と判断された。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[215]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Forward Step</span>
+<span class="n">NForwardStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="c1">#よりランダムな状態に戻す</span>
+<span class="n">ForwardStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NForwardStep</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="c1">#より高い温度で熱的動きがしやすくようにする</span>
+<span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1">#Forward Step</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+<span class="n">sampleset_RQA_Reverse_Pause_Forward</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse_Pause_Forward</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse_Pause_Forward</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -252., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -250., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
+</pre></div></div>
+</div>
+</section>
+<section id="RQAスケジュールを指定するときのパラメータ探索">
+<h4>RQAスケジュールを指定するときのパラメータ探索<a class="headerlink" href="#RQAスケジュールを指定するときのパラメータ探索" title="Permalink to this headline">¶</a></h4>
+<p>以上のように、OpenJijを用いて、Reverse Quantum Annealingを実装してポートフォリオ最適化問題を解いた。ほかの最適解付近にsub-optimalな解が多く存在する問題に関しても、同様な手法でより良い解を求められるので、是非試してみてください。</p>
+</section>
+<section id="付録-DwaveマシンでRQA実験をする場合のコード">
+<h4>付録 DwaveマシンでRQA実験をする場合のコード<a class="headerlink" href="#付録-DwaveマシンでRQA実験をする場合のコード" title="Permalink to this headline">¶</a></h4>
+<p>Dwaveマシンにおいてもこのチュートリアルが実行した手法でRQAを実行できる。ここでは参考としてそのサンプルコードを載せる。実装及びシミュレーションと実機の違いで、スケジュールの設定方法や引数が異なるが、基本的には同じような過程になる。詳細を知りたい方はDwave公式サイトなどにあるドキュメントに参考してください。 また、実機では現実のノイズなどによる影響は見られやすいので通常のアニーリングとRQAによる結果の違いは見られやすい。</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dwave.system</span> <span class="kn">import</span> <span class="n">DWaveSampler</span><span class="p">,</span> <span class="n">EmbeddingComposite</span>
+
+<span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;*** your user token ***&#39;</span>
+<span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;*** your dwave endpoint***&#39;</span> <span class="c1">#&#39;https://cloud.dwavesys.com/sapi/&#39; as defaults</span>
+
+<span class="n">dw_sampler</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;Advantage_system4.1&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw_sampler</span><span class="p">)</span>
+
+<span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span>
+
+
+<span class="c1"># RQA schedule</span>
+<span class="n">timing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">Ratio</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span><span class="n">Ratio</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span><span class="n">Ratio</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#Create QUBO</span>
+<span class="n">QUBO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">Nassets</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nassets</span><span class="p">,</span> <span class="n">Nassets</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>  <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pairwise_corr</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">QUBO</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">SR_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">QUBO</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#FQA</span>
+<span class="n">sampleset</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+
+<span class="n">min_forword</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">sampleset</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_forword</span><span class="p">:</span>
+        <span class="n">min_forword</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">best_forword</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">best_forword</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart_FQA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_FQA</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Forward Annealing&quot;</span><span class="p">)</span>
+
+<span class="c1">#RQA</span>
+<span class="n">sampleset_RQA</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="n">anneal_schedule</span><span class="o">=</span><span class="n">schedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">QA_init_state</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+
+<span class="n">min_RQA</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_RQA</span><span class="p">:</span>
+        <span class="n">min_RQA</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">best_RQA</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">best_RQA</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">portfolioChart_RQA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_RQA</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reverse Annealing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="参考文献">
+<h2>参考文献<a class="headerlink" href="#参考文献" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Harry Markowitz, “Portfolio selection”, The journal of finance, 7(1):77–91 (1952)</p></li>
+<li><p>Davide Venturelli, Alexei Kondratyev, “Reverse Quantum Annealing Approach to Portfolio Optimization Problems”, Quantum Machine Intelligence volume 1, pages17–30 (2019)</p></li>
+<li><p>Sharpe, William F., “Mutual fund performance”, The Journal of Business 39 (1), 119-138 (1966)</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a><ul>
+<li><a class="reference internal" href="#ポートフォリオ最適化問題">ポートフォリオ最適化問題</a></li>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化">Reverse Quantum Annealingによるポートフォリオ最適化</a><ul>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealing">Reverse Quantum Annealing</a></li>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化の手順">Reverse Quantum Annealingによるポートフォリオ最適化の手順</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Open-Jijを用いた実装">Open Jijを用いた実装</a><ul>
+<li><a class="reference internal" href="#最適化を行う銘柄データの生成">最適化を行う銘柄データの生成</a></li>
+<li><a class="reference internal" href="#古典アルゴリズムによる探索">古典アルゴリズムによる探索</a><ul>
+<li><a class="reference internal" href="#貪欲サーチ">貪欲サーチ</a></li>
+<li><a class="reference internal" href="#遺伝的アルゴリズム">遺伝的アルゴリズム</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Quantum-Annealingによる解法">Quantum Annealingによる解法</a><ul>
+<li><a class="reference internal" href="#Forward-Annealingの場合">Forward Annealingの場合</a></li>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealing(RQA)の場合">Reverse Quantum Annealing(RQA)の場合</a></li>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealingの確認">Reverse Quantum Annealingの確認</a></li>
+<li><a class="reference internal" href="#RQAスケジュールを指定するときのパラメータ探索">RQAスケジュールを指定するときのパラメータ探索</a></li>
+<li><a class="reference internal" href="#付録-DwaveマシンでRQA実験をする場合のコード">付録 DwaveマシンでRQA実験をする場合のコード</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#参考文献">参考文献</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="012-ProteinFoldingHubo.html"
+                        title="previous chapter">12-Solving Protein Folding Problem by HUBO Solver</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="A001-Introduction.html"
+                        title="next chapter">A1 - OpenJij core interface入門 (core python interface)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/ja/013-ReverseQuantumAnnealing.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="A001-Introduction.html" title="A1 - OpenJij core interface入門 (core python interface)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Jij Inc..
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+    </div>
+  </body>
+</html>

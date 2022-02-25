@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -301,8 +301,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install pyqubo
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install pyqubo
 </pre></div>
 </div>
 </div>
@@ -327,8 +326,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># set the number of vertex</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set the number of vertex</span>
 <span class="n">N_VER</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="c1"># set the number of colors</span>
 <span class="n">N_COLOR</span> <span class="o">=</span> <span class="mi">4</span>
@@ -344,8 +342,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">solve_qubo</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">solve_qubo</span>
 </pre></div>
 </div>
 </div>
@@ -354,8 +351,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N_VER</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -367,8 +363,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># define first term (constraint)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define first term (constraint)</span>
 <span class="n">H_A</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_VER</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA&#39;</span><span class="p">)</span>
 <span class="c1"># define seconde term (cost, objective function)</span>
 <span class="n">H_B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">N_VER</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N_COLOR</span><span class="p">))</span>
@@ -384,8 +379,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># compile this model</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compile this model</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
 </pre></div>
@@ -397,8 +391,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># use SA on neal</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use SA on neal</span>
 <span class="kn">import</span> <span class="nn">neal</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">neal</span><span class="o">.</span><span class="n">SimulatedAnnealingSampler</span><span class="p">()</span>
 <span class="n">raw_solution</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
@@ -421,8 +414,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
 </pre></div>
 </div>
 </div>
@@ -465,8 +457,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># decode (convert) result into a manageable form</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># decode (convert) result into a manageable form</span>
 <span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
 <span class="c1"># below is for visualization</span>
 <span class="c1"># .array(variable, index) extracts the specific element of the index</span>
@@ -502,8 +493,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -527,8 +517,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># import OpenJij</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import OpenJij</span>
 <span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 
 <span class="c1"># solve this problem with SQA</span>
@@ -544,8 +533,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># get the state of lowest energy</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the state of lowest energy</span>
 <span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
 <span class="c1"># decode</span>
 <span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
@@ -630,7 +618,7 @@ div.rendered_html tbody tr:hover {
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -659,7 +647,7 @@ div.rendered_html tbody tr:hover {
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

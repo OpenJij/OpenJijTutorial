@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -317,8 +317,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install -U cmake
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install -U cmake
 </pre></div>
 </div>
 </div>
@@ -327,8 +326,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip uninstall openjij -y
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip uninstall openjij -y
 <span class="o">!</span>pip install openjij --no-binary :all: --no-cache-dir
 </pre></div>
 </div>
@@ -345,8 +343,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUChimeraSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -370,8 +367,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Q</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
 <span class="n">response</span>
 </pre></div>
@@ -471,8 +467,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install dwave-system
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install dwave-system
 </pre></div>
 </div>
 </div>
@@ -481,8 +476,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
 
 <span class="n">gpusqa</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">GPUSQASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">unit_num_L</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">gpusqa</span><span class="p">)</span>
@@ -531,7 +525,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -560,7 +554,7 @@ Response(rec.array([([1, 1, 1, 0], -2., 1), ([1, 1, 1, 0], -2., 1),
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

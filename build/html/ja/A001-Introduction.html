@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A2 - OpenJij core interface入門 (C++ interface)" href="A002-CppIntroduction.html" />
-    <link rel="prev" title="12-Solving Protein Folding Problem by HUBO Solver" href="012-ProteinFoldingHubo.html" /> 
+    <link rel="prev" title="13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example" href="013-ReverseQuantumAnnealing.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,7 +31,7 @@
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
+          <a href="013-ReverseQuantumAnnealing.html" title="13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">OpenJij チュートリアル</a> &#187;</li>
@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -312,8 +312,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install openjij
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install openjij
 <span class="o">!</span>pip show openjij
 </pre></div>
 </div>
@@ -364,8 +363,7 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># core interfaceではopenjijの代わりにcxxjijをインポートします。</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># core interfaceではopenjijの代わりにcxxjijをインポートします。</span>
 <span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
 
 <span class="c1"># まず相互作用行列を作成してあげます。Graphモジュールを使います。</span>
@@ -465,8 +463,7 @@ The solution is [1, 1, 1, 1, 1].
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
@@ -500,8 +497,8 @@ The solution is [1, 1, 1, 1, 1].
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="012-ProteinFoldingHubo.html"
-                        title="previous chapter">12-Solving Protein Folding Problem by HUBO Solver</a></p>
+  <p class="topless"><a href="013-ReverseQuantumAnnealing.html"
+                        title="previous chapter">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="A002-CppIntroduction.html"
                         title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
@@ -516,7 +513,7 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -536,7 +533,7 @@ The solution is [1, 1, 1, 1, 1].
           <a href="A002-CppIntroduction.html" title="A2 - OpenJij core interface入門 (C++ interface)"
              >next</a> |</li>
         <li class="right" >
-          <a href="012-ProteinFoldingHubo.html" title="12-Solving Protein Folding Problem by HUBO Solver"
+          <a href="013-ReverseQuantumAnnealing.html" title="13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >OpenJij チュートリアル</a> &#187;</li>
@@ -545,7 +542,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>
