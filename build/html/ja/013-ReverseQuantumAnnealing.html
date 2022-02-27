@@ -314,7 +314,7 @@ div.rendered_html tbody tr:hover {
 \[\mathcal{O}(\bm{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
 <p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する洗濯で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金度合を表す。</p>
 <p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
-<div><p><img alt="4977b9a35c624db49173f020bd49c5b6" src="../_images/013_RQA_QUBO.png" /></p>
+<div><p><img alt="dbec0b122bfc4c7da0f35d369b4663e9" src="../_images/013_RQA_QUBO.png" /></p>
 </div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループはポートフォリオを構成する人の基準によって決められた基準によって、銘柄を魅力的であるから魅力ではない順で並べてそれを順位付けした後に、均等に分けた場合形成されたグループになる。この魅力的な基準はリターン率の高さや損失の少なさなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
 <p>このQUBOを使って量子アニーリングを行えば最適のポートフォリオを得ることができるはず。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのが分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的にであるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
 </section>
@@ -330,7 +330,7 @@ Ratioを持つ解と最適解はエネルギーの違いも同じように小さ
 <div class="math notranslate nohighlight">
 \[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
 <p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
-<div><p><img alt="4365328144954444a1f3a4ce4c2b77de" src="../_images/013_QAandRQA.png" /></p>
+<div><p><img alt="8e4fc1aa866f401ab51488263bd8e2f4" src="../_images/013_QAandRQA.png" /></p>
 </div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
 Phaseになる。この時もまた高いエネルギーの状態にあり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
 </section>
@@ -340,13 +340,13 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <p>なので、これから行う実装は基本論文[2]の流れを参考にして以下のようになる。 - 最適化を行う銘柄データの生成 - 古典なアルゴリズムの実装とその結果の確認 - 通常のForward Annealingによる最適解探索 - Reverse Quantum Annealingによる最適解探索 - Reverse Quantum Annealingのパラメータ探索</p>
 </section>
 </section>
-<section id="Open-Jijを用いた実装">
-<h2>Open Jijを用いた実装<a class="headerlink" href="#Open-Jijを用いた実装" title="Permalink to this headline">¶</a></h2>
+<section id="銘柄データの生成と古典アルゴリズムの実装">
+<h2>銘柄データの生成と古典アルゴリズムの実装<a class="headerlink" href="#銘柄データの生成と古典アルゴリズムの実装" title="Permalink to this headline">¶</a></h2>
 <section id="最適化を行う銘柄データの生成">
 <h3>最適化を行う銘柄データの生成<a class="headerlink" href="#最適化を行う銘柄データの生成" title="Permalink to this headline">¶</a></h3>
 <p>参考論文[2]にある方法に従って、与えられた初期値を用いて、ブラウン運動による銘柄チャートを生成する。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[213]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -367,7 +367,7 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <p>のように与えられる。ここの<span class="math notranslate nohighlight">\(Z_n\)</span>はcholesky分解で作られた一様相関行列<span class="math notranslate nohighlight">\(\rho\)</span>を従う多変量正規分布になる。</p>
 <p>それを実行して適当にチャートをプロットして様子を確認する。最初同じところから始めても一年間経つと、全体が広がっていく様子が分かる。また一部銘柄が大きく上昇または降下するのも確認できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[214]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#相関正規確率変数Znの生成</span>
@@ -420,7 +420,7 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <p>銘柄のデータを生成できたので、各銘柄のSharpe Ratioを計算する。ここの結果を評価するに使うのは実現Sharpe Ratioで、その定義に従って無リスク利回り率を超過した超過収益率の平均<span class="math notranslate nohighlight">\(\bar{r}\)</span>と超過リターン率の標準偏差<span class="math notranslate nohighlight">\(\sigma\)</span>で求める。チャートを確認するとき分かったように、銘柄数が少ない場合は偶然による偏りが大きい、かつ生成条件に銘柄間に相関があるので、。銘柄を100回生成してその平均Shape Ratioの確認することでそれらの影響を減らす。結果として、銘柄の平均Sharpe
 Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>になるのを確認できる。また、Sharpe Ratioの計算定義を変更した場合、Sharpeの値が変化するのも確認できるが、おおむね<span class="math notranslate nohighlight">\(0.40\pm0.05\)</span>の範囲内には収まる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[215]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#銘柄生成関数</span>
@@ -497,206 +497,251 @@ Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>に
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-SubSet 0 average Sharpe Ratio: 0.39771321862223386
-Average Sharpe Ratio of all generated: 0.39771321862223386
-SubSet 1 average Sharpe Ratio: 0.31224299181259213
-Average Sharpe Ratio of all generated: 0.354978105217413
-SubSet 2 average Sharpe Ratio: 0.4733691467344419
-Average Sharpe Ratio of all generated: 0.3944417857230893
-SubSet 3 average Sharpe Ratio: 0.4747953226344756
-Average Sharpe Ratio of all generated: 0.4145301699509359
-SubSet 4 average Sharpe Ratio: 0.46746707067595134
-Average Sharpe Ratio of all generated: 0.42511755009593893
-SubSet 5 average Sharpe Ratio: 0.2263411924320541
-Average Sharpe Ratio of all generated: 0.3919881571519581
-SubSet 6 average Sharpe Ratio: 0.38327486854117115
-Average Sharpe Ratio of all generated: 0.3907434016361314
-SubSet 7 average Sharpe Ratio: 0.4393312457853536
-Average Sharpe Ratio of all generated: 0.39681688215478417
-SubSet 8 average Sharpe Ratio: 0.4558302540563192
-Average Sharpe Ratio of all generated: 0.40337392347717693
-SubSet 9 average Sharpe Ratio: 0.4172327183910663
-Average Sharpe Ratio of all generated: 0.40475980296856584
-SubSet 10 average Sharpe Ratio: 0.29434518329195725
-Average Sharpe Ratio of all generated: 0.3947221102706923
-SubSet 11 average Sharpe Ratio: 0.5004277374888711
-Average Sharpe Ratio of all generated: 0.4035309125388739
-SubSet 12 average Sharpe Ratio: 0.38286711261881656
-Average Sharpe Ratio of all generated: 0.40194138946810026
-SubSet 13 average Sharpe Ratio: 0.5476167774248429
-Average Sharpe Ratio of all generated: 0.41234677432215333
-SubSet 14 average Sharpe Ratio: 0.34202062100273967
-Average Sharpe Ratio of all generated: 0.4076583641008591
-SubSet 15 average Sharpe Ratio: 0.3915842381837107
-Average Sharpe Ratio of all generated: 0.4066537312310373
-SubSet 16 average Sharpe Ratio: 0.4459820454174548
-Average Sharpe Ratio of all generated: 0.40896716147729717
-SubSet 17 average Sharpe Ratio: 0.3883467711165325
-Average Sharpe Ratio of all generated: 0.40782158423503245
-SubSet 18 average Sharpe Ratio: 0.4003542329831629
-Average Sharpe Ratio of all generated: 0.40742856574809194
-SubSet 19 average Sharpe Ratio: 0.3639854606024752
-Average Sharpe Ratio of all generated: 0.40525641049081107
-SubSet 20 average Sharpe Ratio: 0.3421587210802155
-Average Sharpe Ratio of all generated: 0.40225175861411605
-SubSet 21 average Sharpe Ratio: 0.5587319757036145
-Average Sharpe Ratio of all generated: 0.40936449575454775
-SubSet 22 average Sharpe Ratio: 0.3006411145569233
-Average Sharpe Ratio of all generated: 0.40463739222421624
-SubSet 23 average Sharpe Ratio: 0.3039549870429209
-Average Sharpe Ratio of all generated: 0.400442292008329
-SubSet 24 average Sharpe Ratio: 0.28285134938832296
-Average Sharpe Ratio of all generated: 0.3957386543035287
-SubSet 25 average Sharpe Ratio: 0.30092016089899815
-Average Sharpe Ratio of all generated: 0.3920917891725853
-SubSet 26 average Sharpe Ratio: 0.40018701950050334
-Average Sharpe Ratio of all generated: 0.3923916125180637
-SubSet 27 average Sharpe Ratio: 0.37447104953301774
-Average Sharpe Ratio of all generated: 0.3917515924114549
-SubSet 28 average Sharpe Ratio: 0.32685727294718503
-Average Sharpe Ratio of all generated: 0.3895138572575146
-SubSet 29 average Sharpe Ratio: 0.3698972348886877
-Average Sharpe Ratio of all generated: 0.38885996984522037
-SubSet 30 average Sharpe Ratio: 0.3403643225809469
-Average Sharpe Ratio of all generated: 0.387295594127018
-SubSet 31 average Sharpe Ratio: 0.45043214002755794
-Average Sharpe Ratio of all generated: 0.3892686111864099
-SubSet 32 average Sharpe Ratio: 0.5031807649412071
-Average Sharpe Ratio of all generated: 0.392720494633525
-SubSet 33 average Sharpe Ratio: 0.3533158836369709
-Average Sharpe Ratio of all generated: 0.3915615354865675
-SubSet 34 average Sharpe Ratio: 0.1715283726158958
-Average Sharpe Ratio of all generated: 0.3852748736902626
-SubSet 35 average Sharpe Ratio: 0.39843406190030467
-Average Sharpe Ratio of all generated: 0.3856404066960971
-SubSet 36 average Sharpe Ratio: 0.4188886916424097
-Average Sharpe Ratio of all generated: 0.38653900899194343
-SubSet 37 average Sharpe Ratio: 0.31772011182757004
-Average Sharpe Ratio of all generated: 0.38472798538235464
-SubSet 38 average Sharpe Ratio: 0.36184538855503073
-Average Sharpe Ratio of all generated: 0.3841412521303719
-SubSet 39 average Sharpe Ratio: 0.37753194828892944
-Average Sharpe Ratio of all generated: 0.38397601953433586
-SubSet 40 average Sharpe Ratio: 0.28515667200514994
-Average Sharpe Ratio of all generated: 0.38156579154581916
-SubSet 41 average Sharpe Ratio: 0.5081912366460136
-Average Sharpe Ratio of all generated: 0.38458068309582377
-SubSet 42 average Sharpe Ratio: 0.4208550753291976
-Average Sharpe Ratio of all generated: 0.38542427361287895
-SubSet 43 average Sharpe Ratio: 0.6014327134967187
-Average Sharpe Ratio of all generated: 0.3903335563375117
-SubSet 44 average Sharpe Ratio: 0.4564217617875184
-Average Sharpe Ratio of all generated: 0.3918021831252896
-SubSet 45 average Sharpe Ratio: 0.5116313896246586
-Average Sharpe Ratio of all generated: 0.39440716587527586
-SubSet 46 average Sharpe Ratio: 0.4179090321788077
-Average Sharpe Ratio of all generated: 0.39490720558386166
-SubSet 47 average Sharpe Ratio: 0.4838005655236632
-Average Sharpe Ratio of all generated: 0.3967591505826075
-SubSet 48 average Sharpe Ratio: 0.45081518855246966
-Average Sharpe Ratio of all generated: 0.397862335030972
-SubSet 49 average Sharpe Ratio: 0.5119989250750935
-Average Sharpe Ratio of all generated: 0.40014506683185447
-SubSet 50 average Sharpe Ratio: 0.3614888789182474
-Average Sharpe Ratio of all generated: 0.3993871023629602
-SubSet 51 average Sharpe Ratio: 0.3406470322989305
-Average Sharpe Ratio of all generated: 0.39825748563095964
-SubSet 52 average Sharpe Ratio: 0.4889578200732346
-Average Sharpe Ratio of all generated: 0.3999688126959083
-SubSet 53 average Sharpe Ratio: 0.4248179614099146
-Average Sharpe Ratio of all generated: 0.400428982116538
-SubSet 54 average Sharpe Ratio: 0.5758767238506953
-Average Sharpe Ratio of all generated: 0.403618941057159
-SubSet 55 average Sharpe Ratio: 0.35258744835809414
-Average Sharpe Ratio of all generated: 0.40270766440181854
-SubSet 56 average Sharpe Ratio: 0.46389573390762034
-Average Sharpe Ratio of all generated: 0.40378113930542914
-SubSet 57 average Sharpe Ratio: 0.33330147565184864
-Average Sharpe Ratio of all generated: 0.4025659726907122
-SubSet 58 average Sharpe Ratio: 0.359936537414074
-Average Sharpe Ratio of all generated: 0.40184343988941323
-SubSet 59 average Sharpe Ratio: 0.18548671422049226
-Average Sharpe Ratio of all generated: 0.3982374944615979
-SubSet 60 average Sharpe Ratio: 0.31825225458046913
-Average Sharpe Ratio of all generated: 0.39692626102092365
-SubSet 61 average Sharpe Ratio: 0.39740585380787086
-Average Sharpe Ratio of all generated: 0.39693399638845506
-SubSet 62 average Sharpe Ratio: 0.3123460704488924
-Average Sharpe Ratio of all generated: 0.3955913308973509
-SubSet 63 average Sharpe Ratio: 0.17066034236469133
-Average Sharpe Ratio of all generated: 0.3920767842015281
-SubSet 64 average Sharpe Ratio: 0.49054960125909913
-Average Sharpe Ratio of all generated: 0.39359175061779844
-SubSet 65 average Sharpe Ratio: 0.4683992999766275
-Average Sharpe Ratio of all generated: 0.39472519833535646
-SubSet 66 average Sharpe Ratio: 0.4276890536750029
-Average Sharpe Ratio of all generated: 0.39521719617624673
-SubSet 67 average Sharpe Ratio: 0.34835579920922205
-Average Sharpe Ratio of all generated: 0.3945280579855552
-SubSet 68 average Sharpe Ratio: 0.5656831737640938
-Average Sharpe Ratio of all generated: 0.39700856690988184
-SubSet 69 average Sharpe Ratio: 0.3500498562509316
-Average Sharpe Ratio of all generated: 0.39633772818618257
-SubSet 70 average Sharpe Ratio: 0.3285772820613489
-Average Sharpe Ratio of all generated: 0.3953833557055511
-SubSet 71 average Sharpe Ratio: 0.28709444026569597
-Average Sharpe Ratio of all generated: 0.3938793429911087
-SubSet 72 average Sharpe Ratio: 0.5297696243260012
-Average Sharpe Ratio of all generated: 0.3957408536943264
-SubSet 73 average Sharpe Ratio: 0.38421598301432724
-Average Sharpe Ratio of all generated: 0.3955851121986507
-SubSet 74 average Sharpe Ratio: 0.4389708443016837
-Average Sharpe Ratio of all generated: 0.39616358862669115
-SubSet 75 average Sharpe Ratio: 0.4151518634562364
-Average Sharpe Ratio of all generated: 0.3964134343481326
-SubSet 76 average Sharpe Ratio: 0.4390185270358841
-Average Sharpe Ratio of all generated: 0.3969667472401813
-SubSet 77 average Sharpe Ratio: 0.34017169303980044
-Average Sharpe Ratio of all generated: 0.39623860551966356
-SubSet 78 average Sharpe Ratio: 0.49931083026300915
-Average Sharpe Ratio of all generated: 0.3975433172252755
-SubSet 79 average Sharpe Ratio: 0.5249102224536594
-Average Sharpe Ratio of all generated: 0.3991354035406303
-SubSet 80 average Sharpe Ratio: 0.4826400222929295
-Average Sharpe Ratio of all generated: 0.40016632475979447
-SubSet 81 average Sharpe Ratio: 0.3473369366871739
-Average Sharpe Ratio of all generated: 0.3995220639296405
-SubSet 82 average Sharpe Ratio: 0.4866880694243147
-Average Sharpe Ratio of all generated: 0.40057225676692576
-SubSet 83 average Sharpe Ratio: 0.2573724712803485
-Average Sharpe Ratio of all generated: 0.3988674974158951
-SubSet 84 average Sharpe Ratio: 0.524029528014986
-Average Sharpe Ratio of all generated: 0.4003399918935314
-SubSet 85 average Sharpe Ratio: 0.2719989232855522
-Average Sharpe Ratio of all generated: 0.39884765388646193
-SubSet 86 average Sharpe Ratio: 0.4232959157978112
-Average Sharpe Ratio of all generated: 0.39912866839119004
-SubSet 87 average Sharpe Ratio: 0.2100435243641696
-Average Sharpe Ratio of all generated: 0.39697997357270115
-SubSet 88 average Sharpe Ratio: 0.19532873260069436
-Average Sharpe Ratio of all generated: 0.39471422929211675
-SubSet 89 average Sharpe Ratio: 0.34212415697757487
-Average Sharpe Ratio of all generated: 0.39412989515528857
-SubSet 90 average Sharpe Ratio: 0.42626960893703086
-Average Sharpe Ratio of all generated: 0.3944830788232198
-SubSet 91 average Sharpe Ratio: 0.21291092928991706
-Average Sharpe Ratio of all generated: 0.39250946850220564
-SubSet 92 average Sharpe Ratio: 0.4020803408152224
-Average Sharpe Ratio of all generated: 0.392612381107722
-SubSet 93 average Sharpe Ratio: 0.39672437477779815
-Average Sharpe Ratio of all generated: 0.39265612572123343
-SubSet 94 average Sharpe Ratio: 0.3320935258938145
-Average Sharpe Ratio of all generated: 0.39201862467041854
-SubSet 95 average Sharpe Ratio: 0.3949367512207725
-Average Sharpe Ratio of all generated: 0.39204902182198476
-SubSet 96 average Sharpe Ratio: 0.40002339328307523
-Average Sharpe Ratio of all generated: 0.39213123183704757
-SubSet 97 average Sharpe Ratio: 0.5257529178707928
-Average Sharpe Ratio of all generated: 0.3934947184292286
-SubSet 98 average Sharpe Ratio: 0.304621937063518
-Average Sharpe Ratio of all generated: 0.3925970135669487
-SubSet 99 average Sharpe Ratio: 0.2627227494576991
-Average Sharpe Ratio of all generated: 0.39129827092585623
+SubSet 0 average Sharpe Ratio: 0.3600512964634801
+Average Sharpe Ratio of all generated: 0.3600512964634801
+SubSet 1 average Sharpe Ratio: 0.25021007319060234
+Average Sharpe Ratio of all generated: 0.3051306848270412
+SubSet 2 average Sharpe Ratio: 0.4269319254372476
+Average Sharpe Ratio of all generated: 0.3457310983637767
+SubSet 3 average Sharpe Ratio: 0.3189863589398198
+Average Sharpe Ratio of all generated: 0.3390449135077875
+SubSet 4 average Sharpe Ratio: 0.2764421536249738
+Average Sharpe Ratio of all generated: 0.3265243615312247
+SubSet 5 average Sharpe Ratio: 0.38203104550409916
+Average Sharpe Ratio of all generated: 0.3357754755267038
+SubSet 6 average Sharpe Ratio: 0.37368187024134825
+Average Sharpe Ratio of all generated: 0.341190674771653
+SubSet 7 average Sharpe Ratio: 0.36857405871944154
+Average Sharpe Ratio of all generated: 0.34461359776512657
+SubSet 8 average Sharpe Ratio: 0.5584916564996508
+Average Sharpe Ratio of all generated: 0.368377826513407
+SubSet 9 average Sharpe Ratio: 0.3170391359924436
+Average Sharpe Ratio of all generated: 0.3632439574613106
+SubSet 10 average Sharpe Ratio: 0.3269090003337926
+Average Sharpe Ratio of all generated: 0.35994077954062714
+SubSet 11 average Sharpe Ratio: 0.45332771039580405
+Average Sharpe Ratio of all generated: 0.36772302377855853
+SubSet 12 average Sharpe Ratio: 0.5519568363147792
+Average Sharpe Ratio of all generated: 0.38189485551211394
+SubSet 13 average Sharpe Ratio: 0.2976800861934678
+Average Sharpe Ratio of all generated: 0.3758795148464964
+SubSet 14 average Sharpe Ratio: 0.3453009678312409
+Average Sharpe Ratio of all generated: 0.3738409450454794
+SubSet 15 average Sharpe Ratio: 0.4271483125464575
+Average Sharpe Ratio of all generated: 0.3771726555142905
+SubSet 16 average Sharpe Ratio: 0.2785943080380704
+Average Sharpe Ratio of all generated: 0.37137392919215995
+SubSet 17 average Sharpe Ratio: 0.4465147892570203
+Average Sharpe Ratio of all generated: 0.3755484214179855
+SubSet 18 average Sharpe Ratio: 0.40639020455488845
+Average Sharpe Ratio of all generated: 0.37717167316203304
+SubSet 19 average Sharpe Ratio: 0.510145216738688
+Average Sharpe Ratio of all generated: 0.3838203503408658
+SubSet 20 average Sharpe Ratio: 0.40881803913787595
+Average Sharpe Ratio of all generated: 0.3850107164740567
+SubSet 21 average Sharpe Ratio: 0.48162608240031807
+Average Sharpe Ratio of all generated: 0.3894023240161595
+SubSet 22 average Sharpe Ratio: 0.4809116057673431
+Average Sharpe Ratio of all generated: 0.393380988440124
+SubSet 23 average Sharpe Ratio: 0.3790710781225293
+Average Sharpe Ratio of all generated: 0.39278474217689086
+SubSet 24 average Sharpe Ratio: 0.4431766158075707
+Average Sharpe Ratio of all generated: 0.39480041712211805
+SubSet 25 average Sharpe Ratio: 0.439951870033362
+Average Sharpe Ratio of all generated: 0.3965370114648582
+SubSet 26 average Sharpe Ratio: 0.465975883759055
+Average Sharpe Ratio of all generated: 0.39910882154982846
+SubSet 27 average Sharpe Ratio: 0.4464054677214715
+Average Sharpe Ratio of all generated: 0.40079798748453
+SubSet 28 average Sharpe Ratio: 0.349073108477391
+Average Sharpe Ratio of all generated: 0.39901437096704245
+SubSet 29 average Sharpe Ratio: 0.35673879440451045
+Average Sharpe Ratio of all generated: 0.39760518508162473
+SubSet 30 average Sharpe Ratio: 0.3994224916535239
+Average Sharpe Ratio of all generated: 0.39766380787426664
+SubSet 31 average Sharpe Ratio: 0.4030313748562615
+Average Sharpe Ratio of all generated: 0.397831544342454
+SubSet 32 average Sharpe Ratio: 0.48856086283813466
+Average Sharpe Ratio of all generated: 0.40058091763020187
+SubSet 33 average Sharpe Ratio: 0.3499685399096956
+Average Sharpe Ratio of all generated: 0.39909231828548114
+SubSet 34 average Sharpe Ratio: 0.11360995678877545
+Average Sharpe Ratio of all generated: 0.3909356793855752
+SubSet 35 average Sharpe Ratio: 0.3481410808978804
+Average Sharpe Ratio of all generated: 0.38974694053869485
+SubSet 36 average Sharpe Ratio: 0.4984334113846817
+Average Sharpe Ratio of all generated: 0.3926844127237215
+SubSet 37 average Sharpe Ratio: 0.47657606896796567
+Average Sharpe Ratio of all generated: 0.3948920878880437
+SubSet 38 average Sharpe Ratio: 0.2527810163191188
+Average Sharpe Ratio of all generated: 0.39124821425807127
+SubSet 39 average Sharpe Ratio: 0.37513878709458154
+Average Sharpe Ratio of all generated: 0.390845478578984
+SubSet 40 average Sharpe Ratio: 0.40825137518508153
+Average Sharpe Ratio of all generated: 0.39127001264254735
+SubSet 41 average Sharpe Ratio: 0.422850995048417
+Average Sharpe Ratio of all generated: 0.3920219407950681
+SubSet 42 average Sharpe Ratio: 0.37402933639199176
+Average Sharpe Ratio of all generated: 0.39160350813453143
+SubSet 43 average Sharpe Ratio: 0.3102965682809806
+Average Sharpe Ratio of all generated: 0.38975562313785983
+SubSet 44 average Sharpe Ratio: 0.5027244521159293
+Average Sharpe Ratio of all generated: 0.3922660415595947
+SubSet 45 average Sharpe Ratio: 0.3408073804642602
+Average Sharpe Ratio of all generated: 0.3911473750140439
+SubSet 46 average Sharpe Ratio: 0.3004322301012465
+Average Sharpe Ratio of all generated: 0.3892172655478142
+SubSet 47 average Sharpe Ratio: 0.46694332805110045
+Average Sharpe Ratio of all generated: 0.3908365585166327
+SubSet 48 average Sharpe Ratio: 0.3188902460653895
+Average Sharpe Ratio of all generated: 0.389368266425791
+SubSet 49 average Sharpe Ratio: 0.24715643147011115
+Average Sharpe Ratio of all generated: 0.3865240297266774
+SubSet 50 average Sharpe Ratio: 0.43562370060766936
+Average Sharpe Ratio of all generated: 0.3874867683714027
+SubSet 51 average Sharpe Ratio: 0.5385826211351911
+Average Sharpe Ratio of all generated: 0.39039245784762944
+SubSet 52 average Sharpe Ratio: 0.41785011536819744
+Average Sharpe Ratio of all generated: 0.3909105268574515
+SubSet 53 average Sharpe Ratio: 0.4909480101826902
+Average Sharpe Ratio of all generated: 0.3927630728449559
+SubSet 54 average Sharpe Ratio: 0.5446723722899334
+Average Sharpe Ratio of all generated: 0.39552506010759186
+SubSet 55 average Sharpe Ratio: 0.21065980604379353
+Average Sharpe Ratio of all generated: 0.3922238948564526
+SubSet 56 average Sharpe Ratio: 0.4207171541315678
+Average Sharpe Ratio of all generated: 0.3927237765981213
+SubSet 57 average Sharpe Ratio: 0.42509520889263314
+Average Sharpe Ratio of all generated: 0.3932819047411301
+SubSet 58 average Sharpe Ratio: 0.3880996172763241
+Average Sharpe Ratio of all generated: 0.3931940693603707
+SubSet 59 average Sharpe Ratio: 0.4256812245840667
+Average Sharpe Ratio of all generated: 0.39373552194743233
+SubSet 60 average Sharpe Ratio: 0.33029281367413044
+Average Sharpe Ratio of all generated: 0.39269547754950934
+SubSet 61 average Sharpe Ratio: 0.4544183273756479
+Average Sharpe Ratio of all generated: 0.39369100738541485
+SubSet 62 average Sharpe Ratio: 0.46097702151638215
+Average Sharpe Ratio of all generated: 0.39475903935574763
+SubSet 63 average Sharpe Ratio: 0.5197013980471027
+Average Sharpe Ratio of all generated: 0.3967112637103001
+SubSet 64 average Sharpe Ratio: 0.5263515026900675
+Average Sharpe Ratio of all generated: 0.3987057289253734
+SubSet 65 average Sharpe Ratio: 0.4552840487109043
+Average Sharpe Ratio of all generated: 0.3995629761948512
+SubSet 66 average Sharpe Ratio: 0.5928545996311347
+Average Sharpe Ratio of all generated: 0.4024479257983778
+SubSet 67 average Sharpe Ratio: 0.41211408620813045
+Average Sharpe Ratio of all generated: 0.4025900752161683
+SubSet 68 average Sharpe Ratio: 0.460167463327895
+Average Sharpe Ratio of all generated: 0.4034245301163383
+SubSet 69 average Sharpe Ratio: 0.26637418930739165
+Average Sharpe Ratio of all generated: 0.4014666681047819
+SubSet 70 average Sharpe Ratio: 0.22858538576155504
+Average Sharpe Ratio of all generated: 0.3990317204661449
+SubSet 71 average Sharpe Ratio: 0.3618889424380825
+Average Sharpe Ratio of all generated: 0.39851584854908845
+SubSet 72 average Sharpe Ratio: 0.40772580114698226
+Average Sharpe Ratio of all generated: 0.39864201228330615
+SubSet 73 average Sharpe Ratio: 0.36816522151159775
+Average Sharpe Ratio of all generated: 0.39823016375936415
+SubSet 74 average Sharpe Ratio: 0.47041751782737723
+Average Sharpe Ratio of all generated: 0.39919266181360435
+SubSet 75 average Sharpe Ratio: 0.4229345680986171
+Average Sharpe Ratio of all generated: 0.39950505531735453
+SubSet 76 average Sharpe Ratio: 0.4065096428420472
+Average Sharpe Ratio of all generated: 0.39959602398650634
+SubSet 77 average Sharpe Ratio: 0.36602561350027113
+Average Sharpe Ratio of all generated: 0.39916563410847766
+SubSet 78 average Sharpe Ratio: 0.4824113461177466
+Average Sharpe Ratio of all generated: 0.4002193772984684
+SubSet 79 average Sharpe Ratio: 0.3533144186326638
+Average Sharpe Ratio of all generated: 0.39963306531514586
+SubSet 80 average Sharpe Ratio: 0.43284327512881643
+Average Sharpe Ratio of all generated: 0.4000430679054381
+SubSet 81 average Sharpe Ratio: 0.5138758916145698
+Average Sharpe Ratio of all generated: 0.4014312730726226
+SubSet 82 average Sharpe Ratio: 0.5313842386967979
+Average Sharpe Ratio of all generated: 0.4029969714536367
+SubSet 83 average Sharpe Ratio: 0.3991101374114235
+Average Sharpe Ratio of all generated: 0.4029506996198009
+SubSet 84 average Sharpe Ratio: 0.44262684583284945
+Average Sharpe Ratio of all generated: 0.40341747781054266
+SubSet 85 average Sharpe Ratio: 0.4738021823655563
+Average Sharpe Ratio of all generated: 0.40423590460769393
+SubSet 86 average Sharpe Ratio: 0.4477454542431058
+Average Sharpe Ratio of all generated: 0.40473601437361817
+SubSet 87 average Sharpe Ratio: 0.36682942551042236
+Average Sharpe Ratio of all generated: 0.404305257681991
+SubSet 88 average Sharpe Ratio: 0.38825174638819254
+Average Sharpe Ratio of all generated: 0.40412488115059997
+SubSet 89 average Sharpe Ratio: 0.42603754345330774
+Average Sharpe Ratio of all generated: 0.4043683551761856
+SubSet 90 average Sharpe Ratio: 0.37272905948831686
+Average Sharpe Ratio of all generated: 0.404020670608187
+SubSet 91 average Sharpe Ratio: 0.2901110955527487
+Average Sharpe Ratio of all generated: 0.40278252305323653
+SubSet 92 average Sharpe Ratio: 0.4929100867710136
+Average Sharpe Ratio of all generated: 0.40375163664159974
+SubSet 93 average Sharpe Ratio: 0.4830173173819965
+Average Sharpe Ratio of all generated: 0.40459488856436987
+SubSet 94 average Sharpe Ratio: 0.4071516269656441
+Average Sharpe Ratio of all generated: 0.40462180160017275
+SubSet 95 average Sharpe Ratio: 0.6294880003750024
+Average Sharpe Ratio of all generated: 0.4069641578374106
+SubSet 96 average Sharpe Ratio: 0.4796841492715549
+Average Sharpe Ratio of all generated: 0.40771384847075226
+SubSet 97 average Sharpe Ratio: 0.44876206355054693
+Average Sharpe Ratio of all generated: 0.4081327078083012
+SubSet 98 average Sharpe Ratio: 0.4707963381403682
+Average Sharpe Ratio of all generated: 0.40876567377125134
+SubSet 99 average Sharpe Ratio: 0.37064232910513106
+Average Sharpe Ratio of all generated: 0.40838444032459015
+</pre></div></div>
+</div>
+<p>銘柄の確認ができてから、作られたポートフォリオ全体のパフォーマンスを確認する、ここでは全銘柄が同じ重みで選ばれるシナリオで銘柄全体のSharpe Ratioを計算しているが、48銘柄の場合で論文の結果「平均1.4、25パーセント分位0.5、75パーセント分位2.1」を再現できていない。（TODO）</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[216]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span>
+<span class="n">SR_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">ntry</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">Chart</span> <span class="o">=</span> <span class="n">CreateAssets</span><span class="p">(</span><span class="n">Nassets</span><span class="p">)</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Chart</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">portfolioSR</span> <span class="o">=</span> <span class="n">CalculateSharpeRatio</span><span class="p">(</span><span class="n">portfolioChart</span><span class="p">)</span>
+    <span class="n">SR_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">portfolioSR</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">portfolioSR</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">SR_list</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">SR_list</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">75</span><span class="p">]))</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.6424289431873234
+0.6424289431873234 [0.64242894 0.64242894]
+1.0690140063361937
+0.8557214747617585 [0.74907521 0.96236774]
+1.6944740511688996
+1.1353056668974721 [0.85572147 1.38174403]
+1.8803181393782316
+1.321558785017662 [0.96236774 1.74093507]
+2.1399546304938237
+1.4852379541128944 [1.06901401 1.88031814]
+0.955090006803346
+1.3968799628946362 [0.98357101 1.83385712]
+1.0640348880987391
+1.3493306664952223 [1.00956245 1.7873961 ]
+1.1884688150400942
+1.3292229350633313 [1.03679867 1.74093507]
+1.5068308301487452
+1.3489571456283773 [1.06403489 1.69447405]
+2.2064989892261875
+1.4347113299881582 [1.06527967 1.83385712]
 </pre></div></div>
 </div>
 </section>
@@ -704,7 +749,7 @@ Average Sharpe Ratio of all generated: 0.39129827092585623
 <h3>古典アルゴリズムによる探索<a class="headerlink" href="#古典アルゴリズムによる探索" title="Permalink to this headline">¶</a></h3>
 <p>続いてはQUBO行列の準備及び古典なアルゴリズムに必要な関数を実装する。ここで、ペアワイズ相関行列は論文に従い対数リターンで計算した。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[217]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">heapq</span>
@@ -798,7 +843,7 @@ Average Sharpe Ratio of all generated: 0.39129827092585623
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[218]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#銘柄セットを再生成する</span>
@@ -826,7 +871,7 @@ Average Sharpe Ratio of all generated: 0.39129827092585623
 <p>実行後、アルゴリズムの初期状態と得られた状態の比較を行う。このとき比較の基準がポートフォリオのSharpe Ratioになる。このチュートリアルでは全銘柄のウエイトが同じというシナリオなので、選ばれた銘柄の平均的なチャートを得てSharpe Ratioの計算を行った。</p>
 <p>また、一個前のコードブロック複数回実行して銘柄セットをリセットすると、貪欲サーチの結果は初期状態よりも悪くなったり、ほぼ変わらなかったりする場合もあるのが分かる。そして最終的なリターンが初期状態に負けたが、Sharpe Ratioが大きい最終状態もある。それらを比較すると、Sharpe Ratioが大きい場合ポートフォリオのチャートが滑らかで、変動が小さくリスクが非常に小さいのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[219]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Greedy Search</span>
@@ -894,12 +939,12 @@ Average Sharpe Ratio of all generated: 0.39129827092585623
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Initial random selection:
-[-1  1 -1  1 -1  1  1  1  1  1 -1 -1 -1 -1 -1 -1  1  1  1 -1  1 -1  1  1
-  1 -1 -1  1  1  1 -1 -1 -1  1  1 -1 -1  1  1  1  1  1 -1  1  1  1 -1  1] 1.3183465113714299
+[ 1 -1  1 -1  1  1 -1  1 -1  1  1 -1  1  1 -1  1 -1 -1  1  1 -1  1  1  1
+  1  1 -1 -1 -1  1 -1 -1 -1  1  1 -1 -1 -1 -1  1 -1 -1  1  1  1  1  1  1] 1.7235493388179437
 
 Selection After Greedy Search:
-[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1
-  1  1 -1 -1 -1  1 -1  1  1  1 -1 -1  1 -1 -1 -1  1 -1 -1  1 -1 -1  1 -1] 1.7791741480346233
+[-1 -1 -1  1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1  1  1  1  1 -1 -1 -1  1
+ -1 -1  1  1  1 -1  1  1 -1  1  1 -1 -1 -1 -1 -1 -1 -1  1 -1  1 -1 -1  1] 2.1161604239414697
 
 </pre></div></div>
 </div>
@@ -907,7 +952,7 @@ Selection After Greedy Search:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" />
 </div>
 </div>
 </section>
@@ -917,7 +962,7 @@ Selection After Greedy Search:
 <p>結果を比較することで、ラスト世代が第一世代よりもパフォーマンスが良くなっていることを観測できる。ただし、ここで試行した世代数が限られているため、パフォーマンスが改善されないまたは改善が小さい場合もある。そして総じて貪欲サーチよりも安定な出力が得られるのも観察できる。</p>
 <p>注意：遺伝子の組数や子孫数、そして変異の数を増やした場合計算量の増加により計算が終わらない場合もあるので、実行環境に合わせて設定を変えてください。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[220]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Genetic Algorithm</span>
@@ -983,12 +1028,12 @@ Selection After Greedy Search:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Best Gene 1st generation:
-[ 1 -1 -1 -1 -1  1  1  1  1 -1 -1  1  1  1  1 -1 -1  1 -1 -1 -1  1  1 -1
- -1  1  1  1  1 -1  1 -1  1  1 -1 -1  1  1  1  1  1 -1  1  1 -1  1  1 -1] 1.7666160535701652
+[ 1  1  1  1  1  1 -1  1  1  1  1  1 -1 -1  1  1 -1  1 -1 -1  1  1 -1 -1
+ -1  1  1  1  1 -1  1  1 -1 -1  1  1 -1 -1  1  1  1  1  1  1  1  1  1 -1] 1.9747726701605997
 
 Best Gene last generation:
-[-1 -1 -1 -1 -1  1 -1  1  1  1  1 -1 -1  1  1  1 -1  1 -1  1  1 -1 -1 -1
-  1  1  1  1 -1  1 -1  1  1  1 -1  1  1  1  1 -1  1  1 -1 -1  1 -1 -1 -1] 2.0983164418363796
+[-1 -1 -1 -1  1 -1  1  1  1 -1  1 -1 -1 -1  1 -1 -1  1 -1  1 -1  1 -1 -1
+  1  1  1 -1  1  1  1  1 -1  1 -1  1  1 -1  1  1 -1 -1 -1  1  1 -1 -1 -1] 2.0880009827357706
 
 </pre></div></div>
 </div>
@@ -996,16 +1041,19 @@ Best Gene last generation:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_24_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_24_1.png" />
 </div>
 </div>
 </section>
 </section>
+</section>
+<section id="Open-Jijを用いた量子アニーリング手法の実装">
+<h2>Open Jijを用いた量子アニーリング手法の実装<a class="headerlink" href="#Open-Jijを用いた量子アニーリング手法の実装" title="Permalink to this headline">¶</a></h2>
 <section id="Quantum-Annealingによる解法">
 <h3>Quantum Annealingによる解法<a class="headerlink" href="#Quantum-Annealingによる解法" title="Permalink to this headline">¶</a></h3>
 <p>Reverse Quantum Annealingでこの最適問題解くために、古典なアルゴリズムで得られたスピン形式の結果をアニーリングが使う形式に変換する。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[221]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ConvertSolutionToQuboState</span><span class="p">(</span><span class="n">solution</span><span class="p">):</span>
@@ -1028,14 +1076,14 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0]
+[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1]
 </pre></div></div>
 </div>
 <section id="Forward-Annealingの場合">
 <h4>Forward Annealingの場合<a class="headerlink" href="#Forward-Annealingの場合" title="Permalink to this headline">¶</a></h4>
 <p>銘柄の魅力度とペアワイズ相関による罰金と賞金の度合を使ってQUBO行列を作り、まずForward Annealingを実行する。最終リターン率の改善はケースバイケースになるが、結果として貪欲サーチの結果よりも安定したチャートを得ている。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[222]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openjij</span> <span class="kn">import</span> <span class="n">SQASampler</span>
@@ -1082,7 +1130,7 @@ Best Gene last generation:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_28_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_28_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1090,25 +1138,25 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
-[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
- 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
+[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -341., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)]
+[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
+ 0 1 0 1 0 1 1 1 0 0 1] 4.33806400478993
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_28_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_28_3.png" />
 </div>
 </div>
 </section>
@@ -1135,12 +1183,32 @@ Best Gene last generation:
 </div>
 <p>のような構造を持つ、格納されたリストの<code class="docutils literal notranslate"><span class="pre">[0]</span></code>成分は<span class="math notranslate nohighlight">\(s\)</span>の値で、アニーリングするときの横磁場の強さを反映する。<code class="docutils literal notranslate"><span class="pre">[1]</span></code>成分は逆温度<span class="math notranslate nohighlight">\(\beta\)</span>で、大きければ低い温度を意味し、より強く基底状態に戻る。デフォルトでは<span class="math notranslate nohighlight">\(\beta = 5\)</span>で設定されている。そして最後の<code class="docutils literal notranslate"><span class="pre">[2]</span></code>成分は量子モンテカルロ法のシミュレーションステップ数を表していて、各スケジュールの長さを調整できる。</p>
 <p>そして<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>が代入する初期状態である。<code class="docutils literal notranslate"><span class="pre">reinitialize_state</span></code>のオプションが<code class="docutils literal notranslate"><span class="pre">False</span></code>にすることで、毎回実行した出力がまた初期状態として代入されて次のアニーリングを行う意味で、上の関数はある初期状態から出発してRQAを10回イタレーションする意味になる。このオプション引数がデフォルトでは<code class="docutils literal notranslate"><span class="pre">True</span></code>で、実行するたびに初期状態の再設定を行っている。RQAを一回実行させ、複数回の結果を比較したい場合は<code class="docutils literal notranslate"><span class="pre">True</span></code>で問題ない。</p>
-<p>ではReverse Annealingのスケジュールを作成する。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+<p>ではReverse Annealingのスケジュールを作成する。OpenJijのsamplerは指定された<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を指定したMC
+stepの数で量子モンテカルロを実行ので、短い定数をつなぎ合わせて<span class="math notranslate nohighlight">\(s\)</span>や<span class="math notranslate nohighlight">\(\beta\)</span>が少しずつ変化するようなスケジュールを作ってRQAの動作を作る必要がある。ここでは<span class="math notranslate nohighlight">\(s\)</span>の変化に注目してそれをプロットすると逆さまの台形のスケジュールを確認できた。横軸は量子モンテカルロ法のステップ数になる。スケジュール作成の関数を書き換えればそのほかの形のスケジュールも簡単に作成できる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[223]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ScheduleFunction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">RQAschedule</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">RQAschedule</span><span class="p">:</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">-</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="n">length</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span> <span class="nf">ConvertScheduleToPlot</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">):</span>
+    <span class="n">TotalLength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TotalLength</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">ScheduleFunction</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">RQAschedule</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span> <span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#Create RQA schedule</span>
 <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">NPauseStep</span> <span class="o">=</span> <span class="mi">50</span>
@@ -1151,7 +1219,6 @@ Best Gene last generation:
 <span class="n">ForwardStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NForwardStep</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.</span>
 <span class="c1">#Reverse Step</span>
-<span class="c1">#for i in range(NReverseStep):</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
     <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">NMCStep</span><span class="p">]</span>
     <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
@@ -1163,12 +1230,22 @@ Best Gene last generation:
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">):</span>
     <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">NMCStep</span><span class="p">]</span>
     <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="c1">#Plot Annealing Schedule</span>
+<span class="n">ConvertScheduleToPlot</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_30_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_30_0.png" />
 </div>
 </div>
 <p>作られたスケジュールを使って、初期状態を指定した<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>関数を使って、RQAを実行する。そして同様に、貪欲サーチの結果やForward Annealingの結果ちお比較を行う。結果を見ると、このチュートリアルが行う設定では銘柄セットのサイズ制限によってForward Annealingと同じ最適解にたどり着く場合が多いのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[224]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#初期状態を準備</span>
@@ -1191,7 +1268,9 @@ Best Gene last generation:
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="c1">#結果の比較</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Forward Quantum Annealing Result:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">sampleset_FQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reverse Quantum Annealing Result:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">EvaluateSolution</span><span class="p">(</span><span class="n">sampleset_RQA</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">Chart</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -1201,23 +1280,23 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
+[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1225,19 +1304,22 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
- 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
-[0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 0 0 1
- 0 0 0 1 1 1 1 1 0 1 0] 2.55394810071403
+Forward Quantum Annealing Result:
+[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
+ 0 1 0 1 0 1 1 1 0 0 1] 4.33806400478993
+Reverse Quantum Annealing Result:
+[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
+ 0 1 0 1 1 1 1 1 0 0 1] 4.1030830955703115
 </pre></div></div>
 </div>
 </section>
+</section>
 <section id="Reverse-Quantum-Annealingの確認">
-<h4>Reverse Quantum Annealingの確認<a class="headerlink" href="#Reverse-Quantum-Annealingの確認" title="Permalink to this headline">¶</a></h4>
+<h3>Reverse Quantum Annealingの確認<a class="headerlink" href="#Reverse-Quantum-Annealingの確認" title="Permalink to this headline">¶</a></h3>
 <p>同じ状態になると、実際にRQAの様子が分からないので、段階を分解してRQAを実行してみる。まずはReverse Phaseの確認である。同じようにアニーリングスケジュールを設定して、スケジュールと初期状態を指定したアニーリングを行う。ここでは例が分かりやすくなるようにReverse
 Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値や逆温度の設定を変えた。また、アニーリングもイタレーションではなく、毎回同じ初期状態から始まるように設定した。結果を見ると、逆転したアニーリング過程によって、既に得られた解から、よりエネルギーの高い状態に登っていったことが分かる。また、ほぼ毎回異なる状態でとまるので、高いエネルギー准位で解が定まっていないのもわかる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[198]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[225]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
@@ -1248,11 +1330,11 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
 <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="c1">#Reverse Step</span>
-<span class="c1">#for i in range(NReverseStep):</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
     <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
     <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
 
+<span class="n">ConvertScheduleToPlot</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">)</span>
 <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
 
 
@@ -1275,7 +1357,14 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1283,21 +1372,21 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -248., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -246., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -250., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -251., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -239., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -248., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0], -252., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -253., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -251., 1)]
+[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -333., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -332., 1)
+ ([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -341., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -341., 1)]
 </pre></div></div>
 </div>
 <p>Reverse状態の確認ができたので、このままPause Phaseの追加を行う。追加後は同様にアニーリングを実行して、その結果を確認した。このPhaseの追加は実装上において上のReverse Phaseの一番最後のステップのMCステップ数を伸ばしたものに等しいので、上のReverseのみのケースと同じようにバラバラの結果になる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[203]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[226]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Pause Step</span>
@@ -1309,7 +1398,7 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
 
 <span class="c1">#print(RQAschedule)</span>
-
+<span class="n">ConvertScheduleToPlot</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">)</span>
 <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
 
 <span class="n">sampleset_RQA_Reverse_Pause</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
@@ -1331,7 +1420,14 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1339,30 +1435,30 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0], -194., 1)
- ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -235., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0], -223., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0], -221., 1)
- ([0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0], -216., 1)
- ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0], -170., 1)
- ([0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0], -210., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -196., 1)
- ([0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0], -169., 1)
- ([0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0], -220., 1)]
+[([0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1], -275., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1], -257., 1)
+ ([0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -248., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1], -309., 1)
+ ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1], -298., 1)
+ ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1], -285., 1)
+ ([0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1], -261., 1)
+ ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1], -259., 1)
+ ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -325., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1], -250., 1)]
 </pre></div></div>
 </div>
 <p>最後にForward Phaseをまた追加してアニーリングを行う。ここの設定はこのチュートリアルの前のサンプルよりも少し緩い温度や磁場の条件で行った。結果として、この銘柄セットで既知の量子アニーリングによる最適解が得られたのが分かる。これでRQAの節の最初の例でもちゃんとRQAによって最適解を出しているのが分かる。</p>
 <p>また、条件が少し緩いため、解が収束せずに、エネルギーが近い複数のsub-optimalの解の存在を確認することができる。そのなかは場合によって、量子アニーリングの最適解よりも最終的なリターンが良くて、形も比較的に滑らかなポートフォリオの存在も確認できる。そのポートフォリオの詳細を見ると、その大きなリターンは上昇率が大きい特定の銘柄によるもので、逆相関を持つ変動率が比較的に小さい銘柄と組み合わせて実現されたものだと分かる。実際の投資においてはそのようなポートフォリオが好ましいかもしれないが、このチュートリアルが設定した「Shape
 Ratioが特に書く最大になる」条件では、相対的に大きいポートフォリSharpe Ratioが実現されることから、量子アニーリングによって最適ではない解と判断された。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[215]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[227]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Forward Step</span>
 <span class="n">NForwardStep</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="c1">#よりランダムな状態に戻す</span>
 <span class="n">ForwardStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NForwardStep</span>
-<span class="n">beta</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="c1">#より高い温度で熱的動きがしやすくようにする</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="c1">#より高い温度で熱的動きがしやすくようにする</span>
 <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
 
 <span class="c1">#Forward Step</span>
@@ -1370,6 +1466,7 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
     <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
     <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
 
+<span class="n">ConvertScheduleToPlot</span><span class="p">(</span><span class="n">RQAschedule</span><span class="p">)</span>
 <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
 
 <span class="n">sampleset_RQA_Reverse_Pause_Forward</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
@@ -1391,7 +1488,14 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1399,25 +1503,585 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -252., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0], -256., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)
- ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0], -250., 1)
- ([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0], -258., 1)]
+[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
+ ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)]
 </pre></div></div>
 </div>
 </section>
 <section id="RQAスケジュールを指定するときのパラメータ探索">
-<h4>RQAスケジュールを指定するときのパラメータ探索<a class="headerlink" href="#RQAスケジュールを指定するときのパラメータ探索" title="Permalink to this headline">¶</a></h4>
-<p>以上のように、OpenJijを用いて、Reverse Quantum Annealingを実装してポートフォリオ最適化問題を解いた。ほかの最適解付近にsub-optimalな解が多く存在する問題に関しても、同様な手法でより良い解を求められるので、是非試してみてください。</p>
+<h3>RQAスケジュールを指定するときのパラメータ探索<a class="headerlink" href="#RQAスケジュールを指定するときのパラメータ探索" title="Permalink to this headline">¶</a></h3>
+<p>Phaseを分けてReverse Quantum Annealingの様子を確認するところで、スケジュールの設定に指定した<span class="math notranslate nohighlight">\(s\)</span>,<span class="math notranslate nohighlight">\(\beta\)</span>そして量子モンテカルロ法のステップ数によって結果が変化することが分かった。つまり、Reverse Annealingでパフォーマンスを良くするには適切な値を設定する必要がある。</p>
+<section id="Reverse-Phaseの場合">
+<h4>Reverse Phaseの場合<a class="headerlink" href="#Reverse-Phaseの場合" title="Permalink to this headline">¶</a></h4>
+<p>まずはそれらがReverse Phaseに対する影響を見る。量子アニーリングの度合を表す<span class="math notranslate nohighlight">\(ssの影響を見る、これは横磁場をどれぐらい強く戻すのかを表す量で、最初のアニーリングで辿り着いたミニマムの周りになるポテンシャル障壁を超えて状態がばらけるようにするために、それを適切に強く（\)</span>s<span class="math notranslate nohighlight">\(を小さく）設定しなければならない。このノートの結果では\)</span>s$が<span class="math notranslate nohighlight">\(0.20\)</span>までReverse
+Phaseの終状態のばらつきがあっても不定にはならず、<span class="math notranslate nohighlight">\(0.20\)</span>以下だと熱的揺らぎが支配的になり、ばらつきが大きくなったのが分かる。なので<span class="math notranslate nohighlight">\(0.2\)</span>あたりをさらに細かくスキャンすれば最適の<span class="math notranslate nohighlight">\(s\)</span>値を得られる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">TargetS</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)):</span>
+    <span class="c1">#Create RQA schedule</span>
+    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
+    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">#Reverse Step</span>
+    <span class="c1">#for i in range(NReverseStep):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+    <span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;Target s=&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TargetS</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_8.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_9.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_10.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_10.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_11.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_11.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_12.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_12.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_13.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_13.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_14.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_14.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_15.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_15.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_16.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_16.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_17.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_17.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_18.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_18.png" />
+</div>
+</div>
+<p>次に<span class="math notranslate nohighlight">\(\beta\)</span>による影響を調べる。<span class="math notranslate nohighlight">\(\beta = \frac{1}{k_{\mathrm{B}T}}\)</span>が逆温度を表していて、<span class="math notranslate nohighlight">\(\beta\)</span>が大きければ大きいほど、系がより低温である意味になる。それはつまり全体としては状態がより基底状態に落ちやすく、より「Annealed」な状態に近いふるまいをする。言い換えると横磁場が一定の場合、<span class="math notranslate nohighlight">\(\beta\)</span>が大きくなると、横磁場が効きにくくなり、実効的には大きい<span class="math notranslate nohighlight">\(s\)</span>に近いふるまいになる。OpenJijにおいてその影響の詳細を知りたい方はこの<a class="reference external" href="https://qiita.com/ground0state/items/0f61c3efc7f12fd96d05">Qiita記事</a>に参照してください。</p>
+<p>また、その影響はQUBO行列に入っているエネルギーんの典型的なスケール付近で変わることも分かっている。このチュートリアルの場合、QUBOに入っている典型な値は<span class="math notranslate nohighlight">\([-5,5]\)</span>の範囲に入るため、<span class="math notranslate nohighlight">\(\beta=5.0\)</span>付近でふるまいが変化すると予想できある。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">QUBO</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([  4.,   4.,   4., 640., 504., 504., 624.,   5.,   5.,  10.]),
+ array([-14., -11.,  -8.,  -5.,  -2.,   1.,   4.,   7.,  10.,  13.,  16.]),
+ &lt;BarContainer object of 10 artists&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" />
+</div>
+</div>
+<p>対数的な<span class="math notranslate nohighlight">\(\beta\)</span>配列を用意して、<span class="math notranslate nohighlight">\(s\)</span>以外の量を固定してReverse Phaseを行う。予想通り<span class="math notranslate nohighlight">\(\beta=5\)</span>あたりで終状態のばらつきが小さくなり、それよりも大きい<span class="math notranslate nohighlight">\(\beta\)</span>だと数少ない状態に収束してしまうことが分かる。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[230]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
+    <span class="c1">#Create RQA schedule</span>
+    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
+    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">#Reverse Step</span>
+    <span class="c1">#for i in range(NReverseStep):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+    <span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;beta =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_6.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_7.png" />
+</div>
+</div>
+<p>そしてスケジュールの分割について調べる。階段関数のような極端的な場合から、細かく分割して緩やかな変化にする場合まで調査をした。結果から分かるように、分割数が少ない場合、状態があまり変化せず、増やすとばらつきが見えてくる。また、大きく増やしても計算時間が長くなるだけで結果の違いが少ないのも分かる。このチュートリアルが取り扱うポートフォリオ最適化問題の場合は<span class="math notranslate nohighlight">\(50\)</span>程度の設定で問題ない。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">NReverseStep</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]:</span>
+    <span class="c1">#Create RQA schedule</span>
+    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
+    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
+    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">#Reverse Step</span>
+    <span class="c1">#for i in range(NReverseStep):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+    <span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NReverseStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_6.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_8.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_9.png" />
+</div>
+</div>
+<p>またMC stepsに関しては、分割数×MC stepsが極端に少ない場合でなければ、最終の結果にはほぼ影響がないことが分かる。<code class="docutils literal notranslate"><span class="pre">SQASampler()</span></code>がデフォルト設定の場合、目安として<span class="math notranslate nohighlight">\(1000\)</span>程度で問題なく動作するはずである。</p>
 </section>
-<section id="付録-DwaveマシンでRQA実験をする場合のコード">
-<h4>付録 DwaveマシンでRQA実験をする場合のコード<a class="headerlink" href="#付録-DwaveマシンでRQA実験をする場合のコード" title="Permalink to this headline">¶</a></h4>
+<section id="Pause-Phaseの場合">
+<h4>Pause Phaseの場合<a class="headerlink" href="#Pause-Phaseの場合" title="Permalink to this headline">¶</a></h4>
+<p>既に説明があったように、通常の場合Pause PhaseがReverse Phaseの最後のステップを延長させたものに違いないので、アニーリング全体の<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を変化させたところで、Reverse Phaseと同じようなふるまいをする。また、ステップ数もどのぐらい最後のステップを伸ばすのかに等しい意味なので、変更してもほぼReverse Phaseの状態を保持したままだけで、影響が少ない。</p>
+<p>ただし、Pause Phaseだけ<span class="math notranslate nohighlight">\(\beta\)</span>を変化させることは量子アニーリングが不完全な状態で古典的なアニーリングを行うの近い行動である。ここでは<span class="math notranslate nohighlight">\(\beta=5.0\)</span>から緩やかに目標とした<span class="math notranslate nohighlight">\(\beta\)</span>に向かって系の温度を変化させて、その影響を調べる。そして、Reverse Phaseで異なる<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行った場合の終状態に近い結果を得られた。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[232]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
+    <span class="c1">#Create RQA schedule</span>
+    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
+    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">#Reverse Step</span>
+    <span class="c1">#for i in range(NReverseStep):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="c1">#Pause Phase</span>
+    <span class="n">NPauseStep</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">betaStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">5.0</span><span class="o">-</span><span class="n">beta</span><span class="p">)</span> <span class="o">/</span> <span class="n">NPauseStep</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="p">,</span> <span class="mf">5.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">betaStep</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+    <span class="n">sampleset_RQA_Reverse_Pause</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse_Pause</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;Target beta =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_6.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_7.png" />
+</div>
+</div>
+</section>
+<section id="Forward-Phaseの場合">
+<h4>Forward Phaseの場合<a class="headerlink" href="#Forward-Phaseの場合" title="Permalink to this headline">¶</a></h4>
+<p>Forwar PhaseはReverse PhaseとPause Phaseで得られた状態から普通の量子アニーリングを行う。このとき考えるぺきパラメータの条件は通常のアニーリングが正しく動作するために必要な条件と基本同じである。Reverse PhaseとPause Phaseと同じ方法で、<span class="math notranslate nohighlight">\(\beta\)</span>と分割したステップ数のスキャンを行った結果、比較的に小さい分割数と<span class="math notranslate nohighlight">\(\beta\)</span>でも結果がちゃんと最適解に収束することが分かった。</p>
+<p>下のコードはその例である。Reverse PhaseとPause Phaseは上の調査で得られた設定で、Forward Phaseだけ粗い分解と小さい<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行っている。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[233]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
+<span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">NReverseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
+<span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+<span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c1">#Reverse Step</span>
+<span class="c1">#for i in range(NReverseStep):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="c1">#Pause Phase</span>
+<span class="n">NPauseStep</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">MC_step</span><span class="o">*</span><span class="n">NPauseStep</span><span class="p">]</span>
+<span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="c1">#Forward Phase</span>
+<span class="n">NForwardStep</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">ForwardStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NForwardStep</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">):</span>
+    <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="n">TargetS</span><span class="o">+</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">ForwardStep</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+    <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+<span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+<span class="n">sampleset_RQA_Reverse_Pause_Forward</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse_Pause_Forward</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+    <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NForwardStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_51_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_51_0.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="終わりに">
+<h2>終わりに<a class="headerlink" href="#終わりに" title="Permalink to this headline">¶</a></h2>
+<p>以上のように、OpenJijを用いて、Reverse Quantum Annealingを実装してポートフォリオ最適化問題を解いた。このチュートリアルをは、RQAの問題定式化やスケジュール指定のやり方、そしてRQAを行う時考慮すべきパラメータなどの説明を行った。また結果として、RQAの手法を用いることで、正しく最適解となる答えを得られることを示した。</p>
+<p>ほかの最適解付近にsub-optimalな解が多く存在する問題に関しても、同様な手法でより良い解を求められるので、通常の量子アニーリングでローカルミニマムにハマった時、このようにReverse Quantum Annealingを試して見ると解決できるかもしれない。</p>
+<p>また、例えばスケジュールの変化が線形関数から非線形な形にした場合の影響など、RQAについてこのチュートリアルで議論しなかった部分もあるが、このチュートリアルにあるコードを変更することで簡単にできるので、興味がある方は是非試してみてください。</p>
+<section id="付録A-シミュレーションの結果が上手くいかない場合">
+<h3>付録A シミュレーションの結果が上手くいかない場合<a class="headerlink" href="#付録A-シミュレーションの結果が上手くいかない場合" title="Permalink to this headline">¶</a></h3>
+<p>このチュートリアルで使用された銘柄セットの生成コードは必ずしても構成が「良い」銘柄を生成する保証がないので、場合によって偏った分布を持ったセットに対して実験する可能性もある。その時は、遺伝的アルゴリズムの計算が非常に長い時間を持つことや、チュートリアルがデフォルトで使用した<span class="math notranslate nohighlight">\(s\)</span>や<span class="math notranslate nohighlight">\(\beta\)</span>などのパラメータでRQAが収束しないこともある。そうした場合は銘柄セットを再生成するか、手動でRQAのパラメータ調整を行って最適解に収束するようにしてください。</p>
+</section>
+<section id="付録B-DwaveマシンでRQA実験をする場合のコード">
+<h3>付録B DwaveマシンでRQA実験をする場合のコード<a class="headerlink" href="#付録B-DwaveマシンでRQA実験をする場合のコード" title="Permalink to this headline">¶</a></h3>
 <p>Dwaveマシンにおいてもこのチュートリアルが実行した手法でRQAを実行できる。ここでは参考としてそのサンプルコードを載せる。実装及びシミュレーションと実機の違いで、スケジュールの設定方法や引数が異なるが、基本的には同じような過程になる。詳細を知りたい方はDwave公式サイトなどにあるドキュメントに参考してください。 また、実機では現実のノイズなどによる影響は見られやすいので通常のアニーリングとRQAによる結果の違いは見られやすい。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -1435,9 +2099,9 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 
 
 <span class="c1"># RQA schedule</span>
-<span class="n">timing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">Ratio</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">schedule</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span><span class="n">Ratio</span><span class="p">))</span>
+<span class="n">timing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="c1">#各フェーズの開始と終了時刻、フェーズの数を増やしても問題ない</span>
+<span class="n">Ratio</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">0.38</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span><span class="c1">#各フェーズが変わる時のs</span>
+<span class="n">schedule</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span><span class="n">Ratio</span><span class="p">))</span><span class="c1">#スケジュールにまとめる</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timing</span><span class="p">,</span><span class="n">Ratio</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
@@ -1492,7 +2156,6 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 </div>
 </section>
 </section>
-</section>
 <section id="参考文献">
 <h2>参考文献<a class="headerlink" href="#参考文献" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
@@ -1519,21 +2182,33 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 <li><a class="reference internal" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化の手順">Reverse Quantum Annealingによるポートフォリオ最適化の手順</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#Open-Jijを用いた実装">Open Jijを用いた実装</a><ul>
+<li><a class="reference internal" href="#銘柄データの生成と古典アルゴリズムの実装">銘柄データの生成と古典アルゴリズムの実装</a><ul>
 <li><a class="reference internal" href="#最適化を行う銘柄データの生成">最適化を行う銘柄データの生成</a></li>
 <li><a class="reference internal" href="#古典アルゴリズムによる探索">古典アルゴリズムによる探索</a><ul>
 <li><a class="reference internal" href="#貪欲サーチ">貪欲サーチ</a></li>
 <li><a class="reference internal" href="#遺伝的アルゴリズム">遺伝的アルゴリズム</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Open-Jijを用いた量子アニーリング手法の実装">Open Jijを用いた量子アニーリング手法の実装</a><ul>
 <li><a class="reference internal" href="#Quantum-Annealingによる解法">Quantum Annealingによる解法</a><ul>
 <li><a class="reference internal" href="#Forward-Annealingの場合">Forward Annealingの場合</a></li>
 <li><a class="reference internal" href="#Reverse-Quantum-Annealing(RQA)の場合">Reverse Quantum Annealing(RQA)の場合</a></li>
-<li><a class="reference internal" href="#Reverse-Quantum-Annealingの確認">Reverse Quantum Annealingの確認</a></li>
-<li><a class="reference internal" href="#RQAスケジュールを指定するときのパラメータ探索">RQAスケジュールを指定するときのパラメータ探索</a></li>
-<li><a class="reference internal" href="#付録-DwaveマシンでRQA実験をする場合のコード">付録 DwaveマシンでRQA実験をする場合のコード</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#Reverse-Quantum-Annealingの確認">Reverse Quantum Annealingの確認</a></li>
+<li><a class="reference internal" href="#RQAスケジュールを指定するときのパラメータ探索">RQAスケジュールを指定するときのパラメータ探索</a><ul>
+<li><a class="reference internal" href="#Reverse-Phaseの場合">Reverse Phaseの場合</a></li>
+<li><a class="reference internal" href="#Pause-Phaseの場合">Pause Phaseの場合</a></li>
+<li><a class="reference internal" href="#Forward-Phaseの場合">Forward Phaseの場合</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#終わりに">終わりに</a><ul>
+<li><a class="reference internal" href="#付録A-シミュレーションの結果が上手くいかない場合">付録A シミュレーションの結果が上手くいかない場合</a></li>
+<li><a class="reference internal" href="#付録B-DwaveマシンでRQA実験をする場合のコード">付録B DwaveマシンでRQA実験をする場合のコード</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#参考文献">参考文献</a></li>
