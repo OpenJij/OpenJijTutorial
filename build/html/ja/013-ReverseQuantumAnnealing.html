@@ -314,7 +314,7 @@ div.rendered_html tbody tr:hover {
 \[\mathcal{O}(\bm{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
 <p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する洗濯で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金度合を表す。</p>
 <p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
-<div><p><img alt="dbec0b122bfc4c7da0f35d369b4663e9" src="../_images/013_RQA_QUBO.png" /></p>
+<div><p><img alt="21b3103f4d7948909a7bd94c65efe7d1" src="../_images/013_RQA_QUBO.png" /></p>
 </div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループはポートフォリオを構成する人の基準によって決められた基準によって、銘柄を魅力的であるから魅力ではない順で並べてそれを順位付けした後に、均等に分けた場合形成されたグループになる。この魅力的な基準はリターン率の高さや損失の少なさなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
 <p>このQUBOを使って量子アニーリングを行えば最適のポートフォリオを得ることができるはず。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのが分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的にであるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
 </section>
@@ -330,7 +330,7 @@ Ratioを持つ解と最適解はエネルギーの違いも同じように小さ
 <div class="math notranslate nohighlight">
 \[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
 <p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
-<div><p><img alt="8e4fc1aa866f401ab51488263bd8e2f4" src="../_images/013_QAandRQA.png" /></p>
+<div><p><img alt="238bdb72d3aa4a0dbde306695ef2cd9f" src="../_images/013_QAandRQA.png" /></p>
 </div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
 Phaseになる。この時もまた高いエネルギーの状態にあり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
 </section>
@@ -699,51 +699,6 @@ SubSet 99 average Sharpe Ratio: 0.37064232910513106
 Average Sharpe Ratio of all generated: 0.40838444032459015
 </pre></div></div>
 </div>
-<p>銘柄の確認ができてから、作られたポートフォリオ全体のパフォーマンスを確認する、ここでは全銘柄が同じ重みで選ばれるシナリオで銘柄全体のSharpe Ratioを計算しているが、48銘柄の場合で論文の結果「平均1.4、25パーセント分位0.5、75パーセント分位2.1」を再現できていない。（TODO）</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[216]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span>
-<span class="n">SR_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-
-<span class="k">for</span> <span class="n">ntry</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">Chart</span> <span class="o">=</span> <span class="n">CreateAssets</span><span class="p">(</span><span class="n">Nassets</span><span class="p">)</span>
-    <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Chart</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">portfolioSR</span> <span class="o">=</span> <span class="n">CalculateSharpeRatio</span><span class="p">(</span><span class="n">portfolioChart</span><span class="p">)</span>
-    <span class="n">SR_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">portfolioSR</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">portfolioSR</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">SR_list</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">SR_list</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">75</span><span class="p">]))</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-0.6424289431873234
-0.6424289431873234 [0.64242894 0.64242894]
-1.0690140063361937
-0.8557214747617585 [0.74907521 0.96236774]
-1.6944740511688996
-1.1353056668974721 [0.85572147 1.38174403]
-1.8803181393782316
-1.321558785017662 [0.96236774 1.74093507]
-2.1399546304938237
-1.4852379541128944 [1.06901401 1.88031814]
-0.955090006803346
-1.3968799628946362 [0.98357101 1.83385712]
-1.0640348880987391
-1.3493306664952223 [1.00956245 1.7873961 ]
-1.1884688150400942
-1.3292229350633313 [1.03679867 1.74093507]
-1.5068308301487452
-1.3489571456283773 [1.06403489 1.69447405]
-2.2064989892261875
-1.4347113299881582 [1.06527967 1.83385712]
-</pre></div></div>
-</div>
 </section>
 <section id="古典アルゴリズムによる探索">
 <h3>古典アルゴリズムによる探索<a class="headerlink" href="#古典アルゴリズムによる探索" title="Permalink to this headline">¶</a></h3>
@@ -952,7 +907,7 @@ Selection After Greedy Search:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_20_1.png" />
 </div>
 </div>
 </section>
@@ -1041,7 +996,7 @@ Best Gene last generation:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_24_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_24_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_22_1.png" />
 </div>
 </div>
 </section>
@@ -1130,7 +1085,7 @@ Best Gene last generation:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_28_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_28_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -1156,7 +1111,7 @@ Best Gene last generation:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_28_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_28_3.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_26_3.png" />
 </div>
 </div>
 </section>
@@ -1240,7 +1195,7 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_30_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_30_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_28_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_28_0.png" />
 </div>
 </div>
 <p>作られたスケジュールを使って、初期状態を指定した<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>関数を使って、RQAを実行する。そして同様に、貪欲サーチの結果やForward Annealingの結果ちお比較を行う。結果を見ると、このチュートリアルが行う設定では銘柄セットのサイズ制限によってForward Annealingと同じ最適解にたどり着く場合が多いのが分かる。</p>
@@ -1296,7 +1251,7 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_30_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1357,14 +1312,14 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_32_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1420,14 +1375,14 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_34_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1488,14 +1443,14 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_36_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1560,133 +1515,133 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_2.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_3.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_4.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_5.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_6.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_6.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_7.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_7.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_8.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_8.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_9.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_9.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_10.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_10.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_10.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_10.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_11.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_11.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_11.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_11.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_12.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_12.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_12.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_12.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_13.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_13.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_13.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_13.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_14.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_14.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_14.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_14.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_15.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_15.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_15.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_15.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_16.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_16.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_16.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_16.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_17.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_17.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_17.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_17.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_18.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_18.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_38_18.png" src="../_images/ja_013-ReverseQuantumAnnealing_38_18.png" />
 </div>
 </div>
 <p>次に<span class="math notranslate nohighlight">\(\beta\)</span>による影響を調べる。<span class="math notranslate nohighlight">\(\beta = \frac{1}{k_{\mathrm{B}T}}\)</span>が逆温度を表していて、<span class="math notranslate nohighlight">\(\beta\)</span>が大きければ大きいほど、系がより低温である意味になる。それはつまり全体としては状態がより基底状態に落ちやすく、より「Annealed」な状態に近いふるまいをする。言い換えると横磁場が一定の場合、<span class="math notranslate nohighlight">\(\beta\)</span>が大きくなると、横磁場が効きにくくなり、実効的には大きい<span class="math notranslate nohighlight">\(s\)</span>に近いふるまいになる。OpenJijにおいてその影響の詳細を知りたい方はこの<a class="reference external" href="https://qiita.com/ground0state/items/0f61c3efc7f12fd96d05">Qiita記事</a>に参照してください。</p>
@@ -1714,7 +1669,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_40_1.png" />
 </div>
 </div>
 <p>対数的な<span class="math notranslate nohighlight">\(\beta\)</span>配列を用意して、<span class="math notranslate nohighlight">\(s\)</span>以外の量を固定してReverse Phaseを行う。予想通り<span class="math notranslate nohighlight">\(\beta=5\)</span>あたりで終状態のばらつきが小さくなり、それよりも大きい<span class="math notranslate nohighlight">\(\beta\)</span>だと数少ない状態に収束してしまうことが分かる。</p>
@@ -1747,6 +1702,96 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;beta =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_3.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_4.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_5.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_6.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_42_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_42_7.png" />
+</div>
+</div>
+<p>そしてスケジュールの分割について調べる。階段関数のような極端的な場合から、細かく分割して緩やかな変化にする場合まで調査をした。結果から分かるように、分割数が少ない場合、状態があまり変化せず、増やすとばらつきが見えてくる。また、大きく増やしても計算時間が長くなるだけで結果の違いが少ないのも分かる。このチュートリアルが取り扱うポートフォリオ最適化問題の場合は<span class="math notranslate nohighlight">\(50\)</span>程度の設定で問題ない。</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">NReverseStep</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]:</span>
+    <span class="c1">#Create RQA schedule</span>
+    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
+    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
+    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="c1">#Reverse Step</span>
+    <span class="c1">#for i in range(NReverseStep):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
+        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
+        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
+
+    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
+
+
+    <span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
+        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NReverseStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1800,115 +1845,25 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <img alt="../_images/ja_013-ReverseQuantumAnnealing_44_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_6.png" />
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <img alt="../_images/ja_013-ReverseQuantumAnnealing_44_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_7.png" />
 </div>
 </div>
-<p>そしてスケジュールの分割について調べる。階段関数のような極端的な場合から、細かく分割して緩やかな変化にする場合まで調査をした。結果から分かるように、分割数が少ない場合、状態があまり変化せず、増やすとばらつきが見えてくる。また、大きく増やしても計算時間が長くなるだけで結果の違いが少ないのも分かる。このチュートリアルが取り扱うポートフォリオ最適化問題の場合は<span class="math notranslate nohighlight">\(50\)</span>程度の設定で問題ない。</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">NReverseStep</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]:</span>
-    <span class="c1">#Create RQA schedule</span>
-    <span class="n">RQAschedule</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">TargetS</span> <span class="o">=</span> <span class="mf">0.18</span>
-    <span class="n">ReverseStep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">TargetS</span><span class="p">)</span> <span class="o">/</span> <span class="n">NReverseStep</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="mf">5.0</span>
-    <span class="n">MC_step</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="c1">#Reverse Step</span>
-    <span class="c1">#for i in range(NReverseStep):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">):</span>
-        <span class="n">step_sche</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">ReverseStep</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">MC_step</span><span class="p">]</span>
-        <span class="n">RQAschedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_sche</span><span class="p">)</span>
-
-    <span class="n">init_state</span> <span class="o">=</span> <span class="n">QA_init_state</span>
-
-
-    <span class="n">sampleset_RQA_Reverse</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">QUBO</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="n">RQAschedule</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">init_state</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">reinitialize_state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#毎回同じ初期状態からアニーリング</span>
-    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
-        <span class="n">selected_charts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nassets</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
-                <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NReverseStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_0.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_2.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_3.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_4.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_5.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_6.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_7.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_8.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_8.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_8.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_46_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_46_9.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_44_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_9.png" />
 </div>
 </div>
 <p>またMC stepsに関しては、分割数×MC stepsが極端に少ない場合でなければ、最終の結果にはほぼ影響がないことが分かる。<code class="docutils literal notranslate"><span class="pre">SQASampler()</span></code>がデフォルト設定の場合、目安として<span class="math notranslate nohighlight">\(1000\)</span>程度で問題なく動作するはずである。</p>
@@ -1961,56 +1916,56 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_0.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_1.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_1.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_2.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_2.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_3.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_3.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_4.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_4.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_5.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_5.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_6.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_6.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_6.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_7.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_47_7.png" src="../_images/ja_013-ReverseQuantumAnnealing_47_7.png" />
 </div>
 </div>
 </section>
@@ -2065,7 +2020,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/ja_013-ReverseQuantumAnnealing_51_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_51_0.png" />
+<img alt="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_49_0.png" />
 </div>
 </div>
 </section>
