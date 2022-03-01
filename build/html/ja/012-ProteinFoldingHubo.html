@@ -342,7 +342,7 @@ div.rendered_html tbody tr:hover {
 <p>これにより、<span class="math notranslate nohighlight">\(2\times 6=12\)</span>個のビット列と6個のアミノ酸列の2次元格子上の構造が1対1で対応します。 例えば010101010101というビット列は左から2ビットずつ区切って読むことで、右、右、右、右、右、右という列に翻訳されます。 よってP-S-V-K-M-Aという順番でアミノ酸が右向きに横一直線に並んだ構造に対応します。 より複雑な例が図１に示してあります。</p>
 <p>実は、簡単な考察から最初の3ビットは010に固定できることが分かります。 まず、平面の対称性からPの右側にSが折りたたまれていると仮定しても一般性を失わないことが分かります。よって最初の2ビットは01列で固定できます。 さらにSの上にVが折りたたまれることと、下に折りたたまれることは、やはり平面の対称性から同じことなので、ここでは下に折りたたまれる場合のみ考えます。
 またVがSの左に折りたたまれてPと重なるパターンも排除します。以上の考察と仮定からVはSの右か下に折りたたまれる場合のみを考えても良いことになります。 したがって3ビット目が0に決まります。よって残りの<span class="math notranslate nohighlight">\(12-3=9\)</span>ビットの配列を決定すれば良いことになります。</p>
-<div><p><img alt="6e0371dac03d4473973f5b45530f3113" class="no-scaled-link" src="../_images/lattice_folding_mapping.png" style="width: 400px; height: 300px;" /></p>
+<div><p><img alt="e3f0f0633bee4a649127484ce412f8d7" class="no-scaled-link" src="../_images/lattice_folding_mapping.png" style="width: 400px; height: 300px;" /></p>
 <p>図1：ラティスフォールディングとビット列の対応関係。 最終的に得られている0100101011というビット列を2ビットずつ区切って左から読むと、右、下、左、左、上となるので図のような2次元構造が対応することが分かります。 論文[1]のFigure2(a)より転載: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY
 4.0.</a>)</p>
 </div></section>
@@ -359,14 +359,14 @@ div.rendered_html tbody tr:hover {
 <p>具体的な例として論文[1]のScheme3のExperiment3を初期状態にして考えます。アミノ酸配列は、</p>
 <p>P-S-V-K-M-A</p>
 <p>でしたが、P-S-V-Kの構造は以下の図2の様にすでに決まっています。 残りのMとAの構造を決定するコスト関数を考えます。</p>
-<div><p><img alt="28b33daa4981437089dfd01962c5ce35" class="no-scaled-link" src="../_images/scheme.png" style="width: 600px; height: 600px;" /></p>
+<div><p><img alt="bea09b0c54bd48bd87bfe84ca0bc31b3" class="no-scaled-link" src="../_images/scheme.png" style="width: 600px; height: 600px;" /></p>
 <p>図2：赤枠内の構造を初期状態として考えます。MはKの下または左に折りたたまれる場合のみを考えます。よって決定変数は<span class="math notranslate nohighlight">\(q_1\)</span>、<span class="math notranslate nohighlight">\(q_2\)</span>、<span class="math notranslate nohighlight">\(q_3\)</span>の3つとなります。 論文[1]のFigure 3(b)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY
 4.0.</a>)</p>
 </div></section>
 <section id="コスト関数設計">
 <h3>コスト関数設計<a class="headerlink" href="#コスト関数設計" title="Permalink to this headline">¶</a></h3>
 <p>コスト関数設計の様子を以下の図3に示しました。図3の詳細について説明します。</p>
-<div><p><img alt="78359c6fcc784e23ade34b70dc7efa80" class="no-scaled-link" src="../_images/make_costfunction_about_protein_folding.png" style="width: 600px; height: 400px;" /></p>
+<div><p><img alt="b908ddf2ff9940ca8b8021b04c9f536b" class="no-scaled-link" src="../_images/make_costfunction_about_protein_folding.png" style="width: 600px; height: 400px;" /></p>
 <p>図3：コスト関数の定式化。 論文[1]のFigure 3(a)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div><p>基本的な方針は簡単で、ありうる２次元構造を全て考えて対応するエネルギーを計算することでコスト関数を導出します。 ただしこの方法ではコスト関数の導出そのものに指数時間かかることになります。また、取りうるエネルギーを毎回計算しているため、わざわざアニーリングで解を求めなくてもコスト関数ができた段階で最適解が分かっていることになります。 ここでは論文[1]の式(5)の導出をわかりやすく説明するためのこのような説明を行っています。</p>
 <p>それでは具体的に見ていきます。すぐに分かることとして、</p>
@@ -453,13 +453,13 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>エネルギーが-5となる解が最も多く得られていることがわかります。これは先程述べたように厳密な最適解となっています。</p>
 <p>またこの時のビット列は<span class="math notranslate nohighlight">\((q_{1},q_{2},q_{3})=(0,0,1)\)</span>であり、対応する2次元構造は以下のようになります。</p>
-<div><p><img alt="d630391c92fe472ca4e972b756ccec61" class="no-scaled-link" src="../_images/optimal_folding_structure.png" style="width: 300px; height: 300px;" /></p>
+<div><p><img alt="f5652ffcd0e8488a8c99e85282e7b29a" class="no-scaled-link" src="../_images/optimal_folding_structure.png" style="width: 300px; height: 300px;" /></p>
 <p>図4： 最適なラティスフォールディング構造。 論文[1]のFigure 3(c)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div></section>
 <section id="4.-HUBOによる直接解法と参考論文[1]の結果との比較">
 <h3>4. HUBOによる直接解法と参考論文[1]の結果との比較<a class="headerlink" href="#4.-HUBOによる直接解法と参考論文[1]の結果との比較" title="Permalink to this headline">¶</a></h3>
 <p>最後に、HUBOによる直接解法と参考論文[1]の結果との比較します。 以下の図5は、論文[1]による測定結果であり、各エネルギーにおいてタンパク質がとり得る2次元構造を示したものです。 なお、論文[1]では、HUBOをQUBOに変換してから、D-waveを用いて解いています。</p>
-<div><p><img alt="72ae96e3c0494a4d997e0fa751a3785e" class="no-scaled-link" src="../_images/protein_folding_qa_result.png" style="width: 800px; height: 1000px;" /></p>
+<div><p><img alt="d6153eafc8614418be082bd0712b9e9b" class="no-scaled-link" src="../_images/protein_folding_qa_result.png" style="width: 800px; height: 1000px;" /></p>
 <p>図5： 測定結果で得られたラティスフォールディング構造とエネルギーのパターン。 論文[1]のFigure 3(c)より転載: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div><p>今回注目したScheme3のExperiment3の測定結果は、図の青色の構造であり、今回は青色の構造のみを観察すれば良いです。</p>
 <p>図5に従い、参考論文[1]のエネルギー測定結果のリストを以下で作成します。注意点として、エネルギーが正の値になる構造は無視しています。論文[1]によるとそのような構造は全体の8%を締めていたようです。</p>

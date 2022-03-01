@@ -301,42 +301,42 @@ div.rendered_html tbody tr:hover {
 <p>この時、与えられた一定のリスクでは最大利益を実現したい、または同じ利益を実現する場合できるだけ小さいリスクを取るには、最適なポートフォリオを選ぶ必要がある。現在、よく利用される手法はMarkowitzによる現代ポートフォリオ理論(Modern Portfolio Theory)であり、ポートフォリオを構成する銘柄の間の相関を考慮して、その共分散を最小にさせるような手法になる[1]。</p>
 <div class="math notranslate nohighlight">
 \[\min \sum_{i=1}^{N}\sum_{j=1}^{N}w_{i}w_{j}\sigma_{ij}; \quad \sum_{i=1}^{N}W_{i}=1; \quad \sum_{i=1}^{N}W_{i}\mu_{i}=R\]</div>
-<p>ただし、<span class="math notranslate nohighlight">\(w_{i}\)</span>は各銘柄がポートフォリオ内を占める重みで、<span class="math notranslate nohighlight">\(\sigma_{ij}\)</span>は銘柄間の共分散である。<span class="math notranslate nohighlight">\(\mu_{i}\)</span>は各銘柄の期待収益で、<span class="math notranslate nohighlight">\(R\)</span>はこのポートフォリオの総収益になる。</p>
+<p>ただし、<span class="math notranslate nohighlight">\(w_{i}\)</span>は各銘柄がポートフォリオ内に占める重みで、<span class="math notranslate nohighlight">\(\sigma_{ij}\)</span>は銘柄間の共分散である。<span class="math notranslate nohighlight">\(\mu_{i}\)</span>は各銘柄の期待収益で、<span class="math notranslate nohighlight">\(R\)</span>はこのポートフォリオの総収益になる。</p>
 <p>この時、ポートフォリオのパフォーマンスの評価によく使われる指標としてSharpe Ratioというのがある。</p>
-<p>### Sharpe Ratio Sharpe Ratioは投資の効率性を評価する指標で、銘柄単体とポートフォリオにたいして計算できる。1966念にウィリアム・シャープによって提案された[3]。その基本的な定義は次のような形になる。</p>
+<p>### Sharpe Ratio Sharpe Ratioは投資の効率性を評価する指標で、銘柄単体とポートフォリオに対して計算できる。1966年にウィリアム・シャープによって提案された[3]。その基本的な定義は次のような形になる。</p>
 <div class="math notranslate nohighlight">
 \[S = \frac{\bar{r}-r_0}{\sigma}\]</div>
-<p>ここの<span class="math notranslate nohighlight">\(\bar{r}\)</span>は一定時間内の平均的なリターン率であり、月間や年間リターンを利用することも多い。<span class="math notranslate nohighlight">\(r_0\)</span>はリスクなしの場合のリターン率で、安定した国債の利子率などを用いることが多い。そして<span class="math notranslate nohighlight">\(\sigma\)</span>はボラティリティを表していて、資産価値の変動の激しさを意味している。</p>
-<p>また、これらの値は実際使う場面によって異なる計算方法で算出される。例えばリターンは単純リターンとして<span class="math notranslate nohighlight">\(r=P(t+1)/P(t) - 1\)</span>で価格<span class="math notranslate nohighlight">\(P\)</span>で計算される場合と<span class="math notranslate nohighlight">\(r=log[P(t+1)/P(t)]\)</span>のように対数リターン率として計算される場合がある。そしてボラティリティも価格の変動からとリターンからのやり方が存在する。具体的に興味がある方は金融工学や市場分析などに関連する本とサイトに参照してください。</p>
-<p>### ポートフォリオの評価と最適化 Sharpe Ratioの定義から、その値が大きいということは収益が大きいまたはリスク（ボラティリティ）が小さいことを意味しているのが分かる。ある与えられた銘柄の集合で作られたポートフォリオのうち、最大のSharpe Ratioを実現できるような組み合わせは、同じリスクに対して最大のリターンを得る組み合わせになる。なので、ポートフォリオの最適化問題は一定の考え方の元でShape Ratioを最大にする問題に置き換えられる。</p>
-<p>現実において、この最適化は銘柄を選別した上でそれぞれの銘柄に投入する資金の量を決定しなければならない。つまり、選ぶ銘柄と各銘柄のウェイトを決定する問題になる。このチュートリアルは、参考した論文[2]に従い、簡単のために各銘柄のウェイトが等しくする戦略について考える。この時、問題は<span class="math notranslate nohighlight">\(M\)</span>個ある銘柄のうち<span class="math notranslate nohighlight">\(N\)</span>個銘柄を選び出して、実現Sharpe Ratioを最大にするものになる。すると、次のようなQUBO形式に問題を翻訳できる。</p>
+<p>ここの<span class="math notranslate nohighlight">\(\bar{r}\)</span>は一定時間内の平均的なリターン率であり、月間や年間リターンの平均を利用することが多い。<span class="math notranslate nohighlight">\(r_0\)</span>はリスクなしの場合のリターン率で、普段は安定した国債の利子率などを用いる。そして<span class="math notranslate nohighlight">\(\sigma\)</span>はボラティリティを表していて、資産価値の変動の激しさを意味している。</p>
+<p>また、実際にSharpe Ratioを計算する時、場面によって異なる計算方法でこれらの値を算出する。例えばリターンは単純リターンとして<span class="math notranslate nohighlight">\(r=P(t+1)/P(t) - 1\)</span>で資産価格<span class="math notranslate nohighlight">\(P\)</span>を使って計算される場合と、<span class="math notranslate nohighlight">\(r=log[P(t+1)/P(t)]\)</span>のように対数リターン率として計算される場合がある。そしてボラティリティも価格の変動から計算する手法とリターン率からの計算するやり方が存在する。具体的に興味がある方は金融工学や市場分析などに関連する本とサイトに参照してください。</p>
+<p>### ポートフォリオの評価と最適化 Sharpe Ratioの定義から、その値が大きいということは収益が大きいまたはリスク（ボラティリティ）が小さいことを意味している。ある与えられた銘柄の集合から作られたポートフォリオのうち、最大のSharpe Ratioを実現できるような組み合わせは、単位リスクに対して最大のリターンを得る組み合わせになる。なので、ポートフォリオの最適化問題が一定の考え方の元ではShape Ratioを最大にする問題に置き換えられる。</p>
+<p>現実において、この最適化は銘柄を選別した上で、それぞれの銘柄に投入する資金の量を決定しなければならない。つまり、選ぶ銘柄と各銘柄のウェイトを決定する問題になる。このチュートリアルは、参考した論文[2]に従い、簡単のために各銘柄のウェイトが等しくする戦略について考える。この時、問題は<span class="math notranslate nohighlight">\(M\)</span>個ある銘柄のうち<span class="math notranslate nohighlight">\(N\)</span>個銘柄を選び出して、実現Sharpe Ratioを最大にするものになる。すると、次のようなQUBO形式に問題を翻訳できる。</p>
 <div class="math notranslate nohighlight">
-\[\mathcal{O}(\bm{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
-<p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する洗濯で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金度合を表す。</p>
+\[\mathcal{O}(\boldsymbol{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
+<p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する選択で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金の度合を表す。</p>
 <p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
-<div><p><img alt="21b3103f4d7948909a7bd94c65efe7d1" src="../_images/013_RQA_QUBO.png" /></p>
-</div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループはポートフォリオを構成する人の基準によって決められた基準によって、銘柄を魅力的であるから魅力ではない順で並べてそれを順位付けした後に、均等に分けた場合形成されたグループになる。この魅力的な基準はリターン率の高さや損失の少なさなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
-<p>このQUBOを使って量子アニーリングを行えば最適のポートフォリオを得ることができるはず。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのが分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的にであるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
+<div><p><img alt="6305763524234958b56b03929f240478" src="../_images/013_RQA_QUBO.png" /></p>
+</div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループは、ポートフォリオを構成する人によって決められた基準で銘柄を魅力的であるから魅力ではない順で並べて、それらを順位付けした後に、均等に分けた場合に形成されたグループである。この魅力的な基準はリターン率の高さなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
+<p>このQUBOを使って量子アニーリングを行えば、最適のポートフォリオを得ることができるはずである。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのも分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的であるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
 </section>
 <section id="Reverse-Quantum-Annealingによるポートフォリオ最適化">
 <h2>Reverse Quantum Annealingによるポートフォリオ最適化<a class="headerlink" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化" title="Permalink to this headline">¶</a></h2>
-<p>現実のポートフォリオ最適化の問題は基本、大きな市場から銘柄を選択することになる。候補銘柄数の増加によって最適のポートフォリオを作るための計算量が非常に大きくなる。なので、一定の条件の下に選別を行ってから最適化アルゴリズを適応するのが普通である。そして、銘柄の組合せの自由度から、最終的の実現Sharpe Ratioが最大Sharpe
+<p>現実のポートフォリオ最適化の問題は基本、大きな銘柄数を持つ市場からいくつかの銘柄を選択することになる。候補銘柄数の増加によって最適のポートフォリオを作るための計算量が非常に大きくなる。なので、一定の条件の下に選別を行ってから最適化アルゴリズを適応させるのが普通である。そして、銘柄の組合せの自由度から、最終的の実現Sharpe Ratioが最大Sharpe
 Ratioと極めて近い値を持つ非最適解が多く存在することもあり得る。伝統的なアルゴリズムがそのような解にハマった場合抜け出すにも時間とリソースが必要となる。そのため、以上の既存な問題点を回避しながらポートフォリオ最適化問題を解くには、量子アニーリングのような大きい数の相関を取り扱えてローカルミニマムから脱却できる技術が有利である。</p>
-<p>ただし、参考論文[2]に示されたように、単純なForward Annealingのみを行う場合、銘柄数の増加によって、最適解までにたどり着く時間も大きく増加して、伝統的の遺伝アルゴリズムと違いパフォーマンスになるのが分かる。その理由としてはやはり最適解と近い値のSharpe
-Ratioを持つ解と最適解はエネルギーの違いも同じように小さいと考えられる。すると、最適解への変化はほとんどエネルギー差がほぼない準位の間で高いポテンシャルの障壁がある場合の遷移になるため、遷移が起こるまでにより長い時間が必要となる。また、量子アニーリングマシンの実機では通常のアニーリングを行う途中で熱ノイズなどによる影響で系が励起されて時間発展する場合もあって、それによって最終の結果が最適解とならない可能性もある。</p>
+<p>ただし、参考論文[2]に示されたように、単純なForward Annealingのみを行う場合、銘柄数の増加によって、最適解までにたどり着く時間も大きく増加して、伝統的の遺伝アルゴリズムと近いパフォーマンスになるのが分かる。その理由としてはやはり最適解と近い値のSharpe
+Ratioを持つ解と最適解はエネルギーの違いも小さいので、最適解への変化がほとんどエネルギー差がほぼない準位の間で高いポテンシャルの障壁がある場合の遷移になるため、遷移が起こるまでにより長い時間が必要となるからである。また、量子アニーリングマシンの実機では通常のアニーリングを行う途中で熱ノイズなどによる影響で系が励起されて時間発展する場合もあって、それによって最終の結果が最適解とならない可能性もある。</p>
 <section id="Reverse-Quantum-Annealing">
 <h3>Reverse Quantum Annealing<a class="headerlink" href="#Reverse-Quantum-Annealing" title="Permalink to this headline">¶</a></h3>
-<p>これらの量子アニーリングを用いた時の問題点を解決するために提案された手法の一つは、Reverse Quantum Annealingである。名前通り、通常のForward Annealingと逆方向のステップを導入するような量子アニーリングを指す。通常のForwardAnnealingの時間依存のハミルトニアンは次のように書ける。</p>
+<p>これらの量子アニーリングを用いた時の問題点を解決するために提案された手法の一つは、Reverse Quantum Annealingである。名前通り、通常のForward Annealingと逆方向のステップを導入するような量子アニーリングを指す。通常のForward Annealingの時間依存のハミルトニアンは次のように書ける。</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
 <p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
-<div><p><img alt="238bdb72d3aa4a0dbde306695ef2cd9f" src="../_images/013_QAandRQA.png" /></p>
+<div><p><img alt="82d4618c6f8e4a3c8db9ecf570d287a2" src="../_images/013_QAandRQA.png" /></p>
 </div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
-Phaseになる。この時もまた高いエネルギーの状態にあり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
+Phaseになる。この時もまた高いエネルギーの状態のままであり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
 </section>
 <section id="Reverse-Quantum-Annealingによるポートフォリオ最適化の手順">
 <h3>Reverse Quantum Annealingによるポートフォリオ最適化の手順<a class="headerlink" href="#Reverse-Quantum-Annealingによるポートフォリオ最適化の手順" title="Permalink to this headline">¶</a></h3>
-<p>このReverse Quantum Annealingの手法を実行するには実際もう一つの条件がある。それがReverse Phaseの初期状態である。この状態はランダムに生成された初期状態を用いても可能ではあるが、手法が提案された背景からも、最適解探索の効率の観点からもある種類のローカルミニマム状態を用意したほうが良いと分かる。その初期状態になるローカルミニマムを得るには参考論文[2]では伝統的なアルゴリズムで得られた出力を利用した。このチュートリアルもそれに従う。</p>
+<p>このReverse Quantum Annealingの手法を実行するにはもう一つの条件がある。それがReverse Phaseの初期状態が必要である。この状態はランダムに生成された初期状態を用いても可能ではあるが、手法が提案された背景からも、最適解探索の効率の観点からもある種類のローカルミニマム状態を用意したほうが良いと分かる。その初期状態になるローカルミニマムを得るには参考論文[2]では伝統的なアルゴリズムで得られた出力を利用した。このチュートリアルもそれに従う。</p>
 <p>なので、これから行う実装は基本論文[2]の流れを参考にして以下のようになる。 - 最適化を行う銘柄データの生成 - 古典なアルゴリズムの実装とその結果の確認 - 通常のForward Annealingによる最適解探索 - Reverse Quantum Annealingによる最適解探索 - Reverse Quantum Annealingのパラメータ探索</p>
 </section>
 </section>
@@ -346,7 +346,7 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <h3>最適化を行う銘柄データの生成<a class="headerlink" href="#最適化を行う銘柄データの生成" title="Permalink to this headline">¶</a></h3>
 <p>参考論文[2]にある方法に従って、与えられた初期値を用いて、ブラウン運動による銘柄チャートを生成する。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[213]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -365,9 +365,9 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <div class="math notranslate nohighlight">
 \[S(t_{n+1})=S(t_n)\exp(\mu-\frac{1}{2}\sigma^2)\Delta t + \sigma Z_n\sqrt{\Delta t}\]</div>
 <p>のように与えられる。ここの<span class="math notranslate nohighlight">\(Z_n\)</span>はcholesky分解で作られた一様相関行列<span class="math notranslate nohighlight">\(\rho\)</span>を従う多変量正規分布になる。</p>
-<p>それを実行して適当にチャートをプロットして様子を確認する。最初同じところから始めても一年間経つと、全体が広がっていく様子が分かる。また一部銘柄が大きく上昇または降下するのも確認できる。</p>
+<p>それを実行してチャートをプロットして様子を確認する。最初が同じところから始めても一年間経つと、全体が広がっていく様子は分かる。また一部銘柄が大きく上昇または降下するのも確認できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[214]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#相関正規確率変数Znの生成</span>
@@ -417,10 +417,10 @@ Phaseになる。この時もまた高いエネルギーの状態にあり、熱
 <img alt="../_images/ja_013-ReverseQuantumAnnealing_13_0.png" src="../_images/ja_013-ReverseQuantumAnnealing_13_0.png" />
 </div>
 </div>
-<p>銘柄のデータを生成できたので、各銘柄のSharpe Ratioを計算する。ここの結果を評価するに使うのは実現Sharpe Ratioで、その定義に従って無リスク利回り率を超過した超過収益率の平均<span class="math notranslate nohighlight">\(\bar{r}\)</span>と超過リターン率の標準偏差<span class="math notranslate nohighlight">\(\sigma\)</span>で求める。チャートを確認するとき分かったように、銘柄数が少ない場合は偶然による偏りが大きい、かつ生成条件に銘柄間に相関があるので、。銘柄を100回生成してその平均Shape Ratioの確認することでそれらの影響を減らす。結果として、銘柄の平均Sharpe
-Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>になるのを確認できる。また、Sharpe Ratioの計算定義を変更した場合、Sharpeの値が変化するのも確認できるが、おおむね<span class="math notranslate nohighlight">\(0.40\pm0.05\)</span>の範囲内には収まる。</p>
+<p>銘柄のデータを生成できたので、各銘柄のSharpe Ratioを計算する。ここの結果を評価するに使うのは実現Sharpe Ratioで、その定義に従って無リスク利回り率を超過した超過収益率の平均<span class="math notranslate nohighlight">\(\bar{r}\)</span>と超過リターン率の標準偏差<span class="math notranslate nohighlight">\(\sigma\)</span>で求める。チャートを確認するとき分かったように、銘柄数が少ない場合は偶然による偏りが大きい、かつ生成条件に銘柄間に相関があるので、銘柄を100回生成してその平均Shape Ratioの確認することでそれらの影響を減らす。結果として、銘柄の平均Sharpe
+Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>になるのを確認できる。また、Sharpe Ratioの計算定義を変更した場合、Sharpeの値が変化するのも確認できるが、おおむね<span class="math notranslate nohighlight">\(0.40\pm0.05\)</span>の範囲内には収まるのも分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[215]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#銘柄生成関数</span>
@@ -497,206 +497,206 @@ Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>に
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-SubSet 0 average Sharpe Ratio: 0.3600512964634801
-Average Sharpe Ratio of all generated: 0.3600512964634801
-SubSet 1 average Sharpe Ratio: 0.25021007319060234
-Average Sharpe Ratio of all generated: 0.3051306848270412
-SubSet 2 average Sharpe Ratio: 0.4269319254372476
-Average Sharpe Ratio of all generated: 0.3457310983637767
-SubSet 3 average Sharpe Ratio: 0.3189863589398198
-Average Sharpe Ratio of all generated: 0.3390449135077875
-SubSet 4 average Sharpe Ratio: 0.2764421536249738
-Average Sharpe Ratio of all generated: 0.3265243615312247
-SubSet 5 average Sharpe Ratio: 0.38203104550409916
-Average Sharpe Ratio of all generated: 0.3357754755267038
-SubSet 6 average Sharpe Ratio: 0.37368187024134825
-Average Sharpe Ratio of all generated: 0.341190674771653
-SubSet 7 average Sharpe Ratio: 0.36857405871944154
-Average Sharpe Ratio of all generated: 0.34461359776512657
-SubSet 8 average Sharpe Ratio: 0.5584916564996508
-Average Sharpe Ratio of all generated: 0.368377826513407
-SubSet 9 average Sharpe Ratio: 0.3170391359924436
-Average Sharpe Ratio of all generated: 0.3632439574613106
-SubSet 10 average Sharpe Ratio: 0.3269090003337926
-Average Sharpe Ratio of all generated: 0.35994077954062714
-SubSet 11 average Sharpe Ratio: 0.45332771039580405
-Average Sharpe Ratio of all generated: 0.36772302377855853
-SubSet 12 average Sharpe Ratio: 0.5519568363147792
-Average Sharpe Ratio of all generated: 0.38189485551211394
-SubSet 13 average Sharpe Ratio: 0.2976800861934678
-Average Sharpe Ratio of all generated: 0.3758795148464964
-SubSet 14 average Sharpe Ratio: 0.3453009678312409
-Average Sharpe Ratio of all generated: 0.3738409450454794
-SubSet 15 average Sharpe Ratio: 0.4271483125464575
-Average Sharpe Ratio of all generated: 0.3771726555142905
-SubSet 16 average Sharpe Ratio: 0.2785943080380704
-Average Sharpe Ratio of all generated: 0.37137392919215995
-SubSet 17 average Sharpe Ratio: 0.4465147892570203
-Average Sharpe Ratio of all generated: 0.3755484214179855
-SubSet 18 average Sharpe Ratio: 0.40639020455488845
-Average Sharpe Ratio of all generated: 0.37717167316203304
-SubSet 19 average Sharpe Ratio: 0.510145216738688
-Average Sharpe Ratio of all generated: 0.3838203503408658
-SubSet 20 average Sharpe Ratio: 0.40881803913787595
-Average Sharpe Ratio of all generated: 0.3850107164740567
-SubSet 21 average Sharpe Ratio: 0.48162608240031807
-Average Sharpe Ratio of all generated: 0.3894023240161595
-SubSet 22 average Sharpe Ratio: 0.4809116057673431
-Average Sharpe Ratio of all generated: 0.393380988440124
-SubSet 23 average Sharpe Ratio: 0.3790710781225293
-Average Sharpe Ratio of all generated: 0.39278474217689086
-SubSet 24 average Sharpe Ratio: 0.4431766158075707
-Average Sharpe Ratio of all generated: 0.39480041712211805
-SubSet 25 average Sharpe Ratio: 0.439951870033362
-Average Sharpe Ratio of all generated: 0.3965370114648582
-SubSet 26 average Sharpe Ratio: 0.465975883759055
-Average Sharpe Ratio of all generated: 0.39910882154982846
-SubSet 27 average Sharpe Ratio: 0.4464054677214715
-Average Sharpe Ratio of all generated: 0.40079798748453
-SubSet 28 average Sharpe Ratio: 0.349073108477391
-Average Sharpe Ratio of all generated: 0.39901437096704245
-SubSet 29 average Sharpe Ratio: 0.35673879440451045
-Average Sharpe Ratio of all generated: 0.39760518508162473
-SubSet 30 average Sharpe Ratio: 0.3994224916535239
-Average Sharpe Ratio of all generated: 0.39766380787426664
-SubSet 31 average Sharpe Ratio: 0.4030313748562615
-Average Sharpe Ratio of all generated: 0.397831544342454
-SubSet 32 average Sharpe Ratio: 0.48856086283813466
-Average Sharpe Ratio of all generated: 0.40058091763020187
-SubSet 33 average Sharpe Ratio: 0.3499685399096956
-Average Sharpe Ratio of all generated: 0.39909231828548114
-SubSet 34 average Sharpe Ratio: 0.11360995678877545
-Average Sharpe Ratio of all generated: 0.3909356793855752
-SubSet 35 average Sharpe Ratio: 0.3481410808978804
-Average Sharpe Ratio of all generated: 0.38974694053869485
-SubSet 36 average Sharpe Ratio: 0.4984334113846817
-Average Sharpe Ratio of all generated: 0.3926844127237215
-SubSet 37 average Sharpe Ratio: 0.47657606896796567
-Average Sharpe Ratio of all generated: 0.3948920878880437
-SubSet 38 average Sharpe Ratio: 0.2527810163191188
-Average Sharpe Ratio of all generated: 0.39124821425807127
-SubSet 39 average Sharpe Ratio: 0.37513878709458154
-Average Sharpe Ratio of all generated: 0.390845478578984
-SubSet 40 average Sharpe Ratio: 0.40825137518508153
-Average Sharpe Ratio of all generated: 0.39127001264254735
-SubSet 41 average Sharpe Ratio: 0.422850995048417
-Average Sharpe Ratio of all generated: 0.3920219407950681
-SubSet 42 average Sharpe Ratio: 0.37402933639199176
-Average Sharpe Ratio of all generated: 0.39160350813453143
-SubSet 43 average Sharpe Ratio: 0.3102965682809806
-Average Sharpe Ratio of all generated: 0.38975562313785983
-SubSet 44 average Sharpe Ratio: 0.5027244521159293
-Average Sharpe Ratio of all generated: 0.3922660415595947
-SubSet 45 average Sharpe Ratio: 0.3408073804642602
-Average Sharpe Ratio of all generated: 0.3911473750140439
-SubSet 46 average Sharpe Ratio: 0.3004322301012465
-Average Sharpe Ratio of all generated: 0.3892172655478142
-SubSet 47 average Sharpe Ratio: 0.46694332805110045
-Average Sharpe Ratio of all generated: 0.3908365585166327
-SubSet 48 average Sharpe Ratio: 0.3188902460653895
-Average Sharpe Ratio of all generated: 0.389368266425791
-SubSet 49 average Sharpe Ratio: 0.24715643147011115
-Average Sharpe Ratio of all generated: 0.3865240297266774
-SubSet 50 average Sharpe Ratio: 0.43562370060766936
-Average Sharpe Ratio of all generated: 0.3874867683714027
-SubSet 51 average Sharpe Ratio: 0.5385826211351911
-Average Sharpe Ratio of all generated: 0.39039245784762944
-SubSet 52 average Sharpe Ratio: 0.41785011536819744
-Average Sharpe Ratio of all generated: 0.3909105268574515
-SubSet 53 average Sharpe Ratio: 0.4909480101826902
-Average Sharpe Ratio of all generated: 0.3927630728449559
-SubSet 54 average Sharpe Ratio: 0.5446723722899334
-Average Sharpe Ratio of all generated: 0.39552506010759186
-SubSet 55 average Sharpe Ratio: 0.21065980604379353
-Average Sharpe Ratio of all generated: 0.3922238948564526
-SubSet 56 average Sharpe Ratio: 0.4207171541315678
-Average Sharpe Ratio of all generated: 0.3927237765981213
-SubSet 57 average Sharpe Ratio: 0.42509520889263314
-Average Sharpe Ratio of all generated: 0.3932819047411301
-SubSet 58 average Sharpe Ratio: 0.3880996172763241
-Average Sharpe Ratio of all generated: 0.3931940693603707
-SubSet 59 average Sharpe Ratio: 0.4256812245840667
-Average Sharpe Ratio of all generated: 0.39373552194743233
-SubSet 60 average Sharpe Ratio: 0.33029281367413044
-Average Sharpe Ratio of all generated: 0.39269547754950934
-SubSet 61 average Sharpe Ratio: 0.4544183273756479
-Average Sharpe Ratio of all generated: 0.39369100738541485
-SubSet 62 average Sharpe Ratio: 0.46097702151638215
-Average Sharpe Ratio of all generated: 0.39475903935574763
-SubSet 63 average Sharpe Ratio: 0.5197013980471027
-Average Sharpe Ratio of all generated: 0.3967112637103001
-SubSet 64 average Sharpe Ratio: 0.5263515026900675
-Average Sharpe Ratio of all generated: 0.3987057289253734
-SubSet 65 average Sharpe Ratio: 0.4552840487109043
-Average Sharpe Ratio of all generated: 0.3995629761948512
-SubSet 66 average Sharpe Ratio: 0.5928545996311347
-Average Sharpe Ratio of all generated: 0.4024479257983778
-SubSet 67 average Sharpe Ratio: 0.41211408620813045
-Average Sharpe Ratio of all generated: 0.4025900752161683
-SubSet 68 average Sharpe Ratio: 0.460167463327895
-Average Sharpe Ratio of all generated: 0.4034245301163383
-SubSet 69 average Sharpe Ratio: 0.26637418930739165
-Average Sharpe Ratio of all generated: 0.4014666681047819
-SubSet 70 average Sharpe Ratio: 0.22858538576155504
-Average Sharpe Ratio of all generated: 0.3990317204661449
-SubSet 71 average Sharpe Ratio: 0.3618889424380825
-Average Sharpe Ratio of all generated: 0.39851584854908845
-SubSet 72 average Sharpe Ratio: 0.40772580114698226
-Average Sharpe Ratio of all generated: 0.39864201228330615
-SubSet 73 average Sharpe Ratio: 0.36816522151159775
-Average Sharpe Ratio of all generated: 0.39823016375936415
-SubSet 74 average Sharpe Ratio: 0.47041751782737723
-Average Sharpe Ratio of all generated: 0.39919266181360435
-SubSet 75 average Sharpe Ratio: 0.4229345680986171
-Average Sharpe Ratio of all generated: 0.39950505531735453
-SubSet 76 average Sharpe Ratio: 0.4065096428420472
-Average Sharpe Ratio of all generated: 0.39959602398650634
-SubSet 77 average Sharpe Ratio: 0.36602561350027113
-Average Sharpe Ratio of all generated: 0.39916563410847766
-SubSet 78 average Sharpe Ratio: 0.4824113461177466
-Average Sharpe Ratio of all generated: 0.4002193772984684
-SubSet 79 average Sharpe Ratio: 0.3533144186326638
-Average Sharpe Ratio of all generated: 0.39963306531514586
-SubSet 80 average Sharpe Ratio: 0.43284327512881643
-Average Sharpe Ratio of all generated: 0.4000430679054381
-SubSet 81 average Sharpe Ratio: 0.5138758916145698
-Average Sharpe Ratio of all generated: 0.4014312730726226
-SubSet 82 average Sharpe Ratio: 0.5313842386967979
-Average Sharpe Ratio of all generated: 0.4029969714536367
-SubSet 83 average Sharpe Ratio: 0.3991101374114235
-Average Sharpe Ratio of all generated: 0.4029506996198009
-SubSet 84 average Sharpe Ratio: 0.44262684583284945
-Average Sharpe Ratio of all generated: 0.40341747781054266
-SubSet 85 average Sharpe Ratio: 0.4738021823655563
-Average Sharpe Ratio of all generated: 0.40423590460769393
-SubSet 86 average Sharpe Ratio: 0.4477454542431058
-Average Sharpe Ratio of all generated: 0.40473601437361817
-SubSet 87 average Sharpe Ratio: 0.36682942551042236
-Average Sharpe Ratio of all generated: 0.404305257681991
-SubSet 88 average Sharpe Ratio: 0.38825174638819254
-Average Sharpe Ratio of all generated: 0.40412488115059997
-SubSet 89 average Sharpe Ratio: 0.42603754345330774
-Average Sharpe Ratio of all generated: 0.4043683551761856
-SubSet 90 average Sharpe Ratio: 0.37272905948831686
-Average Sharpe Ratio of all generated: 0.404020670608187
-SubSet 91 average Sharpe Ratio: 0.2901110955527487
-Average Sharpe Ratio of all generated: 0.40278252305323653
-SubSet 92 average Sharpe Ratio: 0.4929100867710136
-Average Sharpe Ratio of all generated: 0.40375163664159974
-SubSet 93 average Sharpe Ratio: 0.4830173173819965
-Average Sharpe Ratio of all generated: 0.40459488856436987
-SubSet 94 average Sharpe Ratio: 0.4071516269656441
-Average Sharpe Ratio of all generated: 0.40462180160017275
-SubSet 95 average Sharpe Ratio: 0.6294880003750024
-Average Sharpe Ratio of all generated: 0.4069641578374106
-SubSet 96 average Sharpe Ratio: 0.4796841492715549
-Average Sharpe Ratio of all generated: 0.40771384847075226
-SubSet 97 average Sharpe Ratio: 0.44876206355054693
-Average Sharpe Ratio of all generated: 0.4081327078083012
-SubSet 98 average Sharpe Ratio: 0.4707963381403682
-Average Sharpe Ratio of all generated: 0.40876567377125134
-SubSet 99 average Sharpe Ratio: 0.37064232910513106
-Average Sharpe Ratio of all generated: 0.40838444032459015
+SubSet 0 average Sharpe Ratio: 0.44313426341701834
+Average Sharpe Ratio of all generated: 0.44313426341701834
+SubSet 1 average Sharpe Ratio: 0.2829250756706418
+Average Sharpe Ratio of all generated: 0.3630296695438301
+SubSet 2 average Sharpe Ratio: 0.47320516288399483
+Average Sharpe Ratio of all generated: 0.3997548339905517
+SubSet 3 average Sharpe Ratio: 0.42928552846021817
+Average Sharpe Ratio of all generated: 0.4071375076079683
+SubSet 4 average Sharpe Ratio: 0.4395028822515279
+Average Sharpe Ratio of all generated: 0.4136105825366802
+SubSet 5 average Sharpe Ratio: 0.43533003523499575
+Average Sharpe Ratio of all generated: 0.41723049131973283
+SubSet 6 average Sharpe Ratio: 0.5501294982974363
+Average Sharpe Ratio of all generated: 0.436216063745119
+SubSet 7 average Sharpe Ratio: 0.4279622466264703
+Average Sharpe Ratio of all generated: 0.43518433660528794
+SubSet 8 average Sharpe Ratio: 0.4611102335943038
+Average Sharpe Ratio of all generated: 0.4380649918262897
+SubSet 9 average Sharpe Ratio: 0.3873478201591025
+Average Sharpe Ratio of all generated: 0.432993274659571
+SubSet 10 average Sharpe Ratio: 0.4777323665222655
+Average Sharpe Ratio of all generated: 0.43706046482890687
+SubSet 11 average Sharpe Ratio: 0.39711182889178254
+Average Sharpe Ratio of all generated: 0.4337314118341465
+SubSet 12 average Sharpe Ratio: 0.34452455155440465
+Average Sharpe Ratio of all generated: 0.42686934565878176
+SubSet 13 average Sharpe Ratio: 0.32269565161926234
+Average Sharpe Ratio of all generated: 0.41942836751310175
+SubSet 14 average Sharpe Ratio: 0.384764498918265
+Average Sharpe Ratio of all generated: 0.4171174429401126
+SubSet 15 average Sharpe Ratio: 0.3229177672270875
+Average Sharpe Ratio of all generated: 0.41122996320804855
+SubSet 16 average Sharpe Ratio: 0.3658987850546129
+Average Sharpe Ratio of all generated: 0.40856342331667
+SubSet 17 average Sharpe Ratio: 0.33554310565925793
+Average Sharpe Ratio of all generated: 0.40450673900236933
+SubSet 18 average Sharpe Ratio: 0.44232329589746516
+Average Sharpe Ratio of all generated: 0.40649708410211116
+SubSet 19 average Sharpe Ratio: 0.42597539179892413
+Average Sharpe Ratio of all generated: 0.40747099948695176
+SubSet 20 average Sharpe Ratio: 0.46259964948017357
+Average Sharpe Ratio of all generated: 0.41009617329615283
+SubSet 21 average Sharpe Ratio: 0.4025378010003973
+Average Sharpe Ratio of all generated: 0.409752610919073
+SubSet 22 average Sharpe Ratio: 0.33396897088274935
+Average Sharpe Ratio of all generated: 0.4064576700479285
+SubSet 23 average Sharpe Ratio: 0.32765535872204465
+Average Sharpe Ratio of all generated: 0.40317424040934996
+SubSet 24 average Sharpe Ratio: 0.20792653920784057
+Average Sharpe Ratio of all generated: 0.3953643323612896
+SubSet 25 average Sharpe Ratio: 0.268667944783819
+Average Sharpe Ratio of all generated: 0.3904913943775407
+SubSet 26 average Sharpe Ratio: 0.3975570670990112
+Average Sharpe Ratio of all generated: 0.39075308595981745
+SubSet 27 average Sharpe Ratio: 0.3214351282056093
+Average Sharpe Ratio of all generated: 0.38827744461145286
+SubSet 28 average Sharpe Ratio: 0.40491387980141247
+Average Sharpe Ratio of all generated: 0.38885111479041695
+SubSet 29 average Sharpe Ratio: 0.44602832926029096
+Average Sharpe Ratio of all generated: 0.39075702193941275
+SubSet 30 average Sharpe Ratio: 0.26355113133444097
+Average Sharpe Ratio of all generated: 0.38665360611344596
+SubSet 31 average Sharpe Ratio: 0.3158326161787604
+Average Sharpe Ratio of all generated: 0.384440450177987
+SubSet 32 average Sharpe Ratio: 0.5334860387308088
+Average Sharpe Ratio of all generated: 0.38895698316443617
+SubSet 33 average Sharpe Ratio: 0.2569067545823051
+Average Sharpe Ratio of all generated: 0.38507315291202054
+SubSet 34 average Sharpe Ratio: 0.3482860435839124
+Average Sharpe Ratio of all generated: 0.3840220926455032
+SubSet 35 average Sharpe Ratio: 0.41571702718163245
+Average Sharpe Ratio of all generated: 0.38490250749372895
+SubSet 36 average Sharpe Ratio: 0.3031600511466589
+Average Sharpe Ratio of all generated: 0.3826932519167811
+SubSet 37 average Sharpe Ratio: 0.5175179949514425
+Average Sharpe Ratio of all generated: 0.38624127147032483
+SubSet 38 average Sharpe Ratio: 0.4716178135234926
+Average Sharpe Ratio of all generated: 0.3884304135742522
+SubSet 39 average Sharpe Ratio: 0.35971731972527315
+Average Sharpe Ratio of all generated: 0.38771258622802773
+SubSet 40 average Sharpe Ratio: 0.4896370502606999
+Average Sharpe Ratio of all generated: 0.39019854876541
+SubSet 41 average Sharpe Ratio: 0.338648733056426
+Average Sharpe Ratio of all generated: 0.3889711722009104
+SubSet 42 average Sharpe Ratio: 0.47994324551741513
+Average Sharpe Ratio of all generated: 0.3910868018129221
+SubSet 43 average Sharpe Ratio: 0.40508360818995554
+Average Sharpe Ratio of all generated: 0.39140491104876374
+SubSet 44 average Sharpe Ratio: 0.47940723521592915
+Average Sharpe Ratio of all generated: 0.3933605182524786
+SubSet 45 average Sharpe Ratio: 0.35927221879897814
+Average Sharpe Ratio of all generated: 0.392619468264359
+SubSet 46 average Sharpe Ratio: 0.2889731121351001
+Average Sharpe Ratio of all generated: 0.3904142266445875
+SubSet 47 average Sharpe Ratio: 0.4672371992001884
+Average Sharpe Ratio of all generated: 0.39201470523949583
+SubSet 48 average Sharpe Ratio: 0.32386052001754045
+Average Sharpe Ratio of all generated: 0.39062380350027226
+SubSet 49 average Sharpe Ratio: 0.5622260093750191
+Average Sharpe Ratio of all generated: 0.39405584761776724
+SubSet 50 average Sharpe Ratio: 0.32615994167343515
+Average Sharpe Ratio of all generated: 0.39272455534434897
+SubSet 51 average Sharpe Ratio: 0.3118905844094643
+Average Sharpe Ratio of all generated: 0.39117005590329346
+SubSet 52 average Sharpe Ratio: 0.38007916802683767
+Average Sharpe Ratio of all generated: 0.3909607938678887
+SubSet 53 average Sharpe Ratio: 0.3965886524938003
+Average Sharpe Ratio of all generated: 0.39106501347207223
+SubSet 54 average Sharpe Ratio: 0.3411162974764674
+Average Sharpe Ratio of all generated: 0.3901568549994249
+SubSet 55 average Sharpe Ratio: 0.4671246374627705
+Average Sharpe Ratio of all generated: 0.39153127968627033
+SubSet 56 average Sharpe Ratio: 0.3964796502130084
+Average Sharpe Ratio of all generated: 0.3916180932042833
+SubSet 57 average Sharpe Ratio: 0.4197807064342934
+Average Sharpe Ratio of all generated: 0.39210365550135245
+SubSet 58 average Sharpe Ratio: 0.48962780147952106
+Average Sharpe Ratio of all generated: 0.39375660712810107
+SubSet 59 average Sharpe Ratio: 0.3184580760376065
+Average Sharpe Ratio of all generated: 0.3925016316099262
+SubSet 60 average Sharpe Ratio: 0.4353368241983588
+Average Sharpe Ratio of all generated: 0.3932038478818677
+SubSet 61 average Sharpe Ratio: 0.483698883814623
+Average Sharpe Ratio of all generated: 0.3946634452356218
+SubSet 62 average Sharpe Ratio: 0.49774365070368365
+Average Sharpe Ratio of all generated: 0.3962996389732101
+SubSet 63 average Sharpe Ratio: 0.46476189019840936
+Average Sharpe Ratio of all generated: 0.3973693616486038
+SubSet 64 average Sharpe Ratio: 0.31217456910438934
+Average Sharpe Ratio of all generated: 0.39605867253253896
+SubSet 65 average Sharpe Ratio: 0.44148117900502865
+Average Sharpe Ratio of all generated: 0.39674689232757665
+SubSet 66 average Sharpe Ratio: 0.31661922170097606
+Average Sharpe Ratio of all generated: 0.39555095694509007
+SubSet 67 average Sharpe Ratio: 0.46749434617202174
+Average Sharpe Ratio of all generated: 0.3966089479631332
+SubSet 68 average Sharpe Ratio: 0.550952918143715
+Average Sharpe Ratio of all generated: 0.3988458170961851
+SubSet 69 average Sharpe Ratio: 0.39025492804192724
+Average Sharpe Ratio of all generated: 0.3987230901096957
+SubSet 70 average Sharpe Ratio: 0.47508691904517036
+Average Sharpe Ratio of all generated: 0.39979863699611085
+SubSet 71 average Sharpe Ratio: 0.45367321133292077
+Average Sharpe Ratio of all generated: 0.40054689497301094
+SubSet 72 average Sharpe Ratio: 0.3820450245318554
+Average Sharpe Ratio of all generated: 0.4002934446929951
+SubSet 73 average Sharpe Ratio: 0.3137022211748543
+Average Sharpe Ratio of all generated: 0.39912329302383104
+SubSet 74 average Sharpe Ratio: 0.37431325597631443
+Average Sharpe Ratio of all generated: 0.39879249252986415
+SubSet 75 average Sharpe Ratio: 0.31349249692816145
+Average Sharpe Ratio of all generated: 0.3976701241666839
+SubSet 76 average Sharpe Ratio: 0.4410368529367215
+Average Sharpe Ratio of all generated: 0.39823332843642467
+SubSet 77 average Sharpe Ratio: 0.469603749298457
+Average Sharpe Ratio of all generated: 0.39914833383209175
+SubSet 78 average Sharpe Ratio: 0.4797356658140352
+Average Sharpe Ratio of all generated: 0.40016842664198976
+SubSet 79 average Sharpe Ratio: 0.4187989092841286
+Average Sharpe Ratio of all generated: 0.40040130767501647
+SubSet 80 average Sharpe Ratio: 0.5095245299397345
+Average Sharpe Ratio of all generated: 0.40174850794988953
+SubSet 81 average Sharpe Ratio: 0.4797916304351843
+Average Sharpe Ratio of all generated: 0.4027002533460517
+SubSet 82 average Sharpe Ratio: 0.38908258455436556
+Average Sharpe Ratio of all generated: 0.40253618504735666
+SubSet 83 average Sharpe Ratio: 0.433978912443504
+Average Sharpe Ratio of all generated: 0.4029105032306442
+SubSet 84 average Sharpe Ratio: 0.2827300014975318
+Average Sharpe Ratio of all generated: 0.40149661497496053
+SubSet 85 average Sharpe Ratio: 0.495311878956271
+Average Sharpe Ratio of all generated: 0.4025874901375339
+SubSet 86 average Sharpe Ratio: 0.1926470672001297
+Average Sharpe Ratio of all generated: 0.40017438182790854
+SubSet 87 average Sharpe Ratio: 0.49891734099354274
+Average Sharpe Ratio of all generated: 0.40129646090933624
+SubSet 88 average Sharpe Ratio: 0.3615588749292389
+Average Sharpe Ratio of all generated: 0.4008499711792228
+SubSet 89 average Sharpe Ratio: 0.4090031867633914
+Average Sharpe Ratio of all generated: 0.4009405624634913
+SubSet 90 average Sharpe Ratio: 0.38097936764894147
+Average Sharpe Ratio of all generated: 0.40072120867432043
+SubSet 91 average Sharpe Ratio: 0.40702813712915115
+Average Sharpe Ratio of all generated: 0.40078976224448165
+SubSet 92 average Sharpe Ratio: 0.3360943822486602
+Average Sharpe Ratio of all generated: 0.40009411299721476
+SubSet 93 average Sharpe Ratio: 0.339040608482789
+Average Sharpe Ratio of all generated: 0.39944460763004
+SubSet 94 average Sharpe Ratio: 0.39594104149086257
+Average Sharpe Ratio of all generated: 0.39940772798646973
+SubSet 95 average Sharpe Ratio: 0.42201452737055734
+Average Sharpe Ratio of all generated: 0.399643215480054
+SubSet 96 average Sharpe Ratio: 0.4961984937983472
+Average Sharpe Ratio of all generated: 0.40063863072044875
+SubSet 97 average Sharpe Ratio: 0.7011989476679857
+Average Sharpe Ratio of all generated: 0.4037055727301175
+SubSet 98 average Sharpe Ratio: 0.590313532942803
+Average Sharpe Ratio of all generated: 0.4055905016211547
+SubSet 99 average Sharpe Ratio: 0.3489035525274813
+Average Sharpe Ratio of all generated: 0.40502363213021797
 </pre></div></div>
 </div>
 </section>
@@ -704,7 +704,7 @@ Average Sharpe Ratio of all generated: 0.40838444032459015
 <h3>古典アルゴリズムによる探索<a class="headerlink" href="#古典アルゴリズムによる探索" title="Permalink to this headline">¶</a></h3>
 <p>続いてはQUBO行列の準備及び古典なアルゴリズムに必要な関数を実装する。ここで、ペアワイズ相関行列は論文に従い対数リターンで計算した。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[217]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">heapq</span>
@@ -798,7 +798,7 @@ Average Sharpe Ratio of all generated: 0.40838444032459015
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[218]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#銘柄セットを再生成する</span>
@@ -823,10 +823,10 @@ Average Sharpe Ratio of all generated: 0.40838444032459015
 <section id="貪欲サーチ">
 <h4>貪欲サーチ<a class="headerlink" href="#貪欲サーチ" title="Permalink to this headline">¶</a></h4>
 <p>まずは貪欲サーチのアルゴリズムで探索を行う。ランダムに生成した初期状態から出発して、全体のパフォーマンスに対する影響を見ながら、ポートフォリオのSharpe Ratioを高くできそうな銘柄を選んでいくアルゴリズムである。イタレーションを行うことで、ランダムな初期状態からある一定の状態に落ち着くことを観測できる。</p>
-<p>実行後、アルゴリズムの初期状態と得られた状態の比較を行う。このとき比較の基準がポートフォリオのSharpe Ratioになる。このチュートリアルでは全銘柄のウエイトが同じというシナリオなので、選ばれた銘柄の平均的なチャートを得てSharpe Ratioの計算を行った。</p>
+<p>実行後、初期状態と貪欲サーチで得られた状態の比較を行う。このとき比較の基準がポートフォリオのSharpe Ratioになる。このチュートリアルでは全銘柄のウエイトが同じというシナリオなので、選ばれた銘柄の平均的なチャートを得てSharpe Ratioの計算を行った。</p>
 <p>また、一個前のコードブロック複数回実行して銘柄セットをリセットすると、貪欲サーチの結果は初期状態よりも悪くなったり、ほぼ変わらなかったりする場合もあるのが分かる。そして最終的なリターンが初期状態に負けたが、Sharpe Ratioが大きい最終状態もある。それらを比較すると、Sharpe Ratioが大きい場合ポートフォリオのチャートが滑らかで、変動が小さくリスクが非常に小さいのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[219]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Greedy Search</span>
@@ -894,12 +894,12 @@ Average Sharpe Ratio of all generated: 0.40838444032459015
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Initial random selection:
-[ 1 -1  1 -1  1  1 -1  1 -1  1  1 -1  1  1 -1  1 -1 -1  1  1 -1  1  1  1
-  1  1 -1 -1 -1  1 -1 -1 -1  1  1 -1 -1 -1 -1  1 -1 -1  1  1  1  1  1  1] 1.7235493388179437
+[ 1 -1  1  1 -1  1  1 -1  1 -1  1 -1  1 -1 -1 -1 -1 -1 -1  1 -1  1 -1 -1
+ -1  1  1  1 -1 -1  1  1  1 -1 -1  1 -1  1 -1  1  1  1 -1 -1  1 -1  1 -1] 1.2591624969580844
 
 Selection After Greedy Search:
-[-1 -1 -1  1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1  1  1  1  1 -1 -1 -1  1
- -1 -1  1  1  1 -1  1  1 -1  1  1 -1 -1 -1 -1 -1 -1 -1  1 -1  1 -1 -1  1] 2.1161604239414697
+[ 1  1  1 -1  1 -1 -1 -1 -1 -1 -1 -1 -1  1  1 -1 -1 -1  1 -1 -1  1 -1  1
+  1  1 -1  1  1 -1 -1 -1  1 -1 -1 -1  1  1 -1  1  1 -1 -1  1 -1 -1 -1  1] 1.7349409003177532
 
 </pre></div></div>
 </div>
@@ -913,11 +913,11 @@ Selection After Greedy Search:
 </section>
 <section id="遺伝的アルゴリズム">
 <h4>遺伝的アルゴリズム<a class="headerlink" href="#遺伝的アルゴリズム" title="Permalink to this headline">¶</a></h4>
-<p>貪欲サーチのほかに使われた古典アルゴリズムは遺伝的アルゴリズムである。ランダムに生成した複数のポートフォリオからパフォーマンスが良いものを選択して、その良いポートフォリオをもとで次の世代のポートフォリオを生成する。次の世代のポートフォリオは前の世代のポートフォリオにランダムな変更を加える突然変異と、ポートフォリオ間の遺伝子を交換させるなどで生成できる。ここでは銘柄数が比較的に小さいため、突然変異のみを考えていて、遺伝子間の交換や交配を行わなかった。</p>
+<p>貪欲サーチのほかに使われた古典アルゴリズムは遺伝的アルゴリズムである。ランダムに生成した複数のポートフォリオからパフォーマンスが良いものを選択して、その良いポートフォリオをもとにして次の世代のポートフォリオを生成する。次の世代のポートフォリオは前の世代のポートフォリオにランダムな変更を加える突然変異と、ポートフォリオ間の遺伝子を交換させるなどで生成できる。ここでは銘柄数が比較的に小さいため、突然変異のみを考えていて、遺伝子間の交換や交配を行わなかった。</p>
 <p>結果を比較することで、ラスト世代が第一世代よりもパフォーマンスが良くなっていることを観測できる。ただし、ここで試行した世代数が限られているため、パフォーマンスが改善されないまたは改善が小さい場合もある。そして総じて貪欲サーチよりも安定な出力が得られるのも観察できる。</p>
 <p>注意：遺伝子の組数や子孫数、そして変異の数を増やした場合計算量の増加により計算が終わらない場合もあるので、実行環境に合わせて設定を変えてください。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[220]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Genetic Algorithm</span>
@@ -983,12 +983,12 @@ Selection After Greedy Search:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Best Gene 1st generation:
-[ 1  1  1  1  1  1 -1  1  1  1  1  1 -1 -1  1  1 -1  1 -1 -1  1  1 -1 -1
- -1  1  1  1  1 -1  1  1 -1 -1  1  1 -1 -1  1  1  1  1  1  1  1  1  1 -1] 1.9747726701605997
+[-1  1 -1  1  1 -1  1 -1  1 -1  1  1 -1 -1 -1 -1 -1 -1 -1  1 -1  1 -1 -1
+ -1  1 -1  1  1 -1  1  1 -1  1  1  1  1  1  1 -1  1 -1 -1  1  1  1  1  1] 1.7268019181486831
 
 Best Gene last generation:
-[-1 -1 -1 -1  1 -1  1  1  1 -1  1 -1 -1 -1  1 -1 -1  1 -1  1 -1  1 -1 -1
-  1  1  1 -1  1  1  1  1 -1  1 -1  1  1 -1  1  1 -1 -1 -1  1  1 -1 -1 -1] 2.0880009827357706
+[ 1  1  1  1  1 -1  1 -1  1 -1  1  1  1  1 -1 -1 -1 -1 -1  1  1 -1 -1  1
+  1 -1 -1 -1  1  1 -1  1 -1 -1 -1  1  1  1  1  1  1  1  1  1 -1  1 -1 -1] 2.400009398793413
 
 </pre></div></div>
 </div>
@@ -1008,7 +1008,7 @@ Best Gene last generation:
 <h3>Quantum Annealingによる解法<a class="headerlink" href="#Quantum-Annealingによる解法" title="Permalink to this headline">¶</a></h3>
 <p>Reverse Quantum Annealingでこの最適問題解くために、古典なアルゴリズムで得られたスピン形式の結果をアニーリングが使う形式に変換する。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[221]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ConvertSolutionToQuboState</span><span class="p">(</span><span class="n">solution</span><span class="p">):</span>
@@ -1031,14 +1031,14 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1]
+[1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1]
 </pre></div></div>
 </div>
 <section id="Forward-Annealingの場合">
 <h4>Forward Annealingの場合<a class="headerlink" href="#Forward-Annealingの場合" title="Permalink to this headline">¶</a></h4>
-<p>銘柄の魅力度とペアワイズ相関による罰金と賞金の度合を使ってQUBO行列を作り、まずForward Annealingを実行する。最終リターン率の改善はケースバイケースになるが、結果として貪欲サーチの結果よりも安定したチャートを得ている。</p>
+<p>銘柄の魅力度とペアワイズ相関による罰金と賞金の度合を使ってQUBO行列を作り、まずForward Annealingを実行する。最終リターン率の改善はケースバイケースになるが、結果として貪欲サーチの結果よりも安定したチャートを得られている。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[222]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openjij</span> <span class="kn">import</span> <span class="n">SQASampler</span>
@@ -1093,18 +1093,18 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -341., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)]
-[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
- 0 1 0 1 0 1 1 1 0 0 1] 4.33806400478993
+[([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)]
+[1 1 1 1 0 1 0 1 0 0 1 0 0 1 1 0 0 0 1 0 1 1 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1
+ 0 0 1 1 0 0 1 0 1 0 1] 2.1676563796156563
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1136,12 +1136,12 @@ Best Gene last generation:
 <span class="p">]</span>
 </pre></div>
 </div>
-<p>のような構造を持つ、格納されたリストの<code class="docutils literal notranslate"><span class="pre">[0]</span></code>成分は<span class="math notranslate nohighlight">\(s\)</span>の値で、アニーリングするときの横磁場の強さを反映する。<code class="docutils literal notranslate"><span class="pre">[1]</span></code>成分は逆温度<span class="math notranslate nohighlight">\(\beta\)</span>で、大きければ低い温度を意味し、より強く基底状態に戻る。デフォルトでは<span class="math notranslate nohighlight">\(\beta = 5\)</span>で設定されている。そして最後の<code class="docutils literal notranslate"><span class="pre">[2]</span></code>成分は量子モンテカルロ法のシミュレーションステップ数を表していて、各スケジュールの長さを調整できる。</p>
+<p>のような構造を持つ、格納されたリストの<code class="docutils literal notranslate"><span class="pre">[0]</span></code>成分は<span class="math notranslate nohighlight">\(s\)</span>の値で、アニーリングするときの横磁場の強さを反映する。<code class="docutils literal notranslate"><span class="pre">[1]</span></code>成分は逆温度<span class="math notranslate nohighlight">\(\beta\)</span>で、大きければ低い温度を意味し、より基底状態に戻りやすくなる。デフォルトでは<span class="math notranslate nohighlight">\(\beta = 5\)</span>で設定されている。そして最後の<code class="docutils literal notranslate"><span class="pre">[2]</span></code>成分は量子モンテカルロ法のシミュレーションステップ数を表していて、各スケジュールの長さを調整できる。</p>
 <p>そして<code class="docutils literal notranslate"><span class="pre">initial_state</span></code>が代入する初期状態である。<code class="docutils literal notranslate"><span class="pre">reinitialize_state</span></code>のオプションが<code class="docutils literal notranslate"><span class="pre">False</span></code>にすることで、毎回実行した出力がまた初期状態として代入されて次のアニーリングを行う意味で、上の関数はある初期状態から出発してRQAを10回イタレーションする意味になる。このオプション引数がデフォルトでは<code class="docutils literal notranslate"><span class="pre">True</span></code>で、実行するたびに初期状態の再設定を行っている。RQAを一回実行させ、複数回の結果を比較したい場合は<code class="docutils literal notranslate"><span class="pre">True</span></code>で問題ない。</p>
 <p>ではReverse Annealingのスケジュールを作成する。OpenJijのsamplerは指定された<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を指定したMC
 stepの数で量子モンテカルロを実行ので、短い定数をつなぎ合わせて<span class="math notranslate nohighlight">\(s\)</span>や<span class="math notranslate nohighlight">\(\beta\)</span>が少しずつ変化するようなスケジュールを作ってRQAの動作を作る必要がある。ここでは<span class="math notranslate nohighlight">\(s\)</span>の変化に注目してそれをプロットすると逆さまの台形のスケジュールを確認できた。横軸は量子モンテカルロ法のステップ数になる。スケジュール作成の関数を書き換えればそのほかの形のスケジュールも簡単に作成できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[223]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ScheduleFunction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">RQAschedule</span><span class="p">):</span>
@@ -1200,7 +1200,7 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 </div>
 <p>作られたスケジュールを使って、初期状態を指定した<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>関数を使って、RQAを実行する。そして同様に、貪欲サーチの結果やForward Annealingの結果ちお比較を行う。結果を見ると、このチュートリアルが行う設定では銘柄セットのサイズ制限によってForward Annealingと同じ最適解にたどり着く場合が多いのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[224]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#初期状態を準備</span>
@@ -1235,16 +1235,16 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)]
+[([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1260,21 +1260,21 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Forward Quantum Annealing Result:
-[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
- 0 1 0 1 0 1 1 1 0 0 1] 4.33806400478993
+[1 1 1 1 0 1 0 1 0 0 1 0 0 1 1 0 0 0 1 0 1 1 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1
+ 0 0 1 1 0 0 1 0 1 0 1] 2.1676563796156563
 Reverse Quantum Annealing Result:
-[0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0
- 0 1 0 1 1 1 1 1 0 0 1] 4.1030830955703115
+[1 1 1 1 0 1 0 1 0 0 1 0 0 1 1 0 0 0 1 0 1 1 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1
+ 0 0 1 1 0 0 1 0 1 0 1] 2.1676563796156563
 </pre></div></div>
 </div>
 </section>
 </section>
 <section id="Reverse-Quantum-Annealingの確認">
 <h3>Reverse Quantum Annealingの確認<a class="headerlink" href="#Reverse-Quantum-Annealingの確認" title="Permalink to this headline">¶</a></h3>
-<p>同じ状態になると、実際にRQAの様子が分からないので、段階を分解してRQAを実行してみる。まずはReverse Phaseの確認である。同じようにアニーリングスケジュールを設定して、スケジュールと初期状態を指定したアニーリングを行う。ここでは例が分かりやすくなるようにReverse
+<p>同じ状態になると、実際にRQAの様子が分からないので、Phaseを分解してRQAを実行してみる。まずはReverse Phaseの確認である。同じようにアニーリングスケジュールを設定して、スケジュールと初期状態を指定したアニーリングを行う。ここでは例が分かりやすくなるようにReverse
 Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値や逆温度の設定を変えた。また、アニーリングもイタレーションではなく、毎回同じ初期状態から始まるように設定した。結果を見ると、逆転したアニーリング過程によって、既に得られた解から、よりエネルギーの高い状態に登っていったことが分かる。また、ほぼ毎回異なる状態でとまるので、高いエネルギー准位で解が定まっていないのもわかる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[225]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
@@ -1327,21 +1327,21 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -333., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -332., 1)
- ([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -341., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -341., 1)]
+[([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1], -364., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -372., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -376., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1], -361., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -375., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1], -369., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)]
 </pre></div></div>
 </div>
 <p>Reverse状態の確認ができたので、このままPause Phaseの追加を行う。追加後は同様にアニーリングを実行して、その結果を確認した。このPhaseの追加は実装上において上のReverse Phaseの一番最後のステップのMCステップ数を伸ばしたものに等しいので、上のReverseのみのケースと同じようにバラバラの結果になる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[226]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Pause Step</span>
@@ -1390,23 +1390,23 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1], -275., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1], -257., 1)
- ([0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -248., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1], -309., 1)
- ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1], -298., 1)
- ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1], -285., 1)
- ([0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1], -261., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1], -259., 1)
- ([0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -325., 1)
- ([0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1], -250., 1)]
+[([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -328., 1)
+ ([1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1], -313., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1], -344., 1)
+ ([1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1], -258., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1], -339., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -333., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -349., 1)
+ ([1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1], -329., 1)
+ ([1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1], -279., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1], -368., 1)]
 </pre></div></div>
 </div>
 <p>最後にForward Phaseをまた追加してアニーリングを行う。ここの設定はこのチュートリアルの前のサンプルよりも少し緩い温度や磁場の条件で行った。結果として、この銘柄セットで既知の量子アニーリングによる最適解が得られたのが分かる。これでRQAの節の最初の例でもちゃんとRQAによって最適解を出しているのが分かる。</p>
 <p>また、条件が少し緩いため、解が収束せずに、エネルギーが近い複数のsub-optimalの解の存在を確認することができる。そのなかは場合によって、量子アニーリングの最適解よりも最終的なリターンが良くて、形も比較的に滑らかなポートフォリオの存在も確認できる。そのポートフォリオの詳細を見ると、その大きなリターンは上昇率が大きい特定の銘柄によるもので、逆相関を持つ変動率が比較的に小さい銘柄と組み合わせて実現されたものだと分かる。実際の投資においてはそのようなポートフォリオが好ましいかもしれないが、このチュートリアルが設定した「Shape
-Ratioが特に書く最大になる」条件では、相対的に大きいポートフォリSharpe Ratioが実現されることから、量子アニーリングによって最適ではない解と判断された。</p>
+Ratioがとにかく最大になる」条件では、相対的に小さいポートフォリSharpe Ratioが実現されたことから、量子アニーリングによって最適ではない解と判断された。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[227]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Forward Step</span>
@@ -1458,16 +1458,16 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)
- ([0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1], -342., 1)]
+[([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)
+ ([1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1], -382., 1)]
 </pre></div></div>
 </div>
 </section>
@@ -1476,10 +1476,10 @@ Ratioが特に書く最大になる」条件では、相対的に大きいポー
 <p>Phaseを分けてReverse Quantum Annealingの様子を確認するところで、スケジュールの設定に指定した<span class="math notranslate nohighlight">\(s\)</span>,<span class="math notranslate nohighlight">\(\beta\)</span>そして量子モンテカルロ法のステップ数によって結果が変化することが分かった。つまり、Reverse Annealingでパフォーマンスを良くするには適切な値を設定する必要がある。</p>
 <section id="Reverse-Phaseの場合">
 <h4>Reverse Phaseの場合<a class="headerlink" href="#Reverse-Phaseの場合" title="Permalink to this headline">¶</a></h4>
-<p>まずはそれらがReverse Phaseに対する影響を見る。量子アニーリングの度合を表す<span class="math notranslate nohighlight">\(ssの影響を見る、これは横磁場をどれぐらい強く戻すのかを表す量で、最初のアニーリングで辿り着いたミニマムの周りになるポテンシャル障壁を超えて状態がばらけるようにするために、それを適切に強く（\)</span>s<span class="math notranslate nohighlight">\(を小さく）設定しなければならない。このノートの結果では\)</span>s$が<span class="math notranslate nohighlight">\(0.20\)</span>までReverse
+<p>まずはそれらがReverse Phaseに対する影響を見る。量子アニーリングの度合を表す<span class="math notranslate nohighlight">\(s\)</span>の影響を見る、これは横磁場をどれぐらい強く戻すのかを表す量で、最初のアニーリングで辿り着いたミニマムの周りになるポテンシャル障壁を超えて状態がばらけるようにするために、それを適切に強く（<span class="math notranslate nohighlight">\(s\)</span>を小さく）設定しなければならない。このノートの結果では<span class="math notranslate nohighlight">\(s\)</span>が<span class="math notranslate nohighlight">\(0.20\)</span>までReverse
 Phaseの終状態のばらつきがあっても不定にはならず、<span class="math notranslate nohighlight">\(0.20\)</span>以下だと熱的揺らぎが支配的になり、ばらつきが大きくなったのが分かる。なので<span class="math notranslate nohighlight">\(0.2\)</span>あたりをさらに細かくスキャンすれば最適の<span class="math notranslate nohighlight">\(s\)</span>値を得られる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[228]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">TargetS</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)):</span>
@@ -1506,7 +1506,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
                 <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;Target s=&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TargetS</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.4</span><span class="p">,</span> <span class="s2">&quot;Target s=&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TargetS</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1647,7 +1647,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <p>次に<span class="math notranslate nohighlight">\(\beta\)</span>による影響を調べる。<span class="math notranslate nohighlight">\(\beta = \frac{1}{k_{\mathrm{B}T}}\)</span>が逆温度を表していて、<span class="math notranslate nohighlight">\(\beta\)</span>が大きければ大きいほど、系がより低温である意味になる。それはつまり全体としては状態がより基底状態に落ちやすく、より「Annealed」な状態に近いふるまいをする。言い換えると横磁場が一定の場合、<span class="math notranslate nohighlight">\(\beta\)</span>が大きくなると、横磁場が効きにくくなり、実効的には大きい<span class="math notranslate nohighlight">\(s\)</span>に近いふるまいになる。OpenJijにおいてその影響の詳細を知りたい方はこの<a class="reference external" href="https://qiita.com/ground0state/items/0f61c3efc7f12fd96d05">Qiita記事</a>に参照してください。</p>
 <p>また、その影響はQUBO行列に入っているエネルギーんの典型的なスケール付近で変わることも分かっている。このチュートリアルの場合、QUBOに入っている典型な値は<span class="math notranslate nohighlight">\([-5,5]\)</span>の範囲に入るため、<span class="math notranslate nohighlight">\(\beta=5.0\)</span>付近でふるまいが変化すると予想できある。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">QUBO</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
@@ -1655,12 +1655,12 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[229]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([  4.,   4.,   4., 640., 504., 504., 624.,   5.,   5.,  10.]),
+(array([  4.,   4.,   4., 672., 556., 518., 526.,   5.,   5.,  10.]),
  array([-14., -11.,  -8.,  -5.,  -2.,   1.,   4.,   7.,  10.,  13.,  16.]),
  &lt;BarContainer object of 10 artists&gt;)
 </pre></div></div>
@@ -1674,7 +1674,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 <p>対数的な<span class="math notranslate nohighlight">\(\beta\)</span>配列を用意して、<span class="math notranslate nohighlight">\(s\)</span>以外の量を固定してReverse Phaseを行う。予想通り<span class="math notranslate nohighlight">\(\beta=5\)</span>あたりで終状態のばらつきが小さくなり、それよりも大きい<span class="math notranslate nohighlight">\(\beta\)</span>だと数少ない状態に収束してしまうことが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[230]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
@@ -1764,7 +1764,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 <p>そしてスケジュールの分割について調べる。階段関数のような極端的な場合から、細かく分割して緩やかな変化にする場合まで調査をした。結果から分かるように、分割数が少ない場合、状態があまり変化せず、増やすとばらつきが見えてくる。また、大きく増やしても計算時間が長くなるだけで結果の違いが少ないのも分かる。このチュートリアルが取り扱うポートフォリオ最適化問題の場合は<span class="math notranslate nohighlight">\(50\)</span>程度の設定で問題ない。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[231]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">NReverseStep</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]:</span>
@@ -1866,14 +1866,14 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <img alt="../_images/ja_013-ReverseQuantumAnnealing_44_9.png" src="../_images/ja_013-ReverseQuantumAnnealing_44_9.png" />
 </div>
 </div>
-<p>またMC stepsに関しては、分割数×MC stepsが極端に少ない場合でなければ、最終の結果にはほぼ影響がないことが分かる。<code class="docutils literal notranslate"><span class="pre">SQASampler()</span></code>がデフォルト設定の場合、目安として<span class="math notranslate nohighlight">\(1000\)</span>程度で問題なく動作するはずである。</p>
+<p>またMC stepsに関しては、分割数×MC stepsが極端に少ない場合でなければ、最終の結果にはほぼ影響がないことが分かった。<code class="docutils literal notranslate"><span class="pre">SQASampler()</span></code>がデフォルト設定の場合、目安として<span class="math notranslate nohighlight">\(1000\)</span>程度で問題なく動作するはずである。</p>
 </section>
 <section id="Pause-Phaseの場合">
 <h4>Pause Phaseの場合<a class="headerlink" href="#Pause-Phaseの場合" title="Permalink to this headline">¶</a></h4>
 <p>既に説明があったように、通常の場合Pause PhaseがReverse Phaseの最後のステップを延長させたものに違いないので、アニーリング全体の<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を変化させたところで、Reverse Phaseと同じようなふるまいをする。また、ステップ数もどのぐらい最後のステップを伸ばすのかに等しい意味なので、変更してもほぼReverse Phaseの状態を保持したままだけで、影響が少ない。</p>
 <p>ただし、Pause Phaseだけ<span class="math notranslate nohighlight">\(\beta\)</span>を変化させることは量子アニーリングが不完全な状態で古典的なアニーリングを行うの近い行動である。ここでは<span class="math notranslate nohighlight">\(\beta=5.0\)</span>から緩やかに目標とした<span class="math notranslate nohighlight">\(\beta\)</span>に向かって系の温度を変化させて、その影響を調べる。そして、Reverse Phaseで異なる<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行った場合の終状態に近い結果を得られた。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[232]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
@@ -1974,7 +1974,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <p>Forwar PhaseはReverse PhaseとPause Phaseで得られた状態から普通の量子アニーリングを行う。このとき考えるぺきパラメータの条件は通常のアニーリングが正しく動作するために必要な条件と基本同じである。Reverse PhaseとPause Phaseと同じ方法で、<span class="math notranslate nohighlight">\(\beta\)</span>と分割したステップ数のスキャンを行った結果、比較的に小さい分割数と<span class="math notranslate nohighlight">\(\beta\)</span>でも結果がちゃんと最適解に収束することが分かった。</p>
 <p>下のコードはその例である。Reverse PhaseとPause Phaseは上の調査で得られた設定で、Forward Phaseだけ粗い分解と小さい<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行っている。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[233]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
@@ -2038,8 +2038,8 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <section id="付録B-DwaveマシンでRQA実験をする場合のコード">
 <h3>付録B DwaveマシンでRQA実験をする場合のコード<a class="headerlink" href="#付録B-DwaveマシンでRQA実験をする場合のコード" title="Permalink to this headline">¶</a></h3>
 <p>Dwaveマシンにおいてもこのチュートリアルが実行した手法でRQAを実行できる。ここでは参考としてそのサンプルコードを載せる。実装及びシミュレーションと実機の違いで、スケジュールの設定方法や引数が異なるが、基本的には同じような過程になる。詳細を知りたい方はDwave公式サイトなどにあるドキュメントに参考してください。 また、実機では現実のノイズなどによる影響は見られやすいので通常のアニーリングとRQAによる結果の違いは見られやすい。</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dwave.system</span> <span class="kn">import</span> <span class="n">DWaveSampler</span><span class="p">,</span> <span class="n">EmbeddingComposite</span>
@@ -2108,6 +2108,73 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <br/></pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">SolverAuthenticationError</span>                 Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb Cell 54&#39;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell://wsl%2Bubuntu-20.04/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb#ch0000053vscode-remote?line=2&#39;&gt;3&lt;/a&gt;</span> token = &#39;*** your user token ***&#39;
+<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell://wsl%2Bubuntu-20.04/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb#ch0000053vscode-remote?line=3&#39;&gt;4&lt;/a&gt;</span> endpoint = &#39;*** your dwave endpoint***&#39; #&#39;https://cloud.dwavesys.com/sapi/&#39; as defaults
+<span class="ansi-green-fg">----&gt; &lt;a href=&#39;vscode-notebook-cell://wsl%2Bubuntu-20.04/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb#ch0000053vscode-remote?line=5&#39;&gt;6&lt;/a&gt;</span> dw_sampler = DWaveSampler(solver=&#39;Advantage_system4.1&#39;, token=token)
+<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell://wsl%2Bubuntu-20.04/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb#ch0000053vscode-remote?line=6&#39;&gt;7&lt;/a&gt;</span> sampler = EmbeddingComposite(dw_sampler)
+<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell://wsl%2Bubuntu-20.04/home/yuhe/learn/Jij/OpenJijTutorial/source/ja/013-ReverseQuantumAnnealing.ipynb#ch0000053vscode-remote?line=8&#39;&gt;9&lt;/a&gt;</span> Nassets = 48
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py:143</span>, in <span class="ansi-cyan-fg">DWaveSampler.__init__</span><span class="ansi-blue-fg">(self, failover, retry_interval, **config)</span>
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py?line=139&#39;&gt;140&lt;/a&gt;</span> defaults.update(solver=dict(order_by=&#39;-num_active_qubits&#39;))
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py?line=141&#39;&gt;142&lt;/a&gt;</span> self.client = Client.from_config(**config)
+<span class="ansi-green-fg">--&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py?line=142&#39;&gt;143&lt;/a&gt;</span> self.solver = self.client.get_solver()
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py?line=144&#39;&gt;145&lt;/a&gt;</span> self.failover = failover
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/system/samplers/dwave_sampler.py?line=145&#39;&gt;146&lt;/a&gt;</span> self.retry_interval = retry_interval
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py:1250</span>, in <span class="ansi-cyan-fg">Client.get_solver</span><span class="ansi-blue-fg">(self, name, refresh, **filters)</span>
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1246&#39;&gt;1247&lt;/a&gt;</span> try:
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1247&#39;&gt;1248&lt;/a&gt;</span>     logger.info(&#34;Fetching solvers according to filters=%r, order_by=%r&#34;,
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1248&#39;&gt;1249&lt;/a&gt;</span>                 filters, order_by)
+<span class="ansi-green-fg">-&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1249&#39;&gt;1250&lt;/a&gt;</span>     solvers = self.get_solvers(refresh=refresh, order_by=order_by, **filters)
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1250&#39;&gt;1251&lt;/a&gt;</span>     logger.info(&#34;Filtered solvers=%r&#34;, solvers)
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1251&#39;&gt;1252&lt;/a&gt;</span>     return solvers[0]
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py:105</span>, in <span class="ansi-cyan-fg">dispatches_events.__call__.&lt;locals&gt;.wrapped</span><span class="ansi-blue-fg">(*pargs, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py?line=102&#39;&gt;103&lt;/a&gt;</span> dispatch_event(self.before_eventname, obj=obj, args=args)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py?line=103&#39;&gt;104&lt;/a&gt;</span> try:
+<span class="ansi-green-fg">--&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py?line=104&#39;&gt;105&lt;/a&gt;</span>     rval = fn(*pargs, **kwargs)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py?line=105&#39;&gt;106&lt;/a&gt;</span> except Exception as exc:
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/events.py?line=106&#39;&gt;107&lt;/a&gt;</span>     dispatch_event(self.after_eventname, obj=obj, args=args, exception=exc)
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py:1148</span>, in <span class="ansi-cyan-fg">Client.get_solvers</span><span class="ansi-blue-fg">(self, refresh, order_by, **filters)</span>
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1144&#39;&gt;1145&lt;/a&gt;</span>     query[&#39;name&#39;] = filters[&#39;name__eq&#39;]
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1146&#39;&gt;1147&lt;/a&gt;</span> # filter
+<span class="ansi-green-fg">-&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1147&#39;&gt;1148&lt;/a&gt;</span> solvers = self._fetch_solvers(**query)
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1148&#39;&gt;1149&lt;/a&gt;</span> solvers = [s for s in solvers if all(p(s) for p in predicates)]
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1150&#39;&gt;1151&lt;/a&gt;</span> # sort: undefined (None) key values go last
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py:463</span>, in <span class="ansi-cyan-fg">cached.__call__.&lt;locals&gt;.wrapper</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py?line=460&#39;&gt;461&lt;/a&gt;</span>     val = data.get(&#39;val&#39;)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py?line=461&#39;&gt;462&lt;/a&gt;</span> else:
+<span class="ansi-green-fg">--&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py?line=462&#39;&gt;463&lt;/a&gt;</span>     val = fn(*args, **kwargs)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py?line=463&#39;&gt;464&lt;/a&gt;</span>     self.cache[key] = dict(expires=now+self.maxage, val=val)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/utils.py?line=465&#39;&gt;466&lt;/a&gt;</span> return val
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py:782</span>, in <span class="ansi-cyan-fg">Client._fetch_solvers</span><span class="ansi-blue-fg">(self, name)</span>
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=778&#39;&gt;779&lt;/a&gt;</span>     url = &#39;solvers/remote/&#39;
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=780&#39;&gt;781&lt;/a&gt;</span> try:
+<span class="ansi-green-fg">--&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=781&#39;&gt;782&lt;/a&gt;</span>     data = Client._sapi_request(self.session.get, url)
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=782&#39;&gt;783&lt;/a&gt;</span> except SAPIError as exc:
+<span class="ansi-green-intense-fg ansi-bold">    &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=783&#39;&gt;784&lt;/a&gt;</span>     if name is not None and exc.error_code == 404:
+
+File <span class="ansi-green-fg">~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py:1783</span>, in <span class="ansi-cyan-fg">Client._sapi_request</span><span class="ansi-blue-fg">(meth, *args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1780&#39;&gt;1781&lt;/a&gt;</span> else:
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1781&#39;&gt;1782&lt;/a&gt;</span>     if response.status_code == 401:
+<span class="ansi-green-fg">-&gt; &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1782&#39;&gt;1783&lt;/a&gt;</span>         raise SolverAuthenticationError(error_code=401)
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1784&#39;&gt;1785&lt;/a&gt;</span>     try:
+<span class="ansi-green-intense-fg ansi-bold">   &lt;a href=&#39;file:///~/.pyenv/versions/3.8.10/lib/python3.8/site-packages/dwave/cloud/client/base.py?line=1785&#39;&gt;1786&lt;/a&gt;</span>         msg = response.json()
+
+<span class="ansi-red-fg">SolverAuthenticationError</span>: Invalid token or access denied
+</pre></div></div>
 </div>
 </section>
 </section>
