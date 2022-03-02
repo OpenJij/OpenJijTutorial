@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -312,8 +312,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install openjij
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install openjij
 <span class="o">!</span>pip show openjij
 </pre></div>
 </div>
@@ -339,8 +338,7 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># core interface imports cssjij instead of OpenJij</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># core interface imports cssjij instead of OpenJij</span>
 <span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
 <span class="c1"># import Graph module for interaction matrix</span>
 <span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
@@ -480,7 +478,7 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -509,7 +507,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

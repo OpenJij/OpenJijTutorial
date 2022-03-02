@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -303,7 +303,7 @@ div.rendered_html tbody tr:hover {
 <section id="具体例">
 <h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="8f43b8c260a2451f8bc5eb3d2862c577" src="../_images/job_sequence.png" /></p>
+<div><p><img alt="9915e82170b54188a543d088273250f7" src="../_images/job_sequence.png" /></p>
 </div></section>
 <section id="問題の一般化">
 <h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
@@ -383,8 +383,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="c1">#コンピュータの数</span>
 <span class="n">m</span><span class="o">=</span><span class="mi">3</span>
 <span class="c1">#仕事の長さ</span>
@@ -399,8 +398,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">3</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">3</span>
 </pre></div>
 </div>
 </div>
@@ -409,8 +407,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#PYQUBOをimportします</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#PYQUBOをimportします</span>
 <span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span><span class="n">LogEncInteger</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">m</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
@@ -435,8 +432,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
 <span class="n">A2</span><span class="o">=</span><span class="mi">36</span>
 
 <span class="n">A1</span><span class="o">=</span><span class="p">(</span><span class="n">A2</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mf">0.12</span>
@@ -457,8 +453,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="c1"># ハミルトニアン全体を定義します</span>
 <span class="n">Q</span> <span class="o">=</span> <span class="n">A1</span><span class="o">*</span><span class="n">HA1</span><span class="o">+</span><span class="n">A2</span><span class="o">*</span><span class="n">HA2</span><span class="o">+</span><span class="n">B</span><span class="o">*</span><span class="n">HB</span>
-
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <p>上記の式をPyQUBOで解かせた結果を見てみましょう。 brokenはペナルティ項が破れているとき(0でないとき)、どのように破れたかを記録してくれます。brokenが{}であると、制約が破られていないと分かります。</p>
@@ -466,8 +461,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
 <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
@@ -557,8 +551,7 @@ broken
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># OpenJijのインポートをします</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OpenJijのインポートをします</span>
 <span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
 <span class="c1"># SQAを使います。</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">()</span>
@@ -668,7 +661,7 @@ broken
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -697,7 +690,7 @@ broken
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

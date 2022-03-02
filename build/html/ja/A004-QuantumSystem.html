@@ -254,7 +254,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -303,8 +303,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
 <span class="c1">#問題サイズを100とします。</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
 
@@ -316,8 +315,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -348,8 +346,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
 
 <span class="n">mysystem</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_transverse_ising</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">graph</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre></div>
@@ -361,8 +358,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">mysystem</span><span class="o">.</span><span class="n">trotter_spins</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mysystem</span><span class="o">.</span><span class="n">trotter_spins</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -497,8 +493,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">schedule_list</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mi">10</span><span class="p">),((</span><span class="mi">12</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="mi">80</span><span class="p">),((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="mi">30</span><span class="p">)]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">schedule_list</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mi">10</span><span class="p">),((</span><span class="mi">12</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="mi">80</span><span class="p">),((</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="mi">30</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -510,8 +505,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
 <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">schedule_list</span><span class="p">)</span>
 </pre></div>
@@ -534,8 +528,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
 <span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -548,8 +541,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">def</span> <span class="nf">callback_log_energy</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
     <span class="c1">#graphは以前にGraphモジュールにて定義したオブジェクトです</span>
@@ -564,8 +556,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1">#スケジュールをもっと長く取ります (計20000モンテカルロステップ)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#スケジュールをもっと長く取ります (計20000モンテカルロステップ)</span>
 <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">mysystem</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">,</span> <span class="n">callback_log_energy</span><span class="p">)</span>
 </pre></div>
@@ -576,8 +567,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">!</span>pip install matplotlib
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install matplotlib
 </pre></div>
 </div>
 </div>
@@ -585,8 +575,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)),</span> <span class="n">energies</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Monte Carlo step&#39;</span><span class="p">)</span>
@@ -612,8 +601,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">mysystem</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -629,62 +617,62 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
 </section>
 <section id="C++-core-interface">
 <h2>C++ core interface<a class="headerlink" href="#C++-core-interface" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;result/all.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;utility/schedule_list.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;utility/random.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;random&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;graph/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;system/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;updater/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;result/all.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;utility/schedule_list.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;utility/random.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp"></span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
-<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">openjij</span><span class="p">;</span><span class="w"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">openjij</span><span class="p">;</span>
 
-<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span><span class="w"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
 
-<span class="w">    </span><span class="c1">//generate dense graph with size N=100</span>
-<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">dense</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span><span class="w"></span>
+    <span class="c1">//generate dense graph with size N=100</span>
+    <span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">dense</span> <span class="o">=</span> <span class="n">graph</span><span class="o">::</span><span class="n">Dense</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">//generate random engine</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">rand_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="c1">//of course you can specify another random generator that is compatible with C++ random generator, say utility::Xorshift,</span>
-<span class="w">    </span><span class="c1">//auto rand_engine = utility::Xorshift(0x1234);</span>
+    <span class="c1">//generate random engine</span>
+    <span class="k">auto</span> <span class="n">rand_engine</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">mt19937</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">);</span>
+    <span class="c1">//of course you can specify another random generator that is compatible with C++ random generator, say utility::Xorshift,</span>
+    <span class="c1">//auto rand_engine = utility::Xorshift(0x1234);</span>
 
-<span class="w">    </span><span class="c1">//Gaussian distribution</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">gauss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span><span class="w"></span>
+    <span class="c1">//Gaussian distribution</span>
+    <span class="k">auto</span> <span class="n">gauss</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">normal_distribution</span><span class="o">&lt;&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
 
-<span class="w">    </span><span class="c1">//set interactions</span>
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="w">            </span><span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+    <span class="c1">//set interactions</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">dense</span><span class="p">.</span><span class="n">J</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">)</span><span class="o">/</span><span class="n">N</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-<span class="w">    </span><span class="c1">//set local fields</span>
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="w">        </span><span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+    <span class="c1">//set local fields</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="n">dense</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">);</span>
+    <span class="p">}</span>
 
-<span class="w">    </span><span class="c1">//create transverse Ising system</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">make_transverse_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span><span class="w"> </span><span class="n">dense</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
+    <span class="c1">//create transverse Ising system</span>
+    <span class="k">auto</span> <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">::</span><span class="n">make_transverse_ising</span><span class="p">(</span><span class="n">dense</span><span class="p">.</span><span class="n">gen_spin</span><span class="p">(</span><span class="n">rand_engine</span><span class="p">),</span> <span class="n">dense</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">//generate schedule list</span>
-<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">schedule_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utility</span><span class="o">::</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w"></span>
+    <span class="c1">//generate schedule list</span>
+    <span class="k">auto</span> <span class="n">schedule_list</span> <span class="o">=</span> <span class="n">utility</span><span class="o">::</span><span class="n">make_transverse_field_schedule_list</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">//do annealing (updater: SingleSpinFlip)</span>
-<span class="w">    </span><span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span><span class="w"> </span><span class="n">rand_engine</span><span class="p">,</span><span class="w"> </span><span class="n">schedule_list</span><span class="p">);</span><span class="w"></span>
+    <span class="c1">//do annealing (updater: SingleSpinFlip)</span>
+    <span class="n">algorithm</span><span class="o">::</span><span class="n">Algorithm</span><span class="o">&lt;</span><span class="n">updater</span><span class="o">::</span><span class="n">SingleSpinFlip</span><span class="o">&gt;::</span><span class="n">run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">rand_engine</span><span class="p">,</span> <span class="n">schedule_list</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">//show spins</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nl">elem</span> <span class="p">:</span><span class="w"> </span><span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
+    <span class="c1">//show spins</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;The result spins are [&quot;</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="nl">elem</span> <span class="p">:</span> <span class="n">result</span><span class="o">::</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)){</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">elem</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+    <span class="p">}</span>
 
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -733,7 +721,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -762,7 +750,7 @@ H &amp;= s \left(\sum_{i&lt;j}J_{ij}\sigma_i^z \sigma_j^z + \sum_{i=1}^{N}h_i \s
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>
