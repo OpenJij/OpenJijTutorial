@@ -2332,7 +2332,7 @@
                 "token = '*** your user token ***'\n",
                 "endpoint = '*** your dwave endpoint***' #'https://cloud.dwavesys.com/sapi/' as defaults\n",
                 "\n",
-                "dw_sampler = DWaveSampler(solver='Advantage_system4.1', token=token)\n",
+                "dw_sampler = DWaveSampler(solver='Advantage_system4.1', token=token) #Choose your dwave machine/simulator\n",
                 "sampler = EmbeddingComposite(dw_sampler)\n",
                 "\n",
                 "Nassets = 48\n",
@@ -2389,6 +2389,8 @@
                 "        selected_charts.append(Chart[i])\n",
                 "portfolioChart_RQA = np.mean(selected_charts, axis=0)\n",
                 "plt.plot(list(range(13)), portfolioChart_RQA,color=\"b\",label=\"Reverse Annealing\")\n",
+                "plt.xlabel(\"Month\", loc=\"right\")\n",
+                "plt.ylabel(\"Portofolio Asset Amount\", loc=\"top\")\n",
                 "plt.legend()\n",
                 "plt.show()\n"
             ]

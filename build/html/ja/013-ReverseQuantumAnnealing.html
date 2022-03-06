@@ -322,7 +322,7 @@ div.rendered_html tbody tr:hover {
 \[\mathcal{O}(\boldsymbol{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
 <p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する選択で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金の度合を表す。</p>
 <p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
-<div><p><img alt="af22d680f2124df69302e92adce8a27c" src="../_images/013_RQA_QUBO.png" /></p>
+<div><p><img alt="75284400c9e24ad195019709391ebf9e" src="../_images/013_RQA_QUBO.png" /></p>
 </div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループは、ポートフォリオを構成する人によって決められた基準で銘柄を魅力的であるから魅力ではない順で並べて、それらを順位付けした後に、均等に分けた場合に形成されたグループである。この魅力的な基準はリターン率の高さなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
 <p>このQUBOを使って量子アニーリングを行えば、最適のポートフォリオを得ることができるはずである。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのも分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的であるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
 </section>
@@ -338,7 +338,7 @@ Ratioを持つ解と最適解はエネルギーの違いも小さいので、最
 <div class="math notranslate nohighlight">
 \[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
 <p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
-<div><p><img alt="2ac057ccac3349919d73bb5ede8fb08e" src="../_images/013_QAandRQA.png" /></p>
+<div><p><img alt="d6316e04e9364601b22468ce447d52b4" src="../_images/013_QAandRQA.png" /></p>
 </div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
 Phaseになる。この時もまた高いエネルギーの状態のままであり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
 </section>
@@ -2087,7 +2087,7 @@ Text(0, 1, &#39;Number of entries&#39;)
 <span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;*** your user token ***&#39;</span>
 <span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;*** your dwave endpoint***&#39;</span> <span class="c1">#&#39;https://cloud.dwavesys.com/sapi/&#39; as defaults</span>
 
-<span class="n">dw_sampler</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;Advantage_system4.1&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+<span class="n">dw_sampler</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;Advantage_system4.1&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span> <span class="c1">#Choose your dwave machine/simulator</span>
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw_sampler</span><span class="p">)</span>
 
 <span class="n">Nassets</span> <span class="o">=</span> <span class="mi">48</span>
@@ -2144,6 +2144,8 @@ Text(0, 1, &#39;Number of entries&#39;)
         <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 <span class="n">portfolioChart_RQA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_RQA</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reverse Annealing&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <br/></pre></div>
