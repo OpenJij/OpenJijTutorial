@@ -322,7 +322,7 @@ div.rendered_html tbody tr:hover {
 \[\mathcal{O}(\boldsymbol{q})=\sum_{i=1}^{N}a_{i}q_{i}+\sum_{i=1}^{N}\sum_{j=i+1}^{N}b_{ij}q_{i}q_{j}\]</div>
 <p>ここの<span class="math notranslate nohighlight">\(q_{i}\)</span>は各銘柄に対する選択で<span class="math notranslate nohighlight">\(1\)</span>であればポートフォリオに組み入れて、<span class="math notranslate nohighlight">\(0\)</span>であれば組み入れない意味を持つ。そして<span class="math notranslate nohighlight">\(a_i\)</span>は銘柄自体のパフォーマンスによる魅力スコアであり、<span class="math notranslate nohighlight">\(b_ij\)</span>は銘柄間のペアワイズ相関で決められた罰金または賞金の度合を表す。</p>
 <p>具体的に<span class="math notranslate nohighlight">\(a_i\)</span>と<span class="math notranslate nohighlight">\(b_ij\)</span>は次の表1に従って決定される。</p>
-<div><p><img alt="fcc39b18b31b43f3b0a714c51441a01e" src="../_images/013_RQA_QUBO.png" /></p>
+<div><p><img alt="af22d680f2124df69302e92adce8a27c" src="../_images/013_RQA_QUBO.png" /></p>
 </div><p>ここの<span class="math notranslate nohighlight">\(a_i\)</span>のグループは、ポートフォリオを構成する人によって決められた基準で銘柄を魅力的であるから魅力ではない順で並べて、それらを順位付けした後に、均等に分けた場合に形成されたグループである。この魅力的な基準はリターン率の高さなどの要素も取り入れられるが、このチュートリアルでは単純に銘柄単体のSharpe Ratio順を用いた。そして<span class="math notranslate nohighlight">\(b_{ij}\)</span>は対数リターンの時系列から求められた相関行列の成分<span class="math notranslate nohighlight">\(\rho_{ij}\)</span>の値によって決められている。</p>
 <p>このQUBOを使って量子アニーリングを行えば、最適のポートフォリオを得ることができるはずである。また、選択銘柄の数について指定したい場合はこのチュートリアルシリーズで既に説明があったように銘柄数に対して罰金法の制限を付け加えればできる。ただし、参考にした論文[2]によると、罰金法を利用した場合、導入した大きい相互作用（ペナルティ）はアニーリングの性能や最終的に取得した結果にも影響するのも分かる。さらに、最適のポートフォリオに含まれる銘柄の数が分からないのがより現実的であるので、このチュートリアルでは銘柄数制限なして最適化を行う。</p>
 </section>
@@ -338,7 +338,7 @@ Ratioを持つ解と最適解はエネルギーの違いも小さいので、最
 <div class="math notranslate nohighlight">
 \[\mathcal{H}_{\mathrm{QA}}(t)=A[t]\sum_{i=1}^N\sigma_{i}^{\mathrm{x}}+B[t]\mathcal{H}_{\chi-\mathrm{Ising}}\]</div>
 <p>この<span class="math notranslate nohighlight">\(A[t]\)</span>はアニーリングを行うとき系にかける横磁場を表していて、<span class="math notranslate nohighlight">\(B[t]\)</span>は問題のハミルトニアン<span class="math notranslate nohighlight">\(\mathcal{H}_{\chi-\mathrm{Ising}}\)</span>の振幅になる。次の図でのa)で示されるように、Forward Annealingの場合はアニーリングの侵攻によって、<span class="math notranslate nohighlight">\(A[t]\)</span>がだんだん小さくなり、同時に<span class="math notranslate nohighlight">\(B[t]\)</span>主導的になっていく。最終的にアニーリングが完了するときは<span class="math notranslate nohighlight">\(A[t]=0\)</span>になる。</p>
-<div><p><img alt="2422ca5e33234e09b32fa53bd16d4a8c" src="../_images/013_QAandRQA.png" /></p>
+<div><p><img alt="2ac057ccac3349919d73bb5ede8fb08e" src="../_images/013_QAandRQA.png" /></p>
 </div><p>対してReverse Annealingはb)のように<span class="math notranslate nohighlight">\(A[t]=0,B[t]=1\)</span>の状態から出発して、まず通常と逆に<span class="math notranslate nohighlight">\(B[t]\)</span>を小さくしていく。これはReverse Phaseになる。この段階では系のエネルギーが逆に高くなるため、c)に示されたようなAとBの間のポテンシャル障壁は超えやすくなる。そしてある値に達するとそのまま系を維持してしばらく待つ。これはPause
 Phaseになる。この時もまた高いエネルギーの状態のままであり、熱的ホッピングが起こりやすいため、Bの右のようなポテンシャルの山も超えやすくなる。結果的に最初に入ったローカルミニマムから脱して最適解付近にたどり着く可能性が上がる。最後にまた<span class="math notranslate nohighlight">\(A[t]\)</span>を小さくして、<span class="math notranslate nohighlight">\(B[t]\)</span>を大きくさせるForward Phaseで通常のアニーリングをして、最適解を取得する。この時、Reverse Annealingを止めた場所や、各段階に使った時間などによって、最後のパフォーマンスにも影響するのが考えられる。</p>
 </section>
@@ -354,7 +354,7 @@ Phaseになる。この時もまた高いエネルギーの状態のままであ
 <h3>最適化を行う銘柄データの生成<a class="headerlink" href="#最適化を行う銘柄データの生成" title="Permalink to this headline">¶</a></h3>
 <p>参考論文[2]にある方法に従って、与えられた初期値を用いて、ブラウン運動による銘柄チャートを生成する。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -375,7 +375,7 @@ Phaseになる。この時もまた高いエネルギーの状態のままであ
 <p>のように与えられる。ここの<span class="math notranslate nohighlight">\(Z_n\)</span>はcholesky分解で作られた一様相関行列<span class="math notranslate nohighlight">\(\rho\)</span>を従う多変量正規分布になる。</p>
 <p>それを実行してチャートをプロットして様子を確認する。最初が同じところから始めても一年間経つと、全体が広がっていく様子は分かる。また一部銘柄が大きく上昇または降下するのも確認できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#相関正規確率変数Znの生成</span>
@@ -414,6 +414,8 @@ Phaseになる。この時もまた高いエネルギーの状態のままであ
   <span class="c1">#print(chart_asset) #各銘柄の具体的な数値をプリント</span>
   <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">chart_asset</span><span class="p">)</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Relative Price&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -428,7 +430,7 @@ Phaseになる。この時もまた高いエネルギーの状態のままであ
 <p>銘柄のデータを生成できたので、各銘柄のSharpe Ratioを計算する。ここの結果を評価するに使うのは実現Sharpe Ratioで、その定義に従って無リスク利回り率を超過した超過収益率の平均<span class="math notranslate nohighlight">\(\bar{r}\)</span>と超過リターン率の標準偏差<span class="math notranslate nohighlight">\(\sigma\)</span>で求める。チャートを確認するとき分かったように、銘柄数が少ない場合は偶然による偏りが大きい、かつ生成条件に銘柄間に相関があるので、銘柄を100回生成してその平均Shape Ratioの確認することでそれらの影響を減らす。結果として、銘柄の平均Sharpe
 Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>になるのを確認できる。また、Sharpe Ratioの計算定義を変更した場合、Sharpeの値が変化するのも確認できるが、おおむね<span class="math notranslate nohighlight">\(0.40\pm0.05\)</span>の範囲内には収まるのも分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#銘柄生成関数</span>
@@ -505,206 +507,206 @@ Ratioが期待通り<span class="math notranslate nohighlight">\(0.4\)</span>に
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-SubSet 0 average Sharpe Ratio: 0.2620594165006169
-Average Sharpe Ratio of all generated: 0.2620594165006169
-SubSet 1 average Sharpe Ratio: 0.455828073775449
-Average Sharpe Ratio of all generated: 0.35894374513803295
-SubSet 2 average Sharpe Ratio: 0.5303305858112491
-Average Sharpe Ratio of all generated: 0.4160726920291051
-SubSet 3 average Sharpe Ratio: 0.43750001277301503
-Average Sharpe Ratio of all generated: 0.42142952221508256
-SubSet 4 average Sharpe Ratio: 0.3134297390839592
-Average Sharpe Ratio of all generated: 0.39982956558885785
-SubSet 5 average Sharpe Ratio: 0.3369849360882124
-Average Sharpe Ratio of all generated: 0.38935546067208365
-SubSet 6 average Sharpe Ratio: 0.47147204114944685
-Average Sharpe Ratio of all generated: 0.4010864007402784
-SubSet 7 average Sharpe Ratio: 0.2741389145291232
-Average Sharpe Ratio of all generated: 0.385217964963884
-SubSet 8 average Sharpe Ratio: 0.5482360311144064
-Average Sharpe Ratio of all generated: 0.40333108342505314
-SubSet 9 average Sharpe Ratio: 0.38351252429024624
-Average Sharpe Ratio of all generated: 0.4013492275115724
-SubSet 10 average Sharpe Ratio: 0.31556916984050026
-Average Sharpe Ratio of all generated: 0.3935510404505658
-SubSet 11 average Sharpe Ratio: 0.3698137192620988
-Average Sharpe Ratio of all generated: 0.3915729303515269
-SubSet 12 average Sharpe Ratio: 0.3523739870028543
-Average Sharpe Ratio of all generated: 0.38855762701701363
-SubSet 13 average Sharpe Ratio: 0.3733771658471369
-Average Sharpe Ratio of all generated: 0.38747330836202243
-SubSet 14 average Sharpe Ratio: 0.4870087862044962
-Average Sharpe Ratio of all generated: 0.394109006884854
-SubSet 15 average Sharpe Ratio: 0.528379418091502
-Average Sharpe Ratio of all generated: 0.4025009075852695
-SubSet 16 average Sharpe Ratio: 0.43250410383395277
-Average Sharpe Ratio of all generated: 0.4042658014822509
-SubSet 17 average Sharpe Ratio: 0.4248110421696542
-Average Sharpe Ratio of all generated: 0.4054072037426622
-SubSet 18 average Sharpe Ratio: 0.4761182242338505
-Average Sharpe Ratio of all generated: 0.4091288364000932
-SubSet 19 average Sharpe Ratio: 0.46513653938633204
-Average Sharpe Ratio of all generated: 0.4119292215494051
-SubSet 20 average Sharpe Ratio: 0.27631903532449936
-Average Sharpe Ratio of all generated: 0.40547159363393337
-SubSet 21 average Sharpe Ratio: 0.427663632668736
-Average Sharpe Ratio of all generated: 0.4064803226809699
-SubSet 22 average Sharpe Ratio: 0.33696028974242803
-Average Sharpe Ratio of all generated: 0.4034577125532072
-SubSet 23 average Sharpe Ratio: 0.4465466272670158
-Average Sharpe Ratio of all generated: 0.40525308399961596
-SubSet 24 average Sharpe Ratio: 0.40256025568429266
-Average Sharpe Ratio of all generated: 0.40514537086700303
-SubSet 25 average Sharpe Ratio: 0.43860318576179974
-Average Sharpe Ratio of all generated: 0.40643220990141826
-SubSet 26 average Sharpe Ratio: 0.5109918304290179
-Average Sharpe Ratio of all generated: 0.41030478843947754
-SubSet 27 average Sharpe Ratio: 0.445588391085001
-Average Sharpe Ratio of all generated: 0.4115649171053891
-SubSet 28 average Sharpe Ratio: 0.3275065569851669
-Average Sharpe Ratio of all generated: 0.4086663529633125
-SubSet 29 average Sharpe Ratio: 0.39563572506542116
-Average Sharpe Ratio of all generated: 0.40823199870004945
-SubSet 30 average Sharpe Ratio: 0.4903809605329525
-Average Sharpe Ratio of all generated: 0.41088196521078824
-SubSet 31 average Sharpe Ratio: 0.44261101682564785
-Average Sharpe Ratio of all generated: 0.4118734980737526
-SubSet 32 average Sharpe Ratio: 0.35762560839678853
-Average Sharpe Ratio of all generated: 0.4102296226289961
-SubSet 33 average Sharpe Ratio: 0.5105147028990313
-Average Sharpe Ratio of all generated: 0.4131791838134089
-SubSet 34 average Sharpe Ratio: 0.5970634820994857
-Average Sharpe Ratio of all generated: 0.4184330209072968
-SubSet 35 average Sharpe Ratio: 0.3922021934732293
-Average Sharpe Ratio of all generated: 0.417704386811906
-SubSet 36 average Sharpe Ratio: 0.3284212534304028
-Average Sharpe Ratio of all generated: 0.4152913291529465
-SubSet 37 average Sharpe Ratio: 0.39564053032135377
-Average Sharpe Ratio of all generated: 0.41477420286790456
-SubSet 38 average Sharpe Ratio: 0.41719328426389635
-Average Sharpe Ratio of all generated: 0.4148362305960069
-SubSet 39 average Sharpe Ratio: 0.3542896027197436
-Average Sharpe Ratio of all generated: 0.41332256489910024
-SubSet 40 average Sharpe Ratio: 0.4695222696197143
-Average Sharpe Ratio of all generated: 0.4146932894044811
-SubSet 41 average Sharpe Ratio: 0.4880547384037704
-Average Sharpe Ratio of all generated: 0.41643999057113085
-SubSet 42 average Sharpe Ratio: 0.1937156254876815
-Average Sharpe Ratio of all generated: 0.41126035417384127
-SubSet 43 average Sharpe Ratio: 0.462402548098708
-Average Sharpe Ratio of all generated: 0.41242267676304284
-SubSet 44 average Sharpe Ratio: 0.4846025391720932
-Average Sharpe Ratio of all generated: 0.4140266737054662
-SubSet 45 average Sharpe Ratio: 0.31764273803469906
-Average Sharpe Ratio of all generated: 0.4119313707561017
-SubSet 46 average Sharpe Ratio: 0.33784818436107183
-Average Sharpe Ratio of all generated: 0.4103551327476968
-SubSet 47 average Sharpe Ratio: 0.32667553880441824
-Average Sharpe Ratio of all generated: 0.4086118078738785
-SubSet 48 average Sharpe Ratio: 0.4364259391322726
-Average Sharpe Ratio of all generated: 0.4091794432056825
-SubSet 49 average Sharpe Ratio: 0.36804920020125426
-Average Sharpe Ratio of all generated: 0.408356838345594
-SubSet 50 average Sharpe Ratio: 0.4041042796558185
-Average Sharpe Ratio of all generated: 0.4082734548418729
-SubSet 51 average Sharpe Ratio: 0.317870609123937
-Average Sharpe Ratio of all generated: 0.40653493857806644
-SubSet 52 average Sharpe Ratio: 0.2730756074935417
-Average Sharpe Ratio of all generated: 0.40401683799156596
-SubSet 53 average Sharpe Ratio: 0.3115979827937189
-Average Sharpe Ratio of all generated: 0.4023053777101243
-SubSet 54 average Sharpe Ratio: 0.23217256146451212
-Average Sharpe Ratio of all generated: 0.3992120537783859
-SubSet 55 average Sharpe Ratio: 0.3846609391923473
-Average Sharpe Ratio of all generated: 0.39895221244649237
-SubSet 56 average Sharpe Ratio: 0.30578351935416126
-Average Sharpe Ratio of all generated: 0.39731767397118833
-SubSet 57 average Sharpe Ratio: 0.3484072176684893
-Average Sharpe Ratio of all generated: 0.3964743902418314
-SubSet 58 average Sharpe Ratio: 0.5434504620842356
-Average Sharpe Ratio of all generated: 0.39896551010356707
-SubSet 59 average Sharpe Ratio: 0.2935086176832114
-Average Sharpe Ratio of all generated: 0.39720789522989447
-SubSet 60 average Sharpe Ratio: 0.2846498092103096
-Average Sharpe Ratio of all generated: 0.39536268070498326
-SubSet 61 average Sharpe Ratio: 0.35174004484282845
-Average Sharpe Ratio of all generated: 0.39465908980398073
-SubSet 62 average Sharpe Ratio: 0.4624598860133269
-Average Sharpe Ratio of all generated: 0.3957352929184148
-SubSet 63 average Sharpe Ratio: 0.29331151235485003
-Average Sharpe Ratio of all generated: 0.39413492134710915
-SubSet 64 average Sharpe Ratio: 0.22275357068197324
-Average Sharpe Ratio of all generated: 0.39149828518303015
-SubSet 65 average Sharpe Ratio: 0.48932657593841733
-Average Sharpe Ratio of all generated: 0.3929805320126572
-SubSet 66 average Sharpe Ratio: 0.35517306152973305
-Average Sharpe Ratio of all generated: 0.39241624140843445
-SubSet 67 average Sharpe Ratio: 0.23141300558803768
-Average Sharpe Ratio of all generated: 0.3900485467640169
-SubSet 68 average Sharpe Ratio: 0.34537838255413106
-Average Sharpe Ratio of all generated: 0.38940115307981565
-SubSet 69 average Sharpe Ratio: 0.29529812066765215
-Average Sharpe Ratio of all generated: 0.3880568240453562
-SubSet 70 average Sharpe Ratio: 0.4343056053241951
-Average Sharpe Ratio of all generated: 0.38870821533097366
-SubSet 71 average Sharpe Ratio: 0.33307594785047395
-Average Sharpe Ratio of all generated: 0.38793554494930005
-SubSet 72 average Sharpe Ratio: 0.4574650734645955
-Average Sharpe Ratio of all generated: 0.38888800424403014
-SubSet 73 average Sharpe Ratio: 0.41081692262921865
-Average Sharpe Ratio of all generated: 0.38918434097896515
-SubSet 74 average Sharpe Ratio: 0.37284381791492877
-Average Sharpe Ratio of all generated: 0.38896646733811135
-SubSet 75 average Sharpe Ratio: 0.37617727166447934
-Average Sharpe Ratio of all generated: 0.3887981884476688
-SubSet 76 average Sharpe Ratio: 0.32358940311011214
-Average Sharpe Ratio of all generated: 0.3879513211056226
-SubSet 77 average Sharpe Ratio: 0.5178302281474977
-Average Sharpe Ratio of all generated: 0.3896164352984671
-SubSet 78 average Sharpe Ratio: 0.31046983697976754
-Average Sharpe Ratio of all generated: 0.3886145796235469
-SubSet 79 average Sharpe Ratio: 0.5552245035781369
-Average Sharpe Ratio of all generated: 0.39069720367297933
-SubSet 80 average Sharpe Ratio: 0.3801673547554995
-Average Sharpe Ratio of all generated: 0.3905672055381956
-SubSet 81 average Sharpe Ratio: 0.5714016604052851
-Average Sharpe Ratio of all generated: 0.3927725037682821
-SubSet 82 average Sharpe Ratio: 0.37963633410241143
-Average Sharpe Ratio of all generated: 0.392614236663874
-SubSet 83 average Sharpe Ratio: 0.435667351807779
-Average Sharpe Ratio of all generated: 0.3931267737489205
-SubSet 84 average Sharpe Ratio: 0.43047676982145827
-Average Sharpe Ratio of all generated: 0.393566185467421
-SubSet 85 average Sharpe Ratio: 0.3540822082246775
-Average Sharpe Ratio of all generated: 0.39310706945297047
-SubSet 86 average Sharpe Ratio: 0.40555034866411144
-Average Sharpe Ratio of all generated: 0.3932500956507997
-SubSet 87 average Sharpe Ratio: 0.42654395093903247
-Average Sharpe Ratio of all generated: 0.39362843491543875
-SubSet 88 average Sharpe Ratio: 0.3531373559432894
-Average Sharpe Ratio of all generated: 0.39317347897193144
-SubSet 89 average Sharpe Ratio: 0.2767260378530912
-Average Sharpe Ratio of all generated: 0.39187961851505543
-SubSet 90 average Sharpe Ratio: 0.30128634550171873
-Average Sharpe Ratio of all generated: 0.39088408804238134
-SubSet 91 average Sharpe Ratio: 0.3525168560184984
-Average Sharpe Ratio of all generated: 0.39046705291168693
-SubSet 92 average Sharpe Ratio: 0.2885608731202414
-Average Sharpe Ratio of all generated: 0.3893712875375854
-SubSet 93 average Sharpe Ratio: 0.31100304834760173
-Average Sharpe Ratio of all generated: 0.3885375828653515
-SubSet 94 average Sharpe Ratio: 0.4443650464969746
-Average Sharpe Ratio of all generated: 0.3891252403772633
-SubSet 95 average Sharpe Ratio: 0.4309567866115986
-Average Sharpe Ratio of all generated: 0.3895609856505376
-SubSet 96 average Sharpe Ratio: 0.4421701041555099
-Average Sharpe Ratio of all generated: 0.39010334769698063
-SubSet 97 average Sharpe Ratio: 0.3690358126919726
-Average Sharpe Ratio of all generated: 0.38988837284999067
-SubSet 98 average Sharpe Ratio: 0.40604170022504266
-Average Sharpe Ratio of all generated: 0.390051537772971
-SubSet 99 average Sharpe Ratio: 0.45524496055781
-Average Sharpe Ratio of all generated: 0.39070347200081945
+SubSet 0 average Sharpe Ratio: 0.31893263823879553
+Average Sharpe Ratio of all generated: 0.31893263823879553
+SubSet 1 average Sharpe Ratio: 0.5003430271047052
+Average Sharpe Ratio of all generated: 0.40963783267175036
+SubSet 2 average Sharpe Ratio: 0.4213650111154403
+Average Sharpe Ratio of all generated: 0.41354689215298035
+SubSet 3 average Sharpe Ratio: 0.3821756513970873
+Average Sharpe Ratio of all generated: 0.4057040819640071
+SubSet 4 average Sharpe Ratio: 0.342759684332834
+Average Sharpe Ratio of all generated: 0.3931152024377725
+SubSet 5 average Sharpe Ratio: 0.5117713912230796
+Average Sharpe Ratio of all generated: 0.41289123390199034
+SubSet 6 average Sharpe Ratio: 0.5136315654976834
+Average Sharpe Ratio of all generated: 0.4272827098442322
+SubSet 7 average Sharpe Ratio: 0.4522800197758876
+Average Sharpe Ratio of all generated: 0.43040737358568915
+SubSet 8 average Sharpe Ratio: 0.451732019013867
+Average Sharpe Ratio of all generated: 0.43277677863326447
+SubSet 9 average Sharpe Ratio: 0.2363606921309435
+Average Sharpe Ratio of all generated: 0.4131351699830324
+SubSet 10 average Sharpe Ratio: 0.5226028798766865
+Average Sharpe Ratio of all generated: 0.4230867799733646
+SubSet 11 average Sharpe Ratio: 0.31601735483240495
+Average Sharpe Ratio of all generated: 0.41416432787828455
+SubSet 12 average Sharpe Ratio: 0.4864169486637832
+Average Sharpe Ratio of all generated: 0.4197222217848614
+SubSet 13 average Sharpe Ratio: 0.4836805159766217
+Average Sharpe Ratio of all generated: 0.42429067136998716
+SubSet 14 average Sharpe Ratio: 0.4438492387222947
+Average Sharpe Ratio of all generated: 0.425594575860141
+SubSet 15 average Sharpe Ratio: 0.40587089847076796
+Average Sharpe Ratio of all generated: 0.4243618460233052
+SubSet 16 average Sharpe Ratio: 0.32651641514080654
+Average Sharpe Ratio of all generated: 0.41860623244198175
+SubSet 17 average Sharpe Ratio: 0.4503375649462246
+Average Sharpe Ratio of all generated: 0.420369084247773
+SubSet 18 average Sharpe Ratio: 0.40665301649845387
+Average Sharpe Ratio of all generated: 0.41964718594517725
+SubSet 19 average Sharpe Ratio: 0.49562939465926376
+Average Sharpe Ratio of all generated: 0.42344629638088155
+SubSet 20 average Sharpe Ratio: 0.37628633591627375
+Average Sharpe Ratio of all generated: 0.42120058397780497
+SubSet 21 average Sharpe Ratio: 0.3200124348564544
+Average Sharpe Ratio of all generated: 0.41660112265410726
+SubSet 22 average Sharpe Ratio: 0.3380396786615057
+Average Sharpe Ratio of all generated: 0.4131854076979072
+SubSet 23 average Sharpe Ratio: 0.3399065967831083
+Average Sharpe Ratio of all generated: 0.41013212390979054
+SubSet 24 average Sharpe Ratio: 0.48114936769163724
+Average Sharpe Ratio of all generated: 0.4129728136610644
+SubSet 25 average Sharpe Ratio: 0.4090672829623149
+Average Sharpe Ratio of all generated: 0.4128226009418817
+SubSet 26 average Sharpe Ratio: 0.4394343097986075
+Average Sharpe Ratio of all generated: 0.4138082197884271
+SubSet 27 average Sharpe Ratio: 0.4983604154865344
+Average Sharpe Ratio of all generated: 0.41682794106335946
+SubSet 28 average Sharpe Ratio: 0.48205985357650305
+Average Sharpe Ratio of all generated: 0.41907731735691617
+SubSet 29 average Sharpe Ratio: 0.46271574347123146
+Average Sharpe Ratio of all generated: 0.4205319315607267
+SubSet 30 average Sharpe Ratio: 0.4477364793494098
+Average Sharpe Ratio of all generated: 0.4214094976184261
+SubSet 31 average Sharpe Ratio: 0.26537055121917386
+Average Sharpe Ratio of all generated: 0.4165332805434495
+SubSet 32 average Sharpe Ratio: 0.4404639345112848
+Average Sharpe Ratio of all generated: 0.4172584518758082
+SubSet 33 average Sharpe Ratio: 0.5503089809733439
+Average Sharpe Ratio of all generated: 0.4211717027316181
+SubSet 34 average Sharpe Ratio: 0.5620760202499163
+Average Sharpe Ratio of all generated: 0.425197540374998
+SubSet 35 average Sharpe Ratio: 0.4079593656852138
+Average Sharpe Ratio of all generated: 0.4247187021891707
+SubSet 36 average Sharpe Ratio: 0.540810028226036
+Average Sharpe Ratio of all generated: 0.4278563055955724
+SubSet 37 average Sharpe Ratio: 0.46255153846421954
+Average Sharpe Ratio of all generated: 0.4287693380394842
+SubSet 38 average Sharpe Ratio: 0.36386767209766196
+Average Sharpe Ratio of all generated: 0.42710519275892467
+SubSet 39 average Sharpe Ratio: 0.2881188598705284
+Average Sharpe Ratio of all generated: 0.4236305344367148
+SubSet 40 average Sharpe Ratio: 0.3863805020183764
+Average Sharpe Ratio of all generated: 0.4227219970606578
+SubSet 41 average Sharpe Ratio: 0.31383707330712607
+Average Sharpe Ratio of all generated: 0.4201294988760499
+SubSet 42 average Sharpe Ratio: 0.3868442774847058
+Average Sharpe Ratio of all generated: 0.4193554239599721
+SubSet 43 average Sharpe Ratio: 0.4596923851742749
+Average Sharpe Ratio of all generated: 0.42027217307847897
+SubSet 44 average Sharpe Ratio: 0.3316080861501966
+Average Sharpe Ratio of all generated: 0.4183018600356283
+SubSet 45 average Sharpe Ratio: 0.3194617163337616
+Average Sharpe Ratio of all generated: 0.41615316125950075
+SubSet 46 average Sharpe Ratio: 0.6220716362662088
+Average Sharpe Ratio of all generated: 0.42053440540857967
+SubSet 47 average Sharpe Ratio: 0.5935127215768791
+Average Sharpe Ratio of all generated: 0.4241381203287526
+SubSet 48 average Sharpe Ratio: 0.43172716300035835
+Average Sharpe Ratio of all generated: 0.42429299875062204
+SubSet 49 average Sharpe Ratio: 0.4491651072338298
+Average Sharpe Ratio of all generated: 0.4247904409202862
+SubSet 50 average Sharpe Ratio: 0.3607609968302797
+Average Sharpe Ratio of all generated: 0.42353496162440374
+SubSet 51 average Sharpe Ratio: 0.2808492276744485
+Average Sharpe Ratio of all generated: 0.42079100520228924
+SubSet 52 average Sharpe Ratio: 0.5148255666349765
+Average Sharpe Ratio of all generated: 0.4225652422104531
+SubSet 53 average Sharpe Ratio: 0.5226334353006318
+Average Sharpe Ratio of all generated: 0.4244183568973082
+SubSet 54 average Sharpe Ratio: 0.264501727516868
+Average Sharpe Ratio of all generated: 0.4215107818176639
+SubSet 55 average Sharpe Ratio: 0.394277969140527
+Average Sharpe Ratio of all generated: 0.42102448159128647
+SubSet 56 average Sharpe Ratio: 0.5642625674101531
+Average Sharpe Ratio of all generated: 0.4235374304653017
+SubSet 57 average Sharpe Ratio: 0.4897506737419035
+Average Sharpe Ratio of all generated: 0.42467903810800167
+SubSet 58 average Sharpe Ratio: 0.2927089515777873
+Average Sharpe Ratio of all generated: 0.4224422569803709
+SubSet 59 average Sharpe Ratio: 0.37025923160283436
+Average Sharpe Ratio of all generated: 0.42157253989074533
+SubSet 60 average Sharpe Ratio: 0.3923660637384534
+Average Sharpe Ratio of all generated: 0.42109374519972415
+SubSet 61 average Sharpe Ratio: 0.30329395100976864
+Average Sharpe Ratio of all generated: 0.41919374851924096
+SubSet 62 average Sharpe Ratio: 0.38152189168651374
+Average Sharpe Ratio of all generated: 0.4185957825377691
+SubSet 63 average Sharpe Ratio: 0.4691763031326445
+Average Sharpe Ratio of all generated: 0.41938610317206404
+SubSet 64 average Sharpe Ratio: 0.41528157621489625
+Average Sharpe Ratio of all generated: 0.4193229566034922
+SubSet 65 average Sharpe Ratio: 0.3877817105126807
+Average Sharpe Ratio of all generated: 0.4188450589354496
+SubSet 66 average Sharpe Ratio: 0.33493540769424185
+Average Sharpe Ratio of all generated: 0.41759267608110323
+SubSet 67 average Sharpe Ratio: 0.33362754336696554
+Average Sharpe Ratio of all generated: 0.41635789471766005
+SubSet 68 average Sharpe Ratio: 0.4648564236595943
+Average Sharpe Ratio of all generated: 0.41706077194870256
+SubSet 69 average Sharpe Ratio: 0.33017056932960026
+Average Sharpe Ratio of all generated: 0.4158194833398582
+SubSet 70 average Sharpe Ratio: 0.5319795651692525
+Average Sharpe Ratio of all generated: 0.41745554083041303
+SubSet 71 average Sharpe Ratio: 0.36548305949618737
+Average Sharpe Ratio of all generated: 0.41673370081188216
+SubSet 72 average Sharpe Ratio: 0.3125520873851597
+Average Sharpe Ratio of all generated: 0.415306555422475
+SubSet 73 average Sharpe Ratio: 0.28473698037173806
+Average Sharpe Ratio of all generated: 0.41354210170557315
+SubSet 74 average Sharpe Ratio: 0.1546700112718293
+Average Sharpe Ratio of all generated: 0.4100904738331232
+SubSet 75 average Sharpe Ratio: 0.22875821003242044
+Average Sharpe Ratio of all generated: 0.4077045229936403
+SubSet 76 average Sharpe Ratio: 0.3658695442537032
+Average Sharpe Ratio of all generated: 0.4071612115814333
+SubSet 77 average Sharpe Ratio: 0.4083822839186633
+Average Sharpe Ratio of all generated: 0.4071768663549875
+SubSet 78 average Sharpe Ratio: 0.3258580782441389
+Average Sharpe Ratio of all generated: 0.4061475146067489
+SubSet 79 average Sharpe Ratio: 0.5000273557146094
+Average Sharpe Ratio of all generated: 0.40732101262059717
+SubSet 80 average Sharpe Ratio: 0.3083439933077133
+Average Sharpe Ratio of all generated: 0.40609907411056156
+SubSet 81 average Sharpe Ratio: 0.41351841792718863
+Average Sharpe Ratio of all generated: 0.4061895539132033
+SubSet 82 average Sharpe Ratio: 0.2403667550200993
+Average Sharpe Ratio of all generated: 0.40419168886629847
+SubSet 83 average Sharpe Ratio: 0.4047757994986816
+Average Sharpe Ratio of all generated: 0.404198642564303
+SubSet 84 average Sharpe Ratio: 0.36012875984604537
+Average Sharpe Ratio of all generated: 0.40368017335585293
+SubSet 85 average Sharpe Ratio: 0.3313477667643787
+Average Sharpe Ratio of all generated: 0.40283909886060326
+SubSet 86 average Sharpe Ratio: 0.17156195403993624
+Average Sharpe Ratio of all generated: 0.40018074087415884
+SubSet 87 average Sharpe Ratio: 0.4337237903412811
+Average Sharpe Ratio of all generated: 0.4005619118908307
+SubSet 88 average Sharpe Ratio: 0.5206456453084336
+Average Sharpe Ratio of all generated: 0.40191116732248916
+SubSet 89 average Sharpe Ratio: 0.38470112690536634
+Average Sharpe Ratio of all generated: 0.4017199446511878
+SubSet 90 average Sharpe Ratio: 0.3727080573714614
+Average Sharpe Ratio of all generated: 0.401401132703059
+SubSet 91 average Sharpe Ratio: 0.3566246568486097
+Average Sharpe Ratio of all generated: 0.4009144318785541
+SubSet 92 average Sharpe Ratio: 0.3543076556146503
+Average Sharpe Ratio of all generated: 0.4004132837466841
+SubSet 93 average Sharpe Ratio: 0.3374248132203959
+Average Sharpe Ratio of all generated: 0.3997431936347023
+SubSet 94 average Sharpe Ratio: 0.42412610126557
+Average Sharpe Ratio of all generated: 0.3999998558202904
+SubSet 95 average Sharpe Ratio: 0.391914392741516
+Average Sharpe Ratio of all generated: 0.3999156322465532
+SubSet 96 average Sharpe Ratio: 0.41364673588724993
+Average Sharpe Ratio of all generated: 0.4000571900160449
+SubSet 97 average Sharpe Ratio: 0.3292617653853131
+Average Sharpe Ratio of all generated: 0.3993347877238946
+SubSet 98 average Sharpe Ratio: 0.3844640463877578
+Average Sharpe Ratio of all generated: 0.3991845782154487
+SubSet 99 average Sharpe Ratio: 0.49700946799950224
+Average Sharpe Ratio of all generated: 0.40016282711328927
 </pre></div></div>
 </div>
 </section>
@@ -712,7 +714,7 @@ Average Sharpe Ratio of all generated: 0.39070347200081945
 <h3>古典アルゴリズムによる探索<a class="headerlink" href="#古典アルゴリズムによる探索" title="Permalink to this headline">¶</a></h3>
 <p>続いてはQUBO行列の準備及び古典なアルゴリズムに必要な関数を実装する。ここで、ペアワイズ相関行列は論文に従い対数リターンで計算した。</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">heapq</span>
@@ -806,7 +808,7 @@ Average Sharpe Ratio of all generated: 0.39070347200081945
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#銘柄セットを再生成する</span>
@@ -834,7 +836,7 @@ Average Sharpe Ratio of all generated: 0.39070347200081945
 <p>実行後、初期状態と貪欲サーチで得られた状態の比較を行う。このとき比較の基準がポートフォリオのSharpe Ratioになる。このチュートリアルでは全銘柄のウエイトが同じというシナリオなので、選ばれた銘柄の平均的なチャートを得てSharpe Ratioの計算を行った。</p>
 <p>また、一個前のコードブロック複数回実行して銘柄セットをリセットすると、貪欲サーチの結果は初期状態よりも悪くなったり、ほぼ変わらなかったりする場合もあるのが分かる。そして最終的なリターンが初期状態に負けたが、Sharpe Ratioが大きい最終状態もある。それらを比較すると、Sharpe Ratioが大きい場合ポートフォリオのチャートが滑らかで、変動が小さくリスクが非常に小さいのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Greedy Search</span>
@@ -891,6 +893,8 @@ Average Sharpe Ratio of all generated: 0.39070347200081945
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -902,12 +906,12 @@ Average Sharpe Ratio of all generated: 0.39070347200081945
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Initial random selection:
-[ 1  1 -1 -1 -1 -1 -1 -1 -1  1  1  1 -1 -1  1  1 -1  1  1 -1 -1  1 -1  1
- -1 -1 -1  1  1 -1  1  1  1  1 -1 -1  1  1  1 -1  1  1  1 -1 -1 -1 -1 -1] 1.0848187187887222
+[-1 -1 -1 -1  1  1  1  1 -1  1 -1  1 -1  1  1 -1 -1 -1 -1 -1  1  1 -1 -1
+ -1  1 -1  1 -1  1 -1 -1  1 -1 -1 -1 -1  1  1  1 -1 -1  1 -1 -1 -1  1  1] 1.1819620775282662
 
 Selection After Greedy Search:
-[-1  1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1  1 -1 -1 -1  1 -1  1 -1 -1 -1  1 -1
- -1  1  1 -1  1  1  1 -1 -1  1 -1 -1  1 -1 -1 -1 -1 -1 -1  1 -1  1  1 -1] 2.801489861942124
+[-1 -1 -1 -1 -1 -1 -1 -1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1 -1  1 -1 -1  1
+ -1 -1  1 -1  1 -1 -1  1  1  1  1 -1 -1 -1  1 -1 -1  1 -1  1  1 -1 -1  1] 3.133413105046622
 
 </pre></div></div>
 </div>
@@ -925,7 +929,7 @@ Selection After Greedy Search:
 <p>結果を比較することで、ラスト世代が第一世代よりもパフォーマンスが良くなっていることを観測できる。ただし、ここで試行した世代数が限られているため、パフォーマンスが改善されないまたは改善が小さい場合もある。そして総じて貪欲サーチよりも安定な出力が得られるのも観察できる。</p>
 <p>注意：遺伝子の組数や子孫数、そして変異の数を増やした場合計算量の増加により計算が終わらない場合もあるので、実行環境に合わせて設定を変えてください。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Genetic Algorithm</span>
@@ -980,6 +984,8 @@ Selection After Greedy Search:
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;1st Gen Genetic&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Last Gen Genetic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <br/></pre></div>
@@ -991,12 +997,12 @@ Selection After Greedy Search:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Best Gene 1st generation:
-[ 1  1 -1  1  1 -1  1 -1 -1  1 -1  1 -1 -1  1  1  1  1  1 -1 -1 -1 -1 -1
- -1 -1  1 -1 -1 -1  1  1 -1  1  1 -1  1  1 -1  1 -1  1  1  1 -1  1 -1  1] 1.9718144849525687
+[ 1  1 -1 -1  1 -1  1  1 -1 -1  1 -1 -1 -1  1 -1 -1  1 -1 -1 -1 -1  1 -1
+  1  1 -1 -1 -1 -1  1 -1 -1  1  1  1  1 -1  1  1 -1 -1 -1  1 -1  1  1 -1] 1.3900713054121818
 
 Best Gene last generation:
-[ 1  1 -1  1  1 -1  1 -1 -1  1 -1  1 -1 -1  1 -1  1  1  1 -1 -1 -1 -1 -1
- -1 -1  1 -1 -1 -1  1  1 -1  1  1 -1  1  1 -1 -1 -1  1  1  1 -1  1 -1  1] 2.1226446968308657
+[ 1 -1 -1 -1  1  1 -1  1  1 -1 -1 -1 -1  1  1  1  1 -1 -1 -1 -1  1  1  1
+  1 -1 -1 -1  1  1  1  1 -1  1  1 -1 -1  1 -1  1 -1  1 -1 -1  1  1 -1  1] 1.547297840627872
 
 </pre></div></div>
 </div>
@@ -1016,7 +1022,7 @@ Best Gene last generation:
 <h3>Quantum Annealingによる解法<a class="headerlink" href="#Quantum-Annealingによる解法" title="Permalink to this headline">¶</a></h3>
 <p>Reverse Quantum Annealingでこの最適問題解くために、古典なアルゴリズムで得られたスピン形式の結果をアニーリングが使う形式に変換する。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ConvertSolutionToQuboState</span><span class="p">(</span><span class="n">solution</span><span class="p">):</span>
@@ -1039,14 +1045,14 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0]
+[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1]
 </pre></div></div>
 </div>
 <section id="Forward-Annealingの場合">
 <h4>Forward Annealingの場合<a class="headerlink" href="#Forward-Annealingの場合" title="Permalink to this headline">¶</a></h4>
 <p>銘柄の魅力度とペアワイズ相関による罰金と賞金の度合を使ってQUBO行列を作り、まずForward Annealingを実行する。最終リターン率の改善はケースバイケースになるが、結果として貪欲サーチの結果よりも安定したチャートを得られている。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openjij</span> <span class="kn">import</span> <span class="n">SQASampler</span>
@@ -1076,6 +1082,8 @@ Best Gene last generation:
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_FQA</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Forward Annealing&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <br/></pre></div>
@@ -1101,18 +1109,18 @@ Best Gene last generation:
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)]
-[0 1 0 1 0 1 0 0 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 1 0 1 0 0 0 0 1 1 0 1
- 0 1 0 1 1 0 1 0 1 1 1] 3.356689242547606
+[([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)]
+[0 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 1 0 1 0 1 1 1 0 1 1 1 0 0 1 1 1 1 0 0
+ 0 1 0 0 0 0 1 1 0 1 1] 5.278116764964878
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1149,7 +1157,7 @@ Best Gene last generation:
 <p>ではReverse Annealingのスケジュールを作成する。OpenJijのsamplerは指定された<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を指定したMC
 stepの数で量子モンテカルロを実行ので、短い定数をつなぎ合わせて<span class="math notranslate nohighlight">\(s\)</span>や<span class="math notranslate nohighlight">\(\beta\)</span>が少しずつ変化するようなスケジュールを作ってRQAの動作を作る必要がある。ここでは<span class="math notranslate nohighlight">\(s\)</span>の変化に注目してそれをプロットすると逆さまの台形のスケジュールを確認できた。横軸は量子モンテカルロ法のステップ数になる。スケジュール作成の関数を書き換えればそのほかの形のスケジュールも簡単に作成できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ScheduleFunction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">RQAschedule</span><span class="p">):</span>
@@ -1168,6 +1176,8 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TotalLength</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">ScheduleFunction</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">RQAschedule</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span> <span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;MC step&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$s$, progress of quantum annealing&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
@@ -1208,7 +1218,7 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 </div>
 <p>作られたスケジュールを使って、初期状態を指定した<code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code>関数を使って、RQAを実行する。そして同様に、貪欲サーチの結果やForward Annealingの結果の比較を行う。結果を見ると、このチュートリアルが行う設定では銘柄セットのサイズ制限によってForward Annealingと同じ最適解にたどり着く場合が多いのが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#初期状態を準備</span>
@@ -1228,6 +1238,8 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart_RQA</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reverse Annealing&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Before Greedy Search&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;After Greedy Search&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="c1">#結果の比較</span>
@@ -1243,16 +1255,16 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)]
+[([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1268,11 +1280,11 @@ stepの数で量子モンテカルロを実行ので、短い定数をつなぎ�
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Forward Quantum Annealing Result:
-[0 1 0 1 0 1 0 0 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 1 0 1 0 0 0 0 1 1 0 1
- 0 1 0 1 1 0 1 0 1 1 1] 3.356689242547606
+[0 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 1 0 1 0 1 1 1 0 1 1 1 0 0 1 1 1 1 0 0
+ 0 1 0 0 0 0 1 1 0 1 1] 5.278116764964878
 Reverse Quantum Annealing Result:
-[0 1 0 1 0 1 0 0 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 1 0 1 0 0 0 0 1 1 0 1
- 0 1 0 1 1 0 1 0 1 1 1] 3.356689242547606
+[0 0 0 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 1 0 1 0 1 1 1 0 1 1 1 0 0 1 1 1 1 0 0
+ 0 1 0 0 0 0 1 1 0 1 1] 5.278116764964878
 </pre></div></div>
 </div>
 </section>
@@ -1282,7 +1294,7 @@ Reverse Quantum Annealing Result:
 <p>同じ状態になると、実際にRQAの様子が分からないので、Phaseを分解してRQAを実行してみる。まずはReverse Phaseの確認である。同じようにアニーリングスケジュールを設定して、スケジュールと初期状態を指定したアニーリングを行う。ここでは例が分かりやすくなるようにReverse
 Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値や逆温度の設定を変えた。また、アニーリングもイタレーションではなく、毎回同じ初期状態から始まるように設定した。結果を見ると、逆転したアニーリング過程によって、既に得られた解から、よりエネルギーの高い状態に登っていったことが分かる。また、ほぼ毎回異なる状態で留まるので、高いエネルギー准位で解が定まっていないのもわかる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
@@ -1310,6 +1322,8 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
     <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
@@ -1335,21 +1349,21 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -272., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1], -260., 1)
- ([0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1], -267., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -270., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -264., 1)
- ([0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -254., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1], -266., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1], -254., 1)
- ([0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -249., 1)]
+[([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -281., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -279., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -279., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -282., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -282., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1], -263., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -282., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)]
 </pre></div></div>
 </div>
 <p>Reverse状態の確認ができたので、このままPause Phaseの追加を行う。追加後は同様にアニーリングを実行して、その結果を確認した。このPhaseの追加は実装上において上のReverse Phaseの一番最後のステップのMCステップ数を伸ばしたものに等しいので、上のReverseのみのケースと同じようにバラバラの結果になる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Pause Step</span>
@@ -1373,6 +1387,8 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
     <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse_Pause</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
@@ -1398,23 +1414,23 @@ Phaseが止まる<span class="math notranslate nohighlight">\(s\)</span>の値�
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1], -188., 1)
- ([0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1], -241., 1)
- ([0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -219., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1], -227., 1)
- ([0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -178., 1)
- ([0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1], -223., 1)
- ([0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1], -219., 1)
- ([0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0], -216., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -197., 1)
- ([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1], -229., 1)]
+[([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1], -241., 1)
+ ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1], -225., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1], -169., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1], -214., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1], -227., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -258., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -209., 1)
+ ([0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -250., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1], -266., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -223., 1)]
 </pre></div></div>
 </div>
 <p>最後にForward Phaseをまた追加してアニーリングを行う。ここの設定はこのチュートリアルの前のサンプルよりも少し緩い温度や磁場の条件で行った。結果として、この銘柄セットで既知の量子アニーリングによる最適解が得られたのが分かる。これでRQAの節の最初の例でもちゃんとRQAによって最適解を出しているのが分かる。</p>
 <p>また、条件が少し緩いため、解が収束せずに、エネルギーが近い複数のsub-optimalの解の存在を確認することができる。そのなかは場合によって、量子アニーリングの最適解よりも最終的なリターンが良くて、形も比較的に滑らかなポートフォリオの存在も確認できる。そのポートフォリオの詳細を見ると、その大きなリターンは上昇率が大きい特定の銘柄によるもので、逆相関を持つ変動率が比較的に小さい銘柄と組み合わせて実現されたものだと分かる。実際の投資においてはそのようなポートフォリオが好ましいかもしれないが、このチュートリアルが設定した「Shape
 Ratioがとにかく最大になる」条件では、相対的に小さいポートフォリSharpe Ratioが実現されたことから、量子アニーリングによって最適ではない解と判断された。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create Forward Step</span>
@@ -1441,6 +1457,8 @@ Ratioがとにかく最大になる」条件では、相対的に小さいポー
     <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
 
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sampleset_RQA_Reverse_Pause_Forward</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
@@ -1466,16 +1484,16 @@ Ratioがとにかく最大になる」条件では、相対的に小さいポー
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)
- ([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1], -275., 1)]
+[([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)
+ ([0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1], -287., 1)]
 </pre></div></div>
 </div>
 </section>
@@ -1487,7 +1505,7 @@ Ratioがとにかく最大になる」条件では、相対的に小さいポー
 <p>まずはそれらがReverse Phaseに対する影響を見る。量子アニーリングの度合を表す<span class="math notranslate nohighlight">\(s\)</span>の影響を見る、これは横磁場をどれぐらい強く戻すのかを表す量で、最初のアニーリングで辿り着いたミニマムの周りになるポテンシャル障壁を超えて状態がばらけるようにするために、それを適切に強く（<span class="math notranslate nohighlight">\(s\)</span>を小さく）設定しなければならない。このノートの結果では<span class="math notranslate nohighlight">\(s\)</span>が<span class="math notranslate nohighlight">\(0.20\)</span>までReverse
 Phaseの終状態のばらつきがあっても不定にはならず、<span class="math notranslate nohighlight">\(0.20\)</span>以下だと熱的揺らぎが支配的になり、ばらつきが大きくなったのが分かる。なので<span class="math notranslate nohighlight">\(0.2\)</span>あたりをさらに細かくスキャンすれば最適の<span class="math notranslate nohighlight">\(s\)</span>値を得られる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">TargetS</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)):</span>
@@ -1514,6 +1532,9 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
                 <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.4</span><span class="p">,</span> <span class="s2">&quot;Target s=&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">TargetS</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1653,24 +1674,24 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 </div>
 <p>次に<span class="math notranslate nohighlight">\(\beta\)</span>による影響を調べる。<span class="math notranslate nohighlight">\(\beta = \frac{1}{k_{\mathrm{B}T}}\)</span>が逆温度を表していて、<span class="math notranslate nohighlight">\(\beta\)</span>が大きければ大きいほど、系がより低温である意味になる。それはつまり全体としては状態がより基底状態に落ちやすく、より「Annealed」な状態に近いふるまいをする。言い換えると横磁場が一定の場合、<span class="math notranslate nohighlight">\(\beta\)</span>が大きくなると、横磁場が効きにくくなり、実効的には大きい<span class="math notranslate nohighlight">\(s\)</span>に近いふるまいになる。OpenJijにおいてその影響の詳細を知りたい方はこの<a class="reference external" href="https://qiita.com/ground0state/items/0f61c3efc7f12fd96d05">Qiita記事</a>に参照してください。</p>
-<p>また、その影響はQUBO行列に入っているエネルギーんの典型的なスケール付近で変わることも分かっている。このチュートリアルの場合、QUBOに入っている典型な値は<span class="math notranslate nohighlight">\([-5,5]\)</span>の範囲に入るため、<span class="math notranslate nohighlight">\(\beta=5.0\)</span>付近でふるまいが変化すると予想できある。</p>
+<p>また、その影響はQUBO行列に入っているエネルギーの典型的なスケール付近で変わることも分かっている。このチュートリアルの場合、QUBOに入っている典型な値の絶対値は大体<span class="math notranslate nohighlight">\(5\)</span>ぐらいで収まるので、<span class="math notranslate nohighlight">\(\beta=5.0\)</span>程度で変化が起こると予想できる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">QUBO</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Values in QUBO&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of entries&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([  4.,   4.,   4., 590., 532., 516., 634.,   5.,   5.,  10.]),
- array([-14., -11.,  -8.,  -5.,  -2.,   1.,   4.,   7.,  10.,  13.,  16.]),
- &lt;BarContainer object of 10 artists&gt;)
+Text(0, 1, &#39;Number of entries&#39;)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1682,7 +1703,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 <p>対数的な<span class="math notranslate nohighlight">\(\beta\)</span>配列を用意して、<span class="math notranslate nohighlight">\(s\)</span>以外の量を固定してReverse Phaseを行う。予想通り<span class="math notranslate nohighlight">\(\beta=5\)</span>あたりで終状態のばらつきが小さくなり、それよりも大きい<span class="math notranslate nohighlight">\(\beta\)</span>だと数少ない状態に収束してしまうことが分かる。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
@@ -1709,6 +1730,9 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
                 <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;beta =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1772,7 +1796,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 </div>
 <p>そしてスケジュールの分割について調べる。階段関数のような極端的な場合から、細かく分割して緩やかな変化にする場合まで調査をした。結果から分かるように、分割数が少ない場合、状態があまり変化せず、増やすとばらつきが見えてくる。また、大きく増やしても計算時間が長くなるだけで結果の違いが少ないのも分かる。このチュートリアルが取り扱うポートフォリオ最適化問題の場合は<span class="math notranslate nohighlight">\(50\)</span>程度の設定で問題ない。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">NReverseStep</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">1000</span><span class="p">]:</span>
@@ -1799,6 +1823,8 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
                 <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NReverseStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NReverseStep</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1881,7 +1907,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <p>既に説明があったように、通常の場合Pause PhaseがReverse Phaseの最後のステップを延長させたものに違いないので、アニーリング全体の<span class="math notranslate nohighlight">\(s\)</span>と<span class="math notranslate nohighlight">\(\beta\)</span>を変化させたところで、Reverse Phaseと同じようなふるまいをする。また、ステップ数もどのぐらい最後のステップを伸ばすのかに等しい意味なので、変更してもほぼReverse Phaseの状態を保持したままだけで、影響が少ない。</p>
 <p>ただし、Pause Phaseだけ<span class="math notranslate nohighlight">\(\beta\)</span>を変化させることは量子アニーリングが不完全な状態で古典的なアニーリングを行うの近い行動である。ここでは<span class="math notranslate nohighlight">\(\beta=5.0\)</span>から緩やかに目標とした<span class="math notranslate nohighlight">\(\beta\)</span>に向かって系の温度を変化させて、その影響を調べる。そして、Reverse Phaseで異なる<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行った場合の終状態に近い結果を得られた。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="mf">20.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">]:</span>
@@ -1915,6 +1941,9 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
                 <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;Target beta =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -1982,7 +2011,7 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
 <p>Forwar PhaseはReverse PhaseとPause Phaseで得られた状態から普通の量子アニーリングを行う。このとき考えるぺきパラメータの条件は通常のアニーリングが正しく動作するために必要な条件と基本同じである。Reverse PhaseとPause Phaseと同じ方法で、<span class="math notranslate nohighlight">\(\beta\)</span>と分割したステップ数のスキャンを行った結果、比較的に小さい分割数と<span class="math notranslate nohighlight">\(\beta\)</span>でも結果がちゃんと最適解に収束することが分かった。</p>
 <p>下のコードはその例である。Reverse PhaseとPause Phaseは上の調査で得られた設定で、Forward Phaseだけ粗い分解と小さい<span class="math notranslate nohighlight">\(\beta\)</span>でアニーリングを行っている。</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create RQA schedule</span>
@@ -2019,6 +2048,9 @@ Phaseの終状態のばらつきがあっても不定にはならず、<span cla
             <span class="n">selected_charts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Chart</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">portfolioChart</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">selected_charts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)),</span> <span class="n">portfolioChart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Energy=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Portofolio Asset Amount&quot;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span> <span class="s2">&quot;NForwardStep =&quot;</span><span class="o">+</span><span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NForwardStep</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
