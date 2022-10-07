@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>4-Introduction to D-Wave Ocean SDK &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5-OpenJij GPU" href="005-OpenJijGPU.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="4-Introduction-to-D-Wave-Ocean-SDK">
-<h1>4-Introduction to D-Wave Ocean SDK<a class="headerlink" href="#4-Introduction-to-D-Wave-Ocean-SDK" title="Permalink to this headline">¶</a></h1>
+<h1>4-Introduction to D-Wave Ocean SDK<a class="headerlink" href="#4-Introduction-to-D-Wave-Ocean-SDK" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/004-DWaveOceanSDK.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>D-Wave Ocean SDK (Ocean) is a collection of software that uses D-Wave Machines. It is easy to use various features from Python.</p>
 <div class="line-block">
@@ -305,7 +315,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install dwave-ocean-sdk
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!pip install dwave-ocean-sdk
 </pre></div>
 </div>
 </div>
@@ -313,9 +323,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
-<span class="o">!</span><span class="nb">cd</span> dwave-ocean-sdk
-<span class="o">!</span>python setup.py install
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!git clone https://github.com/dwavesystems/dwave-ocean-sdk.git
+!cd dwave-ocean-sdk
+!python setup.py install
 </pre></div>
 </div>
 </div>
@@ -326,46 +336,46 @@ div.rendered_html tbody tr:hover {
 <li><p>Optimization for different annealing parameters</p></li>
 </ul>
 <section id="Formulation">
-<h2>Formulation<a class="headerlink" href="#Formulation" title="Permalink to this headline">¶</a></h2>
+<h2>Formulation<a class="headerlink" href="#Formulation" title="Permalink to this heading">¶</a></h2>
 <p>There are two formats tha can be run on D-Wave machine: Ising model and QUBO. We won’t got into the details here, will describe the minimum requirements for using Ocean.</p>
 <section id="QUBO-and-Ising-model">
-<h3>QUBO and Ising model<a class="headerlink" href="#QUBO-and-Ising-model" title="Permalink to this headline">¶</a></h3>
+<h3>QUBO and Ising model<a class="headerlink" href="#QUBO-and-Ising-model" title="Permalink to this heading">¶</a></h3>
 <section id="QUBO">
-<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this headline">¶</a></h4>
+<h4>QUBO<a class="headerlink" href="#QUBO" title="Permalink to this heading">¶</a></h4>
 <p>In the case of QUBO, we consider the following Hamiltonian for binary variable <span class="math notranslate nohighlight">\(q_{i} \in \{0, 1\}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{q_{i}\right\}\right)= \sum_{i} Q_{i i} q_{i} + \sum_{i&gt;j} Q_{i j} q_{i} q_{j}\]</div>
 <p>In solving QUBO, the classical computer calculates <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and <span class="math notranslate nohighlight">\(Q_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
 </section>
 <section id="Ising-model">
-<h4>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this headline">¶</a></h4>
+<h4>Ising model<a class="headerlink" href="#Ising-model" title="Permalink to this heading">¶</a></h4>
 <p>In the case of Ising model, we consider the following Hamiltonian for spin variable <span class="math notranslate nohighlight">\(\sigma_{i} \in \{1, -1\}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right)=\sum_{i} h_{i} \sigma_{i} + \sum_{i&gt;j} J_{i j} \sigma_{i} \sigma_{j}\]</div>
 <p>In solving Ising model, the classical computer calculates <span class="math notranslate nohighlight">\(h_{i}\)</span>と<span class="math notranslate nohighlight">\(J_{i j}\)</span> in the above equation. The next step is to run on D-Wave machine.</p>
 </section>
 <section id="Reciprocal-conversion">
-<h4>Reciprocal conversion<a class="headerlink" href="#Reciprocal-conversion" title="Permalink to this headline">¶</a></h4>
+<h4>Reciprocal conversion<a class="headerlink" href="#Reciprocal-conversion" title="Permalink to this heading">¶</a></h4>
 <p>QUBO and Ising model canbe converted to each other by the conversion formula <span class="math notranslate nohighlight">\(q_{i} = (\sigma_{i} + 1) / 2\)</span>. It doesn’t matter which way you formulate the Hamiltonian, so we can choose the one that is easier to consider from the subject matter. However, it should be noted that the D-Wave machine may behave differently for two different forms of the same problem.</p>
 </section>
 </section>
 <section id="Number-division-problem">
-<h3>Number division problem<a class="headerlink" href="#Number-division-problem" title="Permalink to this headline">¶</a></h3>
+<h3>Number division problem<a class="headerlink" href="#Number-division-problem" title="Permalink to this heading">¶</a></h3>
 <p>We consider dividing a fiven set of integers into two groups. The problem of dividing each group so that the sum of each group is the same is called a number division problem.</p>
 <p>For example, we divide the following set of intergers <span class="math notranslate nohighlight">\(C\)</span> into two groups.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set integers C</span>
-<span class="n">C</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set integers C
+C = [2, 10, 3, 8, 5, 7, 9, 5, 3, 2]
+N = len(C)
 </pre></div>
 </div>
 </div>
 <p>In this case, There are 23 optimal solutions where the difference between the sum of the two is zero. There are multiple states in which the energy, called the difference in sums, is the same value, but the solutions are different. These states are called “degenerate” in physical terms. For example, a optimal solution is <span class="math notranslate nohighlight">\(\{2,5,3,10,7\}, \{2,5,3,9,8\}\)</span> (both of the sum of two is 27).</p>
 <section id="id1">
-<h4>QUBO<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<h4>QUBO<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
 <p>We will make the formulation with the goal of making the difference between the sum of the two groups equal to zero.</p>
 <p>(Sum of the numbers belonging to group A) - (Sum of the numbers belonging to group B) = 0</p>
 <p>We need binary variables <span class="math notranslate nohighlight">\(q_{i}\)</span>. We define <span class="math notranslate nohighlight">\(q_{i} = 0\)</span> if the <span class="math notranslate nohighlight">\(i\)</span>th number belongs to group A and <span class="math notranslate nohighlight">\(q_{i} = 1\)</span> if it belongs to group B.</p>
@@ -395,12 +405,12 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set the above Q_{ii} &amp; Q_{ij} as a dictionary type such as {(i, j): Q_{ij}}</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set the above Q_{ii} &amp; Q_{ij} as a dictionary type such as {(i, j): Q_{ij}}
+Q = {}
+for i in range(N):
+    Q[i, i] = 4 * C[i] * (C[i] - sum(C))
+    for j in range(i + 1, N):
+        Q[i, j] = 8 * C[i] * C[j]
 </pre></div>
 </div>
 </div>
@@ -409,10 +419,10 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+%matplotlib inline
 </pre></div>
 </div>
 </div>
@@ -420,18 +430,18 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">GnBu</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">n_qubo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">qubo</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def show_qubo(qubo, cmap=cm.GnBu, save_path=None):
+    n_qubo = max(sorted(qubo.keys())[-1][0], sorted(qubo.keys(), key=lambda x: x[1])[-1][1]) + 1
 
-    <span class="n">np_qubo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_qubo</span><span class="p">,</span> <span class="n">n_qubo</span><span class="p">))</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">pos_x</span><span class="p">,</span> <span class="n">pos_y</span><span class="p">),</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">qubo</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">np_qubo</span><span class="p">[</span><span class="n">pos_x</span><span class="p">][</span><span class="n">pos_y</span><span class="p">]</span> <span class="o">=</span> <span class="n">coeff</span>
+    np_qubo = np.zeros((n_qubo, n_qubo))
+    for (pos_x, pos_y), coeff in qubo.items():
+        np_qubo[pos_x][pos_y] = coeff
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np_qubo</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    plt.imshow(np_qubo, cmap=cmap)
+    plt.colorbar()
+    if save_path is not None:
+        plt.savefig(save_path)
+    plt.show()
 </pre></div>
 </div>
 </div>
@@ -439,7 +449,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>show_qubo(Q)
 </pre></div>
 </div>
 </div>
@@ -453,7 +463,7 @@ div.rendered_html tbody tr:hover {
 <p>The diagonal component represents <span class="math notranslate nohighlight">\(Q_{ii}\)</span> and the non-diagonal component represents <span class="math notranslate nohighlight">\(Q_{ij}\)</span>. It turns out that the number division problem is and all-coupling problem, where there is an interaction between all the qubits.</p>
 </section>
 <section id="id2">
-<h4>Ising model<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<h4>Ising model<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
 <p>From the formula for Ising model and teh QUBO interconversion, the number division problem can be expressed in the ising model in the following concise formula.</p>
 <div class="math notranslate nohighlight">
 \[H\left(\left\{\sigma_{i}\right\}\right) = \left(\sum_{i} c_{i} \sigma_{i}\right)^2\]</div>
@@ -470,13 +480,13 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set h_i &amp; J_ij</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">h</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set h_i &amp; J_ij
+h = {}
+J = {}
+for i in range(N):
+    h[i] = 0
+    for j in range(i + 1, N):
+        J[i, j] = 2 * C[i] * C[j]
 </pre></div>
 </div>
 </div>
@@ -495,7 +505,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dimod</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import dimod
 </pre></div>
 </div>
 </div>
@@ -503,9 +513,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert from ising model to QUBO</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># convert from ising model to QUBO
+model = dimod.BinaryQuadraticModel(h, J, 0.0, vartype=&#39;SPIN&#39;)
+qubo, offset = model.to_qubo()
 </pre></div>
 </div>
 </div>
@@ -513,7 +523,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">show_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>show_qubo(qubo)
 </pre></div>
 </div>
 </div>
@@ -535,17 +545,17 @@ div.rendered_html tbody tr:hover {
 </section>
 </section>
 <section id="Optimization-on-D-Wave-machine">
-<h2>Optimization on D-Wave machine<a class="headerlink" href="#Optimization-on-D-Wave-machine" title="Permalink to this headline">¶</a></h2>
+<h2>Optimization on D-Wave machine<a class="headerlink" href="#Optimization-on-D-Wave-machine" title="Permalink to this heading">¶</a></h2>
 <p>Let us consider optimizing this problem using D-Wave machine. In this tutorial, we show (1). solving simply, (2). solving by varying the number of readings, (3). solving by changing annealing time.</p>
 <section id="Solve-Ising-model">
-<h3>Solve Ising model<a class="headerlink" href="#Solve-Ising-model" title="Permalink to this headline">¶</a></h3>
+<h3>Solve Ising model<a class="headerlink" href="#Solve-Ising-model" title="Permalink to this heading">¶</a></h3>
 <p>We use D-Wave machin sampler <code class="docutils literal notranslate"><span class="pre">DWaveSampler</span></code>, and use <code class="docutils literal notranslate"><span class="pre">EmbeddingComposite</span></code> for Embedding the problem in the chimeragraph of D-Wave machine.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
-<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from dwave.system.samplers import DWaveSampler
+from dwave.system.composites import EmbeddingComposite
 </pre></div>
 </div>
 </div>
@@ -553,15 +563,15 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set the connection information as an option</span>
-<span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;https://cloud.dwavesys.com/sapi&#39;</span>
-<span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;##########&#39;</span>
-<span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;DW_2000Q_VFYC_5&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set the connection information as an option
+endpoint = &#39;https://cloud.dwavesys.com/sapi&#39;
+token = &#39;##########&#39;
+solver = &#39;DW_2000Q_VFYC_5&#39;
 
-<span class="c1"># use DWaveSampler</span>
-<span class="n">dw</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
-<span class="c1"># embed to Chimera graph</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span>
+# use DWaveSampler
+dw = DWaveSampler(endpoint=endpoint, token=token, solver=solver)
+# embed to Chimera graph
+sampler = EmbeddingComposite(dw)
 </pre></div>
 </div>
 </div>
@@ -569,11 +579,11 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in the case of ising model, use the following</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># in the case of ising model, use the following
+response = sampler.sample_ising(h, J, num_reads=100)
 
-<span class="c1"># in the case of QUBO, use the following</span>
-<span class="c1"># response = sampler.sample_qubo(Q, num_reads=100)</span>
+# in the case of QUBO, use the following
+# response = sampler.sample_qubo(Q, num_reads=100)
 </pre></div>
 </div>
 </div>
@@ -582,7 +592,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">record</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response.record
 </pre></div>
 </div>
 </div>
@@ -672,22 +682,22 @@ rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;BINARY&#39;</span><span class="p">:</span>
-        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># offset</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-                <span class="n">ene</span> <span class="o">+=</span> <span class="n">Q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">vartype</span> <span class="o">==</span> <span class="s1">&#39;SPIN&#39;</span><span class="p">:</span>
-        <span class="n">ene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-                <span class="n">ene</span> <span class="o">+=</span> <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">solution</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def calcurate_energy(solution, vartype=&#39;BINARY&#39;):
+    if vartype == &#39;BINARY&#39;:
+        ene = sum(C) ** 2  # offset
+        for i in range(N):
+            ene += Q[i, i] * solution[i]
+            for j in range(i + 1, N):
+                ene += Q[i, j] * solution[i] * solution[j]
+    elif vartype == &#39;SPIN&#39;:
+        ene = sum(C[i] ** 2 for i in range(N))
+        for i in range(N):
+            for j in range(i + 1, N):
+                ene += J[i, j] * solution[i] * solution[j]
+    else:
+        raise ValueError(&quot;vartype mast be &#39;BINARY&#39; or &#39;SPIN&#39;.&quot;)
 
-    <span class="k">return</span> <span class="n">ene</span>
+    return ene
 </pre></div>
 </div>
 </div>
@@ -695,22 +705,22 @@ rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># count the number of optimal solution</span>
-<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">twenty_sol</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
-    <span class="c1"># 0th contains a list of state, 2nd contains the number of occurrences in .record</span>
-    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="c1"># compute energy</span>
-    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-    <span class="c1"># count up the times when the energy is zero</span>
-    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
-        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
-    <span class="c1"># preserve a result of 20 µs (we use later)</span>
-    <span class="n">twenty_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># count the number of optimal solution
+num_optimal_sol = 0
+optimal_sol = []
+twenty_sol = []
+for state in response.record:
+    # 0th contains a list of state, 2nd contains the number of occurrences in .record
+    solution = state[0]
+    num_oc = state[2]
+    # compute energy
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # count up the times when the energy is zero
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
+    # preserve a result of 20 µs (we use later)
+    twenty_sol.append(solution)
 </pre></div>
 </div>
 </div>
@@ -718,7 +728,7 @@ rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_optimal_sol</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>num_optimal_sol
 </pre></div>
 </div>
 </div>
@@ -736,12 +746,12 @@ rec.array([([ 1, -1,  1,  1,  1,  1, -1,  1,  1, -1], -226., 1, 0.8),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">optimal_sol</span><span class="p">:</span>
-    <span class="n">group_A</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">group_B</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="o">==-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group A: &#39;</span><span class="p">,</span> <span class="n">group_A</span><span class="p">,</span> <span class="s1">&#39;, Sum = &#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_A</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group B: &#39;</span><span class="p">,</span> <span class="n">group_B</span><span class="p">,</span> <span class="s1">&#39;, Sum = &#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">group_B</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for solution in optimal_sol:
+    group_A = [C[i] for i, s in enumerate(solution) if s==1]
+    group_B = [C[i] for i, s in enumerate(solution) if s==-1]
+    print(solution)
+    print(&#39;Group A: &#39;, group_A, &#39;, Sum = &#39;, sum(group_A))
+    print(&#39;Group B: &#39;, group_B, &#39;, Sum = &#39;, sum(group_B))
 </pre></div>
 </div>
 </div>
@@ -767,7 +777,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">data_vectors</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response.data_vectors
 </pre></div>
 </div>
 </div>
@@ -802,7 +812,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">info</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response.info
 </pre></div>
 </div>
 </div>
@@ -830,17 +840,17 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 </div>
 </section>
 <section id="Change-the-number-of-reading">
-<h3>Change the number of reading<a class="headerlink" href="#Change-the-number-of-reading" title="Permalink to this headline">¶</a></h3>
+<h3>Change the number of reading<a class="headerlink" href="#Change-the-number-of-reading" title="Permalink to this heading">¶</a></h3>
 <p>In this part, let’s see how the solution we get changes when we change the number of readings. We can set the value of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> to speciry the number of readings Default number of <code class="docutils literal notranslate"><span class="pre">num_reads</span></code> is 1. Before we set 100, now we try to set 1000.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[122]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># in the case of ising model, use the following</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># in the case of ising model, use the following
+response = sampler.sample_ising(h, J, num_reads=1000)
 
-<span class="c1"># in the case of QUBO, use the following</span>
-<span class="c1"># response = sampler.sample_qubo(Q, num_reads=1000)</span>
+# in the case of QUBO, use the following
+# response = sampler.sample_qubo(Q, num_reads=1000)
 </pre></div>
 </div>
 </div>
@@ -848,19 +858,19 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[123]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># count up the number of occurrences of optimal solution</span>
-<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
-    <span class="c1"># 0th is a list of states, 2nd is the number of occurrence in .record</span>
-    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="c1"># compute energy</span>
-    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-    <span class="c1"># count up the times when the energy is zero</span>
-    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
-        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># count up the number of occurrences of optimal solution
+num_optimal_sol = 0
+optimal_sol = []
+for state in response.record:
+    # 0th is a list of states, 2nd is the number of occurrence in .record
+    solution = state[0]
+    num_oc = state[2]
+    # compute energy
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # count up the times when the energy is zero
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
 </pre></div>
 </div>
 </div>
@@ -868,7 +878,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[124]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_optimal_sol</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>num_optimal_sol
 </pre></div>
 </div>
 </div>
@@ -886,7 +896,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[125]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span><span class="o">.</span><span class="n">info</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response.info
 </pre></div>
 </div>
 </div>
@@ -914,7 +924,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 </div>
 </section>
 <section id="Change-annealing-time">
-<h3>Change annealing time<a class="headerlink" href="#Change-annealing-time" title="Permalink to this headline">¶</a></h3>
+<h3>Change annealing time<a class="headerlink" href="#Change-annealing-time" title="Permalink to this heading">¶</a></h3>
 <div class="line-block">
 <div class="line">Finally, we look at how the solution we get changes when we change the annealing time. We can specify the annealing time by setting the value of ‘annealing_time’ in sample_ising() or sample_qubo() (unit: µs).</div>
 <div class="line">In the previous example, we used the default value 20µs. Now we try to annealing with 50µs.</div>
@@ -923,11 +933,11 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[126]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In the case of ising model, use the following</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">annealing_time</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># In the case of ising model, use the following
+response = sampler.sample_ising(h, J, num_reads=100, annealing_time=50)
 
-<span class="c1"># In the case of QUBO, use the following</span>
-<span class="c1"># response = sampler.sample_qubo(Q, num_reads=100, annealing_time=50)</span>
+# In the case of QUBO, use the following
+# response = sampler.sample_qubo(Q, num_reads=100, annealing_time=50)
 </pre></div>
 </div>
 </div>
@@ -935,22 +945,22 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[127]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># count up the number of times the optimal solution was found</span>
-<span class="n">num_optimal_sol</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">optimal_sol</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">fifty_sol</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">:</span>
-    <span class="c1"># 0th contains a list of states, 2nd contains the number of occurrences of states in .record</span>
-    <span class="n">solution</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">num_oc</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="c1"># compute energy</span>
-    <span class="n">energy</span> <span class="o">=</span> <span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-    <span class="c1"># count up when the energy is 0</span>
-    <span class="k">if</span> <span class="n">energy</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">num_optimal_sol</span> <span class="o">+=</span> <span class="n">num_oc</span>
-        <span class="n">optimal_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
-    <span class="c1"># preserve a result of 50µs</span>
-    <span class="n">fifty_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># count up the number of times the optimal solution was found
+num_optimal_sol = 0
+optimal_sol = []
+fifty_sol = []
+for state in response.record:
+    # 0th contains a list of states, 2nd contains the number of occurrences of states in .record
+    solution = state[0]
+    num_oc = state[2]
+    # compute energy
+    energy = calcurate_energy(solution, vartype=&#39;SPIN&#39;)
+    # count up when the energy is 0
+    if energy == 0.0:
+        num_optimal_sol += num_oc
+        optimal_sol.append(solution)
+    # preserve a result of 50µs
+    fifty_sol.append(solution)
 </pre></div>
 </div>
 </div>
@@ -958,7 +968,7 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[128]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_optimal_sol</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>num_optimal_sol
 </pre></div>
 </div>
 </div>
@@ -976,12 +986,12 @@ Group B:  [10, 3, 9, 3, 2] , Sum =  27
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[129]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">twenty_sol</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;20μs&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">([</span><span class="n">calcurate_energy</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">fifty_sol</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;50μs&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in twenty_sol], alpha=0.5, label=&#39;20μs&#39;)
+plt.hist([calcurate_energy(solution, vartype=&#39;SPIN&#39;) for solution in fifty_sol], alpha=0.5, label=&#39;50μs&#39;)
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
+plt.legend()
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -997,7 +1007,7 @@ the results you get will be different.</p>
 </section>
 </section>
 <section id="Conclusion">
-<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this headline">¶</a></h2>
+<h2>Conclusion<a class="headerlink" href="#Conclusion" title="Permalink to this heading">¶</a></h2>
 <p>Through the optimization of number division problem, we introduced D-Wave Ocean. We can do a lot of things just by holding on to what we’ve discussed in this tutorial. For example, we can investigate as follows.</p>
 <ul class="simple">
 <li><p>success probability (percentage of optimal solutions) relative to the number of readings, annealing time</p></li>
@@ -1025,8 +1035,9 @@ the results you get will be different.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">4-Introduction to D-Wave Ocean SDK</a><ul>
 <li><a class="reference internal" href="#Formulation">Formulation</a><ul>
 <li><a class="reference internal" href="#QUBO-and-Ising-model">QUBO and Ising model</a><ul>
@@ -1053,12 +1064,17 @@ the results you get will be different.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="003-PyQUBO_2_OpenJij.html"
-                        title="previous chapter">3-PyQUBO with OpenJij</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="005-OpenJijGPU.html"
-                        title="next chapter">5-OpenJij GPU</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="003-PyQUBO_2_OpenJij.html"
+                          title="previous chapter">3-PyQUBO with OpenJij</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="005-OpenJijGPU.html"
+                          title="next chapter">5-OpenJij GPU</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -1070,12 +1086,12 @@ the results you get will be different.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1099,7 +1115,7 @@ the results you get will be different.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

@@ -3,6 +3,10 @@
 Welcome to OpenJij's Tutorial!
 ============================================
 
+.. warning::
+   (2022/10/07) This tutorial will not be updated anymore.
+   Please see the new version of Tutorial: https://openjij.github.io/OpenJij/ .
+
 .. toctree::
    :maxdepth: 1 
    :caption: Contents:
@@ -10,12 +14,9 @@ Welcome to OpenJij's Tutorial!
 
    English Tutorial <en/index>
    日本語 (Japanease) Tutorial <ja/index>
-   How to contribute to the project. <HowToContribute>
 
 GitHub Links:
    * `OpenJij: GitHub repository <https://github.com/OpenJij/OpenJij>`_
-   * `OpenJij Tutorial: GitHub repository <https://github.com/OpenJij/OpenJijTutorial>`_
-
 
 
 

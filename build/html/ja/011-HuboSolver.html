@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>11-HUBO: Higher Order Unconstraint Binary Optimization &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="12-Solving Protein Folding Problem by HUBO Solver" href="012-ProteinFoldingHubo.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="11-HUBO:-Higher-Order-Unconstraint-Binary-Optimization">
-<h1>11-HUBO: Higher Order Unconstraint Binary Optimization<a class="headerlink" href="#11-HUBO:-Higher-Order-Unconstraint-Binary-Optimization" title="Permalink to this headline">¶</a></h1>
+<h1>11-HUBO: Higher Order Unconstraint Binary Optimization<a class="headerlink" href="#11-HUBO:-Higher-Order-Unconstraint-Binary-Optimization" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/011-HuboSolver.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>通常のイジングモデルに対して高次の項を導入したモデルを考えてみます。 具体的には２値のバイナリ変数<span class="math notranslate nohighlight">\(\sigma_{i} \in \{-1, +1\}\)</span> または <span class="math notranslate nohighlight">\(\sigma_{i} \in \{0, 1\}\)</span>に対して次のようなエネルギー関数を導入してみましょう。</p>
 <div class="math notranslate nohighlight">
@@ -303,7 +313,7 @@ i=1,\ldots ,N\end{split}\]</div>
 <p>ここで、添え字<span class="math notranslate nohighlight">\(i,j,k,\ldots\)</span>はバイナリ変数を指定するインデックスで、<span class="math notranslate nohighlight">\(1&lt;= i,j,k,... &lt;=N\)</span>の値を取ります。<span class="math notranslate nohighlight">\(c\)</span>は定数であり、0次の項に対応します。 このエネルギー関数の最小値を与える変数の組<span class="math notranslate nohighlight">\((\sigma_{1} ,\sigma_{2} ,\ldots,\sigma_{N} )\)</span>を求める問題は、higher-order unconstrained binary optimization (HUBO)やpolynomial unconstrained binary optimization (PUBO)などど呼ばれています。以下ではHUBOで統一して呼称することにします。
 この手の問題は通常のイジングモデルを自然に拡張したものとみなすことができ、例えば、量子化学の分野で現れます。 このチュートリアルでOpenJijを用いたHUBOの解法を紹介します。</p>
 <section id="HUBOの定義">
-<h2>HUBOの定義<a class="headerlink" href="#HUBOの定義" title="Permalink to this headline">¶</a></h2>
+<h2>HUBOの定義<a class="headerlink" href="#HUBOの定義" title="Permalink to this heading">¶</a></h2>
 <p>本チュートリアルでは、簡単のため、以下のような3次以下の項のみが現れる<span class="math notranslate nohighlight">\(N=3\)</span>変数の問題を考えます。以下ではバイナリ変数は<span class="math notranslate nohighlight">\(\{-1,+1\}\)</span>のスピン変数とします。</p>
 <div class="math notranslate nohighlight">
 \[H = -\sigma_1 -\sigma_1\sigma_2 +\sigma_1\sigma_2\sigma_3,\;\;\; \sigma_i \in \{-1, +1\}\]</div>
@@ -312,29 +322,29 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">polynomial</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">1</span><span class="p">,):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>polynomial = {(1,): -1, (1,2): -1, (1,2,3): 1}
 </pre></div>
 </div>
 </div>
 </section>
 <section id="HUBOの直接解法">
-<h2>HUBOの直接解法<a class="headerlink" href="#HUBOの直接解法" title="Permalink to this headline">¶</a></h2>
+<h2>HUBOの直接解法<a class="headerlink" href="#HUBOの直接解法" title="Permalink to this heading">¶</a></h2>
 <p>通常HUBOを解く際は相互作用の次数を2次以下に落としたQUBOを生成してこれを解きますが、 OpenJijではHUBOをQUBOに変換することなく、以下のsample_huboメソッドを用いることで 直接SAで解を求めることができます。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import openjij as oj
 
-<span class="c1"># sample_huboメソッドを利用するためには、SASamplerメソッドを用いる必要があります。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
+# sample_huboメソッドを利用するためには、SASamplerメソッドを用いる必要があります。
+sampler = oj.SASampler()
 
-<span class="c1"># sample_huboメソッドに投げます。</span>
-<span class="c1"># sample_huboメソッドの第２引数は変数のタイプ、&quot;SPIN&quot;もしくは&quot;BINARY&quot;を指定します。</span>
-<span class="c1"># SPINでは{-1,1}、BINARYでは{0,1}が変数として指定されます。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_hubo</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="c1"># 結果を表示します。</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+# sample_huboメソッドに投げます。
+# sample_huboメソッドの第２引数は変数のタイプ、&quot;SPIN&quot;もしくは&quot;BINARY&quot;を指定します。
+# SPINでは{-1,1}、BINARYでは{0,1}が変数として指定されます。
+response = sampler.sample_hubo(polynomial, &quot;SPIN&quot;)
+# 結果を表示します。
+print(response)
 </pre></div>
 </div>
 </div>
@@ -354,8 +364,8 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_hubo</span><span class="p">({(</span><span class="s1">&#39;a&#39;</span><span class="p">,):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">):</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">},</span> <span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response = sampler.sample_hubo({(&#39;a&#39;,): -1, (&#39;a&#39;, &#39;b&#39;): -1, (&#39;a&#39;, &#39;b&#39;, &#39;c&#39;): 1}, &quot;SPIN&quot;)
+print(response)
 </pre></div>
 </div>
 </div>
@@ -371,20 +381,20 @@ i=1,\ldots ,N\end{split}\]</div>
 </div>
 </section>
 <section id="QUBO変換による解法">
-<h2>QUBO変換による解法<a class="headerlink" href="#QUBO変換による解法" title="Permalink to this headline">¶</a></h2>
+<h2>QUBO変換による解法<a class="headerlink" href="#QUBO変換による解法" title="Permalink to this heading">¶</a></h2>
 <p>HUBOを解く方法の一つとして、3次以上の高次の項を２次以下に変換して対応するQUBOを構成しこれを解くというものがあります。 この章ではその方法を説明します。</p>
 <p>3次相互作用から対応するQUBOを生成するためにD-Waveのdimodというライブラリを使います。 ここで、5.0に指定されているペナルティの大きさ(strength)は、高次相互作用を２次以下に変換する際に生じた制約条件に対するペナルティで、小さすぎると生成したQUBOの最適解がもとのHUBOと一致しなくなります。逆に大きすぎるとそもそも最適解が得られなくなってしまいます。実際上、どれくらいの値を指定すればいいのかというのは難しい問題ですが、ここでは5.0に指定しています。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dimod</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import dimod
 
-<span class="c1"># HUBO、strengthの大きさ、変数のタイプを指定して対応するquadraticモデルを生成します。</span>
-<span class="n">bqm_dimod</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">make_quadratic</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;0次の項:&#39;</span><span class="p">,</span> <span class="n">bqm_dimod</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1次の項:&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">linear</span><span class="p">))</span>    <span class="c1"># bqm.linearはpythonのdictに変換して表示します。</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2次の項:&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">quadratic</span><span class="p">))</span> <span class="c1"># bqm.quadraticもpythonのdictに変換して表示します。</span>
+# HUBO、strengthの大きさ、変数のタイプを指定して対応するquadraticモデルを生成します。
+bqm_dimod = dimod.make_quadratic(poly=polynomial, strength=5.0, vartype=&quot;SPIN&quot;)
+print(&#39;0次の項:&#39;, bqm_dimod.offset)
+print(&#39;1次の項:&#39;, dict(bqm_dimod.linear))    # bqm.linearはpythonのdictに変換して表示します。
+print(&#39;2次の項:&#39;, dict(bqm_dimod.quadratic)) # bqm.quadraticもpythonのdictに変換して表示します。
 </pre></div>
 </div>
 </div>
@@ -399,36 +409,36 @@ i=1,\ldots ,N\end{split}\]</div>
 </pre></div></div>
 </div>
 <p>見ての通りですが、もとの変数 <span class="math notranslate nohighlight">\(\sigma_1,\sigma_2,\sigma_3\)</span> に加えて <span class="math notranslate nohighlight">\(\sigma_{&quot;1∗2&quot;}\)</span>、<span class="math notranslate nohighlight">\(\sigma_{&quot;\rm aux1,2&quot;}\)</span> という２つの文字列で表現された変数が現れています。一般にHUBOをQUBOに変換すると変数の数、相互作用の数が増えてしまいます。 今回のケースではHUBOの場合の変数が3個、相互作用の数も3個でしたが、QUBOに変換することで、変数が5個、相互作用の数が7個に増えています。</p>
-<p>このQUBOをopenJijのSAで解きたいわけですが、openJijでは数値と文字列が混在した変数は扱えないため、文字列を全て整数に変換する必要があります。 そのためにdimodのrelabel_variablesというメソッドを使って“1∗2”と“aux1,2”を整数に変換します。</p>
+<p>このQUBOをopenJijのSAで解きたいわけですが、openJijでは数値と文字列が混在した変数は扱えないため、文字列を全て整数に変換する必要があります。 そのためにdimodのrelabel_variablesというメソッドを使って”1∗2”と”aux1,2”を整数に変換します。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#文字列と整数の対応関係を作る関数を定義します。</span>
-<span class="k">def</span> <span class="nf">generate_mapping</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1">#もともと整数であったN個のインデックスは変化しないようにします。</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#文字列と整数の対応関係を作る関数を定義します。
+def generate_mapping(variables, N):
+    mapping = {}
+    #もともと整数であったN個のインデックスは変化しないようにします。
+    for i in range(1, N+1):
+        mapping[i] = i
+    count = N+1
 
-    <span class="c1">#新たに現れた文字列を整数に変換します。</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-            <span class="n">mapping</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">mapping</span>
+    #新たに現れた文字列を整数に変換します。
+    for v in variables:
+        if type(v) == str:
+            mapping[v] = count
+            count += 1
+    return mapping
 
-<span class="c1"># 変換前と変換後の変数の対応関係を表した辞書を作ります。</span>
-<span class="n">mapping</span> <span class="o">=</span> <span class="n">generate_mapping</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+# 変換前と変換後の変数の対応関係を表した辞書を作ります。
+mapping = generate_mapping(bqm_dimod.variables, 3)
 
-<span class="c1"># インデックスを1始まりの整数に変換します。</span>
-<span class="n">bqm_dimod</span><span class="o">.</span><span class="n">relabel_variables</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+# インデックスを1始まりの整数に変換します。
+bqm_dimod.relabel_variables(mapping)
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;0次の項:&#39;</span><span class="p">,</span> <span class="n">bqm_dimod</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1次の項:&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">linear</span><span class="p">))</span>    <span class="c1"># bqm.linearはpythonのdictに変換して表示します。</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;2次の項:&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">quadratic</span><span class="p">))</span> <span class="c1"># bqm.quadraticもpythonのdictに変換して表示します。</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;変数の対応関係:&#39;</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span> <span class="c1"># Relabelした後のインデックスと元のインデックスの対応関係を表示します。</span>
+print(&#39;0次の項:&#39;, bqm_dimod.offset)
+print(&#39;1次の項:&#39;, dict(bqm_dimod.linear))    # bqm.linearはpythonのdictに変換して表示します。
+print(&#39;2次の項:&#39;, dict(bqm_dimod.quadratic)) # bqm.quadraticもpythonのdictに変換して表示します。
+print(&#39;変数の対応関係:&#39;, mapping) # Relabelした後のインデックスと元のインデックスの対応関係を表示します。
 </pre></div>
 </div>
 </div>
@@ -448,12 +458,12 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dimodのbqmをOpenJijのBinaryQuadraticModelに変換します。</span>
-<span class="n">bqm_oj</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">linear</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">quadratic</span><span class="p">),</span> <span class="n">bqm_dimod</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># dimodのbqmをOpenJijのBinaryQuadraticModelに変換します。
+bqm_oj = oj.BinaryQuadraticModel(dict(bqm_dimod.linear), dict(bqm_dimod.quadratic), bqm_dimod.offset, vartype=&quot;SPIN&quot;)
 
-<span class="c1"># sampleメソッドを使ってSAを行います。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm_oj</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+# sampleメソッドを使ってSAを行います。
+response = sampler.sample(bqm_oj)
+print(response)
 </pre></div>
 </div>
 </div>
@@ -472,10 +482,10 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 元のHUBOの解に焼き直します。</span>
-<span class="n">hubo_configuration</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)}</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;対応するHUBOの解:&#39;</span><span class="p">,</span> <span class="n">hubo_configuration</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;対応するHUBOの解のエネルギー:&#39;</span><span class="p">,</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryPolynomial</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;SPIN&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">hubo_configuration</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 元のHUBOの解に焼き直します。
+hubo_configuration = {i+1: response.record[0][0][i] for i in range(3)}
+print(&#39;対応するHUBOの解:&#39;, hubo_configuration)
+print(&#39;対応するHUBOの解のエネルギー:&#39;, dimod.BinaryPolynomial(polynomial, &quot;SPIN&quot;).energy(hubo_configuration))
 </pre></div>
 </div>
 </div>
@@ -494,10 +504,10 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 元のHUBOの厳密な最適解を確認します。</span>
-<span class="n">sampleset</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">ExactPolySolver</span><span class="p">()</span><span class="o">.</span><span class="n">sample_hising</span><span class="p">(</span><span class="n">h</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">J</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;最適解:&#39;</span><span class="p">,</span><span class="n">sampleset</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;対応するエネルギー:&#39;</span><span class="p">,</span><span class="n">sampleset</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 元のHUBOの厳密な最適解を確認します。
+sampleset = dimod.ExactPolySolver().sample_hising(h = {}, J = polynomial)
+print(&#39;最適解:&#39;,sampleset.first.sample)
+print(&#39;対応するエネルギー:&#39;,sampleset.first.energy)
 </pre></div>
 </div>
 </div>
@@ -513,21 +523,21 @@ i=1,\ldots ,N\end{split}\]</div>
 <p>元のHUBOに対する最適解のエネルギーは確かに-3.0であることがわかります。 今回は変数の数が3個と少なかったため簡単に厳密解を求めることができますが、通常は厳密解を求めることは困難であることに注意してください。</p>
 </section>
 <section id="HUBOによる直接解法とQUBO変換による解法結果の比較">
-<h2>HUBOによる直接解法とQUBO変換による解法結果の比較<a class="headerlink" href="#HUBOによる直接解法とQUBO変換による解法結果の比較" title="Permalink to this headline">¶</a></h2>
+<h2>HUBOによる直接解法とQUBO変換による解法結果の比較<a class="headerlink" href="#HUBOによる直接解法とQUBO変換による解法結果の比較" title="Permalink to this heading">¶</a></h2>
 <p>最後に, HUBOによる直接解法とQUBO変換による解法を比較してみましょう。 SAによるシミュレーションを100回行い、各シミュレーションで得られたエネルギーを比較してみます。 まずはsample_huboメソッドを用いた場合のエネルギーを求めます。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># SAによるシミュレーションを行う回数を指定します。</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># SAによるシミュレーションを行う回数を指定します。
+num_reads = 100
 
-<span class="c1"># num_readsというパラメータを設定すると、その回数分SAを独立に行います。</span>
-<span class="c1"># 今回は100に指定します。デフォルトは1になっています。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_hubo</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;SPIN&quot;</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
+# num_readsというパラメータを設定すると、その回数分SAを独立に行います。
+# 今回は100に指定します。デフォルトは1になっています。
+response = sampler.sample_hubo(polynomial, &quot;SPIN&quot;, num_reads=num_reads)
 
-<span class="c1"># 得られたエネルギーをenergy_huboに代入します</span>
-<span class="n">energy_hubo</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">energies</span>
+# 得られたエネルギーをenergy_huboに代入します
+energy_hubo = response.energies
 </pre></div>
 </div>
 </div>
@@ -536,18 +546,18 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm_oj</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>response = sampler.sample(bqm_oj, num_reads=num_reads)
 
-<span class="c1"># 得られたスピン配位からhuboのエネルギーを計算し直す関数を定義します。</span>
-<span class="k">def</span> <span class="nf">calculate_true_energy</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-    <span class="n">energy_quad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_reads</span><span class="p">):</span>
-        <span class="n">hubo_configuration</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)}</span>
-        <span class="n">energy_quad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dimod</span><span class="o">.</span><span class="n">BinaryPolynomial</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;BINARY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">energy</span><span class="p">(</span><span class="n">hubo_configuration</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">energy_quad</span>
+# 得られたスピン配位からhuboのエネルギーを計算し直す関数を定義します。
+def calculate_true_energy(polynomial, response, N):
+    energy_quad = []
+    for i in range(num_reads):
+        hubo_configuration = {j+1: response.record[i][0][j] for j in range(N)}
+        energy_quad.append(dimod.BinaryPolynomial(polynomial, &quot;BINARY&quot;).energy(hubo_configuration))
+    return energy_quad
 
-<span class="c1"># 得られたエネルギーをenergy_quadに代入します</span>
-<span class="n">energy_quad</span> <span class="o">=</span> <span class="n">calculate_true_energy</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+# 得られたエネルギーをenergy_quadに代入します
+energy_quad = calculate_true_energy(polynomial, response, 3)
 </pre></div>
 </div>
 </div>
@@ -556,12 +566,12 @@ i=1,\ldots ,N\end{split}\]</div>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_hubo</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_quad</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Through QUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+plt.hist(energy_hubo, label=&#39;HUBO&#39;, range=(-3, 1), bins=10, alpha=0.5)
+plt.hist(energy_quad, label=&#39;Through QUBO&#39;, range=(-3, 1), bins=10, alpha=0.5)
+plt.legend()
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
 </pre></div>
 </div>
 </div>
@@ -586,21 +596,21 @@ Text(0, 0.5, &#39;Frequency&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># strengthを1に設定してQUBOに変換します。</span>
-<span class="n">bqm_dimod</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">make_quadratic</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># strengthを1に設定してQUBOに変換します。
+bqm_dimod = dimod.make_quadratic(poly=polynomial, strength=1.0, vartype=&quot;SPIN&quot;)
 
-<span class="c1">#インデックスを整数に変換してからOpenJijで解きます。</span>
-<span class="n">bqm_dimod</span><span class="o">.</span><span class="n">relabel_variables</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
-<span class="n">bqm_oj</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">linear</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">quadratic</span><span class="p">),</span> <span class="n">bqm_dimod</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm_oj</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
-<span class="n">energy_quad</span> <span class="o">=</span> <span class="n">calculate_true_energy</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+#インデックスを整数に変換してからOpenJijで解きます。
+bqm_dimod.relabel_variables(mapping)
+bqm_oj = oj.BinaryQuadraticModel(dict(bqm_dimod.linear), dict(bqm_dimod.quadratic), bqm_dimod.offset, vartype=&quot;SPIN&quot;)
+response = sampler.sample(bqm_oj, num_reads=num_reads)
+energy_quad = calculate_true_energy(polynomial, response, 3)
 
-<span class="c1"># ヒストグラムを表示します。</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_hubo</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_quad</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Through QUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+# ヒストグラムを表示します。
+plt.hist(energy_hubo, label=&#39;HUBO&#39;, range=(-3, 1), bins=10, alpha=0.5)
+plt.hist(energy_quad, label=&#39;Through QUBO&#39;, range=(-3, 1), bins=10, alpha=0.5)
+plt.legend()
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
 </pre></div>
 </div>
 </div>
@@ -626,14 +636,14 @@ Text(0, 0.5, &#39;Frequency&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import random
 
-<span class="n">N</span><span class="o">=</span><span class="mi">10</span>
-<span class="n">polynomial</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">polynomial</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+N=10
+polynomial = {}
+for i in range(1, N+1):
+    for j in range(i+1, N+1):
+        for k in range(j+1, N+1):
+            polynomial[(i,j,k)] = random.uniform(-1, +1)
 </pre></div>
 </div>
 </div>
@@ -642,26 +652,26 @@ Text(0, 0.5, &#39;Frequency&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#HUBOソルバーで直接解きます。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_hubo</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;SPIN&quot;</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
-<span class="n">energy_hubo</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">energies</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#HUBOソルバーで直接解きます。
+response = sampler.sample_hubo(polynomial, &quot;SPIN&quot;, num_reads=num_reads)
+energy_hubo = response.energies
 
-<span class="c1">#QUBO変換を通して解きます。</span>
-<span class="n">bqm_dimod</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">make_quadratic</span><span class="p">(</span><span class="n">poly</span><span class="o">=</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="n">mapping</span> <span class="o">=</span> <span class="n">generate_mapping</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
-<span class="n">bqm_dimod</span><span class="o">.</span><span class="n">relabel_variables</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
-<span class="n">bqm_oj</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">linear</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">bqm_dimod</span><span class="o">.</span><span class="n">quadratic</span><span class="p">),</span> <span class="n">bqm_dimod</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm_oj</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
-<span class="n">energy_quad</span> <span class="o">=</span> <span class="n">calculate_true_energy</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+#QUBO変換を通して解きます。
+bqm_dimod = dimod.make_quadratic(poly=polynomial, strength=2, vartype=&quot;SPIN&quot;)
+mapping = generate_mapping(bqm_dimod.variables, N)
+bqm_dimod.relabel_variables(mapping)
+bqm_oj = oj.BinaryQuadraticModel(dict(bqm_dimod.linear), dict(bqm_dimod.quadratic), bqm_dimod.offset, vartype=&quot;SPIN&quot;)
+response = sampler.sample(bqm_oj, num_reads=num_reads)
+energy_quad = calculate_true_energy(polynomial, response, N)
 
-<span class="c1"># ヒストグラムを表示します。</span>
-<span class="n">max_e</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">energy_hubo</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">energy_quad</span><span class="p">))</span>
-<span class="n">min_e</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">energy_hubo</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">energy_quad</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_hubo</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="n">min_e</span><span class="p">,</span> <span class="n">max_e</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_quad</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Through QUBO&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="n">min_e</span><span class="p">,</span> <span class="n">max_e</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+# ヒストグラムを表示します。
+max_e = max(max(energy_hubo), max(energy_quad))
+min_e = min(min(energy_hubo), min(energy_quad))
+plt.hist(energy_hubo, label=&#39;HUBO&#39;, range=(min_e, max_e), alpha=0.5)
+plt.hist(energy_quad, label=&#39;Through QUBO&#39;, range=(min_e, max_e), alpha=0.5)
+plt.legend()
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
 </pre></div>
 </div>
 </div>
@@ -684,7 +694,7 @@ Text(0, 0.5, &#39;Frequency&#39;)
 <p>このモデルではかなり差が出ているのが分かります。HUBOを直接解いたほうがよりエネルギーの低い解が得られています。 もちろんstrengthの値をより適切なものにすればQUBO変換の解法による解も改善する可能性はありますが、それを行うのは簡単ではありません。</p>
 </section>
 <section id="まとめ">
-<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
+<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this heading">¶</a></h2>
 <p>QUBO変換を通した解法では、QUBOに変換するための前処理やstrengthというパラメータを決定する必要があります。 一方でHUBOソルバーを利用すればそのような処理は不要になり、得られる解も(少なくとも今回取り扱ったモデルに関しては)QUBO変換を行う解法と同程度以上の解が得られることが分かりました。</p>
 </section>
 </section>
@@ -696,8 +706,9 @@ Text(0, 0.5, &#39;Frequency&#39;)
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">11-HUBO: Higher Order Unconstraint Binary Optimization</a><ul>
 <li><a class="reference internal" href="#HUBOの定義">HUBOの定義</a></li>
 <li><a class="reference internal" href="#HUBOの直接解法">HUBOの直接解法</a></li>
@@ -708,12 +719,17 @@ Text(0, 0.5, &#39;Frequency&#39;)
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="010-JobSequencingPyqubo.html"
-                        title="previous chapter">10-Solving Job Sequencing Problem with PyQUBO</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="012-ProteinFoldingHubo.html"
-                        title="next chapter">12-Solving Protein Folding Problem by HUBO Solver</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="010-JobSequencingPyqubo.html"
+                          title="previous chapter">10-Solving Job Sequencing Problem with PyQUBO</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="012-ProteinFoldingHubo.html"
+                          title="next chapter">12-Solving Protein Folding Problem by HUBO Solver</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -725,12 +741,12 @@ Text(0, 0.5, &#39;Frequency&#39;)
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -754,7 +770,7 @@ Text(0, 0.5, &#39;Frequency&#39;)
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

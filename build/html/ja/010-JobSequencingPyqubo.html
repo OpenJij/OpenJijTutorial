@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>10-Solving Job Sequencing Problem with PyQUBO &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="11-HUBO: Higher Order Unconstraint Binary Optimization" href="011-HuboSolver.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,31 +289,34 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="10-Solving-Job-Sequencing-Problem-with-PyQUBO">
-<h1>10-Solving Job Sequencing Problem with PyQUBO<a class="headerlink" href="#10-Solving-Job-Sequencing-Problem-with-PyQUBO" title="Permalink to this headline">¶</a></h1>
+<h1>10-Solving Job Sequencing Problem with PyQUBO<a class="headerlink" href="#10-Solving-Job-Sequencing-Problem-with-PyQUBO" title="Permalink to this heading">¶</a></h1>
 <p>この節では、<a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> から6.3. Job Eequencing with Integer LengthsをPyQUBOを用いて解きます。</p>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/010-JobSequencingPyqubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <section id="整数長ジョブスケジューリング問題">
-<h2>整数長ジョブスケジューリング問題<a class="headerlink" href="#整数長ジョブスケジューリング問題" title="Permalink to this headline">¶</a></h2>
+<h2>整数長ジョブスケジューリング問題<a class="headerlink" href="#整数長ジョブスケジューリング問題" title="Permalink to this heading">¶</a></h2>
 <p>整数長ジョブスケジューリング問題は以下のような状況の最適解を求める問題であり、NP困難な問題の一つです。まずは具体的な問から考えてみましょう。</p>
 </section>
 <section id="具体例">
-<h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this headline">¶</a></h2>
+<h2>具体例<a class="headerlink" href="#具体例" title="Permalink to this heading">¶</a></h2>
 <p>分かりやすくするために具体的に以下のような問を考えます。 &gt; 10個の仕事と3個のコンピュータがあります。10個の仕事の長さは<span class="math notranslate nohighlight">\(1,2,\cdots,10\)</span>です。 &gt; どのようにコンピュータに仕事を割り振れば仕事にかかる時間の最大値<span class="math notranslate nohighlight">\(\max M_\alpha\)</span>を最小化できるか考えます。 &gt; 例えば、<span class="math notranslate nohighlight">\(V_1=\{9,10\},V_2=\{1,2,7,8\},V_3=\{3,4,5,6\}\)</span>とすると<span class="math notranslate nohighlight">\(\max(M_1,M_2,M_3)=19\)</span>となって問の最適解となります。</p>
-<div><p><img alt="3c1473504cd840ddbf5809f9f10d41f2" src="../_images/job_sequence.png" /></p>
+<div><p><img alt="f58260ed475d4f89adfd1a8e400211ba" src="../_images/job_sequence.png" /></p>
 </div></section>
 <section id="問題の一般化">
-<h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this headline">¶</a></h2>
+<h2>問題の一般化<a class="headerlink" href="#問題の一般化" title="Permalink to this heading">¶</a></h2>
 <p>まず、N個の仕事<span class="math notranslate nohighlight">\(\{1,2,\dots ,N \}\)</span>とm個のコンピュータがあるとします。各仕事が<span class="math notranslate nohighlight">\(\alpha\)</span>をindexとして持っているものと考えます。 仕事にかかる時間のリスト<span class="math notranslate nohighlight">\(L\)</span>を作ります。</p>
 <div class="math notranslate nohighlight">
 \[L=\{L_1,L_2,\dots L_N\}\]</div>
@@ -319,12 +329,12 @@ div.rendered_html tbody tr:hover {
 \[(\forall \alpha \in \{1,2,\dots,N\})\]</div>
 <p>この<span class="math notranslate nohighlight">\(M_1\)</span>を最小化することがこの問題の目的となります。</p>
 <section id="QUBO行列への変換方法">
-<h3>QUBO行列への変換方法<a class="headerlink" href="#QUBO行列への変換方法" title="Permalink to this headline">¶</a></h3>
+<h3>QUBO行列への変換方法<a class="headerlink" href="#QUBO行列への変換方法" title="Permalink to this heading">¶</a></h3>
 <p>まず、<span class="math notranslate nohighlight">\(M_1 = \max M_\alpha\)</span>として一般性を失わないことに注意します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>でも解説されているようにQUBO行列を表現するにあたって式(1)で定義したバイナリ変数<span class="math notranslate nohighlight">\(x_{i,\alpha}\)</span>に加えてコンピュータが仕事にかかる時間を表現するためのスラック変数yを導入します。</p>
 </section>
 </section>
 <section id="One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義">
-<h2>One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義<a class="headerlink" href="#One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
+<h2>One-hot encoding により仕事にかかる最大値と他との差を表現した制約項(2)の定義<a class="headerlink" href="#One-hot-encoding-により仕事にかかる最大値と他との差を表現した制約項(2)の定義" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="https://arxiv.org/pdf/1302.5843v3.pdf">Ising formulations of many NP problems</a> ではOne-hot encodingを用いて仕事の実行時間を表しています。 バイナリ変数<span class="math notranslate nohighlight">\(y_{n,\alpha}\)</span>をノード1とノード<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の長さの差を表すバイナリ変数とします。</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}y_{n,\alpha} = \begin{cases}
@@ -349,7 +359,7 @@ div.rendered_html tbody tr:hover {
 <p><span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はユーザーによって選ばれる値であり、コンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span> とコンピュータ1の差がどの程度存在するか表しています。最悪の場合<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>は<span class="math notranslate nohighlight">\(N\max L_i\)</span>となります。</p>
 </section>
 <section id="Log-encoding-によるスラック変数を用いた制約項(2)の定義">
-<h2>Log encoding によるスラック変数を用いた制約項(2)の定義<a class="headerlink" href="#Log-encoding-によるスラック変数を用いた制約項(2)の定義" title="Permalink to this headline">¶</a></h2>
+<h2>Log encoding によるスラック変数を用いた制約項(2)の定義<a class="headerlink" href="#Log-encoding-によるスラック変数を用いた制約項(2)の定義" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>のようにLog encodingを用いて制約項を設定してみましょう。 <span class="math notranslate nohighlight">\(\mathcal{M}\)</span>はコンピュータ1とコンピュータ<span class="math notranslate nohighlight">\(\alpha\)</span>の仕事の実行時間の差の上限であるため以下の不等式が成り立ちます。</p>
 <div class="math notranslate nohighlight">
 \[\mathcal{M}\geq \sum_{i=1}^N L_i(x_{i,1}-x_{i,\alpha}) = M_1-M_\alpha\tag{13}\]</div>
@@ -366,14 +376,14 @@ div.rendered_html tbody tr:hover {
 <p>この方法を用いると、One-hot encodingに比べて少ないバイナリ変数<span class="math notranslate nohighlight">\((\lfloor\log_2(\mathcal{M}-1)\rfloor+1)\)</span>個で整数を表現できる上に追加の制約項が不要になります。変数Yの最大値は<span class="math notranslate nohighlight">\(2^{\lfloor\log_2(\mathcal{M}-1)\rfloor}\)</span>となっているからです。また、スラック変数を用いているため、仕事量の差が<span class="math notranslate nohighlight">\(\mathcal{M}\)</span>を上回ることもありません。</p>
 </section>
 <section id="目的項(1)の定義">
-<h2>目的項(1)の定義<a class="headerlink" href="#目的項(1)の定義" title="Permalink to this headline">¶</a></h2>
+<h2>目的項(1)の定義<a class="headerlink" href="#目的項(1)の定義" title="Permalink to this heading">¶</a></h2>
 <p>目的項はコンピュータで仕事を終えるまでの最大実行時間を最小化するためのものです。 よってハミルトニアンは以下のように定義するとエネルギーが最小になったときに最大実行時間を最小化した解が得られます。</p>
 <div class="math notranslate nohighlight">
 \[H_B = B\sum_{i=1}^N L_ix_{i,1}\tag{17}\]</div>
 <p>ただし定数A,Bは目的項<span class="math notranslate nohighlight">\(H_B\)</span>によって制約項<span class="math notranslate nohighlight">\(H_A\)</span>を違反してはいけないため、<span class="math notranslate nohighlight">\(0&lt;B \max(L_i)&lt;A\)</span>を満たす必要があります。</p>
 </section>
 <section id="PyQUBOへの実装">
-<h2>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this headline">¶</a></h2>
+<h2>PyQUBOへの実装<a class="headerlink" href="#PyQUBOへの実装" title="Permalink to this heading">¶</a></h2>
 <p>PyQUBOの<a class="reference external" href="https://pyqubo.readthedocs.io/en/latest/reference/integer.html">Documentation</a>では、バイナリ変数を整数に変換するための4つのクラスについて説明されています。その中のLogEncIntegerを用いてスラック変数を定義します。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/008-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>であるようにLogEncIntegerの使い方は以下のようになっていて、整数のように扱うことができます。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">LogEncInteger</span><span class="p">(</span><span class="s2">&quot;ラベルの名前&quot;</span><span class="p">,</span><span class="n">最小値</span><span class="p">,</span><span class="n">最大値</span><span class="p">)</span>
 </pre></div>
@@ -383,13 +393,13 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="c1">#コンピュータの数</span>
-<span class="n">m</span><span class="o">=</span><span class="mi">3</span>
-<span class="c1">#仕事の長さ</span>
-<span class="n">L</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
-<span class="c1">#仕事の数</span>
-<span class="n">N</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
+#コンピュータの数
+m=3
+#仕事の長さ
+L= [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#仕事の数
+N=len(L)
 </pre></div>
 </div>
 </div>
@@ -398,7 +408,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">3</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>M = 3
 </pre></div>
 </div>
 </div>
@@ -407,11 +417,11 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#PYQUBOをimportします</span>
-<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span><span class="n">LogEncInteger</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#PYQUBOをimportします
+from pyqubo import Array,LogEncInteger
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">m</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;BINARY&#39;</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span>  <span class="n">LogEncInteger</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="n">M</span><span class="p">))</span>
+x = Array.create(&#39;x&#39;, shape=(N,m), vartype=&#39;BINARY&#39;)
+y =  LogEncInteger(&#39;y&#39;,(0,M))
 </pre></div>
 </div>
 </div>
@@ -432,27 +442,27 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Constraint</span>
-<span class="n">A2</span><span class="o">=</span><span class="mi">36</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pyqubo import Constraint
+A2=36
 
-<span class="n">A1</span><span class="o">=</span><span class="p">(</span><span class="n">A2</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mf">0.12</span>
+A1=(A2/max(L) **2)/0.12
 
-<span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">A2</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">))</span><span class="o">/</span><span class="mf">3.6</span>
+B = (A2/max(L))/3.6
 
-<span class="c1"># ハミルトニアンの第一項</span>
-<span class="n">const</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
-    <span class="n">const</span> <span class="o">+=</span> <span class="p">(</span><span class="n">M</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">([</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">HA1</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA1&#39;</span><span class="p">)</span>
+# ハミルトニアンの第一項
+const = 0
+for a in range(1,m):
+    const += (M - sum([L[i]*(x[i,0]-x[i,a]) for i in range(N)])-y)**2
+HA1 = Constraint(const, label=&#39;HA1&#39;)
 
-<span class="c1"># ハミルトニアンの第二項</span>
-<span class="n">HA2</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HA2&#39;</span><span class="p">)</span>
+# ハミルトニアンの第二項
+HA2 = Constraint(sum((1-sum(x[i,a] for a in range(m)))**2 for i in range(N)), label=&#39;HA2&#39;)
 
-<span class="c1"># ハミルトニアンの第三項</span>
-<span class="n">HB</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+# ハミルトニアンの第三項
+HB = sum(L[i] * x[i,0] for i in range(N))
 
-<span class="c1"># ハミルトニアン全体を定義します</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="n">A1</span><span class="o">*</span><span class="n">HA1</span><span class="o">+</span><span class="n">A2</span><span class="o">*</span><span class="n">HA2</span><span class="o">+</span><span class="n">B</span><span class="o">*</span><span class="n">HB</span>
+# ハミルトニアン全体を定義します
+Q = A1*HA1+A2*HA2+B*HB
 <br/></pre></div>
 </div>
 </div>
@@ -461,43 +471,43 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">solve_qubo</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pyqubo import solve_qubo
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
+model = Q.compile()
+qubo, offset = model.to_qubo()
 
-<span class="c1"># nealを用いて使います</span>
-<span class="kn">import</span> <span class="nn">neal</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">neal</span><span class="o">.</span><span class="n">SimulatedAnnealingSampler</span><span class="p">()</span>
-<span class="n">raw_solution</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
-<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-<span class="c1">#結果の表示</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Inputs]&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;N (仕事の数) : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;個&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;m (コンピュータの数): &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の長さのリスト&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A1 : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">A1</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;A2 : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">A2</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B : &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Results]&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="n">job_length</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
-            <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-    <span class="nb">print</span><span class="p">()</span>
+# nealを用いて使います
+import neal
+sampler = neal.SimulatedAnnealingSampler()
+raw_solution = sampler.sample_qubo(qubo, num_reads=500)
+decoded_sample = model.decode_sample(raw_solution.first.sample, vartype=&quot;BINARY&quot;)
+#結果の表示
+print(&quot;[Inputs]&quot;)
+print()
+print(&quot;N (仕事の数) : &quot;+str(N)+&quot;個&quot;)
+print(&quot;m (コンピュータの数): &quot;+str(m))
+print()
+print(&quot;仕事の長さのリスト&quot;)
+print(L)
+print()
+print(&quot;A1 : &quot;+str(A1))
+print(&quot;A2 : &quot;+str(A2))
+print(&quot;B : &quot;+str(B))
+print()
+print(&quot;[Results]&quot;)
+print()
+job_length = [0] * m
+for i in range(0,m):
+    print(&quot;コンピュータ&quot;+str(i+1)+&quot;で行われる仕事&quot;)
+    for j in range(0,N):
+        if decoded_sample.array(&#39;x&#39;, (j,i))==1:
+            print(str(j+1)+&quot;番目の仕事 長さ:&quot;+str(L[j]))
+            job_length[i] += L[j]
+    print(&quot;仕事の総実行時間:&quot;+str(job_length[i]))
+    print()
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+print(&quot;broken&quot;)
+print(decoded_sample.constraints(only_broken=True))
 </pre></div>
 </div>
 </div>
@@ -545,37 +555,37 @@ broken
 </div>
 </section>
 <section id="OpenJijに投げる">
-<h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this headline">¶</a></h2>
+<h2>OpenJijに投げる<a class="headerlink" href="#OpenJijに投げる" title="Permalink to this heading">¶</a></h2>
 <p>次にOpenJijのSQAを用いて解いてみます。量子力学的振る舞いを再現するため、計算に必要な時間は前と比べて多少伸びます。</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># OpenJijのインポートをします</span>
-<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
-<span class="c1"># SQAを使います。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SQASampler</span><span class="p">()</span>
-<span class="c1"># PYQUBOで使ったquboを使います。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">Q</span><span class="o">=</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="c1"># エネルギーが一番低い状態を取り出します。</span>
-<span class="n">dict_solution</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
-<span class="c1"># デコードします。</span>
-<span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-<span class="c1">#結果の表示</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Results]&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="n">job_length</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;コンピュータ&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;で行われる仕事&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;番目の仕事 長さ:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
-            <span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">L</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;仕事の総実行時間:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">job_length</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-    <span class="nb">print</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># OpenJijのインポートをします
+import openjij as oj
+# SQAを使います。
+sampler = oj.SQASampler()
+# PYQUBOで使ったquboを使います。
+response = sampler.sample_qubo(Q=qubo, num_reads=300)
+# エネルギーが一番低い状態を取り出します。
+dict_solution = response.first.sample
+# デコードします。
+decoded_sample = model.decode_sample(raw_solution.first.sample, vartype=&quot;BINARY&quot;)
+#結果の表示
+print(&quot;[Results]&quot;)
+print()
+job_length = [0] * m
+for i in range(0,m):
+    print(&quot;コンピュータ&quot;+str(i+1)+&quot;で行われる仕事&quot;)
+    for j in range(0,N):
+        if decoded_sample.array(&#39;x&#39;, (j,i))==1:
+            print(str(j+1)+&quot;番目の仕事 長さ:&quot;+str(L[j]))
+            job_length[i] += L[j]
+    print(&quot;仕事の総実行時間:&quot;+str(job_length[i]))
+    print()
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">constraints</span><span class="p">(</span><span class="n">only_broken</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+print(&quot;broken&quot;)
+print(decoded_sample.constraints(only_broken=True))
 </pre></div>
 </div>
 </div>
@@ -611,7 +621,7 @@ broken
 </div>
 </section>
 <section id="まとめ">
-<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this headline">¶</a></h2>
+<h2>まとめ<a class="headerlink" href="#まとめ" title="Permalink to this heading">¶</a></h2>
 <p>Job Eequencing with Integer LengthsをPyQUBO,OpenJijを使って解く方法について解説しました。</p>
 <p>係数を調整する前では良い解が得られませんが係数を調整すると安定しました。</p>
 <p>また、整数をバイナリ変数で表現する方法は複数ありますが、今回はLog encodingを扱いました。 <a class="reference external" href="https://openjij.github.io/OpenJijTutorial/build/html/ja/8-KnapsackPyqubo.html">8-Solving Knapsack Problem with PyQUBO</a>と合わせて確認してみてください。</p>
@@ -625,8 +635,9 @@ broken
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">10-Solving Job Sequencing Problem with PyQUBO</a><ul>
 <li><a class="reference internal" href="#整数長ジョブスケジューリング問題">整数長ジョブスケジューリング問題</a></li>
 <li><a class="reference internal" href="#具体例">具体例</a></li>
@@ -644,12 +655,17 @@ broken
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="009-GraphColorPyqubo.html"
-                        title="previous chapter">9-Solving Graph Coloring Problem with PyQUBO</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="011-HuboSolver.html"
-                        title="next chapter">11-HUBO: Higher Order Unconstraint Binary Optimization</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="009-GraphColorPyqubo.html"
+                          title="previous chapter">9-Solving Graph Coloring Problem with PyQUBO</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="011-HuboSolver.html"
+                          title="next chapter">11-HUBO: Higher Order Unconstraint Binary Optimization</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -661,12 +677,12 @@ broken
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -690,7 +706,7 @@ broken
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>6-Machine Learning (QBoost) with Quantum Annealing &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7-MonteCarlo Sampling" href="007-MonteCarloSampling.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="6-Machine-Learning-(QBoost)-with-Quantum-Annealing">
-<h1>6-Machine Learning (QBoost) with Quantum Annealing<a class="headerlink" href="#6-Machine-Learning-(QBoost)-with-Quantum-Annealing" title="Permalink to this headline">¶</a></h1>
+<h1>6-Machine Learning (QBoost) with Quantum Annealing<a class="headerlink" href="#6-Machine-Learning-(QBoost)-with-Quantum-Annealing" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/006-Machine_Learning_by_QA.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>In this section, we describe machine lerning (ML) as an example of an application of quantum annealing (QA) optimization.</p>
 <div class="line-block">
@@ -301,48 +311,48 @@ div.rendered_html tbody tr:hover {
 <div class="line">In the seconde, we execute an ensamble study called QBoost with PyQUBO and D-Wave sampler.</div>
 </div>
 <section id="Clustering">
-<h2>Clustering<a class="headerlink" href="#Clustering" title="Permalink to this headline">¶</a></h2>
+<h2>Clustering<a class="headerlink" href="#Clustering" title="Permalink to this heading">¶</a></h2>
 <p>Clustering is the task of deviding given set of data into <span class="math notranslate nohighlight">\(n\)</span> clusters (<span class="math notranslate nohighlight">\(n\)</span> is our input). For the sake of simplicity, let us consider the number of cluster is 2 in this time.</p>
 <section id="Importing-the-required-libraries">
-<h3>Importing the required libraries<a class="headerlink" href="#Importing-the-required-libraries" title="Permalink to this headline">¶</a></h3>
+<h3>Importing the required libraries<a class="headerlink" href="#Importing-the-required-libraries" title="Permalink to this heading">¶</a></h3>
 <p>We import scikit-learn library for ML.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import libraries</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
-<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">Placeholder</span><span class="p">,</span> <span class="n">solve_qubo</span>
-<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># import libraries
+import numpy as np
+from matplotlib import pyplot as plt
+from sklearn import cluster
+import pandas as pd
+from scipy.spatial import distance_matrix
+from pyqubo import Array, Constraint, Placeholder, solve_qubo
+import openjij as oj
+from sklearn.model_selection import train_test_split
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Make-artificial-data">
-<h3>Make artificial data<a class="headerlink" href="#Make-artificial-data" title="Permalink to this headline">¶</a></h3>
+<h3>Make artificial data<a class="headerlink" href="#Make-artificial-data" title="Permalink to this heading">¶</a></h3>
 <p>In this case, let us generate linearly separable data in a two-dimensional plane artificially.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
-    <span class="c1"># generate 0 to 1 random number</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># set class 1 when certain condition are met, and -1 when it are not met</span>
-    <span class="bp">cls</span> <span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span><span class="o">&gt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="c1"># create random numbers following a normal distribution</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">]))</span>
-    <span class="n">label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-<span class="c1"># formatted as a DataFrame</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-<span class="n">df1</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data = []
+label = []
+for i in range(100):
+    # generate 0 to 1 random number
+    p = np.random.uniform(0, 1)
+    # set class 1 when certain condition are met, and -1 when it are not met
+    cls =1 if p&gt;0.5 else -1
+    # create random numbers following a normal distribution
+    data.append(np.random.normal(0, 0.5, 2) + np.array([cls, cls]))
+    label.append(cls)
+# formatted as a DataFrame
+df1 = pd.DataFrame(data, columns=[&quot;x&quot;, &quot;y&quot;], index=range(len(data)))
+df1[&quot;label&quot;] = label
 </pre></div>
 </div>
 </div>
@@ -350,9 +360,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize dataset</span>
-<span class="n">df1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualize dataset
+df1.plot(kind=&#39;scatter&#39;, x=&quot;x&quot;, y=&quot;y&quot;)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -375,32 +385,32 @@ div.rendered_html tbody tr:hover {
 <p>Note that minus of R.H.S., Hamiltonian means the problem is “Choosing pairs of <span class="math notranslate nohighlight">\(\{\sigma _1, \sigma _2 \ldots \}\)</span> that maximizes the distance between the samples of different classes”.</p>
 </section>
 <section id="Clustering-with-PyQUBO">
-<h3>Clustering with PyQUBO<a class="headerlink" href="#Clustering-with-PyQUBO" title="Permalink to this headline">¶</a></h3>
+<h3>Clustering with PyQUBO<a class="headerlink" href="#Clustering-with-PyQUBO" title="Permalink to this heading">¶</a></h3>
 <p>At first, we formulate the Hamiltonian in PyQUBO. Second, we execute simulated annealing (SA) with <code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clustering_pyqubo</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># set distance matrix</span>
-    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-    <span class="c1"># set spin variables</span>
-    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># set the total Hamiltonian</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="p">)</span>
-    <span class="c1"># compile</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># convert to QUBO</span>
-    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
-    <span class="c1"># solve with SA</span>
-    <span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="c1"># decode for easier analysis</span>
-    <span class="n">decoded_samples</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># extract label</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoded_samples</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="k">return</span> <span class="n">labels</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def clustering_pyqubo(df):
+    # set distance matrix
+    d_ij = distance_matrix(df, df)
+    # set spin variables
+    spin = Array.create(&quot;spin&quot;, shape= len(df), vartype=&quot;SPIN&quot;)
+    # set the total Hamiltonian
+    H = - 0.5* sum(
+        [d_ij[i,j]* (1 - spin[i]* spin[j]) for i in range(len(df)) for j in range(len(df))]
+    )
+    # compile
+    model = H.compile()
+    # convert to QUBO
+    qubo, offset = model.to_qubo()
+    # solve with SA
+    raw_solution = solve_qubo(qubo, num_reads=10)
+    # decode for easier analysis
+    decoded_samples = model.decode_sample(raw_solution, vartype=&quot;SPIN&quot;)
+    # extract label
+    labels = [decoded_samples.array(&quot;spin&quot;, idx) for idx in range(len(df))]
+    return labels
 </pre></div>
 </div>
 </div>
@@ -409,8 +419,8 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span><span class="n">clustering_pyqubo</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>labels =clustering_pyqubo(df1[[&quot;x&quot;, &quot;y&quot;]])
+print(&quot;label&quot;, labels)
 </pre></div>
 </div>
 </div>
@@ -436,11 +446,11 @@ label [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for idx, label in enumerate(labels):
+    if label:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;b&quot;)
+    else:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;r&quot;)
 </pre></div>
 </div>
 </div>
@@ -453,36 +463,36 @@ label [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0
 </div>
 </section>
 <section id="Clustering-with-OpenJij-solver">
-<h3>Clustering with OpenJij solver<a class="headerlink" href="#Clustering-with-OpenJij-solver" title="Permalink to this headline">¶</a></h3>
+<h3>Clustering with OpenJij solver<a class="headerlink" href="#Clustering-with-OpenJij-solver" title="Permalink to this heading">¶</a></h3>
 <p>Next, we introduce clustering with OpenJij solver and use PyQUBO to formulate QUBO.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clustering_openjij</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># set distance matrix</span>
-    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-    <span class="c1"># set spin variables</span>
-    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># set total Hamiltonian</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="p">)</span>
-    <span class="c1"># compile</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># convert to QUBO</span>
-    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
-    <span class="c1"># set OpenJij SA sampler</span>
-    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_sweeps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="c1"># solve with above sampler</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
-    <span class="c1"># extract raw data</span>
-    <span class="n">raw_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)]))</span>
-    <span class="c1"># decode for easier analysis</span>
-    <span class="n">decoded_samples</span><span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># extract labels</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">decoded_samples</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">idx</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span>  <span class="nb">sum</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def clustering_openjij(df):
+    # set distance matrix
+    d_ij = distance_matrix(df, df)
+    # set spin variables
+    spin = Array.create(&quot;spin&quot;, shape= len(df), vartype=&quot;SPIN&quot;)
+    # set total Hamiltonian
+    H = - 0.5* sum(
+        [d_ij[i,j]* (1 - spin[i]* spin[j]) for i in range(len(df)) for j in range(len(df))]
+    )
+    # compile
+    model = H.compile()
+    # convert to QUBO
+    qubo, offset = model.to_qubo()
+    # set OpenJij SA sampler
+    sampler = oj.SASampler(num_reads=10, num_sweeps=100)
+    # solve with above sampler
+    response = sampler.sample_qubo(qubo)
+    # extract raw data
+    raw_solution = dict(zip(response.indices, response.states[np.argmin(response.energies)]))
+    # decode for easier analysis
+    decoded_samples= model.decode_sample(raw_solution, vartype=&quot;SPIN&quot;)
+    # extract labels
+    labels = [int(decoded_samples.array(&quot;spin&quot;, idx) ) for idx  in range(len(df))]
+    return labels,  sum(response.energies)
 </pre></div>
 </div>
 </div>
@@ -491,9 +501,9 @@ label [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span><span class="n">clustering_openjij</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>labels, energy =clustering_openjij(df1[[&quot;x&quot;, &quot;y&quot;]])
+print(&quot;label&quot;, labels)
+print(&quot;energy&quot;, energy)
 </pre></div>
 </div>
 </div>
@@ -511,11 +521,11 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span>  <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for idx, label in  enumerate(labels):
+    if label:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;b&quot;)
+    else:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;r&quot;)
 </pre></div>
 </div>
 </div>
@@ -530,7 +540,7 @@ energy -139358.74510750096
 </section>
 </section>
 <section id="QBoost">
-<h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this headline">¶</a></h2>
+<h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this heading">¶</a></h2>
 <p>QBoost is a one of the ensamble learning using QA. Ensamble learning involves preparing a number of weak predictors and combining the results of each of these predictors to obtain the final prediction result.</p>
 <p>QBoost uses QA to optimize the best combination of learners for a given training data. We handle classification problem in this time.</p>
 <p>We define that the set of <span class="math notranslate nohighlight">\(D\)</span> training data are <span class="math notranslate nohighlight">\(\{\vec x^{(d)}\}(d=1, ..., D)\)</span>, corresponding label are <span class="math notranslate nohighlight">\(\{y^{(d)}\}(d=1, ..., D), y^{(d)}\in \{-1, 1\}\)</span> and the (function) set of <span class="math notranslate nohighlight">\(N\)</span> weak learner is <span class="math notranslate nohighlight">\(\{C_i\}(i=1, ..., N)\)</span>. For some data <span class="math notranslate nohighlight">\(\vec x^{(d)}\)</span>, <span class="math notranslate nohighlight">\(C_i(\vec x^{(d)})\in \{-1, 1\}\)</span>.</p>
@@ -544,17 +554,17 @@ energy -139358.74510750096
 <p>The first term represents the difference between weak classifier and the correct label. The second term represents a degree of the number of weak classifier to be employed in the final classifier. <span class="math notranslate nohighlight">\(\lambda\)</span> is the regularization parameter that adjust how much the number of weak classifiers affects the total Hamiltonian.</p>
 <p>We optimize this Hamiltonian by recognizing the first term as a cost (objective function) and the second term as a constraint.Minimizing with QA allows us to obtain a combination of weak classifiers that best fits the training data.</p>
 <section id="Scripts">
-<h3>Scripts<a class="headerlink" href="#Scripts" title="Permalink to this headline">¶</a></h3>
+<h3>Scripts<a class="headerlink" href="#Scripts" title="Permalink to this heading">¶</a></h3>
 <p>Let us try QBoost. We use the cancer identification dataset from scikit-learn for training data. For simplicity, we will only use two character types for training: “0” and “1”.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import libraries</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># import libraries
+import pandas as pd
+from scipy import stats
+from sklearn import datasets
+from sklearn import metrics
 </pre></div>
 </div>
 </div>
@@ -562,10 +572,10 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load data</span>
-<span class="n">cancerdata</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_breast_cancer</span><span class="p">()</span>
-<span class="c1"># set the number of training data &amp; test data</span>
-<span class="n">num_train</span> <span class="o">=</span> <span class="mi">450</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># load data
+cancerdata = datasets.load_breast_cancer()
+# set the number of training data &amp; test data
+num_train = 450
 </pre></div>
 </div>
 </div>
@@ -574,8 +584,8 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_noisy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">30</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data_noisy</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data_noisy = np.concatenate((cancerdata.data, np.random.rand(cancerdata.data.shape[0], 30)), axis=1)
+print(data_noisy.shape)
 </pre></div>
 </div>
 </div>
@@ -591,8 +601,8 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert from label {0, 1} to {-1, 1}</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">target</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># convert from label {0, 1} to {-1, 1}
+labels = (cancerdata.target-0.5) * 2
 </pre></div>
 </div>
 </div>
@@ -600,11 +610,11 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># divide dataset to training and test</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">data_noisy</span><span class="p">[:</span><span class="n">num_train</span><span class="p">,</span> <span class="p">:]</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">data_noisy</span><span class="p">[</span><span class="n">num_train</span><span class="p">:,</span> <span class="p">:]</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:</span><span class="n">num_train</span><span class="p">]</span>
-<span class="n">y_test</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">num_train</span><span class="p">:]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># divide dataset to training and test
+X_train = data_noisy[:num_train, :]
+X_test = data_noisy[num_train:, :]
+y_train = labels[:num_train]
+y_test = labels[num_train:]
 </pre></div>
 </div>
 </div>
@@ -612,40 +622,40 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from the result of weak learnor</span>
-<span class="k">def</span> <span class="nf">aggre_mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># from the result of weak learnor
+def aggre_mean(Y_list):
+    return ((np.mean(Y_list, axis=0)&gt;0)-0.5) * 2
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Set-of-Weak-Learner">
-<h3>Set of Weak Learner<a class="headerlink" href="#Set-of-Weak-Learner" title="Permalink to this headline">¶</a></h3>
+<h3>Set of Weak Learner<a class="headerlink" href="#Set-of-Weak-Learner" title="Permalink to this heading">¶</a></h3>
 <p>We make weak learner with scikit-learn. In this time, we choose decision stump. Desision stump is a single-layer decision tree. As it will be used as a weak classifier, the features to be used for segmentation are selected randomly (it’s a good understanding that we execute single-layer of random forest).</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import required libraries</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span> <span class="k">as</span> <span class="n">DTC</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># import required libraries
+from sklearn.tree import DecisionTreeClassifier as DTC
 
-<span class="c1"># set the number of weak classifier</span>
-<span class="n">num_clf</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c1"># set the number of ensembles to be taken out for one sample in bootstrap sampling</span>
-<span class="n">sample_train</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="c1"># set model</span>
-<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">DTC</span><span class="p">(</span><span class="n">splitter</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_clf</span><span class="p">)]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># extract randomly</span>
-    <span class="n">train_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">sample_train</span><span class="p">)</span>
-    <span class="c1"># make decision tree with variables</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
-<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># execute prediction with model</span>
-    <span class="n">y_pred_list_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
-<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
-<span class="n">y_pred_train</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
+# set the number of weak classifier
+num_clf = 32
+# set the number of ensembles to be taken out for one sample in bootstrap sampling
+sample_train = 40
+# set model
+models = [DTC(splitter=&quot;random&quot;,max_depth=1) for i in range(num_clf)]
+for model in models:
+    # extract randomly
+    train_idx = np.random.choice(np.arange(X_train.shape[0]), sample_train)
+    # make decision tree with variables
+    model.fit(X=X_train[train_idx], y=y_train[train_idx])
+y_pred_list_train = []
+for model in models:
+    # execute prediction with model
+    y_pred_list_train.append(model.predict(X_train))
+y_pred_list_train = np.asanyarray(y_pred_list_train)
+y_pred_train =np.sign(y_pred_list_train)
 </pre></div>
 </div>
 </div>
@@ -654,16 +664,16 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># execute with test data</span>
-    <span class="n">y_pred_list_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>y_pred_list_test = []
+for model in models:
+    # execute with test data
+    y_pred_list_test.append(model.predict(X_test))
 
-<span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">)</span>
-<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="c1"># compute score of prediction accuracy</span>
-<span class="n">acc_test_base</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">)</span>
+y_pred_list_test = np.array(y_pred_list_test)
+y_pred_test = np.sign(np.sum(y_pred_list_test,axis=0))
+# compute score of prediction accuracy
+acc_test_base = metrics.accuracy_score(y_true=y_test, y_pred=y_pred_test)
+print(acc_test_base)
 </pre></div>
 </div>
 </div>
@@ -679,28 +689,28 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set class of QBoost</span>
-<span class="k">class</span> <span class="nc">QBoost</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">=</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># set binary variables</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-        <span class="c1"># set hyperparameter with PyQUBO Placeholder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">)</span>
-        <span class="c1"># set combination of weak classifier Hamiltonian</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">([</span><span class="n">W</span><span class="o">*</span><span class="n">C</span> <span class="k">for</span> <span class="n">W</span><span class="p">,</span> <span class="n">C</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">,</span> <span class="n">y_clf</span><span class="p">)])</span><span class="o">-</span> <span class="n">y_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_clf</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-        <span class="p">])</span>
-        <span class="c1"># set normalization term as a constraint</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">W</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">]),</span> <span class="s2">&quot;norm&quot;</span><span class="p">)</span>
-        <span class="c1"># set total Hamiltonian</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span>
-        <span class="c1"># compile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># set function for converting to QUBO</span>
-    <span class="k">def</span> <span class="nf">to_qubo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_param</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># set value of hyperparameter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm_param</span><span class="p">}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set class of QBoost
+class QBoost():
+    def __init__(self, y_train, ys_pred):
+        self.num_clf = ys_pred.shape[0]
+        # set binary variables
+        self.Ws = Array.create(&quot;weight&quot;, shape = self.num_clf, vartype=&quot;BINARY&quot;)
+        # set hyperparameter with PyQUBO Placeholder
+        self.param_lamda = Placeholder(&quot;norm&quot;)
+        # set combination of weak classifier Hamiltonian
+        self.H_clf = sum( [ (1/self.num_clf * sum([W*C for W, C in zip(self.Ws, y_clf)])- y_true)**2 for y_true, y_clf in zip(y_train, ys_pred.T)
+        ])
+        # set normalization term as a constraint
+        self.H_norm = Constraint(sum([W for W in self.Ws]), &quot;norm&quot;)
+        # set total Hamiltonian
+        self.H = self.H_clf + self.H_norm * self.param_lamda
+        # compile
+        self.model = self.H.compile()
+    # set function for converting to QUBO
+    def to_qubo(self, norm_param=1):
+        # set value of hyperparameter
+        self.feed_dict = {&#39;norm&#39;: norm_param}
+        return self.model.to_qubo(feed_dict=self.feed_dict)
 </pre></div>
 </div>
 </div>
@@ -708,22 +718,22 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qboost</span> <span class="o">=</span> <span class="n">QBoost</span><span class="p">(</span><span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">=</span><span class="n">y_pred_list_train</span><span class="p">)</span>
-<span class="c1"># make QUBO with lambda=3</span>
-<span class="n">qubo</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>qboost = QBoost(y_train=y_train, ys_pred=y_pred_list_train)
+# make QUBO with lambda=3
+qubo = qboost.to_qubo(3)[0]
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Execute-QBoost-with-D-Wave-Sampler">
-<h3>Execute QBoost with D-Wave Sampler<a class="headerlink" href="#Execute-QBoost-with-D-Wave-Sampler" title="Permalink to this headline">¶</a></h3>
+<h3>Execute QBoost with D-Wave Sampler<a class="headerlink" href="#Execute-QBoost-with-D-Wave-Sampler" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import required libraries</span>
-<span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
-<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># import required libraries
+from dwave.system.samplers import DWaveSampler
+from dwave.system.composites import EmbeddingComposite
 </pre></div>
 </div>
 </div>
@@ -731,12 +741,12 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set DwaveSampler with token yourself</span>
-<span class="n">dw</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s1">&#39;https://cloud.dwavesys.com/sapi/&#39;</span><span class="p">,</span>
-                  <span class="n">token</span><span class="o">=</span><span class="s1">&#39;xxxx&#39;</span><span class="p">,</span>
-                  <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;DW_2000Q_VFYC_6&#39;</span><span class="p">)</span>
-<span class="c1"># embed on chimeragraph</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set DwaveSampler with token yourself
+dw = DWaveSampler(endpoint=&#39;https://cloud.dwavesys.com/sapi/&#39;,
+                  token=&#39;xxxx&#39;,
+                  solver=&#39;DW_2000Q_VFYC_6&#39;)
+# embed on chimeragraph
+sampler = EmbeddingComposite(dw)
 </pre></div>
 </div>
 </div>
@@ -795,8 +805,8 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute DWaveSampler</span>
-<span class="n">sampleset</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># compute DWaveSampler
+sampleset = sampler.sample_qubo(qubo, num_reads=100)
 </pre></div>
 </div>
 </div>
@@ -818,8 +828,8 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># check the result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">sampleset</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># check the result
+print(sampleset)
 </pre></div>
 </div>
 </div>
@@ -841,16 +851,16 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># decode each computation result with PyQUBO</span>
-<span class="n">decoded_solutions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">brokens</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">energies</span> <span class="o">=</span><span class="p">[]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># decode each computation result with PyQUBO
+decoded_solutions = []
+brokens = []
+energies =[]
 
-<span class="n">decoded_sol</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">decode_dimod_response</span><span class="p">(</span><span class="n">sampleset</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">qboost</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">d_sol</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="n">decoded_sol</span><span class="p">:</span>
-    <span class="n">decoded_solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_sol</span><span class="p">)</span>
-    <span class="n">brokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
-    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+decoded_sol = qboost.model.decode_dimod_response(sampleset, feed_dict=qboost.feed_dict)
+for d_sol, broken, energy in decoded_sol:
+    decoded_solutions.append(d_sol)
+    brokens.append(broken)
+    energies.append(energy)
 </pre></div>
 </div>
 </div>
@@ -876,19 +886,19 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">accs_train_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">accs_test_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">decoded_solution</span> <span class="ow">in</span> <span class="n">decoded_solutions</span><span class="p">:</span>
-    <span class="n">idx_clf_DWave</span><span class="o">=</span><span class="p">[]</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">idx_clf_DWave</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-    <span class="n">y_pred_train_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">y_pred_test_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">acc_train_DWave</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_train_DWave</span><span class="p">)</span>
-    <span class="n">acc_test_DWave</span><span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test_DWave</span><span class="p">)</span>
-    <span class="n">accs_train_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_train_DWave</span><span class="p">)</span>
-    <span class="n">accs_test_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_test_DWave</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accs_train_Dwaves = []
+accs_test_Dwaves = []
+for decoded_solution in decoded_solutions:
+    idx_clf_DWave=[]
+    for key, val in decoded_solution[&quot;weight&quot;].items():
+        if val == 1:
+            idx_clf_DWave.append(int(key))
+    y_pred_train_DWave = np.sign(np.sum(y_pred_list_train[idx_clf_DWave, :], axis=0))
+    y_pred_test_DWave = np.sign(np.sum(y_pred_list_test[idx_clf_DWave, :], axis=0))
+    acc_train_DWave = metrics.accuracy_score(y_true=y_train, y_pred=y_pred_train_DWave)
+    acc_test_DWave= metrics.accuracy_score(y_true=y_test, y_pred=y_pred_test_DWave)
+    accs_train_Dwaves.append(acc_train_DWave)
+    accs_test_Dwaves.append(acc_test_DWave)
 </pre></div>
 </div>
 </div>
@@ -897,15 +907,15 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_train_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train&quot;</span> <span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_test_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;energy: D-wave&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;relationship between energy and accuracy&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(figsize=(12, 8))
+plt.scatter(energies, accs_train_Dwaves, label=&quot;train&quot; )
+plt.scatter(energies, accs_test_Dwaves, label=&quot;test&quot;)
+plt.xlabel(&quot;energy: D-wave&quot;)
+plt.ylabel(&quot;accuracy&quot;)
+plt.title(&quot;relationship between energy and accuracy&quot;)
+plt.grid()
+plt.legend()
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -919,9 +929,9 @@ energy -139358.74510750096
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;base accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;average accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">))))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;base accuracy is {}&quot;.format(acc_test_base))
+print(&quot;max accuracy　of QBoost is {}&quot;.format(max(accs_test_Dwaves)))
+print(&quot;average accuracy　of QBoost is {}&quot;.format(np.mean(np.asarray(accs_test_Dwaves))))
 </pre></div>
 </div>
 </div>
@@ -955,8 +965,9 @@ average accuracy　of QBoost is 0.9398183515830576
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">6-Machine Learning (QBoost) with Quantum Annealing</a><ul>
 <li><a class="reference internal" href="#Clustering">Clustering</a><ul>
 <li><a class="reference internal" href="#Importing-the-required-libraries">Importing the required libraries</a></li>
@@ -975,12 +986,17 @@ average accuracy　of QBoost is 0.9398183515830576
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="005-OpenJijGPU.html"
-                        title="previous chapter">5-OpenJij GPU</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="007-MonteCarloSampling.html"
-                        title="next chapter">7-MonteCarlo Sampling</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="005-OpenJijGPU.html"
+                          title="previous chapter">5-OpenJij GPU</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="007-MonteCarloSampling.html"
+                          title="next chapter">7-MonteCarlo Sampling</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -992,12 +1008,12 @@ average accuracy　of QBoost is 0.9398183515830576
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1021,7 +1037,7 @@ average accuracy　of QBoost is 0.9398183515830576
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>
