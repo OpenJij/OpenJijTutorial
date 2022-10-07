@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>A1 - Introduction to OpenJij core interface (core Python interface) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A2 - Introduction to OpenJij core interface (C++ interface)" href="A002-CppIntroduction.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)">
-<h1>A1 - Introduction to OpenJij core interface (core Python interface)<a class="headerlink" href="#A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)" title="Permalink to this headline">¶</a></h1>
+<h1>A1 - Introduction to OpenJij core interface (core Python interface)<a class="headerlink" href="#A1---Introduction-to-OpenJij-core-interface-(core-Python-interface)" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/A001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>In this chapeter, let us show you how to use OpenJij core interface (core Python insterface) and demonstrate easy case of calculation.</p>
 <p>Core insterface is lower-layer APIs than in the previous tutorials. The target readers are expected to have completed the previous OpenJij tutorials and be familiar with terms such as ising models and MonteCarlo methods.</p>
@@ -303,7 +313,7 @@ div.rendered_html tbody tr:hover {
 <li><p>We would like to set annealing schedules and directly develop algorithms we use.</p></li>
 </ul>
 <section id="About-OpenJij-core-interface">
-<h2>About OpenJij core interface<a class="headerlink" href="#About-OpenJij-core-interface" title="Permalink to this headline">¶</a></h2>
+<h2>About OpenJij core interface<a class="headerlink" href="#About-OpenJij-core-interface" title="Permalink to this heading">¶</a></h2>
 <p>In previous tutorial, we introduced how to solve various problems and how to benchmark with OpenJij. The lowest level of OpenJij is implemented in C++ based on the Markov Chain MonteCarlo (MCMC) method for statistical physics numerical scheme. The Python modules of OpenJij call <strong>cxxjij</strong>, a Python library that wraps this C++ interface directly. The figure show the following inclusion relaationship.</p>
 <a class="reference internal image-reference" href="../_images/hierarchy.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy.png" style="width: 80.0%;" /></a>
 <p>Using core interface, we can use all funtinon of OpenJij. Therefore, We can choose OpenJij not only for optimization problem but also for reserch purpose as numerical tools of statistical physics. Also, we can compute faster computation because of using C++ interface.</p>
@@ -312,14 +322,14 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install openjij
-<span class="o">!</span>pip show openjij
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!pip install openjij
+!pip show openjij
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Run-problem">
-<h2>Run problem<a class="headerlink" href="#Run-problem" title="Permalink to this headline">¶</a></h2>
+<h2>Run problem<a class="headerlink" href="#Run-problem" title="Permalink to this heading">¶</a></h2>
 <p>As a tutorial, we solve classical spin-ising problem (<span class="math notranslate nohighlight">\(\sigma = \pm 1\)</span>) with <span class="math notranslate nohighlight">\(N=5\)</span> variable size with annealing. The Hamiltonian of this problem is as follows.</p>
 <p><span class="math">\begin{align}
 H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
@@ -338,40 +348,40 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># core interface imports cssjij instead of OpenJij</span>
-<span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
-<span class="c1"># import Graph module for interaction matrix</span>
-<span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># core interface imports cssjij instead of OpenJij
+import cxxjij as cj
+# import Graph module for interaction matrix
+import cxxjij.graph as G
 
-<span class="c1"># set Dense Graph of problem size N=5</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">J</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1"># set interaction matrix</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
-<span class="c1"># set longitudinal matnetic fields</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="c1"># we can get same result J[i,i] = -1</span>
-    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+# set Dense Graph of problem size N=5
+N = 5
+J = G.Dense(N)
+# set interaction matrix
+for i in range(N):
+    for j in range(N):
+        J[i,j] = 0 if i == j else -1.0
+# set longitudinal matnetic fields
+for i in range(N):
+    # we can get same result J[i,i] = -1
+    J[i] = -1
 
-<span class="c1"># import system to perform the computation from Graph</span>
-<span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+# import system to perform the computation from Graph
+import cxxjij.system as S
 
-<span class="c1"># In this time, we use normal classical MonteCarlo calculation system</span>
-<span class="n">system</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">J</span><span class="p">)</span>
-<span class="c1"># use Utility to set annealing schedule</span>
-<span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
-<span class="n">schedule</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+# In this time, we use normal classical MonteCarlo calculation system
+system = S.make_classical_ising(J.gen_spin(), J)
+# use Utility to set annealing schedule
+import cxxjij.utility as U
+schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)
 
-<span class="c1"># use Altorigthm to run annealing</span>
-<span class="c1"># use simple SingleSpinFlip for updating the MonteCarlo step</span>
-<span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
-<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+# use Altorigthm to run annealing
+# use simple SingleSpinFlip for updating the MonteCarlo step
+import cxxjij.algorithm as A
+A.Algorithm_SingleSpinFlip_run(system, schedule)
 
-<span class="c1"># use get_soultion in Result module to get result</span>
-<span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solution is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
+# use get_soultion in Result module to get result
+import cxxjij.result as R
+print(&quot;The solution is {}.&quot;.format(R.get_solution(system)))
 </pre></div>
 </div>
 </div>
@@ -386,14 +396,14 @@ The solution is [1, 1, 1, 1, 1].
 <p>We can see this solution is <span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>. Because it is a low layer API, there are many settings to be made, but the more detailed settings are possible.</p>
 </section>
 <section id="List-of-Modules">
-<h2>List of Modules<a class="headerlink" href="#List-of-Modules" title="Permalink to this headline">¶</a></h2>
+<h2>List of Modules<a class="headerlink" href="#List-of-Modules" title="Permalink to this heading">¶</a></h2>
 <p>As a script example, OpenJij core interface consists of <code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorigthm</span></code> and other modules. Each module can be combined to compute ising models of various types and algorithms. It is also easy to extend when implementing new algorithms. The following chapters will explain details.</p>
 <section id="Graph">
-<h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
+<h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this heading">¶</a></h3>
 <p>A module for holding the ising Hamiltonian’s coefficient <span class="math notranslate nohighlight">\(J_{ij}\)</span>. There are <code class="docutils literal notranslate"><span class="pre">Dense</span></code> and <code class="docutils literal notranslate"><span class="pre">Sparse</span></code>, which deal with tight coupling (suitable for models in which all Jij have non-zero values) and others (suitable for models in whick many Jij values are zero).</p>
 </section>
 <section id="System">
-<h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
+<h3>System<a class="headerlink" href="#System" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code> defines a data structure for keeping the current status of the system in MonteCarlo simulation and others.</p>
 <p>Specifically, the following are defined.</p>
 <ul class="simple">
@@ -404,7 +414,7 @@ The solution is [1, 1, 1, 1, 1].
 <p>There are many different MonteCarlo methods and other computation schemes (or new methods will be developed in the feature). Therefore, by separating the data structures, algorithms and result fetching interfaces for each methods, OpenJij has been designed to make it easy to add different algorithms.</p>
 </section>
 <section id="Updater">
-<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
+<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">updater</span></code> difines how to update the <code class="docutils literal notranslate"><span class="pre">system</span></code>. Specifically, the following methods are implemented.</p>
 <ul class="simple">
 <li><p>SingleSpinFlip Update</p></li>
@@ -416,15 +426,15 @@ The solution is [1, 1, 1, 1, 1].
 </div></blockquote>
 </section>
 <section id="Algorithm">
-<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
+<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Algorithm</span></code> has a role of executing altorighms, including what schedule to run the annealing algorithm. <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updater_type]_run</span></code> allows you to run the program using the corresponding Updater.</p>
 </section>
 <section id="Result">
-<h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
+<h3>Result<a class="headerlink" href="#Result" title="Permalink to this heading">¶</a></h3>
 <p>This module is used to get information from the <code class="docutils literal notranslate"><span class="pre">system</span></code> such as spin assignment.</p>
 </section>
 <section id="Coding-Flow">
-<h3>Coding Flow<a class="headerlink" href="#Coding-Flow" title="Permalink to this headline">¶</a></h3>
+<h3>Coding Flow<a class="headerlink" href="#Coding-Flow" title="Permalink to this heading">¶</a></h3>
 <p>The coding process is basically as fllows. This trend will not change as the scale of the problem is largeer.</p>
 <ul class="simple">
 <li><p>set <span class="math notranslate nohighlight">\(J_{ij}, h_{i}\)</span> with <code class="docutils literal notranslate"><span class="pre">graph</span></code></p></li>
@@ -443,8 +453,9 @@ The solution is [1, 1, 1, 1, 1].
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">A1 - Introduction to OpenJij core interface (core Python interface)</a><ul>
 <li><a class="reference internal" href="#About-OpenJij-core-interface">About OpenJij core interface</a></li>
 <li><a class="reference internal" href="#Run-problem">Run problem</a></li>
@@ -461,12 +472,17 @@ The solution is [1, 1, 1, 1, 1].
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="007-MonteCarloSampling.html"
-                        title="previous chapter">7-MonteCarlo Sampling</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="A002-CppIntroduction.html"
-                        title="next chapter">A2 - Introduction to OpenJij core interface (C++ interface)</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="007-MonteCarloSampling.html"
+                          title="previous chapter">7-MonteCarlo Sampling</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="A002-CppIntroduction.html"
+                          title="next chapter">A2 - Introduction to OpenJij core interface (C++ interface)</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -478,12 +494,12 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -507,7 +523,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

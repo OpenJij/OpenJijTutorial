@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>6-量子アニーリングによる機械学習 (QBoost) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="7-MonteCarlo Sampling" href="007-MonteCarloSampling.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="6-量子アニーリングによる機械学習-(QBoost)">
-<h1>6-量子アニーリングによる機械学習 (QBoost)<a class="headerlink" href="#6-量子アニーリングによる機械学習-(QBoost)" title="Permalink to this headline">¶</a></h1>
+<h1>6-量子アニーリングによる機械学習 (QBoost)<a class="headerlink" href="#6-量子アニーリングによる機械学習-(QBoost)" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/006-Machine_Learning_by_QA.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="line-block">
 <div class="line">このチュートリアルでは、量子アニーリングの最適化の応用の一例として機械学習を取り上げます。</div>
@@ -301,48 +311,48 @@ div.rendered_html tbody tr:hover {
 <div class="line">後半では、PyQUBOとD-Waveのサンプラーを用いたQboostというアンサンブル学習を行います。</div>
 </div>
 <section id="クラスタリング">
-<h2>クラスタリング<a class="headerlink" href="#クラスタリング" title="Permalink to this headline">¶</a></h2>
+<h2>クラスタリング<a class="headerlink" href="#クラスタリング" title="Permalink to this heading">¶</a></h2>
 <p>クラスタリングとは与えられたデータを<span class="math notranslate nohighlight">\(n\)</span>個のクラスターに分けるというタスクです(<span class="math notranslate nohighlight">\(n\)</span>は外部から与えられているとします)。簡単のため、今回はクラスター数が2を考えましょう。</p>
 <section id="必要なライブラリのインポート">
-<h3>必要なライブラリのインポート<a class="headerlink" href="#必要なライブラリのインポート" title="Permalink to this headline">¶</a></h3>
+<h3>必要なライブラリのインポート<a class="headerlink" href="#必要なライブラリのインポート" title="Permalink to this heading">¶</a></h3>
 <p>機械学習のライブラリであるscikit-learnなどをインポートします。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ライブラリのインポート</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance_matrix</span>
-<span class="kn">from</span> <span class="nn">pyqubo</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Constraint</span><span class="p">,</span> <span class="n">Placeholder</span><span class="p">,</span> <span class="n">solve_qubo</span>
-<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ライブラリのインポート
+import numpy as np
+from matplotlib import pyplot as plt
+from sklearn import cluster
+import pandas as pd
+from scipy.spatial import distance_matrix
+from pyqubo import Array, Constraint, Placeholder, solve_qubo
+import openjij as oj
+from sklearn.model_selection import train_test_split
 </pre></div>
 </div>
 </div>
 </section>
 <section id="人工データの生成">
-<h3>人工データの生成<a class="headerlink" href="#人工データの生成" title="Permalink to this headline">¶</a></h3>
+<h3>人工データの生成<a class="headerlink" href="#人工データの生成" title="Permalink to this heading">¶</a></h3>
 <p>今回は人工的に二次元平面上の明らかに線形分離可能なデータを生成しましょう。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
-    <span class="c1"># [0, 1]の乱数を生成</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># ある条件を満たすときをクラス1、満たさないときを-1</span>
-    <span class="bp">cls</span> <span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span><span class="o">&gt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="c1"># ある座標を中心とする正規分布に従う乱数を作成</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">cls</span><span class="p">]))</span>
-    <span class="n">label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-<span class="c1"># DataFrameとして整形</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-<span class="n">df1</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data = []
+label = []
+for i in range(100):
+    # [0, 1]の乱数を生成
+    p = np.random.uniform(0, 1)
+    # ある条件を満たすときをクラス1、満たさないときを-1
+    cls =1 if p&gt;0.5 else -1
+    # ある座標を中心とする正規分布に従う乱数を作成
+    data.append(np.random.normal(0, 0.5, 2) + np.array([cls, cls]))
+    label.append(cls)
+# DataFrameとして整形
+df1 = pd.DataFrame(data, columns=[&quot;x&quot;, &quot;y&quot;], index=range(len(data)))
+df1[&quot;label&quot;] = label
 </pre></div>
 </div>
 </div>
@@ -350,9 +360,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># データセットの可視化</span>
-<span class="n">df1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># データセットの可視化
+df1.plot(kind=&#39;scatter&#39;, x=&quot;x&quot;, y=&quot;y&quot;)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -377,32 +387,32 @@ div.rendered_html tbody tr:hover {
 <p>となります。右辺のマイナスに注意すると、ハミルトニアン全体では「異なるクラスに属しているサンプル同士の距離を最大にする<span class="math notranslate nohighlight">\(\{\sigma _1, \sigma _2 \ldots \}\)</span>の組を選びなさい」という問題に帰着することがわかります。</p>
 </section>
 <section id="PyQUBOによるクラスタリング">
-<h3>PyQUBOによるクラスタリング<a class="headerlink" href="#PyQUBOによるクラスタリング" title="Permalink to this headline">¶</a></h3>
+<h3>PyQUBOによるクラスタリング<a class="headerlink" href="#PyQUBOによるクラスタリング" title="Permalink to this heading">¶</a></h3>
 <p>まずは、PyQUBOで上のハミルトニアンを定式化します。そして<code class="docutils literal notranslate"><span class="pre">solve_qubo</span></code>を用いてシミュレーテッドアニーリング(SA)を行います。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clustering_pyqubo</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># 距離行列の作成</span>
-    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-    <span class="c1"># スピン変数の設定</span>
-    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># 全ハミルトニアンの設定</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="p">)</span>
-    <span class="c1"># コンパイル</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># QUBOに変換</span>
-    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
-    <span class="c1"># SAで解を求める</span>
-    <span class="n">raw_solution</span> <span class="o">=</span> <span class="n">solve_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="c1"># 解を見やすい形にデコード</span>
-    <span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># ラベルを抽出</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="k">return</span> <span class="n">labels</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def clustering_pyqubo(df):
+    # 距離行列の作成
+    d_ij = distance_matrix(df, df)
+    # スピン変数の設定
+    spin = Array.create(&quot;spin&quot;, shape= len(df), vartype=&quot;SPIN&quot;)
+    # 全ハミルトニアンの設定
+    H = - 0.5* sum(
+        [d_ij[i,j]* (1 - spin[i]* spin[j]) for i in range(len(df)) for j in range(len(df))]
+    )
+    # コンパイル
+    model = H.compile()
+    # QUBOに変換
+    qubo, offset = model.to_qubo()
+    # SAで解を求める
+    raw_solution = solve_qubo(qubo, num_reads=10)
+    # 解を見やすい形にデコード
+    decoded_sample = model.decode_sample(raw_solution, vartype=&quot;SPIN&quot;)
+    # ラベルを抽出
+    labels = [decoded_sample.array(&quot;spin&quot;, idx) for idx in range(len(df))]
+    return labels
 </pre></div>
 </div>
 </div>
@@ -411,8 +421,8 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span><span class="n">clustering_pyqubo</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>labels =clustering_pyqubo(df1[[&quot;x&quot;, &quot;y&quot;]])
+print(&quot;label&quot;, labels)
 </pre></div>
 </div>
 </div>
@@ -438,11 +448,11 @@ label [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for idx, label in enumerate(labels):
+    if label:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;b&quot;)
+    else:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;r&quot;)
 </pre></div>
 </div>
 </div>
@@ -455,36 +465,36 @@ label [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1
 </div>
 </section>
 <section id="Openjijのソルバーを用いたクラスタリング">
-<h3>Openjijのソルバーを用いたクラスタリング<a class="headerlink" href="#Openjijのソルバーを用いたクラスタリング" title="Permalink to this headline">¶</a></h3>
+<h3>Openjijのソルバーを用いたクラスタリング<a class="headerlink" href="#Openjijのソルバーを用いたクラスタリング" title="Permalink to this heading">¶</a></h3>
 <p>次はQUBOの定式化にPyQUBOを用いて、ソルバー部分をOpenJijにしてクラスタリングを行います。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clustering_openjij</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># 距離行列の作成</span>
-    <span class="n">d_ij</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-    <span class="c1"># スピン変数の設定</span>
-    <span class="n">spin</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># 全ハミルトニアンの設定</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">d_ij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span> <span class="n">spin</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="p">)</span>
-    <span class="c1"># コンパイル</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># QUBOに変換</span>
-    <span class="n">qubo</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">()</span>
-    <span class="c1"># OpenJijのSAをサンプラーに設定</span>
-    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_reads</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_sweeps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="c1"># サンプラーで解を求める</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">)</span>
-    <span class="c1"># 生データの抽出</span>
-    <span class="n">raw_solution</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)]))</span>
-    <span class="c1"># 解を見やすい形にデコード</span>
-    <span class="n">decoded_sample</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode_sample</span><span class="p">(</span><span class="n">raw_solution</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;SPIN&quot;</span><span class="p">)</span>
-    <span class="c1"># ラベルを抽出</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">decoded_sample</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;spin&quot;</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">idx</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span>
-    <span class="k">return</span> <span class="n">labels</span><span class="p">,</span>  <span class="nb">sum</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def clustering_openjij(df):
+    # 距離行列の作成
+    d_ij = distance_matrix(df, df)
+    # スピン変数の設定
+    spin = Array.create(&quot;spin&quot;, shape= len(df), vartype=&quot;SPIN&quot;)
+    # 全ハミルトニアンの設定
+    H = - 0.5* sum(
+        [d_ij[i,j]* (1 - spin[i]* spin[j]) for i in range(len(df)) for j in range(len(df))]
+    )
+    # コンパイル
+    model = H.compile()
+    # QUBOに変換
+    qubo, offset = model.to_qubo()
+    # OpenJijのSAをサンプラーに設定
+    sampler = oj.SASampler(num_reads=10, num_sweeps=100)
+    # サンプラーで解を求める
+    response = sampler.sample_qubo(qubo)
+    # 生データの抽出
+    raw_solution = dict(zip(response.indices, response.states[np.argmin(response.energies)]))
+    # 解を見やすい形にデコード
+    decoded_sample = model.decode_sample(raw_solution, vartype=&quot;SPIN&quot;)
+    # ラベルを抽出
+    labels = [int(decoded_sample.array(&quot;spin&quot;, idx) ) for idx  in range(len(df))]
+    return labels,  sum(response.energies)
 </pre></div>
 </div>
 </div>
@@ -493,9 +503,9 @@ label [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span><span class="p">,</span> <span class="n">energy</span> <span class="o">=</span><span class="n">clustering_openjij</span><span class="p">(</span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>labels, energy =clustering_openjij(df1[[&quot;x&quot;, &quot;y&quot;]])
+print(&quot;label&quot;, labels)
+print(&quot;energy&quot;, energy)
 </pre></div>
 </div>
 </div>
@@ -513,11 +523,11 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span>  <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">df1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for idx, label in  enumerate(labels):
+    if label:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;b&quot;)
+    else:
+        plt.scatter(df1.loc[idx][&quot;x&quot;], df1.loc[idx][&quot;y&quot;], color=&quot;r&quot;)
 </pre></div>
 </div>
 </div>
@@ -532,7 +542,7 @@ energy -147945.96434710253
 </section>
 </section>
 <section id="QBoost">
-<h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this headline">¶</a></h2>
+<h2>QBoost<a class="headerlink" href="#QBoost" title="Permalink to this heading">¶</a></h2>
 <div class="line-block">
 <div class="line">QBoostは量子アニーリングを用いたアンサンブル学習の一つです。アンサンブル学習は弱い予測器を多数用意して、その予測器の各予測結果の組み合わせて最終的な予測結果を得ます。</div>
 <div class="line">QBoostでは、与えられた学習データに対して最適な学習器の組み合わせを、量子アニーリングを用いて最適化を行います。今回は分類問題を扱います。</div>
@@ -551,17 +561,17 @@ energy -147945.96434710253
 <div class="line">第一項をコスト(目的関数)、第二項を制約として、このハミルトニアンの最適化を行います。量子アニーリングで最小化することにより、学習データに最も適合するような弱分類器の組み合わせを得ることができます。</div>
 </div>
 <section id="スクリプト">
-<h3>スクリプト<a class="headerlink" href="#スクリプト" title="Permalink to this headline">¶</a></h3>
-<p>それでは実際にQBoostを試してみましょう。学習データにはscikit-learnの癌識別のデータセットを使用します。簡単のために、学習に用いるのは“0”と“1”の２つの文字種のみとします。</p>
+<h3>スクリプト<a class="headerlink" href="#スクリプト" title="Permalink to this heading">¶</a></h3>
+<p>それでは実際にQBoostを試してみましょう。学習データにはscikit-learnの癌識別のデータセットを使用します。簡単のために、学習に用いるのは”0”と”1”の２つの文字種のみとします。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ライブラリをインポート</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># ライブラリをインポート
+import pandas as pd
+from scipy import stats
+from sklearn import datasets
+from sklearn import metrics
 </pre></div>
 </div>
 </div>
@@ -569,10 +579,10 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># データのロード</span>
-<span class="n">cancerdata</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_breast_cancer</span><span class="p">()</span>
-<span class="c1"># 学習用データと検証用データの個数の設定</span>
-<span class="n">num_train</span> <span class="o">=</span> <span class="mi">450</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># データのロード
+cancerdata = datasets.load_breast_cancer()
+# 学習用データと検証用データの個数の設定
+num_train = 450
 </pre></div>
 </div>
 </div>
@@ -581,8 +591,8 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_noisy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">30</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data_noisy</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data_noisy = np.concatenate((cancerdata.data, np.random.rand(cancerdata.data.shape[0], 30)), axis=1)
+print(data_noisy.shape)
 </pre></div>
 </div>
 </div>
@@ -598,8 +608,8 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># labelを{0, 1}から{-1, 1}に変換</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">(</span><span class="n">cancerdata</span><span class="o">.</span><span class="n">target</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># labelを{0, 1}から{-1, 1}に変換
+labels = (cancerdata.target-0.5) * 2
 </pre></div>
 </div>
 </div>
@@ -607,11 +617,11 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># データセットを学習用と検証用に分割</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">data_noisy</span><span class="p">[:</span><span class="n">num_train</span><span class="p">,</span> <span class="p">:]</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">data_noisy</span><span class="p">[</span><span class="n">num_train</span><span class="p">:,</span> <span class="p">:]</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:</span><span class="n">num_train</span><span class="p">]</span>
-<span class="n">y_test</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">num_train</span><span class="p">:]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># データセットを学習用と検証用に分割
+X_train = data_noisy[:num_train, :]
+X_test = data_noisy[num_train:, :]
+y_train = labels[:num_train]
+y_test = labels[num_train:]
 </pre></div>
 </div>
 </div>
@@ -619,40 +629,40 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 弱学習器の結果から</span>
-<span class="k">def</span> <span class="nf">aggre_mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Y_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 弱学習器の結果から
+def aggre_mean(Y_list):
+    return ((np.mean(Y_list, axis=0)&gt;0)-0.5) * 2
 </pre></div>
 </div>
 </div>
 </section>
 <section id="弱学習器の作成">
-<h3>弱学習器の作成<a class="headerlink" href="#弱学習器の作成" title="Permalink to this headline">¶</a></h3>
+<h3>弱学習器の作成<a class="headerlink" href="#弱学習器の作成" title="Permalink to this heading">¶</a></h3>
 <p>scikit-learnで弱分類器を作成します。今回は弱分類器としてdecision stumpを用いましょう。decision stumpとは、一層の決定木のことです。今回は弱分類器として用いるので、分割に用いる特徴量はランダムに選ぶこととします(一層のランダムフォレストを行うという理解で良いでしょう)。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 必要なライブラリのインポート</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span> <span class="k">as</span> <span class="n">DTC</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 必要なライブラリのインポート
+from sklearn.tree import DecisionTreeClassifier as DTC
 
-<span class="c1"># 弱分類機の個数の設定</span>
-<span class="n">num_clf</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="c1"># bootstrap samplingで、一つのサンプルに対して取り出すサンブル個数</span>
-<span class="n">sample_train</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="c1"># モデルの設定</span>
-<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="n">DTC</span><span class="p">(</span><span class="n">splitter</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_clf</span><span class="p">)]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># ランダムに抽出</span>
-    <span class="n">train_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">sample_train</span><span class="p">)</span>
-    <span class="c1"># 説明変数と目的変数から決定木を作成</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
-<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># 作成したモデルを用いて予測を実行</span>
-    <span class="n">y_pred_list_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
-<span class="n">y_pred_list_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
-<span class="n">y_pred_train</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">)</span>
+# 弱分類機の個数の設定
+num_clf = 32
+# bootstrap samplingで、一つのサンプルに対して取り出すサンブル個数
+sample_train = 40
+# モデルの設定
+models = [DTC(splitter=&quot;random&quot;,max_depth=1) for i in range(num_clf)]
+for model in models:
+    # ランダムに抽出
+    train_idx = np.random.choice(np.arange(X_train.shape[0]), sample_train)
+    # 説明変数と目的変数から決定木を作成
+    model.fit(X=X_train[train_idx], y=y_train[train_idx])
+y_pred_list_train = []
+for model in models:
+    # 作成したモデルを用いて予測を実行
+    y_pred_list_train.append(model.predict(X_train))
+y_pred_list_train = np.asanyarray(y_pred_list_train)
+y_pred_train =np.sign(y_pred_list_train)
 </pre></div>
 </div>
 </div>
@@ -661,16 +671,16 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
-    <span class="c1"># 検証データで実行</span>
-    <span class="n">y_pred_list_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>y_pred_list_test = []
+for model in models:
+    # 検証データで実行
+    y_pred_list_test.append(model.predict(X_test))
 
-<span class="n">y_pred_list_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">)</span>
-<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-<span class="c1"># 予測結果の精度のスコア計算</span>
-<span class="n">acc_test_base</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">)</span>
+y_pred_list_test = np.array(y_pred_list_test)
+y_pred_test = np.sign(np.sum(y_pred_list_test,axis=0))
+# 予測結果の精度のスコア計算
+acc_test_base = metrics.accuracy_score(y_true=y_test, y_pred=y_pred_test)
+print(acc_test_base)
 </pre></div>
 </div>
 </div>
@@ -686,28 +696,28 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># QBoostを行うクラスを定義</span>
-<span class="k">class</span> <span class="nc">QBoost</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">=</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># バイナリ変数を定義</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span> <span class="o">=</span> <span class="n">Array</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s2">&quot;BINARY&quot;</span><span class="p">)</span>
-        <span class="c1"># 正規化項の大きさ(ハイパーパラメータ)をPyQUBOのPlaceholderで定義</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span> <span class="o">=</span> <span class="n">Placeholder</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">)</span>
-        <span class="c1">#　弱分類器の組み合わせのハミルトニアンをセット</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_clf</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">([</span><span class="n">W</span><span class="o">*</span><span class="n">C</span> <span class="k">for</span> <span class="n">W</span><span class="p">,</span> <span class="n">C</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">,</span> <span class="n">y_clf</span><span class="p">)])</span><span class="o">-</span> <span class="n">y_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_clf</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-        <span class="p">])</span>
-        <span class="c1"># 正規化項のハミルトニアンを制約としてセット</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">W</span> <span class="k">for</span> <span class="n">W</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ws</span><span class="p">]),</span> <span class="s2">&quot;norm&quot;</span><span class="p">)</span>
-        <span class="c1"># 全ハミルトニアンをセット</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_clf</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_lamda</span>
-        <span class="c1"># モデルをコンパイル</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-    <span class="c1"># QUBOに変換する関数を定義</span>
-    <span class="k">def</span> <span class="nf">to_qubo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_param</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># ハイパーパラメータの大きさを設定</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm_param</span><span class="p">}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># QBoostを行うクラスを定義
+class QBoost():
+    def __init__(self, y_train, ys_pred):
+        self.num_clf = ys_pred.shape[0]
+        # バイナリ変数を定義
+        self.Ws = Array.create(&quot;weight&quot;, shape = self.num_clf, vartype=&quot;BINARY&quot;)
+        # 正規化項の大きさ(ハイパーパラメータ)をPyQUBOのPlaceholderで定義
+        self.param_lamda = Placeholder(&quot;norm&quot;)
+        #　弱分類器の組み合わせのハミルトニアンをセット
+        self.H_clf = sum( [ (1/self.num_clf * sum([W*C for W, C in zip(self.Ws, y_clf)])- y_true)**2 for y_true, y_clf in zip(y_train, ys_pred.T)
+        ])
+        # 正規化項のハミルトニアンを制約としてセット
+        self.H_norm = Constraint(sum([W for W in self.Ws]), &quot;norm&quot;)
+        # 全ハミルトニアンをセット
+        self.H = self.H_clf + self.H_norm * self.param_lamda
+        # モデルをコンパイル
+        self.model = self.H.compile()
+    # QUBOに変換する関数を定義
+    def to_qubo(self, norm_param=1):
+        # ハイパーパラメータの大きさを設定
+        self.feed_dict = {&#39;norm&#39;: norm_param}
+        return self.model.to_qubo(feed_dict=self.feed_dict)
 </pre></div>
 </div>
 </div>
@@ -715,33 +725,22 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qboost</span> <span class="o">=</span> <span class="n">QBoost</span><span class="p">(</span><span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">ys_pred</span><span class="o">=</span><span class="n">y_pred_list_train</span><span class="p">)</span>
-<span class="c1"># lambda=3としてQUBO作成</span>
-<span class="n">qubo</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">to_qubo</span><span class="p">(</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>qboost = QBoost(y_train=y_train, ys_pred=y_pred_list_train)
+# lambda=3としてQUBO作成
+qubo = qboost.to_qubo(3)[0]
 </pre></div>
 </div>
 </div>
 </section>
 <section id="D-Waveサンプラーを用いてQBoostを実行">
-<h3>D-Waveサンプラーを用いてQBoostを実行<a class="headerlink" href="#D-Waveサンプラーを用いてQBoostを実行" title="Permalink to this headline">¶</a></h3>
+<h3>D-Waveサンプラーを用いてQBoostを実行<a class="headerlink" href="#D-Waveサンプラーを用いてQBoostを実行" title="Permalink to this heading">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 必要なライブラリをインポート</span>
-<span class="kn">from</span> <span class="nn">dwave.system.samplers</span> <span class="kn">import</span> <span class="n">DWaveSampler</span>
-<span class="kn">from</span> <span class="nn">dwave.system.composites</span> <span class="kn">import</span> <span class="n">EmbeddingComposite</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dw</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s1">&#39;https://cloud.dwavesys.com/sapi/&#39;</span><span class="p">,</span>
-                  <span class="n">token</span><span class="o">=</span><span class="s1">&#39;xxxx&#39;</span><span class="p">,</span>
-                  <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;DW_2000Q_VFYC_6&#39;</span><span class="p">)</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">EmbeddingComposite</span><span class="p">(</span><span class="n">dw</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 必要なライブラリをインポート
+from dwave.system.samplers import DWaveSampler
+from dwave.system.composites import EmbeddingComposite
 </pre></div>
 </div>
 </div>
@@ -749,8 +748,10 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># D-Waveサンプラーで計算</span>
-<span class="n">sampleset</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_qubo</span><span class="p">(</span><span class="n">qubo</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>dw = DWaveSampler(endpoint=&#39;https://cloud.dwavesys.com/sapi/&#39;,
+                  token=&#39;xxxx&#39;,
+                  solver=&#39;DW_2000Q_VFYC_6&#39;)
+sampler = EmbeddingComposite(dw)
 </pre></div>
 </div>
 </div>
@@ -758,8 +759,8 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 結果の確認</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">sampleset</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># D-Waveサンプラーで計算
+sampleset = sampler.sample_qubo(qubo, num_reads=100)
 </pre></div>
 </div>
 </div>
@@ -767,16 +768,25 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 各計算結果をPyQUBOでdecode</span>
-<span class="n">decoded_solutions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">brokens</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">energies</span> <span class="o">=</span><span class="p">[]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 結果の確認
+print(sampleset)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 各計算結果をPyQUBOでdecode
+decoded_solutions = []
+brokens = []
+energies =[]
 
-<span class="n">decoded_sol</span> <span class="o">=</span> <span class="n">qboost</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">decode_dimod_response</span><span class="p">(</span><span class="n">sampleset</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">qboost</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">d_sol</span><span class="p">,</span> <span class="n">broken</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="n">decoded_sol</span><span class="p">:</span>
-    <span class="n">decoded_solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_sol</span><span class="p">)</span>
-    <span class="n">brokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">broken</span><span class="p">)</span>
-    <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+decoded_sol = qboost.model.decode_dimod_response(sampleset, feed_dict=qboost.feed_dict)
+for d_sol, broken, energy in decoded_sol:
+    decoded_solutions.append(d_sol)
+    brokens.append(broken)
+    energies.append(energy)
 </pre></div>
 </div>
 </div>
@@ -785,19 +795,19 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">accs_train_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">accs_test_Dwaves</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">decoded_solution</span> <span class="ow">in</span> <span class="n">decoded_solutions</span><span class="p">:</span>
-    <span class="n">idx_clf_DWave</span><span class="o">=</span><span class="p">[]</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">decoded_solution</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">idx_clf_DWave</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-    <span class="n">y_pred_train_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_train</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">y_pred_test_DWave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_pred_list_test</span><span class="p">[</span><span class="n">idx_clf_DWave</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-    <span class="n">acc_train_DWave</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_train_DWave</span><span class="p">)</span>
-    <span class="n">acc_test_DWave</span><span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_test_DWave</span><span class="p">)</span>
-    <span class="n">accs_train_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_train_DWave</span><span class="p">)</span>
-    <span class="n">accs_test_Dwaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc_test_DWave</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>accs_train_Dwaves = []
+accs_test_Dwaves = []
+for decoded_solution in decoded_solutions:
+    idx_clf_DWave=[]
+    for key, val in decoded_solution[&quot;weight&quot;].items():
+        if val == 1:
+            idx_clf_DWave.append(int(key))
+    y_pred_train_DWave = np.sign(np.sum(y_pred_list_train[idx_clf_DWave, :], axis=0))
+    y_pred_test_DWave = np.sign(np.sum(y_pred_list_test[idx_clf_DWave, :], axis=0))
+    acc_train_DWave = metrics.accuracy_score(y_true=y_train, y_pred=y_pred_train_DWave)
+    acc_test_DWave= metrics.accuracy_score(y_true=y_test, y_pred=y_pred_test_DWave)
+    accs_train_Dwaves.append(acc_train_DWave)
+    accs_test_Dwaves.append(acc_test_DWave)
 </pre></div>
 </div>
 </div>
@@ -806,15 +816,15 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_train_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train&quot;</span> <span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">accs_test_Dwaves</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;energy: D-wave&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;relationship between energy and accuracy&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(figsize=(12, 8))
+plt.scatter(energies, accs_train_Dwaves, label=&quot;train&quot; )
+plt.scatter(energies, accs_test_Dwaves, label=&quot;test&quot;)
+plt.xlabel(&quot;energy: D-wave&quot;)
+plt.ylabel(&quot;accuracy&quot;)
+plt.title(&quot;relationship between energy and accuracy&quot;)
+plt.grid()
+plt.legend()
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -822,9 +832,9 @@ energy -147945.96434710253
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;base accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc_test_base</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">)))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;average accuracy　of QBoost is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">accs_test_Dwaves</span><span class="p">))))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;base accuracy is {}&quot;.format(acc_test_base))
+print(&quot;max accuracy　of QBoost is {}&quot;.format(max(accs_test_Dwaves)))
+print(&quot;average accuracy　of QBoost is {}&quot;.format(np.mean(np.asarray(accs_test_Dwaves))))
 </pre></div>
 </div>
 </div>
@@ -840,8 +850,9 @@ energy -147945.96434710253
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">6-量子アニーリングによる機械学習 (QBoost)</a><ul>
 <li><a class="reference internal" href="#クラスタリング">クラスタリング</a><ul>
 <li><a class="reference internal" href="#必要なライブラリのインポート">必要なライブラリのインポート</a></li>
@@ -860,12 +871,17 @@ energy -147945.96434710253
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="005-OpenJijGPU.html"
-                        title="previous chapter">5-OpenJij GPU</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="007-MonteCarloSampling.html"
-                        title="next chapter">7-MonteCarlo Sampling</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="005-OpenJijGPU.html"
+                          title="previous chapter">5-OpenJij GPU</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="007-MonteCarloSampling.html"
+                          title="next chapter">7-MonteCarlo Sampling</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -877,12 +893,12 @@ energy -147945.96434710253
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -906,7 +922,7 @@ energy -147945.96434710253
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

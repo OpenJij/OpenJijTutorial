@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>How to contribute &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,11 +12,12 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="A6-Monte-Carlo Calculation" href="ja/A006-MonteCarloCalc.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -24,9 +25,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="ja/A006-MonteCarloCalc.html" title="A6-Monte-Carlo Calculation"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to contribute</a></li> 
       </ul>
@@ -38,12 +36,12 @@
           <div class="body" role="main">
             
   <section id="how-to-contribute">
-<h1>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h1>
+<h1>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this heading">¶</a></h1>
 <p>The OpenJij Tutorial is constantly changing and can grow with your help.</p>
 <p>You can participate in this project from a simple issue submission or typo correction.</p>
 <p>We are also looking forward to more documentation on the latest research results in quantum optimization and quantum annealing, so requests are welcome.</p>
 <section id="submit-requests-and-issues">
-<h2>Submit requests and issues.<a class="headerlink" href="#submit-requests-and-issues" title="Permalink to this headline">¶</a></h2>
+<h2>Submit requests and issues.<a class="headerlink" href="#submit-requests-and-issues" title="Permalink to this heading">¶</a></h2>
 <p>The easiest way to contribute is to report an issue
 or submit a request for documentation
 on <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial/issues">GitHub issues</a>.</p>
@@ -53,9 +51,9 @@ Don’t worry about the language barrier.</p>
 <p>Requests can also be made for documents on quantum annealing, adiabatic quantum computations, and theories in quantum optimization.</p>
 </section>
 <section id="how-to-edit-and-contribute-by-yourself">
-<h2>How to edit and contribute by yourself<a class="headerlink" href="#how-to-edit-and-contribute-by-yourself" title="Permalink to this headline">¶</a></h2>
+<h2>How to edit and contribute by yourself<a class="headerlink" href="#how-to-edit-and-contribute-by-yourself" title="Permalink to this heading">¶</a></h2>
 <section id="setup-enviroment-by-pipenv">
-<h3>1. Setup enviroment by pipenv<a class="headerlink" href="#setup-enviroment-by-pipenv" title="Permalink to this headline">¶</a></h3>
+<h3>1. Setup enviroment by pipenv<a class="headerlink" href="#setup-enviroment-by-pipenv" title="Permalink to this heading">¶</a></h3>
 <p>First, clone from <a class="reference external" href="https://github.com/OpenJij/OpenJijTutorial">GitHub repository</a>.</p>
 <p>Environment reproduction by pipenv</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pipenv update
@@ -69,13 +67,13 @@ Note, however, that it does not contain the <code class="docutils literal notran
 </div></blockquote>
 </section>
 <section id="edit-project">
-<h3>2. Edit project<a class="headerlink" href="#edit-project" title="Permalink to this headline">¶</a></h3>
+<h3>2. Edit project<a class="headerlink" href="#edit-project" title="Permalink to this heading">¶</a></h3>
 <p>Once your environment is in place, edit or add your notebook and make the changes you want to make to this document.</p>
 <p>The source code of the document is located under the <code class="docutils literal notranslate"><span class="pre">source</span></code> directory.</p>
 <p>When you edit or add a Jupyter notebook, please follow <a class="reference external" href="#rules">the rules of Jupyter notebook</a>, even if it’s a small thing.</p>
 </section>
 <section id="compile-documents">
-<h3>3. Compile documents<a class="headerlink" href="#compile-documents" title="Permalink to this headline">¶</a></h3>
+<h3>3. Compile documents<a class="headerlink" href="#compile-documents" title="Permalink to this heading">¶</a></h3>
 <p>You can compile documents to HTML files by make command.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ make html
 </pre></div>
@@ -92,13 +90,13 @@ Please check it by referring to it.</p>
 </section>
 </section>
 <section id="pull-requests">
-<h2>4. Pull requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">¶</a></h2>
+<h2>4. Pull requests<a class="headerlink" href="#pull-requests" title="Permalink to this heading">¶</a></h2>
 <p>When you’re done editing, make pull requests to your master branch.</p>
 <p>With pull requests, you don’t need to publish the compiled products under <code class="docutils literal notranslate"><span class="pre">build/</span></code>.</p>
 <p>Also, if you make changes to Jupyter Notebooks, please state in the pull requests comment where in the Notebook you made the changes, what you made the changes to, and why you made the changes, as it’s hard to see the differences in the git diff.</p>
 <div id="rules"></div></section>
 <section id="the-rules-of-jupyter-notebook">
-<h2>The rules of Jupyter notebook<a class="headerlink" href="#the-rules-of-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
+<h2>The rules of Jupyter notebook<a class="headerlink" href="#the-rules-of-jupyter-notebook" title="Permalink to this heading">¶</a></h2>
 <ol>
 <li><p>You need to put an <code class="docutils literal notranslate"><span class="pre">h1</span></code> level heading in the first cell.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Title of Notebook</span>
@@ -117,8 +115,9 @@ Please check it by referring to it.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">How to contribute</a><ul>
 <li><a class="reference internal" href="#submit-requests-and-issues">Submit requests and issues.</a></li>
 <li><a class="reference internal" href="#how-to-edit-and-contribute-by-yourself">How to edit and contribute by yourself</a><ul>
@@ -133,9 +132,7 @@ Please check it by referring to it.</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="ja/A006-MonteCarloCalc.html"
-                        title="previous chapter">A6-Monte-Carlo Calculation</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -147,12 +144,12 @@ Please check it by referring to it.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -163,16 +160,13 @@ Please check it by referring to it.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="ja/A006-MonteCarloCalc.html" title="A6-Monte-Carlo Calculation"
-             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">OpenJij Tutorial 0.3.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">How to contribute</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

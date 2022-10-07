@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>2-An Evaluation of Annealing Algorithms &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="How to use the standard error function of benchmark functions" href="002-Evaluation_errorbar.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="2-An-Evaluation-of-Annealing-Algorithms">
-<h1>2-An Evaluation of Annealing Algorithms<a class="headerlink" href="#2-An-Evaluation-of-Annealing-Algorithms" title="Permalink to this headline">¶</a></h1>
+<h1>2-An Evaluation of Annealing Algorithms<a class="headerlink" href="#2-An-Evaluation-of-Annealing-Algorithms" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/en/002-Evaluation.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>Annealing algorithms are heuristics, so it may not be able to give an optimal solution every time. These are algorithms for approximate solutions. In addition, these are probabilistic algorithm and solutions are also different each time. Therefore, when we evaluate them, we use various averages to evaluate these solution.</p>
 <p>The three following indicators are often used.</p>
@@ -304,7 +314,7 @@ div.rendered_html tbody tr:hover {
 </ul>
 <p>In particular, <strong>TTS</strong> is a measure of computation time and is often used in various evaluations. A Residual energy is an average value of how close to an optimal solution we got.</p>
 <section id="Time-to-solution">
-<h2>Time to solution<a class="headerlink" href="#Time-to-solution" title="Permalink to this headline">¶</a></h2>
+<h2>Time to solution<a class="headerlink" href="#Time-to-solution" title="Permalink to this heading">¶</a></h2>
 <p>An annealing algorithm can produce some kind of solution at any computation time. However even if the calculation is fast, it is useless if it gives wrong answers. We set an index (e.g., the time it takes to get the optimal solution with 90% probability) for the computation time it takes for the optimal solution to be calculated with the probability we need.</p>
 <p>As shown in the previous chapter, an annealing algorithm looks for the optimal solution from among multiple runs, therefore multiple runs should be taken into account to evaluate the computation time.</p>
 <p>A Time to Solution (TTS) is computed by taking into account the multiple annealing process.</p>
@@ -328,7 +338,7 @@ div.rendered_html tbody tr:hover {
 <p>This value means the total computation time for one annealing session, taking into account the computation time of <span class="math notranslate nohighlight">\(p_R\)</span> and the number of iterations until the optimal solution is found with probability <span class="math notranslate nohighlight">\(p_s(p_R)\)</span> when the algorithm with probability <span class="math notranslate nohighlight">\(p_s(\tau)\)</span> is used to find the optimal solution.</p>
 <p>In an evaluation of the actual computation, <span class="math notranslate nohighlight">\(p_R\)</span> is given as a constant. The most common value used in research and other studies is <span class="math notranslate nohighlight">\(p_R = 0.99\)</span>. Then calculate <span class="math notranslate nohighlight">\(p_s(\tau)\)</span> in various annealing time <span class="math notranslate nohighlight">\(\tau\)</span>. We use them to compute <span class="math notranslate nohighlight">\({\rm TTS}(\tau, p_R)\)</span>.</p>
 <section id="Measuring-TTS-with-OpenJij">
-<h3>Measuring TTS with OpenJij<a class="headerlink" href="#Measuring-TTS-with-OpenJij" title="Permalink to this headline">¶</a></h3>
+<h3>Measuring TTS with OpenJij<a class="headerlink" href="#Measuring-TTS-with-OpenJij" title="Permalink to this heading">¶</a></h3>
 <p>In this section, we measure TTS with OpenJij. In the following, We consider a one-dimensional antiferromagnetic Ising model. This is the physical model represented by the following Hamiltonian</p>
 <div class="math notranslate nohighlight">
 \[H(\{\sigma_i\}) = \sum_{i=0}^{N-1} J_{i, i+1}\sigma_i \sigma_{i+1} + \sum_{i=0}^{N-1} h_i \sigma_i\]</div>
@@ -340,12 +350,12 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import random
+import numpy as np
+import matplotlib.pyplot as plt
 
-<span class="c1"># import OpenJij</span>
-<span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+# import OpenJij
+import openjij as oj
 </pre></div>
 </div>
 </div>
@@ -353,66 +363,66 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make one-dimensional antiferromagnetic Ising model</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">h</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="o">-</span><span class="mi">10</span><span class="p">}</span>
-<span class="n">J</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># make one-dimensional antiferromagnetic Ising model
+N = 30
+h = {0: -10}
+J = {(i, i+1): 1 for i in range(N-1)}
 </pre></div>
 </div>
 </div>
 </section>
 </section>
 <section id="Compute-TTS">
-<h2>Compute TTS<a class="headerlink" href="#Compute-TTS" title="Permalink to this headline">¶</a></h2>
+<h2>Compute TTS<a class="headerlink" href="#Compute-TTS" title="Permalink to this heading">¶</a></h2>
 <p>The response class returned by <code class="docutils literal notranslate"><span class="pre">sample_ising</span></code> or <code class="docutils literal notranslate"><span class="pre">sample_qubo</span></code> of openjij has member variable <code class="docutils literal notranslate"><span class="pre">info</span></code>. This is a dictionary of information for each sampler. Most sampler have an <code class="docutils literal notranslate"><span class="pre">execution_time</span></code> key, which is the execution time of each algorithm (in <span class="math notranslate nohighlight">\(\mu\)</span>s).</p>
 <p>In the case of SASampler, the computation time per one cycle of Simulated Annealing is stored.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set optimal solution</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set optimal solution
+correct_state = [(-1)**i for i in range(N)]
 
-<span class="c1"># define pR for TTS</span>
-<span class="n">pR</span> <span class="o">=</span> <span class="mf">0.99</span>
+# define pR for TTS
+pR = 0.99
 
-<span class="c1"># define num_sweeps_list, which is argument of Sampler</span>
-<span class="c1"># num_sweeps means the number of splits for decraesing parameters (temperature, transverse field) during annealing.</span>
-<span class="c1"># therefore, the more we increase this parameter, the more slowly it is equivalent to annealing.</span>
+# define num_sweeps_list, which is argument of Sampler
+# num_sweeps means the number of splits for decraesing parameters (temperature, transverse field) during annealing.
+# therefore, the more we increase this parameter, the more slowly it is equivalent to annealing.
 
-<span class="n">num_sweeps_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+num_sweeps_list = list(range(10, 51, 10))
 
-<span class="n">TTS_list</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># define empty list for TTS of each computation</span>
-<span class="n">tau_list</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># define empty list for computation time</span>
+TTS_list = [] # define empty list for TTS of each computation
+tau_list = [] # define empty list for computation time
 
-<span class="c1"># define empty list for success probability</span>
-<span class="n">ps_list</span> <span class="o">=</span> <span class="p">[]</span>
+# define empty list for success probability
+ps_list = []
 
-<span class="c1"># set the number of times of annealing for computing probability</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">100</span>
+# set the number of times of annealing for computing probability
+num_reads = 100
 
-<span class="k">for</span> <span class="n">num_sweeps</span> <span class="ow">in</span> <span class="n">num_sweeps_list</span><span class="p">:</span>
-    <span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_sweeps</span><span class="o">=</span><span class="n">num_sweeps</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+for num_sweeps in num_sweeps_list:
+    sampler = oj.SASampler(num_sweeps=num_sweeps, num_reads=num_reads)
+    response = sampler.sample_ising(h, J)
 
-    <span class="c1"># get execution time of each annealing</span>
-    <span class="n">tau</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span>
+    # get execution time of each annealing
+    tau = response.info[&#39;execution_time&#39;]
 
-    <span class="c1"># get ps.</span>
-    <span class="c1"># state is ndarray, and we can compare this list with .all()</span>
-    <span class="n">ps</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="n">correct_state</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">states</span><span class="p">])</span><span class="o">/</span><span class="n">num_reads</span>
+    # get ps.
+    # state is ndarray, and we can compare this list with .all()
+    ps = sum([1 if (state == correct_state).all() else 0 for state in response.states])/num_reads
 
 
-    <span class="c1"># When ps = 0, TTS diverges to infinity. We avoid this situation</span>
-    <span class="k">if</span> <span class="n">ps</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="k">continue</span>
+    # When ps = 0, TTS diverges to infinity. We avoid this situation
+    if ps == 0.0:
+        continue
 
-    <span class="c1"># compute TTS</span>
-    <span class="n">TTS_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pR</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">ps</span><span class="p">)</span><span class="o">*</span><span class="n">tau</span><span class="p">)</span>
-    <span class="n">tau_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+    # compute TTS
+    TTS_list.append(np.log(1-pR)/np.log(1-ps)*tau)
+    tau_list.append(tau)
 
-    <span class="c1"># compute success probability</span>
-    <span class="n">ps_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    # compute success probability
+    ps_list.append(ps)
 </pre></div>
 </div>
 </div>
@@ -420,22 +430,22 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this cell is for visualization of evaluation</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># this cell is for visualization of evaluation
 
-<span class="c1"># configure various settings</span>
-<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span> <span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
+# configure various settings
+fig, (axL, axR) = plt.subplots(ncols=2, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
+fontsize = 10
 
-<span class="c1"># plot TTS</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">TTS_list</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+# plot TTS
+axL.plot(tau_list, TTS_list)
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="c1"># plot succss probability ps</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_list</span><span class="p">,</span> <span class="n">ps_list</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+# plot succss probability ps
+axR.plot(tau_list, ps_list)
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
@@ -460,7 +470,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <p>OpenJij has TTS, Residual Energy and Success probability by default the benchmark function <code class="docutils literal notranslate"><span class="pre">openjij.solver_benchmark</span></code>.</p>
 </section>
 <section id="solver_benchmark-function">
-<h2>solver_benchmark function<a class="headerlink" href="#solver_benchmark-function" title="Permalink to this headline">¶</a></h2>
+<h2>solver_benchmark function<a class="headerlink" href="#solver_benchmark-function" title="Permalink to this heading">¶</a></h2>
 <p>solver_benchmark function compute TTS, residual energy and success probability, and return these values.</p>
 <p>The arguments are listed below.</p>
 <ul class="simple">
@@ -493,18 +503,18 @@ Specifies the key associated with the execution time of <code class="docutils li
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define optimal solution</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define optimal solution
+correct_state = [(-1)**i for i in range(N)]
 
-<span class="c1"># set num_sweeps &amp; num_reads(the number of repetition)</span>
-<span class="n">num_sweeps_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>  <span class="c1"># [10, 20, 30, 40, 50]</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">100</span>
+# set num_sweeps &amp; num_reads(the number of repetition)
+num_sweeps_list = list(range(10, 51, 10))  # [10, 20, 30, 40, 50]
+num_reads = 100
 
-<span class="c1"># compute TTS, residual energy, success probability with benchmark function</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">solver_benchmark</span><span class="p">(</span>
-                      <span class="n">solver</span><span class="o">=</span><span class="k">lambda</span> <span class="n">time</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">:</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">(</span><span class="n">num_sweeps</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span><span class="o">.</span><span class="n">sample_ising</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">J</span><span class="p">),</span>
-                      <span class="n">time_list</span><span class="o">=</span><span class="n">num_sweeps_list</span><span class="p">,</span> <span class="n">solutions</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">p_r</span><span class="o">=</span><span class="mf">0.99</span>
-            <span class="p">)</span>
+# compute TTS, residual energy, success probability with benchmark function
+result = oj.solver_benchmark(
+                      solver=lambda time, **args: oj.SASampler(num_sweeps=time, num_reads=num_reads).sample_ising(h,J),
+                      time_list=num_sweeps_list, solutions=[correct_state], p_r=0.99
+            )
 </pre></div>
 </div>
 </div>
@@ -512,25 +522,25 @@ Specifies the key associated with the execution time of <code class="docutils li
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># configure the settings of drawing</span>
-<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># configure the settings of drawing
+fig, (axL,axC,axR) = plt.subplots(ncols=3, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
+fontsize = 10
 
-<span class="c1"># plot TTS</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+# plot TTS
+axL.plot(result[&#39;time&#39;], result[&#39;tts&#39;])
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="c1"># plot residual energy</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;residual_energy&#39;</span><span class="p">])</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+# plot residual energy
+axC.plot(result[&#39;time&#39;], result[&#39;residual_energy&#39;])
+axC.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axC.set_ylabel(&#39;Residual energy&#39;, fontsize=fontsize)
 
-<span class="c1"># plot of probability of appearance of optimal solution</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success_prob&#39;</span><span class="p">])</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+# plot of probability of appearance of optimal solution
+axR.plot(result[&#39;time&#39;], result[&#39;success_prob&#39;])
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
@@ -559,51 +569,51 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import time
 
-<span class="k">def</span> <span class="nf">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">num_reads</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">):</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
-<span class="c1">#    set function to choose randomly from three states</span>
-<span class="c1">#    [1, 1, 1,...], [1,-1,1,...] &amp; [-1,1,-1,...]</span>
-<span class="c1">#    &quot;&quot;&quot;</span>
+def anti_ferro_solver(time_param, num_reads, h, J):
+#    &quot;&quot;&quot;
+#    set function to choose randomly from three states
+#    [1, 1, 1,...], [1,-1,1,...] &amp; [-1,1,-1,...]
+#    &quot;&quot;&quot;
 
-    <span class="c1"># set subscript h &amp; J</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span> <span class="o">|</span> <span class="nb">set</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">J</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]))</span>
+    # set subscript h &amp; J
+    indices = set(h.keys())
+    indices = list(indices | set([key for keys in J.keys() for key in keys]))
 
-    <span class="c1"># make state of [1, 1, 1,...]</span>
-    <span class="n">ones_state</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>
+    # make state of [1, 1, 1,...]
+    ones_state = list(np.ones(len(indices), dtype=int))
 
-    <span class="c1"># make state of [-1, 1, -1,...]</span>
-    <span class="n">minus_plus_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">minus_plus_state</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+    # make state of [-1, 1, -1,...]
+    minus_plus_state = np.ones(len(indices), dtype=int)
+    minus_plus_state[::2] *= -1
 
-    <span class="c1"># make state of [1, -1, 1,...]</span>
-    <span class="n">plus_minus_state</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">minus_plus_state</span>
+    # make state of [1, -1, 1,...]
+    plus_minus_state = -1 * minus_plus_state
 
-    <span class="c1"># start measuring the execution time.</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">ones_state</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">minus_plus_state</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">plus_minus_state</span><span class="p">)]</span>
+    # start measuring the execution time.
+    start = time.time()
+    _states = [ones_state, list(minus_plus_state), list(plus_minus_state)]
 
-    <span class="c1"># choose state randomly from three states</span>
-    <span class="n">state_record</span> <span class="o">=</span> <span class="p">[</span><span class="n">_states</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_reads</span><span class="p">)]</span>
-    <span class="c1"># convert state_record to ndarray</span>
-    <span class="n">state_record</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state_record</span><span class="p">)</span>
+    # choose state randomly from three states
+    state_record = [_states[np.random.randint(3)] for _ in range(num_reads)]
+    # convert state_record to ndarray
+    state_record = np.array(state_record)
 
-    <span class="c1"># Add the computation time at random</span>
-    <span class="n">exec_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">time_param</span>
-    <span class="c1"># compute energy at random</span>
-    <span class="n">energies</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">state_record</span><span class="p">]</span>
+    # Add the computation time at random
+    exec_time = (time.time()-start) * 10**6 * time_param
+    # compute energy at random
+    energies = [sum(state) for state in state_record]
 
-    <span class="c1"># make tuple (state, subscript)</span>
-    <span class="n">samples_like</span> <span class="o">=</span> <span class="p">(</span><span class="n">state_record</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+    # make tuple (state, subscript)
+    samples_like = (state_record, indices)
 
-    <span class="c1"># we refer to from_samples (dimod) and store the state and energy in the Response class.</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">Response</span><span class="o">.</span><span class="n">from_samples</span><span class="p">(</span><span class="n">samples_like</span><span class="o">=</span><span class="n">samples_like</span><span class="p">,</span> <span class="n">energy</span><span class="o">=</span><span class="n">energies</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="s1">&#39;SPIN&#39;</span><span class="p">)</span>
-    <span class="c1"># substitute computation time to response.info &#39;execution_time&#39; key</span>
-    <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;execution_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_time</span>
+    # we refer to from_samples (dimod) and store the state and energy in the Response class.
+    response = oj.Response.from_samples(samples_like=samples_like, energy=energies, vartype=&#39;SPIN&#39;)
+    # substitute computation time to response.info &#39;execution_time&#39; key
+    response.info[&#39;execution_time&#39;] = exec_time
 
-    <span class="k">return</span> <span class="n">response</span>
+    return response
 </pre></div>
 </div>
 </div>
@@ -616,18 +626,18 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set optimal solution [1, -1, 1,...]</span>
-<span class="n">correct_state</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set optimal solution [1, -1, 1,...]
+correct_state = [(-1)**i for i in range(N)]
 
-<span class="c1"># set num_sweeps &amp; num_reads</span>
-<span class="n">num_sweeps_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">2000</span>
+# set num_sweeps &amp; num_reads
+num_sweeps_list = list(range(10, 51, 10))
+num_reads = 2000
 
-<span class="c1"># compute TTS, residual energy &amp; success probability with benchmark function</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">solver_benchmark</span><span class="p">(</span>
-                      <span class="n">solver</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">time_param</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">:</span> <span class="n">anti_ferro_solver</span><span class="p">(</span><span class="n">time_param</span><span class="p">,</span> <span class="n">num_reads</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">J</span><span class="p">),</span>
-                      <span class="n">time_list</span><span class="o">=</span><span class="n">num_sweeps_list</span><span class="p">,</span> <span class="n">solutions</span><span class="o">=</span><span class="p">[</span><span class="n">correct_state</span><span class="p">],</span> <span class="n">p_r</span><span class="o">=</span><span class="mf">0.99</span>
-              <span class="p">)</span>
+# compute TTS, residual energy &amp; success probability with benchmark function
+result = oj.solver_benchmark(
+                      solver= lambda time_param, **args: anti_ferro_solver(time_param, num_reads, h, J),
+                      time_list=num_sweeps_list, solutions=[correct_state], p_r=0.99
+              )
 </pre></div>
 </div>
 </div>
@@ -635,21 +645,21 @@ Text(0, 0.5, &#39;Success probability&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axL</span><span class="p">,</span><span class="n">axC</span><span class="p">,</span><span class="n">axR</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, (axL,axC,axR) = plt.subplots(ncols=3, figsize=(15,3))
+plt.subplots_adjust(wspace=0.4)
 
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;tts&#39;</span><span class="p">])</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axL</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;TTS&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+fontsize = 10
+axL.plot(result[&#39;time&#39;], result[&#39;tts&#39;])
+axL.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axL.set_ylabel(&#39;TTS&#39;, fontsize=fontsize)
 
-<span class="n">axC</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;residual_energy&#39;</span><span class="p">])</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axC</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residual energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axC.plot(result[&#39;time&#39;], result[&#39;residual_energy&#39;])
+axC.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axC.set_ylabel(&#39;Residual energy&#39;, fontsize=fontsize)
 
-<span class="n">axR</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success_prob&#39;</span><span class="p">])</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;annealing time&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">axR</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Success probability&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+axR.plot(result[&#39;time&#39;], result[&#39;success_prob&#39;])
+axR.set_xlabel(&#39;annealing time&#39;, fontsize=fontsize)
+axR.set_ylabel(&#39;Success probability&#39;, fontsize=fontsize)
 </pre></div>
 </div>
 </div>
@@ -682,8 +692,9 @@ Text(0, 0.5, &#39;Success probability&#39;)
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">2-An Evaluation of Annealing Algorithms</a><ul>
 <li><a class="reference internal" href="#Time-to-solution">Time to solution</a><ul>
 <li><a class="reference internal" href="#Measuring-TTS-with-OpenJij">Measuring TTS with OpenJij</a></li>
@@ -695,12 +706,17 @@ Text(0, 0.5, &#39;Success probability&#39;)
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="001-Introduction.html"
-                        title="previous chapter">1-An Introduction to OpenJij</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="002-Evaluation_errorbar.html"
-                        title="next chapter">How to use the standard error function of benchmark functions</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="001-Introduction.html"
+                          title="previous chapter">1-An Introduction to OpenJij</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="002-Evaluation_errorbar.html"
+                          title="next chapter">How to use the standard error function of benchmark functions</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -712,12 +728,12 @@ Text(0, 0.5, &#39;Success probability&#39;)
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -741,7 +757,7 @@ Text(0, 0.5, &#39;Success probability&#39;)
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

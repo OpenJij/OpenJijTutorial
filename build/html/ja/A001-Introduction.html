@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>A1 - OpenJij core interface入門 (core python interface) &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="A2 - OpenJij core interface入門 (C++ interface)" href="A002-CppIntroduction.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,18 +289,21 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="A1---OpenJij-core-interface入門-(core-python-interface)">
-<h1>A1 - OpenJij core interface入門 (core python interface)<a class="headerlink" href="#A1---OpenJij-core-interface入門-(core-python-interface)" title="Permalink to this headline">¶</a></h1>
+<h1>A1 - OpenJij core interface入門 (core python interface)<a class="headerlink" href="#A1---OpenJij-core-interface入門-(core-python-interface)" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/A001-Introduction.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>この章ではOpenJijのcore interface (core python interface)の使い方を説明し、簡単な計算のデモンストレーションを行います。</p>
 <p>core interfaceは前回までのチュートリアルよりも下部のレイヤーのAPIです。対象読者としては前回までのOpenJijチュートリアルを一通り終えて、イジングモデルやモンテカルロ法などの用語を知っている方を想定しています。具体的には</p>
@@ -303,7 +313,7 @@ div.rendered_html tbody tr:hover {
 </ul>
 <p>といった目的に利用できます。</p>
 <section id="OpenJij-core-interface-について">
-<h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this headline">¶</a></h2>
+<h2>OpenJij core interface について<a class="headerlink" href="#OpenJij-core-interface-について" title="Permalink to this heading">¶</a></h2>
 <p>前回までのチュートリアルでは、OpenJijを用いた様々な問題の解き方やベンチマークの取り方などを紹介してきました。OpenJijは最下層の部分は統計物理学の数値計算手法である、マルコフ連鎖モンテカルロ法(MCMC)をベースにC++を用いて実装されています。今まで触れてきたPythonモジュールはこのC++インターフェースを直接ラップしたpythonライブラリである<strong>cxxjij</strong>を呼び出す形となっています。図にすると次のような包含関係があります。</p>
 <a class="reference internal image-reference" href="../_images/hierarchy1.png"><img alt="OpenJij hierarchy" src="../_images/hierarchy1.png" style="width: 80.0%;" /></a>
 <p>core interfaceを用いることでOpenJij上の全ての機能を使用することができます。よって最適化問題のみならず、<strong>統計物理学の数値計算ツール</strong>として研究用途で使用することもできます。また、C++インターフェースを用いることで、より高速な演算を行うことができます。</p>
@@ -312,8 +322,8 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install openjij
-<span class="o">!</span>pip show openjij
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>!pip install openjij
+!pip show openjij
 </pre></div>
 </div>
 </div>
@@ -346,7 +356,7 @@ Required-by:
 </div>
 </section>
 <section id="問題を投げてみる">
-<h2>問題を投げてみる<a class="headerlink" href="#問題を投げてみる" title="Permalink to this headline">¶</a></h2>
+<h2>問題を投げてみる<a class="headerlink" href="#問題を投げてみる" title="Permalink to this heading">¶</a></h2>
 <p>チュートリアルとしてまずは変数のサイズが<span class="math notranslate nohighlight">\(N=5\)</span>の古典スピン (<span class="math notranslate nohighlight">\(\sigma = \pm 1\)</span>)イジング問題をアニーリングで解いてみましょう。 ハミルトニアンは以下のようになります。 <span class="math">\begin{align}
 H &= \sum_{i<j}J_{ij}\sigma_i \sigma_j + \sum_{i=1}^{N}h_i \sigma_i \\
 \sigma_i &= \pm 1 (i=1 \cdots N)
@@ -363,43 +373,43 @@ h_i = -1 \ \mathrm{for\ } \forall i,\ J_{ij} = -1　\ \mathrm{for\ } \forall i,\
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># core interfaceではopenjijの代わりにcxxjijをインポートします。</span>
-<span class="kn">import</span> <span class="nn">cxxjij</span> <span class="k">as</span> <span class="nn">cj</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># core interfaceではopenjijの代わりにcxxjijをインポートします。
+import cxxjij as cj
 
-<span class="c1"># まず相互作用行列を作成してあげます。Graphモジュールを使います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.graph</span> <span class="k">as</span> <span class="nn">G</span>
+# まず相互作用行列を作成してあげます。Graphモジュールを使います。
+import cxxjij.graph as G
 
-<span class="c1"># 問題サイズN=5の密結合グラフ(Dense)を定義します。</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">J</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="c1"># 相互作用を設定してあげます。</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-        <span class="c1">#J[i,i]以外に-1を入力</span>
-        <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
+# 問題サイズN=5の密結合グラフ(Dense)を定義します。
+N = 5
+J = G.Dense(N)
+# 相互作用を設定してあげます。
+for i in range(N):
+    for j in range(N):
+        #J[i,i]以外に-1を入力
+        J[i,j] = 0 if i == j else -1.0
 
-<span class="c1"># 縦磁場を設定してあげます。</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="c1"># J[i,i] = -1でも同じ結果となります。</span>
-    <span class="n">J</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+# 縦磁場を設定してあげます。
+for i in range(N):
+    # J[i,i] = -1でも同じ結果となります。
+    J[i] = -1
 
-<span class="c1"># 続いてGraphから計算を行うためのSystemを作成します。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.system</span> <span class="k">as</span> <span class="nn">S</span>
+# 続いてGraphから計算を行うためのSystemを作成します。
+import cxxjij.system as S
 
-<span class="c1"># 今回は通常の古典モンテカルロ計算のシステムを使用します。</span>
-<span class="n">system</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">make_classical_ising</span><span class="p">(</span><span class="n">J</span><span class="o">.</span><span class="n">gen_spin</span><span class="p">(),</span> <span class="n">J</span><span class="p">)</span>
-<span class="c1"># アニーリングスケジュールを設定します。Utilityモジュールを使用します。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.utility</span> <span class="k">as</span> <span class="nn">U</span>
-<span class="n">schedule</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">make_classical_schedule_list</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+# 今回は通常の古典モンテカルロ計算のシステムを使用します。
+system = S.make_classical_ising(J.gen_spin(), J)
+# アニーリングスケジュールを設定します。Utilityモジュールを使用します。
+import cxxjij.utility as U
+schedule = U.make_classical_schedule_list(0.1, 100, 10, 10)
 
-<span class="c1"># 実際にアニーリングを走らせます。Algorithmモジュールを使用します。</span>
-<span class="c1"># モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.algorithm</span> <span class="k">as</span> <span class="nn">A</span>
-<span class="n">A</span><span class="o">.</span><span class="n">Algorithm_SingleSpinFlip_run</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+# 実際にアニーリングを走らせます。Algorithmモジュールを使用します。
+# モンテカルロステップの更新方法として単純なSingleSpinFlipを用います。
+import cxxjij.algorithm as A
+A.Algorithm_SingleSpinFlip_run(system, schedule)
 
-<span class="c1"># 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。</span>
-<span class="kn">import</span> <span class="nn">cxxjij.result</span> <span class="k">as</span> <span class="nn">R</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The solution is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="n">system</span><span class="p">)))</span>
+# 結果を取得しまAす。Resultモジュールにあるget_solutionを用います。
+import cxxjij.result as R
+print(&quot;The solution is {}.&quot;.format(R.get_solution(system)))
 </pre></div>
 </div>
 </div>
@@ -414,14 +424,14 @@ The solution is [1, 1, 1, 1, 1].
 <p>出てきた答えが<span class="math notranslate nohighlight">\([1,1,1,1,1]\)</span>であることが確認できます。低レイヤーのAPIのため設定する項目は多いですが、その分詳細な設定が可能となります。</p>
 </section>
 <section id="モジュール一覧">
-<h2>モジュール一覧<a class="headerlink" href="#モジュール一覧" title="Permalink to this headline">¶</a></h2>
+<h2>モジュール一覧<a class="headerlink" href="#モジュール一覧" title="Permalink to this heading">¶</a></h2>
 <p>コード例に出てきたように、OpenJij core interfaceでは主に<code class="docutils literal notranslate"><span class="pre">graph</span></code>, <code class="docutils literal notranslate"><span class="pre">system</span></code>, <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>などのモジュールから構成されています。それぞれのモジュールを組み合わせることで様々な種類、アルゴリズムでイジングモデルを計算することが可能となります。また新たにアルゴリズムを実装する際に拡張が容易であるという特徴を備えています。次章以降で詳細な説明を行います。</p>
 <section id="Graph">
-<h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this headline">¶</a></h3>
+<h3>Graph<a class="headerlink" href="#Graph" title="Permalink to this heading">¶</a></h3>
 <p>イジングハミルトニアンの係数<span class="math notranslate nohighlight">\(J_{ij}\)</span>を保持するためのモジュールです。基本的に密結合 (全てのJijが0以外の値を持つモデルに適している)を扱う<code class="docutils literal notranslate"><span class="pre">Dense</span></code>と疎結合 (Jijの多くの値が0であるモデルに適している)<code class="docutils literal notranslate"><span class="pre">Sparse</span></code>などがあります。</p>
 </section>
 <section id="System">
-<h3>System<a class="headerlink" href="#System" title="Permalink to this headline">¶</a></h3>
+<h3>System<a class="headerlink" href="#System" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code>では、モンテカルロ等の計算における現在のシステムの状態を保持するためのデータ構造が定義されています。具体的には</p>
 <ul class="simple">
 <li><p>古典イジングモデル (スピン配列)</p></li>
@@ -431,7 +441,7 @@ The solution is [1, 1, 1, 1, 1].
 <p>等が定義されています。モンテカルロ法を始めとする計算手法には様々な手法があります(もしくは今後新しい手法が開発されていくことでしょう)。そのため、OpenJijでは各々の計算手法に対応するデータ構造とアルゴリズム、そして計算結果の取得インターフェースを分離することにより、様々なアルゴリズムを追加することが容易に行えるように設計されています。</p>
 </section>
 <section id="Updater">
-<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this headline">¶</a></h3>
+<h3>Updater<a class="headerlink" href="#Updater" title="Permalink to this heading">¶</a></h3>
 <p>どのような手法で<code class="docutils literal notranslate"><span class="pre">system</span></code>を更新していくかを定義します。具体的には</p>
 <ul class="simple">
 <li><p>SingleSpinFlip Update</p></li>
@@ -443,15 +453,15 @@ The solution is [1, 1, 1, 1, 1].
 </div></blockquote>
 </section>
 <section id="Algorithm">
-<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this headline">¶</a></h3>
+<h3>Algorithm<a class="headerlink" href="#Algorithm" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">updater</span></code>を用いてどのようなスケジュールでアニーリングアルゴリズムを実行するかなど、アルゴリズムを実行する役割を担います。 <code class="docutils literal notranslate"><span class="pre">Algorithm_[Updaterの種類]_run</span></code>で、対応したUpdaterを用いて実行することができます。</p>
 </section>
 <section id="Result">
-<h3>Result<a class="headerlink" href="#Result" title="Permalink to this headline">¶</a></h3>
+<h3>Result<a class="headerlink" href="#Result" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">system</span></code>からスピン配位などの情報を得るために使用されます。</p>
 </section>
 <section id="コーディングフロー">
-<h3>コーディングフロー<a class="headerlink" href="#コーディングフロー" title="Permalink to this headline">¶</a></h3>
+<h3>コーディングフロー<a class="headerlink" href="#コーディングフロー" title="Permalink to this heading">¶</a></h3>
 <p>コーディングの流れは基本的には以下に示すようなものとなります。問題の規模が大きくなってもこの流れは変わりません。</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">graph</span></code>モジュールで<span class="math notranslate nohighlight">\(J_{ij}, h_{i}\)</span>を定義</p></li>
@@ -478,8 +488,9 @@ The solution is [1, 1, 1, 1, 1].
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">A1 - OpenJij core interface入門 (core python interface)</a><ul>
 <li><a class="reference internal" href="#OpenJij-core-interface-について">OpenJij core interface について</a></li>
 <li><a class="reference internal" href="#問題を投げてみる">問題を投げてみる</a></li>
@@ -496,12 +507,17 @@ The solution is [1, 1, 1, 1, 1].
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="013-ReverseQuantumAnnealing.html"
-                        title="previous chapter">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="A002-CppIntroduction.html"
-                        title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="013-ReverseQuantumAnnealing.html"
+                          title="previous chapter">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="A002-CppIntroduction.html"
+                          title="next chapter">A2 - OpenJij core interface入門 (C++ interface)</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -513,12 +529,12 @@ The solution is [1, 1, 1, 1, 1].
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -542,7 +558,7 @@ The solution is [1, 1, 1, 1, 1].
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>

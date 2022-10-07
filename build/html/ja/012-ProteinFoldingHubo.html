@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>12-Solving Protein Folding Problem by HUBO Solver &#8212; OpenJij Tutorial 0.3.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,10 +12,12 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example" href="013-ReverseQuantumAnnealing.html" />
@@ -259,6 +261,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
 div.rendered_html table {
   border: none;
   border-collapse: collapse;
@@ -267,10 +270,14 @@ div.rendered_html table {
   font-size: 12px;
   table-layout: fixed;
 }
+.jp-RenderedHTMLCommon thead,
 div.rendered_html thead {
   border-bottom: 1px solid black;
   vertical-align: bottom;
 }
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
 div.rendered_html tr,
 div.rendered_html th,
 div.rendered_html td {
@@ -282,31 +289,34 @@ div.rendered_html td {
   max-width: none;
   border: none;
 }
+.jp-RenderedHTMLCommon th,
 div.rendered_html th {
   font-weight: bold;
 }
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
 div.rendered_html tbody tr:nth-child(odd) {
   background: #f5f5f5;
 }
+.jp-RenderedHTMLCommon tbody tr:hover,
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
 <section id="12-Solving-Protein-Folding-Problem-by-HUBO-Solver">
-<h1>12-Solving Protein Folding Problem by HUBO Solver<a class="headerlink" href="#12-Solving-Protein-Folding-Problem-by-HUBO-Solver" title="Permalink to this headline">¶</a></h1>
+<h1>12-Solving Protein Folding Problem by HUBO Solver<a class="headerlink" href="#12-Solving-Protein-Folding-Problem-by-HUBO-Solver" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/OpenJij/OpenJijTutorial/blob/master/source/ja/012-ProteinFoldingHubo.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>2012年に、Alejandroらがタンパク質折り畳み問題を量子アニーリングマシン(D-wave)を用いて解きました[1]。</p>
 <p>ここでタンパク質折り畳み問題とは、「アミノ酸配列という１次元的情報からそのタンパク質の３次元的立体構造を予測すること」を意味します。 タンパク質はアミノ酸配列によって特徴付けられ、１つのアミノ酸配列に対して固有の立体構造が対応することが知られています。 タンパク質はその固有の立体構造を持って初めて生体高分子としての機能を果たすため、アミノ酸配列の情報からそのタンパク質の立体構造を予測することは非常に重要な問題です。
 しかし、アミノ酸配列とタンパク質の立体構造との因果関係はまだよくわかっておらず、非常に難しい問題です。</p>
 <p>このチュートリアルでは、OpenJijのHUBOソルバーを用いてタンパク質折り畳み問題を解き、その結果を論文[1]と比較します。</p>
 <section id="問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル">
-<h2>問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル<a class="headerlink" href="#問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル" title="Permalink to this headline">¶</a></h2>
+<h2>問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル<a class="headerlink" href="#問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル" title="Permalink to this heading">¶</a></h2>
 <section id="問題概要">
-<h3>問題概要<a class="headerlink" href="#問題概要" title="Permalink to this headline">¶</a></h3>
+<h3>問題概要<a class="headerlink" href="#問題概要" title="Permalink to this heading">¶</a></h3>
 <p>タンパク質の立体構造をラティスフォールディングモデルという単純な格子モデルとして捉え、HUBOの形式にエンコードしこれを解くことで立体構造を決定します。 ラティスフォールディングモデルにはいくつか種類があり、 以下代表的な２つのモデル、HPモデルとMJモデルについて紹介します。 論文[1]では、２次元上の構造問題とみなして以下で説明するMJモデルを利用しています。</p>
 </section>
 <section id="HPモデル">
-<h3>HPモデル<a class="headerlink" href="#HPモデル" title="Permalink to this headline">¶</a></h3>
+<h3>HPモデル<a class="headerlink" href="#HPモデル" title="Permalink to this heading">¶</a></h3>
 <p>タンパク質は数十から数百程度のアミノ酸配列からなるポリペプチドが折り畳まった安定した立体構造を持ちます。 その立体構造を決定するために、ポリペプチドの３次元立体構造をそのままの状態で扱うのは、計算量が膨大でスーパーコンピュータ等を利用しても難しいのが現状です。 なぜなら、タンパク質分子のエネルギーを計算するには、水素結合、静電相互作用、ファンデルワールス力、疎水性相互作用等の様々な力を考慮する必要があるからです。
 しかし、疎水性相互作用だけを扱った極めて単純なモデルでもある程度のことが説明できます。</p>
 <p>LauとDillは疎水性相互作用のみを考慮した格子モデルであるHPモデル[2]を提案しました。 このモデルは、アミノ酸を疎水性(H: hydrophobic)と親水性(P: polar)の2種類のみに分類し､タンパク質のアミノ酸配列をHとPの配列として表現します。 そして､Hモノマー同士が最近接格子にきた場合､エネルギーが下がるというモデルです。</p>
@@ -317,14 +327,14 @@ div.rendered_html tbody tr:hover {
 </ul>
 </section>
 <section id="MJモデル">
-<h3>MJモデル<a class="headerlink" href="#MJモデル" title="Permalink to this headline">¶</a></h3>
+<h3>MJモデル<a class="headerlink" href="#MJモデル" title="Permalink to this heading">¶</a></h3>
 <p>HPモデルでは、アミノ酸を単純化して疎水性と親水性の2種類のみに分類しました。つまり、アミノ酸同士の相互作用の大きさの違いは考慮していません。 より精度の高いモデルを構築しようとした場合、この違いを考慮することが考えられます。それがMJモデルです。</p>
 <p>MJモデルは、立体構造が既知のタンパク質を多数集め、それらの中から互いに近距離にあるアミノ酸ペアの個数を数え上げ、それらの統計的な情報をアミノ酸間の相互作用エネルギーとして表現したものです。 立体構造群の中でのアミノ酸ペアの数が多ければ、そのアミノ酸ペアに働く相互作用エネルギーの絶対値は大きくなります。 この相互作用エネルギーは、アミノ酸ペアを形成しやすい・しにくいという傾向を表現していると考えられます。</p>
 <p>論文[1]では参考論文[3]のTable3に報告されている値を利用しています。</p>
 </section>
 </section>
 <section id="解法の概要">
-<h2>解法の概要<a class="headerlink" href="#解法の概要" title="Permalink to this headline">¶</a></h2>
+<h2>解法の概要<a class="headerlink" href="#解法の概要" title="Permalink to this heading">¶</a></h2>
 <p>ここでは論文[1]で扱っているモデルの構築方法について説明します。 今回使用するアミノ酸配列は、Proline-Serine-Valine-Lysine-Methionine-Alanineの6アミノ酸配列(1文字のアミノ酸配列表記ではP-S-V-K-M-A)です。 ここでP-S-V-K-M-Aというアミノ酸の順番は固定されていることに注意してください。 2次元の格子上でこれらのアミノ酸列の折りたたみ問題を考えます。 ただし、6種類とはいえアミノ酸配列を全て一度に処理するのは難しいので、すでにいくつかの折り畳まれたパターンを起点に考えてモデルを構築します。
 以下では簡単な例として論文[1]のscheme3について解説します。</p>
 <p>本チュートリアルでは以下の順で詳細な解法手順を説明します。</p>
@@ -335,19 +345,19 @@ div.rendered_html tbody tr:hover {
 <li><p>HUBOによる直接解法と参考論文[1]の結果との比較</p></li>
 </ol>
 <section id="1.-ラティスフォールディングのビット表現方法">
-<h3>1. ラティスフォールディングのビット表現方法<a class="headerlink" href="#1.-ラティスフォールディングのビット表現方法" title="Permalink to this headline">¶</a></h3>
+<h3>1. ラティスフォールディングのビット表現方法<a class="headerlink" href="#1.-ラティスフォールディングのビット表現方法" title="Permalink to this heading">¶</a></h3>
 <p>ここでは2次元上のアミノ酸の立体構造とビット列を対応付ける方法を説明します。P-S-V-K-M-A列の構造を例に考えますが、より現実的な3次元の立体構造も同様の方針で対応付けることができます。 方法は非常に簡単です。今は2次元格子を考えているためアミノ酸の折りたたみ方としては、上、下、左、右の4種類あります。これらに対して２つのビットを次のように割り当てます。</p>
 <div class="math notranslate nohighlight">
 \[00(下向き)、01(右向き)、10(左向き)、11(上向き)\]</div>
 <p>これにより、<span class="math notranslate nohighlight">\(2\times 6=12\)</span>個のビット列と6個のアミノ酸列の2次元格子上の構造が1対1で対応します。 例えば010101010101というビット列は左から2ビットずつ区切って読むことで、右、右、右、右、右、右という列に翻訳されます。 よってP-S-V-K-M-Aという順番でアミノ酸が右向きに横一直線に並んだ構造に対応します。 より複雑な例が図１に示してあります。</p>
 <p>実は、簡単な考察から最初の3ビットは010に固定できることが分かります。 まず、平面の対称性からPの右側にSが折りたたまれていると仮定しても一般性を失わないことが分かります。よって最初の2ビットは01列で固定できます。 さらにSの上にVが折りたたまれることと、下に折りたたまれることは、やはり平面の対称性から同じことなので、ここでは下に折りたたまれる場合のみ考えます。
 またVがSの左に折りたたまれてPと重なるパターンも排除します。以上の考察と仮定からVはSの右か下に折りたたまれる場合のみを考えても良いことになります。 したがって3ビット目が0に決まります。よって残りの<span class="math notranslate nohighlight">\(12-3=9\)</span>ビットの配列を決定すれば良いことになります。</p>
-<div><p><img alt="cff918f71e54489cbabdf3a52ae5621e" class="no-scaled-link" src="../_images/lattice_folding_mapping.png" style="width: 400px; height: 300px;" /></p>
+<div><p><img alt="97504a9afce04cc5a02986c9b89bb0cc" class="no-scaled-link" src="../_images/lattice_folding_mapping.png" style="width: 400px; height: 300px;" /></p>
 <p>図1：ラティスフォールディングとビット列の対応関係。 最終的に得られている0100101011というビット列を2ビットずつ区切って左から読むと、右、下、左、左、上となるので図のような2次元構造が対応することが分かります。 論文[1]のFigure2(a)より転載: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY
 4.0.</a>)</p>
 </div></section>
 <section id="2.-コスト関数の定式化">
-<h3>2. コスト関数の定式化<a class="headerlink" href="#2.-コスト関数の定式化" title="Permalink to this headline">¶</a></h3>
+<h3>2. コスト関数の定式化<a class="headerlink" href="#2.-コスト関数の定式化" title="Permalink to this heading">¶</a></h3>
 <p>ここでは具体的なコスト関数の定式化方法を説明します。 論文[1]では以下の２つの項の寄与を考えています。</p>
 <div class="math notranslate nohighlight">
 \[E_\mathrm{p} = E_\mathrm{onsite} + E_\mathrm{pw}\]</div>
@@ -359,14 +369,14 @@ div.rendered_html tbody tr:hover {
 <p>具体的な例として論文[1]のScheme3のExperiment3を初期状態にして考えます。アミノ酸配列は、</p>
 <p>P-S-V-K-M-A</p>
 <p>でしたが、P-S-V-Kの構造は以下の図2の様にすでに決まっています。 残りのMとAの構造を決定するコスト関数を考えます。</p>
-<div><p><img alt="c01c1efe4bb24ebf9da9d03d0ef45e19" class="no-scaled-link" src="../_images/scheme.png" style="width: 600px; height: 600px;" /></p>
+<div><p><img alt="aed1b65d6d064133b20b6cfca91a5284" class="no-scaled-link" src="../_images/scheme.png" style="width: 600px; height: 600px;" /></p>
 <p>図2：赤枠内の構造を初期状態として考えます。MはKの下または左に折りたたまれる場合のみを考えます。よって決定変数は<span class="math notranslate nohighlight">\(q_1\)</span>、<span class="math notranslate nohighlight">\(q_2\)</span>、<span class="math notranslate nohighlight">\(q_3\)</span>の3つとなります。 論文[1]のFigure 3(b)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY
 4.0.</a>)</p>
 </div></section>
 <section id="コスト関数設計">
-<h3>コスト関数設計<a class="headerlink" href="#コスト関数設計" title="Permalink to this headline">¶</a></h3>
+<h3>コスト関数設計<a class="headerlink" href="#コスト関数設計" title="Permalink to this heading">¶</a></h3>
 <p>コスト関数設計の様子を以下の図3に示しました。図3の詳細について説明します。</p>
-<div><p><img alt="92b85aa67c4c45a0bb430562b4be222e" class="no-scaled-link" src="../_images/make_costfunction_about_protein_folding.png" style="width: 600px; height: 400px;" /></p>
+<div><p><img alt="0b278fdf16cf42dc804bb5d34c95db10" class="no-scaled-link" src="../_images/make_costfunction_about_protein_folding.png" style="width: 600px; height: 400px;" /></p>
 <p>図3：コスト関数の定式化。 論文[1]のFigure 3(a)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div><p>基本的な方針は簡単で、ありうる２次元構造を全て考えて対応するエネルギーを計算することでコスト関数を導出します。 ただしこの方法ではコスト関数の導出そのものに指数時間かかることになります。また、取りうるエネルギーを毎回計算しているため、わざわざアニーリングで解を求めなくてもコスト関数ができた段階で最適解が分かっていることになります。 ここでは論文[1]の式(5)の導出をわかりやすく説明するためのこのような説明を行っています。</p>
 <p>それでは具体的に見ていきます。すぐに分かることとして、</p>
@@ -402,14 +412,14 @@ div.rendered_html tbody tr:hover {
 <p>また、明らかにこのコスト関数の最小値は-5でその時のビット列は<span class="math notranslate nohighlight">\((q_{1},q_{2},q_{3})=(0,0,1)\)</span>であることが分かります。</p>
 </section>
 <section id="3.-HUBOソルバーによる解法">
-<h3>3. HUBOソルバーによる解法<a class="headerlink" href="#3.-HUBOソルバーによる解法" title="Permalink to this headline">¶</a></h3>
+<h3>3. HUBOソルバーによる解法<a class="headerlink" href="#3.-HUBOソルバーによる解法" title="Permalink to this heading">¶</a></h3>
 <p>上で求めたコスト関数をOpenJijのHUBOソルバーを使って解きます。論文[1]ではD-waveを用いて１万回の測定を行っているため、HUBOソルバーでも1万回シミュレーションを行います。</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># コスト関数を定義します。</span>
-<span class="n">polynomial</span> <span class="o">=</span> <span class="p">{():</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span> <span class="mi">9</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span> <span class="mi">9</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span> <span class="o">-</span><span class="mi">16</span><span class="p">}</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># コスト関数を定義します。
+polynomial = {():-1, (3,): -4, (1,3): 9, (2,3): 9, (1,2,3): -16}
 </pre></div>
 </div>
 </div>
@@ -417,16 +427,16 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openjij</span> <span class="k">as</span> <span class="nn">oj</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import openjij as oj
 
-<span class="c1"># HUBOメソッドを利用するためには、SASamplerメソッドを用いる必要があります。</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">oj</span><span class="o">.</span><span class="n">SASampler</span><span class="p">()</span>
+# HUBOメソッドを利用するためには、SASamplerメソッドを用いる必要があります。
+sampler = oj.SASampler()
 
-<span class="c1"># SAによるシミュレーションを行う回数を指定します。ここでは、論文[1]でD-waveを用いて１万回の測定を行ったため、１万回に指定します。</span>
-<span class="n">num_reads</span> <span class="o">=</span> <span class="mi">10000</span>
+# SAによるシミュレーションを行う回数を指定します。ここでは、論文[1]でD-waveを用いて１万回の測定を行ったため、１万回に指定します。
+num_reads = 10000
 
-<span class="c1"># 変数は、バイナリ変数、変数の更新方式は、single spin flipを指定します。</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_hubo</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="s2">&quot;BINARY&quot;</span><span class="p">,</span> <span class="n">updater</span><span class="o">=</span><span class="s2">&quot;single spin flip&quot;</span><span class="p">,</span> <span class="n">num_reads</span><span class="o">=</span><span class="n">num_reads</span><span class="p">)</span>
+# 変数は、バイナリ変数、変数の更新方式は、single spin flipを指定します。
+response = sampler.sample_hubo(polynomial, &quot;BINARY&quot;, updater=&quot;single spin flip&quot;, num_reads=num_reads)
 </pre></div>
 </div>
 </div>
@@ -435,12 +445,12 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
 
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+plt.hist(response.energies, bins=15)
+plt.xlabel(&#39;Energy&#39;, fontsize=15)
+plt.ylabel(&#39;Frequency&#39;, fontsize=15)
+plt.show()
 </pre></div>
 </div>
 </div>
@@ -453,13 +463,13 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>エネルギーが-5となる解が最も多く得られていることがわかります。これは先程述べたように厳密な最適解となっています。</p>
 <p>またこの時のビット列は<span class="math notranslate nohighlight">\((q_{1},q_{2},q_{3})=(0,0,1)\)</span>であり、対応する2次元構造は以下のようになります。</p>
-<div><p><img alt="651705cf0c2541a0a2da929a86cf290d" class="no-scaled-link" src="../_images/optimal_folding_structure.png" style="width: 300px; height: 300px;" /></p>
+<div><p><img alt="e474eb7bbd6747d0bfc3498c2e358ec8" class="no-scaled-link" src="../_images/optimal_folding_structure.png" style="width: 300px; height: 300px;" /></p>
 <p>図4： 最適なラティスフォールディング構造。 論文[1]のFigure 3(c)を改変して作成: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div></section>
 <section id="4.-HUBOによる直接解法と参考論文[1]の結果との比較">
-<h3>4. HUBOによる直接解法と参考論文[1]の結果との比較<a class="headerlink" href="#4.-HUBOによる直接解法と参考論文[1]の結果との比較" title="Permalink to this headline">¶</a></h3>
+<h3>4. HUBOによる直接解法と参考論文[1]の結果との比較<a class="headerlink" href="#4.-HUBOによる直接解法と参考論文[1]の結果との比較" title="Permalink to this heading">¶</a></h3>
 <p>最後に、HUBOによる直接解法と参考論文[1]の結果との比較します。 以下の図5は、論文[1]による測定結果であり、各エネルギーにおいてタンパク質がとり得る2次元構造を示したものです。 なお、論文[1]では、HUBOをQUBOに変換してから、D-waveを用いて解いています。</p>
-<div><p><img alt="d9bdf9b7fde044a4ad98c7e10c2b2682" class="no-scaled-link" src="../_images/protein_folding_qa_result.png" style="width: 800px; height: 1000px;" /></p>
+<div><p><img alt="a5301ca8ce914e43878ff5bdc9fa1c42" class="no-scaled-link" src="../_images/protein_folding_qa_result.png" style="width: 800px; height: 1000px;" /></p>
 <p>図5： 測定結果で得られたラティスフォールディング構造とエネルギーのパターン。 論文[1]のFigure 3(c)より転載: Alejandro Perdomo-Ortiz, Neil Dickson, Marshall Drew-Brook, Geordie Rose and Alán Aspuru-Guzik, Finding low-energy conformations of lattice protein models by quantum annealing. Sci Rep 2, 571 (2012). <a class="reference external" href="https://doi.org/10.1038/srep00571">https://doi.org/10.1038/srep00571</a> (<a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0.</a>)</p>
 </div><p>今回注目したScheme3のExperiment3の測定結果は、図の青色の構造であり、今回は青色の構造のみを観察すれば良いです。</p>
 <p>図5に従い、参考論文[1]のエネルギー測定結果のリストを以下で作成します。注意点として、エネルギーが正の値になる構造は無視しています。論文[1]によるとそのような構造は全体の8%を締めていたようです。</p>
@@ -467,15 +477,15 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
 
-<span class="n">energy_qa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_reads</span><span class="p">)</span>
-<span class="c1"># エネルギー -5の解は、4164回得られました。</span>
-<span class="n">energy_qa</span><span class="p">[:</span><span class="mi">4164</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span>
-<span class="c1"># エネルギー -3の解は、1317回得られました。</span>
-<span class="n">energy_qa</span><span class="p">[</span><span class="mi">4164</span><span class="p">:</span><span class="mi">4164</span><span class="o">+</span><span class="mi">1317</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
-<span class="c1"># エネルギー -1の解は、４状態の構造について、それぞれ415回, 381回, 1371回, 1552回の計3719回得られました。</span>
-<span class="n">energy_qa</span><span class="p">[</span><span class="mi">4164</span><span class="o">+</span><span class="mi">1317</span><span class="p">:</span><span class="mi">4164</span><span class="o">+</span><span class="mi">1317</span><span class="o">+</span><span class="mi">415</span><span class="o">+</span><span class="mi">381</span><span class="o">+</span><span class="mi">1371</span><span class="o">+</span><span class="mi">1552</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+energy_qa = np.zeros(num_reads)
+# エネルギー -5の解は、4164回得られました。
+energy_qa[:4164] = -5
+# エネルギー -3の解は、1317回得られました。
+energy_qa[4164:4164+1317] = -3
+# エネルギー -1の解は、４状態の構造について、それぞれ415回, 381回, 1371回, 1552回の計3719回得られました。
+energy_qa[4164+1317:4164+1317+415+381+1371+1552] = -1
 <br/></pre></div>
 </div>
 </div>
@@ -484,11 +494,11 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">energies</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HUBO (SA by openjij)&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy_qa</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;QUBO (QA by D-wave)&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.hist(response.energies, label=&#39;HUBO (SA by openjij)&#39;, range=(-5, -0.1), bins=10, alpha=0.5)
+plt.hist(energy_qa, label=&#39;QUBO (QA by D-wave)&#39;, range=(-5, -0.1), bins=10, alpha=0.5)
+plt.legend()
+plt.xlabel(&#39;Energy&#39;)
+plt.ylabel(&#39;Frequency&#39;)
 </pre></div>
 </div>
 </div>
@@ -512,7 +522,7 @@ Text(0, 0.5, &#39;Frequency&#39;)
 </section>
 </section>
 <section id="引用文献">
-<h2>引用文献<a class="headerlink" href="#引用文献" title="Permalink to this headline">¶</a></h2>
+<h2>引用文献<a class="headerlink" href="#引用文献" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Alejandro Perdomo-Ortiz, et.al “Finding low-energy conformations of lattice protein models by quantum annealing”. Scientific Reports volume 2, Article number: 571 (2012)</p></li>
 <li><p>Dill KA (March 1985). “Theory for the folding and stability of globular proteins”. Biochemistry. 24 (6)</p></li>
@@ -528,8 +538,9 @@ Text(0, 0.5, &#39;Frequency&#39;)
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">12-Solving Protein Folding Problem by HUBO Solver</a><ul>
 <li><a class="reference internal" href="#問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル">問題の概要とHydrophobic-Polar(HP)モデル、Miyazawa-Jernigan(MJ)モデル</a><ul>
 <li><a class="reference internal" href="#問題概要">問題概要</a></li>
@@ -550,12 +561,17 @@ Text(0, 0.5, &#39;Frequency&#39;)
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="011-HuboSolver.html"
-                        title="previous chapter">11-HUBO: Higher Order Unconstraint Binary Optimization</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="013-ReverseQuantumAnnealing.html"
-                        title="next chapter">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="011-HuboSolver.html"
+                          title="previous chapter">11-HUBO: Higher Order Unconstraint Binary Optimization</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="013-ReverseQuantumAnnealing.html"
+                          title="next chapter">13 Reverse Quantum Annealing with Portfolio Optimization Problem as an example</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -567,12 +583,12 @@ Text(0, 0.5, &#39;Frequency&#39;)
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -596,7 +612,7 @@ Text(0, 0.5, &#39;Frequency&#39;)
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jij Inc..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.2.3.
     </div>
   </body>
 </html>
