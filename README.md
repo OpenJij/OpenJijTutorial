@@ -1,7 +1,7 @@
 
 # OpenJij Tutorial Notebooks
 
-This is a tutorial on quantum annealing with [OpenJij](https://github.com/OpenJij/OpenJij).
+This is a tutorial on quantum annealing with [OpenJij](https://github.com/OpenJij/OpenJij).  
 
 You can learn how to use "OpenJij," how to use D-Wave Leap, how to use annealing algorithms, and how to evaluate.
 
