@@ -1,5 +1,5 @@
 
-#OpenJij Tutorial Notebooks
+# OpenJij Tutorial Notebooks
 
 This is a tutorial on quantum annealing with [OpenJij](https://github.com/OpenJij/OpenJij).
 
